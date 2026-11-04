@@ -153,6 +153,7 @@ with workflow.unsafe.imports_passed_through():
     from tracecat_ee.agent.approvals.service import ApprovalManager
     from tracecat_ee.agent.context import AgentContext
     from tracecat_ee.agent.types import AgentWorkflowID
+    from tracecat_ee.agent.workflows.channel import ChannelNotifier
 
 
 ROOT_AGENT_SCOPE = "root"
@@ -551,6 +552,7 @@ class DurableAgentWorkflow:
         self.active_stream_id = args.agent_args.active_stream_id
         self.harness_type = args.harness_type or "claude_code"
         self.approvals = ApprovalManager(role=self.role)
+        self.channel = ChannelNotifier(role=self.role, session_id=self.session_id)
         self.max_requests = args.agent_args.max_requests
         self.max_tool_calls = args.agent_args.max_tool_calls
         self._cancel_requested: bool = False
@@ -1028,6 +1030,9 @@ class DurableAgentWorkflow:
         run_id = AgentWorkflowID.from_workflow_id(
             workflow.info().workflow_id
         ).session_id
+        # Deliver before releasing the session so the reply posts before the
+        # next turn starts; a failed delivery still releases it.
+        await self.channel.turn_finished()
         try:
             result: FinalizeTurnResult | None = await workflow.execute_activity(
                 finalize_turn_activity,
@@ -1338,6 +1343,7 @@ class DurableAgentWorkflow:
             raise_application_error_from_classification(
                 agent_session_initialization_failed(retryable=True)
             )
+        self.channel.capture(create_result.channel_thread_linked, curr_run_id)
 
         # Build internal tool context for builder assistant sessions
         internal_tool_context: InternalToolContext | None = None
@@ -1550,6 +1556,7 @@ class DurableAgentWorkflow:
                         request_metadata=request_metadata,
                     )
                 await self._emit_approval_pause_done()
+                await self.channel.approval_pending(result.approval_items)
                 # Wait for either approval decisions or a user cancellation.
                 await workflow.wait_condition(
                     lambda: self.approvals.is_ready() or self._cancel_requested
@@ -1570,11 +1577,13 @@ class DurableAgentWorkflow:
                         }
                     )
                     await self.approvals.handle_decisions()
+                    await self.channel.approval_decided()
                     return await self._cancelled_turn_output(
                         result, info, emit_cancelled=True
                     )
                 # Persist approval decisions to DB (atomic with chat messages)
                 await self.approvals.handle_decisions()
+                await self.channel.approval_decided()
                 if self._cancel_requested:
                     logger.info(
                         "Agent turn cancelled after approval decisions",
