@@ -32,6 +32,7 @@ from tracecat_registry._internal.exceptions import SecretNotFoundError
 
 import tracecat.artifacts.projection as artifact_projection
 from tracecat.agent.adapter.vercel import is_text_ui_part
+from tracecat.agent.approvals.batch import approval_batch_id
 from tracecat.agent.approvals.decisions import (
     ApprovalDecisionMetadata,
     SubmittedDecision,
@@ -1593,7 +1594,7 @@ class AgentSessionService(BaseWorkspaceService):
         self,
         *,
         session_id: uuid.UUID,
-        expected_run_id: uuid.UUID | None,
+        expected_batch_id: uuid.UUID | None,
         decisions: Mapping[str, SubmittedDecision],
     ) -> _LockedBatch:
         """Lock the session and the batch, then check the decisions against them."""
@@ -1616,15 +1617,17 @@ class AgentSessionService(BaseWorkspaceService):
             raise TracecatNotFoundError(
                 f"No active workflow run for session {session_id}"
             )
-        if expected_run_id is not None and run_id != expected_run_id:
-            raise ApprovalNoLongerActiveError(
-                f"Run {expected_run_id} is no longer waiting on approvals"
-            )
         backend = get_agent_backend(
             agent_session.backend_id, harness_type=agent_session.harness_type
         )
 
         rows = await self._lock_approval_batch(session_id, list(decisions))
+        if expected_batch_id is not None and expected_batch_id != approval_batch_id(
+            run_id, (row.tool_call_id for row in rows)
+        ):
+            raise ApprovalNoLongerActiveError(
+                f"Approval batch {expected_batch_id} is no longer waiting on decisions"
+            )
         by_id = {row.tool_call_id: row for row in rows}
         for tool_call_id, submitted in decisions.items():
             row = by_id[tool_call_id]
@@ -1643,7 +1646,7 @@ class AgentSessionService(BaseWorkspaceService):
         self,
         *,
         session_id: uuid.UUID,
-        expected_run_id: uuid.UUID | None,
+        expected_batch_id: uuid.UUID | None,
         decisions: Mapping[str, SubmittedDecision],
         approved_by: uuid.UUID | None,
     ) -> _RecordedDecisions:
@@ -1651,7 +1654,7 @@ class AgentSessionService(BaseWorkspaceService):
         try:
             batch = await self._lock_decided_batch(
                 session_id=session_id,
-                expected_run_id=expected_run_id,
+                expected_batch_id=expected_batch_id,
                 decisions=decisions,
             )
             by_id = {row.tool_call_id: row for row in batch.rows}
@@ -1751,7 +1754,7 @@ class AgentSessionService(BaseWorkspaceService):
         self,
         *,
         session_id: uuid.UUID,
-        expected_run_id: uuid.UUID | None,
+        expected_batch_id: uuid.UUID | None,
         decisions: Mapping[str, SubmittedDecision],
         approved_by: uuid.UUID | None,
     ) -> _AppliedDecisions:
@@ -1765,8 +1768,8 @@ class AgentSessionService(BaseWorkspaceService):
 
         Raises:
             TracecatNotFoundError: If the session or its run is gone.
-            ApprovalNoLongerActiveError: If ``expected_run_id`` is not the
-                current run, or a decision contradicts a recorded one.
+            ApprovalNoLongerActiveError: If ``expected_batch_id`` is not the
+                current run's batch, or a decision contradicts a recorded one.
             ApprovalDecisionInvalidError: If an ID is not an approval of the
                 session.
             AgentControlRejected: If the run refused the decisions. This call's
@@ -1776,7 +1779,7 @@ class AgentSessionService(BaseWorkspaceService):
         """
         recorded = await self._record_decisions(
             session_id=session_id,
-            expected_run_id=expected_run_id,
+            expected_batch_id=expected_batch_id,
             decisions=decisions,
             approved_by=approved_by,
         )
@@ -2703,7 +2706,7 @@ class AgentSessionService(BaseWorkspaceService):
         """
         applied = await self._record_and_apply_decisions(
             session_id=session_id,
-            expected_run_id=None,
+            expected_batch_id=None,
             decisions=self._continuation_decisions(request),
             approved_by=await self._existing_user_id(self.role.user_id),
         )
@@ -2741,7 +2744,7 @@ class AgentSessionService(BaseWorkspaceService):
         try:
             applied = await self._record_and_apply_decisions(
                 session_id=request.session_id,
-                expected_run_id=request.batch_id,
+                expected_batch_id=request.batch_id,
                 decisions={
                     request.tool_call_id: SubmittedDecision(
                         result=approval_result(request.action, reason=request.reason),

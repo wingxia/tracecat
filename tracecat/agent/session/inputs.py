@@ -71,6 +71,8 @@ class MessageInput(AgentSessionInput):
 
 class DecisionInput(AgentSessionInput):
     kind: Literal["decision"] = "decision"
+    # `approval_batch_id` of the paused run and its pause's tool calls, as sent
+    # in `ApprovalPending`; a click from an earlier run or pause does not match.
     batch_id: uuid.UUID
     tool_call_id: str
     action: Literal["approve", "deny"]
