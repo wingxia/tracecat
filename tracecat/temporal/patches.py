@@ -58,6 +58,7 @@ class DurableAgentWorkflowPatch(StrEnum):
     REMINT_SCOPE_TOKENS = "durable-agent-remint-scope-tokens-v1"
     APPROVAL_STREAM_V2 = "durable-agent-approval-stream-v2"
     CHANNEL_DELIVERY = "durable-agent-channel-delivery-v1"
+    CHANNEL_TURN_STARTED = "durable-agent-channel-turn-started-v1"
     APPROVAL_IGNORE_REPEATED_DECISIONS = (
         "durable-agent-approval-ignore-repeated-decisions-v1"
     )

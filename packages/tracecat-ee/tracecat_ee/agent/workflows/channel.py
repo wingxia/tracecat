@@ -21,6 +21,7 @@ with workflow.unsafe.imports_passed_through():
         ChannelNotice,
         DeliverChannelNoticeInput,
         TurnFinished,
+        TurnStarted,
         deliver_channel_notice,
     )
     from tracecat.auth.types import Role
@@ -42,6 +43,16 @@ class ChannelNotifier:
         # Histories recorded before delivery replay without any notice.
         if linked and workflow.patched(DurableAgentWorkflowPatch.CHANNEL_DELIVERY):
             self._run_id = run_id
+
+    async def turn_started(self) -> None:
+        # Gated apart from capture: histories recorded before this notice existed.
+        if self._run_id is None or not workflow.patched(
+            DurableAgentWorkflowPatch.CHANNEL_TURN_STARTED
+        ):
+            return
+        await self._deliver_mid_run(
+            TurnStarted(session_id=self._session_id, run_id=self._run_id)
+        )
 
     async def turn_finished(self) -> None:
         if self._run_id is None:

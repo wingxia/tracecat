@@ -1350,6 +1350,7 @@ class DurableAgentWorkflow:
                 agent_session_initialization_failed(retryable=True)
             )
         self.channel.capture(create_result.channel_thread_linked, curr_run_id)
+        await self.channel.turn_started()
 
         # Build internal tool context for builder assistant sessions
         internal_tool_context: InternalToolContext | None = None

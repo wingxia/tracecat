@@ -19,6 +19,7 @@ from tracecat.agent.delivery import (
     DeliverChannelNoticeInput,
     NoopChannelDeliveryPort,
     TurnFinished,
+    TurnStarted,
     deliver_channel_notice,
     get_channel_delivery_port,
     linked_thread_hint,
@@ -37,6 +38,7 @@ ROLE = Role(
 
 TURN_FINISHED = TurnFinished(session_id=SESSION_ID, run_id=RUN_ID)
 NOTICES: list[ChannelNotice] = [
+    TurnStarted(session_id=SESSION_ID, run_id=RUN_ID),
     TURN_FINISHED,
     ApprovalPending(session_id=SESSION_ID, run_id=RUN_ID, batch_id=BATCH_ID),
     ApprovalDecided(session_id=SESSION_ID, batch_id=BATCH_ID, previous_ref="ts-1"),

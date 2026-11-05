@@ -47,6 +47,13 @@ class ChannelNoticeBase(Variant, discriminator="kind"):
     session_id: uuid.UUID
 
 
+class TurnStarted(ChannelNoticeBase):
+    """A run began work; show the thread that the agent is working."""
+
+    kind: Literal["turn_started"] = "turn_started"
+    run_id: uuid.UUID
+
+
 class TurnFinished(ChannelNoticeBase):
     """A run ended, whatever its outcome.
 
@@ -76,7 +83,8 @@ class ApprovalDecided(ChannelNoticeBase):
 
 
 ChannelNotice = Annotated[
-    TurnFinished | ApprovalPending | ApprovalDecided, Field(discriminator="kind")
+    TurnStarted | TurnFinished | ApprovalPending | ApprovalDecided,
+    Field(discriminator="kind"),
 ]
 
 

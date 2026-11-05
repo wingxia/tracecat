@@ -46,6 +46,7 @@ from tracecat.agent.delivery import (
     ChannelNoticeResult,
     DeliverChannelNoticeInput,
     TurnFinished,
+    TurnStarted,
 )
 from tracecat.agent.executor.activity import AgentExecutorInput, AgentExecutorResult
 from tracecat.agent.schemas import AgentOutput, RunAgentArgs
@@ -255,12 +256,20 @@ async def test_turn_finished_is_delivered_before_the_session_is_released(
         queue,
     )
 
-    assert recorder.order == ["deliver:turn_finished", "finalize_turn"]
+    assert recorder.order == [
+        "deliver:turn_started",
+        "deliver:turn_finished",
+        "finalize_turn",
+    ]
     # The workflow id token doubles as the run id.
-    assert recorder.notices == [TurnFinished(session_id=session_id, run_id=session_id)]
-    assert DurableAgentWorkflowPatch.CHANNEL_DELIVERY in await recorded_patch_ids(
-        temporal_client, history
-    )
+    assert recorder.notices == [
+        TurnStarted(session_id=session_id, run_id=session_id),
+        TurnFinished(session_id=session_id, run_id=session_id),
+    ]
+    assert {
+        DurableAgentWorkflowPatch.CHANNEL_DELIVERY,
+        DurableAgentWorkflowPatch.CHANNEL_TURN_STARTED,
+    } <= set(await recorded_patch_ids(temporal_client, history))
     await replay_durable_agent_workflow_history(temporal_client, history)
 
 
@@ -285,7 +294,12 @@ async def test_failed_delivery_still_releases_the_session(
         queue,
     )
 
-    assert recorder.order == ["deliver:turn_finished", "finalize_turn"]
+    # A failed status still runs the turn.
+    assert recorder.order == [
+        "deliver:turn_started",
+        "deliver:turn_finished",
+        "finalize_turn",
+    ]
 
 
 @pytest.mark.anyio
@@ -312,27 +326,36 @@ async def test_unlinked_session_schedules_no_delivery(
 
 @pytest.mark.anyio
 @pytest.mark.integration
-async def test_history_without_the_patch_never_schedules_delivery(
+@pytest.mark.parametrize(
+    ("patch_id", "order"),
+    [
+        (DurableAgentWorkflowPatch.CHANNEL_DELIVERY, ["finalize_turn"]),
+        (
+            DurableAgentWorkflowPatch.CHANNEL_TURN_STARTED,
+            ["deliver:turn_finished", "finalize_turn"],
+        ),
+    ],
+    ids=["delivery", "turn-started"],
+)
+async def test_history_recorded_before_a_patch_replays_without_it(
     svc_role: Role,
     temporal_client: Client,
     worker_for,
     monkeypatch: pytest.MonkeyPatch,
+    patch_id: str,
+    order: list[str],
 ) -> None:
     session_id = uuid.uuid4()
     queue = f"test-channel-delivery-{session_id}"
     recorder = Recorder()
     patched = temporal_workflow.patched
 
-    # Record history as a pre-patch worker would: no marker, no delivery.
+    # Record history as a worker without the patch would: no marker, no notice.
     with monkeypatch.context() as pre_patch:
         pre_patch.setattr(
             temporal_workflow,
             "patched",
-            lambda patch_id: (
-                False
-                if patch_id == DurableAgentWorkflowPatch.CHANNEL_DELIVERY
-                else patched(patch_id)
-            ),
+            lambda candidate: False if candidate == patch_id else patched(candidate),
         )
         history = await _run_to_completion(
             temporal_client,
@@ -342,11 +365,9 @@ async def test_history_without_the_patch_never_schedules_delivery(
             queue,
         )
 
-    assert recorder.order == ["finalize_turn"]
-    assert DurableAgentWorkflowPatch.CHANNEL_DELIVERY not in await recorded_patch_ids(
-        temporal_client, history
-    )
-    # Current code replays the marker-less history without scheduling delivery.
+    assert recorder.order == order
+    assert patch_id not in await recorded_patch_ids(temporal_client, history)
+    # Current code replays the marker-less history without the notice.
     await replay_durable_agent_workflow_history(temporal_client, history)
 
 
@@ -385,12 +406,13 @@ async def test_approval_notices_carry_the_card_ref(
 
     batch_id = approval_batch_id(session_id, [TOOL_CALL_ID])
     assert recorder.order == [
+        "deliver:turn_started",
         "deliver:approval_pending",
         "deliver:approval_decided",
         "deliver:turn_finished",
         "finalize_turn",
     ]
-    assert recorder.notices[:2] == [
+    assert recorder.notices[1:3] == [
         ApprovalPending(session_id=session_id, run_id=session_id, batch_id=batch_id),
         ApprovalDecided(
             session_id=session_id, batch_id=batch_id, previous_ref="card-1"
