@@ -4,6 +4,7 @@ import os
 import uuid
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from types import SimpleNamespace
 
 import orjson
 import pytest
@@ -33,7 +34,7 @@ from tracecat.secrets.reencrypt import (
     UndecryptableValuesError,
     reencrypt_database,
 )
-from tracecat.secrets.types import ReencryptReport
+from tracecat.secrets.types import EncryptedColumn, ReencryptReport
 
 pytestmark = pytest.mark.usefixtures("db", "env_sandbox")
 
@@ -446,6 +447,72 @@ async def test_dry_run_leaves_callers_transaction_uncommitted(
         )
         is None
     )
+
+
+def _register(monkeypatch: pytest.MonkeyPatch, *columns: EncryptedColumn) -> None:
+    """Install one fake entry point in the encrypted-columns group."""
+    installed = [SimpleNamespace(name="ext", load=lambda: lambda: columns)]
+
+    def fake_entry_points(*, group: str) -> list[SimpleNamespace]:
+        assert group == reencrypt.ENCRYPTED_COLUMNS_ENTRY_POINT_GROUP
+        return installed if columns else []
+
+    monkeypatch.setattr(reencrypt, "entry_points", fake_entry_points)
+
+
+@pytest.mark.anyio
+@pytest.mark.usefixtures("rotate_to_aes")
+async def test_reencrypt_rotates_a_column_an_installed_package_registers(
+    rls_bypass: AsyncSession, monkeypatch: pytest.MonkeyPatch, old_key, new_key, seal
+) -> None:
+    session = rls_bypass
+    (platform,) = (c for c in ENCRYPTED_COLUMNS if c.label == "platform_settings.value")
+    monkeypatch.setattr(
+        reencrypt,
+        "ENCRYPTED_COLUMNS",
+        tuple(c for c in ENCRYPTED_COLUMNS if c is not platform),
+    )
+    _register(monkeypatch, platform)
+    setting = PlatformSetting(
+        key=f"test-registered-{uuid.uuid4().hex}",
+        value=seal(b'"registered"', key=old_key, algorithm=FERNET),
+        value_type="string",
+        is_encrypted=True,
+    )
+    session.add(setting)
+    await session.commit()
+
+    reports = await reencrypt_database(session, key=new_key)
+
+    assert {r.target: r for r in reports}["platform_settings.value"].rewritten >= 1
+    monkeypatch.setattr(config, "TRACECAT__DB_ENCRYPTION_PREVIOUS_KEYS", ())
+    await session.refresh(setting)
+    decrypted = decrypt_token(setting.value, key=new_key)
+    assert decrypted.plaintext == b'"registered"'
+    assert is_current(decrypted, key=new_key)
+
+
+@pytest.mark.anyio
+@pytest.mark.usefixtures("rotate_to_aes")
+async def test_reencrypt_covers_only_built_in_columns_when_none_are_registered(
+    rls_bypass: AsyncSession, monkeypatch: pytest.MonkeyPatch, new_key
+) -> None:
+    _register(monkeypatch)
+
+    reports = await reencrypt_database(rls_bypass, key=new_key, dry_run=True)
+
+    assert [r.target for r in reports] == [
+        t.label for t in (*ENCRYPTED_COLUMNS, *ENCRYPTED_JSON_FIELDS)
+    ]
+
+
+def test_registered_columns_must_be_encrypted_columns(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _register(monkeypatch, Secret.encrypted_keys)  # pyright: ignore[reportArgumentType]
+
+    with pytest.raises(TypeError, match="ext"):
+        reencrypt.load_registered_columns()
 
 
 def test_cli_database_error_reports_type_without_ciphertext(

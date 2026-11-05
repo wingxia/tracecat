@@ -18,6 +18,7 @@ import argparse
 import asyncio
 import sys
 from collections.abc import AsyncIterator, Sequence
+from importlib.metadata import entry_points
 from typing import Any, Final
 
 from cryptography.fernet import InvalidToken
@@ -62,6 +63,7 @@ from tracecat.secrets.types import (
 )
 
 DEFAULT_BATCH_SIZE: Final[int] = 200
+ENCRYPTED_COLUMNS_ENTRY_POINT_GROUP: Final[str] = "tracecat.encrypted_columns"
 
 
 ENCRYPTED_COLUMNS: Final[tuple[EncryptedColumn, ...]] = (
@@ -96,6 +98,26 @@ ENCRYPTED_JSON_FIELDS: Final[tuple[EncryptedJSONFields, ...]] = (
     ),
 )
 """Every JSONB column holding DB-encrypted values inside its fields."""
+
+
+def load_registered_columns() -> tuple[EncryptedColumn, ...]:
+    """Encrypted columns installed packages register for the sweep.
+
+    Each entry point names a zero-argument callable returning ``EncryptedColumn``s.
+    """
+    columns: list[EncryptedColumn] = []
+    installed = sorted(
+        entry_points(group=ENCRYPTED_COLUMNS_ENTRY_POINT_GROUP), key=lambda ep: ep.name
+    )
+    for entry in installed:
+        registered = tuple(entry.load()())
+        if not all(isinstance(column, EncryptedColumn) for column in registered):
+            raise TypeError(
+                f"{ENCRYPTED_COLUMNS_ENTRY_POINT_GROUP} entry point {entry.name!r} "
+                "returned a non-EncryptedColumn"
+            )
+        columns.extend(registered)
+    return tuple(columns)
 
 
 class UndecryptableValuesError(Exception):
@@ -222,9 +244,9 @@ async def _process_json_fields(
 
 
 async def _process_all(
-    session: AsyncSession, run: ReencryptPass
+    session: AsyncSession, columns: Sequence[EncryptedColumn], run: ReencryptPass
 ) -> list[ReencryptReport]:
-    reports = [await _process_column(session, c, run) for c in ENCRYPTED_COLUMNS]
+    reports = [await _process_column(session, c, run) for c in columns]
     for target in ENCRYPTED_JSON_FIELDS:
         reports.append(await _process_json_fields(session, target, run))
     return reports
@@ -256,8 +278,10 @@ async def reencrypt_database(
     """
     if batch_size < 1:
         raise ValueError("batch_size must be at least 1")
+    columns = (*ENCRYPTED_COLUMNS, *load_registered_columns())
     scan = await _process_all(
         session,
+        columns,
         ReencryptPass(
             key=key, write=False, skip_undecryptable=True, batch_size=batch_size
         ),
@@ -268,6 +292,7 @@ async def reencrypt_database(
         raise UndecryptableValuesError(scan)
     return await _process_all(
         session,
+        columns,
         ReencryptPass(
             key=key,
             write=True,
