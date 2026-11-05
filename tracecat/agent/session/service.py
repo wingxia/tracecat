@@ -2880,7 +2880,7 @@ class AgentSessionService(BaseWorkspaceService):
                 await self._start_new_turn(
                     agent_session,
                     user_prompt=input.text,
-                    request_instructions=None,
+                    request_instructions=input.instructions,
                     page_context=None,
                     is_first_prompt=None,
                     run_id=run_id,

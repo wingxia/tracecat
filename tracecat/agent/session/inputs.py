@@ -67,6 +67,8 @@ class AgentSessionInput(Variant, discriminator="kind"):
 class MessageInput(AgentSessionInput):
     kind: Literal["message"] = "message"
     text: str
+    # Model-only context for a new turn; a steer into a running turn carries only `text`.
+    instructions: str | None = None
 
 
 class DecisionInput(AgentSessionInput):
