@@ -81,6 +81,12 @@ target_metadata = models.Base.metadata
 # ... etc.
 
 
+def include_name(name: str | None, type_: str, parent_names: object) -> bool:
+    # Skip tables with no model so autogenerate never drops tables Tracecat
+    # does not own; dropping a removed model's table needs a hand-written op.
+    return type_ != "table" or name in target_metadata.tables
+
+
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode."""
     context.configure(
@@ -121,6 +127,7 @@ def run_migrations_online() -> None:
             connection=connection,
             target_metadata=target_metadata,
             version_table_schema="public",
+            include_name=include_name,
         )
         # After configure(): alembic must see the connection's first transaction.
         pin_migration_search_path(connection)

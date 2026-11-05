@@ -742,12 +742,12 @@ def _print_upgrade(result: UpgradeResult) -> None:
 
 
 def _alembic_upgrade(db_uri: str | None) -> int:
-    """Run ``alembic upgrade head``, as ``db_uri`` when given."""
+    """Run ``alembic upgrade head`` and extension chains, as ``db_uri`` when given."""
     env = os.environ.copy()
     if db_uri is not None:
         # alembic/env.py prefers TRACECAT__DB_URI over the user/password settings.
         env["TRACECAT__DB_URI"] = db_uri
-    cmd = [sys.executable, "-m", "alembic", "upgrade", "head"]
+    cmd = [sys.executable, "-m", "tracecat.db.migrate"]
     return subprocess.run(cmd, env=env, check=False).returncode
 
 

@@ -24,6 +24,7 @@ from tracecat.db.engine import (
     get_async_session_auth,
     get_async_session_auth_context_manager,
     get_async_session_bypass_rls,
+    get_db_uri,
     reset_async_engine,
 )
 from tracecat.db.exceptions import (
@@ -64,7 +65,7 @@ def test_get_db_uri_logs_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
     )
     try:
         with pytest.raises(UnicodeDecodeError):
-            _get_db_uri()
+            get_db_uri()
     finally:
         logger.remove(sink_id)
 
@@ -72,6 +73,10 @@ def test_get_db_uri_logs_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
         "SecretBinary must be UTF-8 encoded text or JSON." in message
         for message in messages
     )
+
+
+def test_private_get_db_uri_alias_still_resolves() -> None:
+    assert _get_db_uri is get_db_uri
 
 
 @pytest.mark.anyio

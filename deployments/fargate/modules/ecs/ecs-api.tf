@@ -18,7 +18,7 @@ resource "aws_ecs_task_definition" "api_task_definition" {
       name      = "TracecatApiMigrationsContainer"
       image     = "${local.tracecat_migrations_image}:${local.tracecat_migrations_image_tag}"
       essential = false
-      command   = ["python3", "-m", "alembic", "upgrade", "head"]
+      command   = ["python3", "-m", "tracecat.db.migrate"]
       logConfiguration = {
         logDriver = "awslogs"
         options = {

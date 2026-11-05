@@ -172,7 +172,7 @@ def get_connection_string(
     return base
 
 
-def _get_db_uri(driver: Literal["psycopg", "asyncpg"] = "psycopg") -> str:
+def get_db_uri(driver: Literal["psycopg", "asyncpg"] = "psycopg") -> str:
     # Check if AWS environment
     if config.TRACECAT__DB_PASS__ARN:
         logger.info("Retrieving database password from AWS Secrets Manager...")
@@ -284,9 +284,13 @@ def _get_db_uri(driver: Literal["psycopg", "asyncpg"] = "psycopg") -> str:
     return uri
 
 
+# Extension migration envs still import the private name.
+_get_db_uri = get_db_uri
+
+
 def _create_async_db_engine() -> AsyncEngine:
     # Postgres as default
-    uri = _get_db_uri(driver="asyncpg")
+    uri = get_db_uri(driver="asyncpg")
     engine = create_async_engine(
         uri,
         max_overflow=config.TRACECAT__DB_MAX_OVERFLOW,
@@ -313,7 +317,7 @@ def _create_async_auth_db_engine() -> AsyncEngine:
     lookups separately from request-scoped work. This is not a privilege
     boundary: both engines use the same database role and RLS session settings.
     """
-    uri = _get_db_uri(driver="asyncpg")
+    uri = get_db_uri(driver="asyncpg")
     return create_async_engine(
         uri,
         max_overflow=config.TRACECAT__DB_AUTH_MAX_OVERFLOW,
