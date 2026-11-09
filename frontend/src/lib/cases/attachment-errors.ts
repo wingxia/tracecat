@@ -51,10 +51,10 @@ export function describeAttachmentUploadError(
   fileName: string
 ): AttachmentUploadErrorToast {
   if (!isApiError(error)) {
-    const message = error instanceof Error ? error.message : "Unknown error"
+    const message = error instanceof Error ? error.message : "未知错误"
     return {
-      title: "Upload failed",
-      description: `Failed to upload ${fileName}. ${message}`,
+      title: "上传失败",
+      description: `上传 ${fileName} 失败。${message}`,
     }
   }
 
@@ -64,59 +64,56 @@ export function describeAttachmentUploadError(
   switch (detailObject?.error) {
     case "unsupported_file_extension":
       return {
-        title: "File type not supported",
-        description: `${fileName} cannot be uploaded. Allowed file types: ${
+        title: "不支持此文件类型",
+        description: `无法上传 ${fileName}。允许的文件类型：${
           detailObject.allowed_extensions?.join(", ") ||
           "txt, pdf, png, jpeg, gif, csv"
         }`,
       }
     case "unsupported_content_type":
       return {
-        title: "Content type not supported",
-        description: `${fileName} has an unsupported content type. Please try a different file type.`,
+        title: "不支持此内容类型",
+        description: `${fileName} 的内容类型不受支持，请尝试其他文件类型。`,
       }
     case "file_too_large":
       return {
-        title: "File too large",
-        description: `${fileName} is too large to upload. ${
-          detailObject.message || "Please choose a smaller file."
-        }`,
+        title: "文件过大",
+        description: `${fileName} 过大，无法上传。${detailObject.message || "请选择较小的文件。"}`,
       }
     case "storage_limit_exceeded": {
-      let description = `Adding ${fileName} would exceed the case storage limit.`
+      let description = `添加 ${fileName} 将超出事件存储限额。`
       if (
         detailObject.current_size_mb &&
         detailObject.new_file_size_mb &&
         detailObject.max_size_mb
       ) {
-        description = `Adding ${fileName} (${detailObject.new_file_size_mb}MB) would exceed the case storage limit. Current usage: ${detailObject.current_size_mb}MB of ${detailObject.max_size_mb}MB allowed.`
+        description = `添加 ${fileName}（${detailObject.new_file_size_mb}MB）将超出事件存储限额。目前已使用 ${detailObject.current_size_mb}MB，限额为 ${detailObject.max_size_mb}MB。`
       }
       return {
-        title: "Case storage limit exceeded",
-        description: `${description} Please remove some attachments or choose a smaller file.`,
+        title: "超出事件存储限制",
+        description: `${description} 请移除部分附件或选择较小的文件。`,
       }
     }
     case "max_attachments_exceeded": {
-      let description =
-        "This case already has the maximum number of attachments allowed."
+      let description = "此事件的附件数量已达到上限。"
       if (detailObject.current_count && detailObject.max_count) {
-        description = `This case already has ${detailObject.current_count} of ${detailObject.max_count} attachments allowed.`
+        description = `此事件已有 ${detailObject.current_count} 个附件，上限为 ${detailObject.max_count} 个。`
       }
       return {
-        title: "Too many attachments",
-        description: `${description} Please remove some attachments before adding new ones.`,
+        title: "附件过多",
+        description: `${description} 请先移除部分附件，再添加新附件。`,
       }
     }
     case "file_validation_failed":
       return {
-        title: "File validation failed",
-        description: `${fileName} failed validation. Please check the file and try again.`,
+        title: "文件校验失败",
+        description: `${fileName} 未通过校验，请检查文件后重试。`,
       }
     default:
       break
   }
 
-  let message = error.message || "Unknown error"
+  let message = error.message || "未知错误"
   if (detail) {
     message =
       typeof detail === "string"
@@ -124,7 +121,7 @@ export function describeAttachmentUploadError(
         : detail.message || JSON.stringify(detail)
   }
   return {
-    title: "Upload failed",
-    description: `Failed to upload ${fileName}. ${message}`,
+    title: "上传失败",
+    description: `上传 ${fileName} 失败。${message}`,
   }
 }

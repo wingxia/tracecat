@@ -250,7 +250,7 @@ export function AgentTurn({
   const endedAt = times.length > 0 ? Math.max(...times) : null
   const title =
     startedAt !== null && endedAt !== null && endedAt > startedAt
-      ? `Worked for ${formatDuration(endedAt - startedAt)}`
+      ? `已工作 ${formatDuration(endedAt - startedAt)}`
       : "Worked"
   return (
     <>

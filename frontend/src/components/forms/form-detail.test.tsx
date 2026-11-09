@@ -103,11 +103,11 @@ function renderDetail() {
 }
 
 const editor = () => screen.getByLabelText("Form config")
-const saveButton = () => screen.getByRole("button", { name: "Save" })
+const saveButton = () => screen.getByRole("button", { name: "保存" })
 const edit = (text: string) =>
   fireEvent.change(editor(), { target: { value: text } })
 async function previewTitle(name: string) {
-  const pane = await screen.findByRole("region", { name: "Preview" })
+  const pane = await screen.findByRole("region", { name: "预览" })
   return within(pane).findByRole("heading", { name }, { timeout: 3000 })
 }
 
@@ -191,14 +191,14 @@ describe("FormDetail config", () => {
     edit("layout:\n  - field: model\n    widget: cards\n")
     await user.click(saveButton())
     expect(
-      await screen.findByRole("button", { name: "1 error blocks saving" })
+      await screen.findByRole("button", { name: "1 个错误阻止保存" })
     ).toBeInTheDocument()
     expect(editor()).toHaveValue(
       "layout:\n  - field: model\n    widget: cards\n"
     )
 
     edit("# Renamed\ntitle: Order\n")
-    expect(screen.getByText("Unsaved changes")).toBeInTheDocument()
+    expect(screen.getByText("未保存的更改")).toBeInTheDocument()
     await user.click(saveButton())
     // The server stores JSON, so the comment does not come back.
     await waitFor(() => expect(editor()).toHaveValue("title: Order\n"))
@@ -222,13 +222,13 @@ describe("FormDetail config", () => {
     expect(
       await screen.findByRole(
         "button",
-        { name: "1 error blocks saving" },
+        { name: "1 个错误阻止保存" },
         { timeout: 3000 }
       )
     ).toBeInTheDocument()
     expect(saveButton()).toBeDisabled()
-    const pane = screen.getByRole("region", { name: "Preview" })
-    expect(pane).toHaveTextContent("Showing the last valid config")
+    const pane = screen.getByRole("region", { name: "预览" })
+    expect(pane).toHaveTextContent("正在显示上次有效的配置")
     expect(
       within(pane)
         .getByRole("heading", { name: "Laptop request" })
@@ -264,7 +264,7 @@ describe("FormDetail config", () => {
       )
     )
     expect(
-      await screen.findByText(/This form changed elsewhere/)
+      await screen.findByText(/此表单已在其他位置更改/)
     ).toBeInTheDocument()
     expect(editor()).toHaveValue("title: Mine\n")
     expect(saveButton()).toBeDisabled()
@@ -314,7 +314,7 @@ describe("FormDetail config", () => {
       })
     )
     expect(
-      await screen.findByText(/This form changed elsewhere/)
+      await screen.findByText(/此表单已在其他位置更改/)
     ).toBeInTheDocument()
     expect(editor()).toHaveValue("title: Mine\n")
 
@@ -334,9 +334,9 @@ describe("FormDetail config", () => {
 
     const { user } = renderDetail()
     await waitFor(() => expect(editor()).toHaveValue("title: Half done\n"))
-    expect(screen.getByText(/Unsaved draft restored/)).toBeInTheDocument()
+    expect(screen.getByText(/已恢复未保存的草稿/)).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: "Discard draft" }))
+    await user.click(screen.getByRole("button", { name: "放弃草稿" }))
     expect(editor()).toHaveValue(SAVED_YAML)
     cleanup()
     renderDetail()
@@ -350,7 +350,7 @@ describe("FormDetail config", () => {
     expect(
       await screen.findByRole(
         "button",
-        { name: "1 error blocks saving" },
+        { name: "1 个错误阻止保存" },
         { timeout: 3000 }
       )
     ).toBeInTheDocument()
@@ -362,7 +362,7 @@ describe("FormDetail config", () => {
     expect(
       await screen.findByRole(
         "button",
-        { name: "1 error blocks saving" },
+        { name: "1 个错误阻止保存" },
         { timeout: 3000 }
       )
     ).toBeInTheDocument()
@@ -375,7 +375,7 @@ describe("FormDetail config", () => {
 
     expect(await previewTitle("Laptop request")).toBeInTheDocument()
     expect(editor()).toHaveAttribute("readonly")
-    expect(screen.queryByRole("button", { name: "Save" })).toBeNull()
+    expect(screen.queryByRole("button", { name: "保存" })).toBeNull()
     expect(screen.queryByRole("button", { name: "Insert image" })).toBeNull()
   })
 })
@@ -441,24 +441,22 @@ describe("FormDetail activity", () => {
     expect(await screen.findByText("Maya Okafor")).toBeInTheDocument()
     expect(screen.getByText("311")).toBeInTheDocument()
     expect(screen.getByText("42")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "Run" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "运行" })).toHaveAttribute(
       "href",
       "/workspaces/workspace-1/workflows/wf_3KbAYlkEEToril859NNEOb/executions/exec_2a"
     )
-    await user.click(
-      screen.getByRole("button", { name: "Show answers of FRM-8F3K2A1C" })
-    )
+    await user.click(screen.getByRole("button", { name: "显示 FRM-8F3K2A1C" }))
 
     const answerOf = (term: string) =>
       screen.getByText(term, { selector: "dt" }).nextElementSibling
     // Labels come from the preview; inputs with no field keep their name.
     await waitFor(() => expect(answerOf("Model")).toHaveTextContent("mbp14"))
-    expect(answerOf("ship_to_home")).toHaveTextContent("Yes")
+    expect(answerOf("ship_to_home")).toHaveTextContent("是")
     expect(answerOf("manager")).toHaveTextContent(
       "Daniel Reyes (daniel.reyes@example.com)"
     )
 
-    await user.click(screen.getByRole("button", { name: "Download quote.pdf" }))
+    await user.click(screen.getByRole("button", { name: "下载 quote.pdf" }))
     await waitFor(() =>
       expect(clicked).toEqual([
         "https://storage.example.com/file-1?signature=x",
@@ -477,8 +475,8 @@ describe("FormDetail activity", () => {
 
     renderDetail()
 
-    expect(await screen.findByText("Run")).toBeInTheDocument()
-    expect(screen.queryByRole("link", { name: "Run" })).toBeNull()
+    expect(await screen.findByText("运行")).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: "运行" })).toBeNull()
   })
 
   it("asks for no submissions without form:submission:read", async () => {
@@ -486,9 +484,7 @@ describe("FormDetail activity", () => {
 
     renderDetail()
 
-    expect(
-      await screen.findByText("No access to submissions")
-    ).toBeInTheDocument()
+    expect(await screen.findByText("无权访问提交记录")).toBeInTheDocument()
     expect(formsListFormSubmissions).not.toHaveBeenCalled()
   })
 })

@@ -70,23 +70,23 @@ import { cn } from "@/lib/utils"
 const ORG_WIDE = "org-wide"
 
 const inviteFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("邮箱地址无效"),
   group_ids: z.array(z.string()),
   grants: z
     .array(
       z.object({
-        scope: z.string().min(1, "Select a scope"),
-        role_id: z.string().uuid("Select a role"),
+        scope: z.string().min(1, "选择权限范围"),
+        role_id: z.string().uuid("选择角色"),
       })
     )
-    .min(1, "Add at least one role grant")
+    .min(1, "至少添加一个角色授权")
     .superRefine((grants, ctx) => {
       const seen = new Set<string>()
       grants.forEach((grant, index) => {
         if (seen.has(grant.scope)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "This scope already has a grant",
+            message: "此范围已有授权",
             path: [index, "scope"],
           })
         }
@@ -184,10 +184,9 @@ function InviteMemberForm({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Invite member</DialogTitle>
+        <DialogTitle>邀请成员</DialogTitle>
         <DialogDescription>
-          Send an invitation to join this organization. Each grant assigns a
-          role organization-wide or on a single workspace.
+          发送加入此组织的邀请。每项授权会在整个组织或单个工作空间中分配角色。
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -199,7 +198,7 @@ function InviteMemberForm({
             {warning && (
               <Alert variant="warning">
                 <TriangleAlertIcon className="size-4" />
-                <AlertTitle>Invitation created</AlertTitle>
+                <AlertTitle>已创建邀请</AlertTitle>
                 <AlertDescription>{warning}</AlertDescription>
               </Alert>
             )}
@@ -208,7 +207,7 @@ function InviteMemberForm({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>邮箱</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="user@example.com"
@@ -216,9 +215,7 @@ function InviteMemberForm({
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    The email address of the person to invite.
-                  </FormDescription>
+                  <FormDescription>受邀人的邮箱地址。</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -229,7 +226,7 @@ function InviteMemberForm({
                 name="group_ids"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Groups</FormLabel>
+                    <FormLabel>用户组</FormLabel>
                     <InviteGroupsPicker
                       value={field.value}
                       onChange={field.onChange}
@@ -240,7 +237,7 @@ function InviteMemberForm({
               />
             )}
             <div className="space-y-2">
-              <Label>Role grants</Label>
+              <Label>角色授权</Label>
               <div className="space-y-2">
                 {fields.map((field, index) => {
                   const scope = grantValues?.[index]?.scope ?? ORG_WIDE
@@ -264,9 +261,9 @@ function InviteMemberForm({
                             >
                               <FormControl>
                                 <SelectTrigger
-                                  aria-label={`Grant ${index + 1} scope`}
+                                  aria-label={`授予第 ${index + 1} 项权限范围`}
                                 >
-                                  <SelectValue placeholder="Scope" />
+                                  <SelectValue placeholder={"范围"} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -279,7 +276,7 @@ function InviteMemberForm({
                                 >
                                   <div className="flex min-w-0 items-center gap-2">
                                     <GlobeIcon className="size-4 shrink-0 text-blue-500" />
-                                    Organization-wide
+                                    整个组织
                                   </div>
                                 </SelectItem>
                                 {workspaces?.map((workspace) => (
@@ -314,9 +311,9 @@ function InviteMemberForm({
                             >
                               <FormControl>
                                 <SelectTrigger
-                                  aria-label={`Grant ${index + 1} role`}
+                                  aria-label={`授予第 ${index + 1} 项角色`}
                                 >
-                                  <SelectValue placeholder="Select a role" />
+                                  <SelectValue placeholder={"选择角色"} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -338,7 +335,7 @@ function InviteMemberForm({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        aria-label={`Remove grant ${index + 1}`}
+                        aria-label={`移除第 ${index + 1} 项授权`}
                         disabled={fields.length === 1}
                         onClick={() => remove(index)}
                         className="col-start-2 row-start-1 text-muted-foreground hover:text-foreground sm:col-start-3"
@@ -362,7 +359,7 @@ function InviteMemberForm({
                 onClick={() => append({ scope: "", role_id: "" })}
               >
                 <PlusIcon className="mr-2 size-4" />
-                Add grant
+                添加授权
               </Button>
             </div>
           </DialogBody>
@@ -372,7 +369,7 @@ function InviteMemberForm({
               type="submit"
               disabled={createInvitationIsPending}
             >
-              {createInvitationIsPending ? "Sending..." : "Send invitation"}
+              {createInvitationIsPending ? "发送中…" : "发送邀请"}
             </Button>
           </DialogFooter>
         </form>
@@ -423,7 +420,7 @@ function InviteGroupsPicker({
             )}
           >
             {selected.length === 0 ? (
-              <span>Select groups</span>
+              <span>选择用户组</span>
             ) : (
               <span className="flex min-w-0 flex-wrap gap-1">
                 {selected.map((group) => (
@@ -447,9 +444,9 @@ function InviteGroupsPicker({
         className="w-[var(--radix-popover-trigger-width)] p-0"
       >
         <Command>
-          <CommandInput placeholder="Search groups" className="text-sm" />
+          <CommandInput placeholder={"搜索用户组"} className="text-sm" />
           <CommandList>
-            <CommandEmpty>No groups found.</CommandEmpty>
+            <CommandEmpty>未找到用户组。</CommandEmpty>
             <CommandGroup>
               {options.map((group) => (
                 <CommandItem
@@ -486,7 +483,7 @@ export function InviteMemberDialogButton() {
     <>
       <Button size="sm" onClick={() => setOpen(true)}>
         <PlusIcon className="mr-2 size-4" />
-        Invite member
+        邀请成员
       </Button>
       <InviteMemberDialog open={open} onOpenChange={setOpen} />
     </>

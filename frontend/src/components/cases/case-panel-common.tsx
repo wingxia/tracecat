@@ -124,15 +124,15 @@ export function CaseEventTimestamp({
           <span className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
             {showIcon && <Clock className="h-3 w-3 flex-shrink-0" />}
             {shortTimeAgo(createdAtDate)}
-            {lastEditedAt && <span className="ml-1">(edited)</span>}
+            {lastEditedAt && <span className="ml-1">（已编辑）</span>}
           </span>
         </TooltipTrigger>
         <TooltipContent>
-          {createdAtDate.toLocaleString()}
+          {createdAtDate.toLocaleString("zh-CN")}
           {lastEditedAtDate && (
             <>
               <br />
-              Edited: {lastEditedAtDate.toLocaleString()}
+              编辑时间： {lastEditedAtDate.toLocaleString("zh-CN")}
             </>
           )}
         </TooltipContent>

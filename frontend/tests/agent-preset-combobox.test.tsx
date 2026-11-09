@@ -69,7 +69,7 @@ it("searches presets by slug and writes the slug", async () => {
   render(<TestField />)
   await user.click(screen.getByRole("combobox"))
   await user.type(
-    screen.getByPlaceholderText("Search agent presets..."),
+    screen.getByPlaceholderText("搜索智能体预设…"),
     "searchable-slug"
   )
   await user.click(screen.getByRole("option", { name: /Second preset/ }))
@@ -81,9 +81,7 @@ it("searches presets by slug and writes the slug", async () => {
 
 it("shows an unknown saved slug with a not-found hint", () => {
   render(<TestField value="removed-preset" />)
-  expect(screen.getByRole("combobox")).toHaveTextContent(
-    "removed-presetNot found"
-  )
+  expect(screen.getByRole("combobox")).toHaveTextContent("removed-preset未找到")
 })
 
 it("highlights the selected preset when the list is opened", async () => {

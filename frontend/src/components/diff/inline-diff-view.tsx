@@ -34,14 +34,12 @@ export interface InlineDiffViewProps {
  */
 const MAX_RENDERABLE_DIFF_CHARS = 1_000_000
 
-const NOT_PREVIEWABLE_COPY = "This file is not previewable inline."
-const BOTH_ABSENT_COPY =
-  "This file does not exist in the draft or in this version."
-const ADDED_BY_VERSION_COPY = "Restoring this version adds this file."
-const REMOVED_BY_VERSION_COPY = "Restoring this version removes this file."
-const IDENTICAL_COPY =
-  "No changes. Restoring this version leaves this file unchanged."
-const TOO_LARGE_COPY = "This file is too large to compare."
+const NOT_PREVIEWABLE_COPY = "此文件无法在线预览。"
+const BOTH_ABSENT_COPY = "此文件在草稿和所选版本中均不存在。"
+const ADDED_BY_VERSION_COPY = "恢复此版本将添加此文件。"
+const REMOVED_BY_VERSION_COPY = "恢复此版本将移除此文件。"
+const IDENTICAL_COPY = "没有更改，恢复此版本时此文件保持不变。"
+const TOO_LARGE_COPY = "此文件过大，无法比较。"
 
 /** Diff of one document section, after the prose-to-unified fallback. */
 type ContentView =
@@ -122,14 +120,12 @@ export function InlineDiffView({
         <div className={cn("flex min-w-0 flex-col gap-4", className)}>
           <section className="flex min-w-0 flex-col gap-2">
             <h3 className="text-xs font-medium text-muted-foreground">
-              Frontmatter
+              元数据
             </h3>
             <UnifiedDiff rows={model.frontmatterRows} />
           </section>
           <section className="flex min-w-0 flex-col gap-2">
-            <h3 className="text-xs font-medium text-muted-foreground">
-              Content
-            </h3>
+            <h3 className="text-xs font-medium text-muted-foreground">内容</h3>
             <ContentDiff content={model.body} />
           </section>
         </div>
@@ -265,7 +261,7 @@ function OpenFileButton({ downloadUrl }: { downloadUrl: string }) {
   return (
     <Button asChild size="sm" variant="outline">
       <Link href={downloadUrl} target="_blank" rel="noreferrer">
-        Open file
+        打开文件
       </Link>
     </Button>
   )

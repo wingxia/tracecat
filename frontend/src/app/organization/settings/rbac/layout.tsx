@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Access control | Organization",
+  title: "访问控制 | 组织",
 }
 
 export default function RbacLayout({

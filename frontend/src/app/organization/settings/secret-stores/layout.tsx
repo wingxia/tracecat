@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Secret stores | Organization",
+  title: "密钥存储 | 组织",
 }
 
 export default function SecretStoresLayout({

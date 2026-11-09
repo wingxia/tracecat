@@ -108,33 +108,33 @@ export function SkillLibrarySkillActions({ slug }: { slug: string }) {
           onClick={handleFork}
         >
           <GitForkIcon className="mr-1 size-3.5" />
-          Fork
+          创建分支副本
         </Button>
       ) : null}
       {librarySkill.installed && canDelete ? (
         <SkillLibraryActionButton
-          label="Uninstall"
+          label={"卸载"}
           disabled={isMutating}
           onAction={() => run(() => uninstallLibrarySkill(slug))}
           onCreateAgent={onCreateAgent}
-          createAgentLabel="Create agent with this skill"
+          createAgentLabel="使用此技能创建智能体"
         />
       ) : null}
       {librarySkill.installed && !canDelete && onCreateAgent ? (
         <SkillLibraryActionButton
-          label="Create agent"
+          label={"创建智能体"}
           disabled={isMutating}
           onAction={onCreateAgent}
-          createAgentLabel="Create agent with this skill"
+          createAgentLabel="使用此技能创建智能体"
         />
       ) : null}
       {!librarySkill.installed && canCreate ? (
         <SkillLibraryActionButton
-          label="Install"
+          label={"安装"}
           disabled={isMutating}
           onAction={() => run(() => installLibrarySkill(slug))}
           onCreateAgent={onCreateAgent}
-          createAgentLabel="Create agent with this skill"
+          createAgentLabel="使用此技能创建智能体"
         />
       ) : null}
       <CreateAgentDialog
@@ -188,8 +188,8 @@ export function SkillLibrarySkillView({ slug }: { slug: string }) {
         level="error"
         message={
           librarySkillError
-            ? `Error loading library skill: ${librarySkillError.message}`
-            : "This skill is not in the skill library."
+            ? `加载库技能出错：${librarySkillError.message}`
+            : "此技能不在技能库中。"
         }
       />
     )
@@ -203,7 +203,7 @@ export function SkillLibrarySkillView({ slug }: { slug: string }) {
     <div className="flex size-full min-h-0">
       <aside className="flex w-60 shrink-0 flex-col border-r">
         <div className="flex h-8 items-center border-b px-3 text-xs text-muted-foreground">
-          Files
+          文件
         </div>
         <div className="min-h-0 flex-1 overflow-auto p-1">
           <SkillFileTree
@@ -221,7 +221,7 @@ export function SkillLibrarySkillView({ slug }: { slug: string }) {
           </span>
           <span className="flex items-center gap-1 text-muted-foreground">
             <LockIcon className="size-3" />
-            Read-only · fork to edit
+            只读 · 创建分支副本后编辑
           </span>
         </div>
         <div className="min-h-0 flex-1 overflow-auto p-4">
@@ -255,7 +255,7 @@ function SkillManifestPreview({
     <>
       {source ? (
         <section className="flex flex-col gap-2">
-          <h3 className="text-sm font-medium">Source</h3>
+          <h3 className="text-sm font-medium">来源</h3>
           <div className="flex items-center gap-3.5 rounded-lg border p-4">
             <SkillLibraryProviderIcon
               providerSlug={libraryProviderSlug(sourceName)}
@@ -276,7 +276,7 @@ function SkillManifestPreview({
               ) : null}
               {!source.repo && source.group && source.provider ? (
                 <span className="text-xs text-muted-foreground">
-                  Maintained by {source.provider}
+                  维护者 {source.provider}
                 </span>
               ) : null}
             </div>
@@ -285,17 +285,15 @@ function SkillManifestPreview({
       ) : null}
       <section className="flex flex-col gap-2">
         <div>
-          <h3 className="text-sm font-medium">Frontmatter</h3>
+          <h3 className="text-sm font-medium">元数据</h3>
           <p className="text-xs text-muted-foreground">
-            Metadata the agent uses to discover this skill.
+            智能体用于发现此技能的元数据。
           </p>
         </div>
         <dl className="grid grid-cols-[120px_minmax(0,1fr)] rounded-md border text-xs">
-          <dt className="px-3 py-2 text-muted-foreground">name</dt>
+          <dt className="px-3 py-2 text-muted-foreground">名称</dt>
           <dd className="px-3 py-2 font-mono">{skill.slug}</dd>
-          <dt className="border-t px-3 py-2 text-muted-foreground">
-            description
-          </dt>
+          <dt className="border-t px-3 py-2 text-muted-foreground">描述</dt>
           <dd className="border-t px-3 py-2 leading-relaxed">
             {skill.description ?? parsed?.description ?? ""}
           </dd>
@@ -303,10 +301,9 @@ function SkillManifestPreview({
       </section>
       <section className="flex flex-col gap-2">
         <div>
-          <h3 className="text-sm font-medium">Instructions</h3>
+          <h3 className="text-sm font-medium">指令</h3>
           <p className="text-xs text-muted-foreground">
-            Workflow, examples, and references the agent loads when the skill is
-            triggered.
+            技能被触发时，智能体加载的工作流、示例和参考资料。
           </p>
         </div>
         <article className="rounded-md border px-5 py-4 text-sm">
@@ -320,9 +317,7 @@ function SkillManifestPreview({
 function FilePreview({ content }: { content: string | null }) {
   if (content === null) {
     return (
-      <p className="text-sm text-muted-foreground">
-        Binary file; no preview available.
-      </p>
+      <p className="text-sm text-muted-foreground">二进制文件，无法预览。</p>
     )
   }
   return (

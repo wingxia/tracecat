@@ -26,7 +26,7 @@ export function WatchtowerSidebar({
 
   const navMain = [
     {
-      title: "Monitor",
+      title: "监控",
       url: "/watchtower/monitor",
       icon: RadarIcon,
       isActive: pathname?.includes("/watchtower/monitor"),
@@ -41,7 +41,7 @@ export function WatchtowerSidebar({
             <SidebarMenuButton asChild>
               <Link href="/workspaces" className="text-muted-foreground">
                 <ChevronLeftIcon />
-                <span>Back to workspaces</span>
+                <span>返回工作空间列表</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -68,9 +68,9 @@ export function WatchtowerSidebar({
                   className="text-muted-foreground hover:bg-transparent"
                 >
                   <SearchIcon />
-                  <span>Detect</span>
+                  <span>检测</span>
                 </SidebarMenuButton>
-                <SidebarMenuBadge>Soon</SidebarMenuBadge>
+                <SidebarMenuBadge>即将推出</SidebarMenuBadge>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

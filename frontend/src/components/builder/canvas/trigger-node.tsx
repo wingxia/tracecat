@@ -233,7 +233,7 @@ export default React.memo(function TriggerNode({
                 </CardTitle>
                 {style.showContent && (
                   <CardDescription className="mt-2 text-xs text-muted-foreground">
-                    Workflow trigger
+                    工作流触发器
                   </CardDescription>
                 )}
               </div>
@@ -251,10 +251,10 @@ export default React.memo(function TriggerNode({
                     </TooltipTrigger>
                     <TooltipContent side="top" sideOffset={4}>
                       {workflow.webhook.api_key?.is_active
-                        ? "Webhook is protected"
+                        ? "Webhook 已受保护"
                         : workflow.webhook.api_key
-                          ? "API key revoked"
-                          : "Webhook is unprotected"}
+                          ? "API 密钥已撤销"
+                          : "Webhook 未受保护"}
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -301,7 +301,7 @@ export default React.memo(function TriggerNode({
                     }
                   >
                     <SquarePlay className="size-3" />
-                    <span>Case triggers</span>
+                    <span>事件触发器</span>
                     <span
                       className={cn(
                         "ml-2 inline-block size-2 rounded-full",
@@ -347,7 +347,7 @@ export default React.memo(function TriggerNode({
                   <button
                     type="button"
                     className="inline-flex items-center"
-                    aria-label="Explain trigger inputs"
+                    aria-label={"触发器输入说明"}
                   >
                     <Info className="size-3 stroke-muted-foreground" />
                   </button>
@@ -361,19 +361,18 @@ export default React.memo(function TriggerNode({
                   <div className="w-full space-y-4">
                     <div className="flex w-full items-center justify-between text-muted-foreground">
                       <span className="font-mono text-sm font-semibold">
-                        Trigger inputs
+                        触发器输入
                       </span>
                     </div>
                     <span className="text-muted-foreground">
-                      This JSON payload is passed to{" "}
-                      <code className="text-foreground">TRIGGER</code>{" "}
-                      expressions when you run the workflow.
+                      运行工作流时，此 JSON 数据将传递给{" "}
+                      <code className="text-foreground">TRIGGER</code> 表达式。
                     </span>
                   </div>
                 </HoverCardContent>
               </HoverCard>
               <span className="text-xs font-medium text-foreground">
-                Trigger inputs
+                触发器输入
               </span>
             </div>
             <CodeEditor
@@ -442,7 +441,7 @@ function TriggerNodeSchedulesTable({ workflowId }: { workflowId: string }) {
           <TableHead className="h-8 text-center text-xs" colSpan={2}>
             <div className="flex items-center justify-center gap-1">
               <CalendarCheck className="size-3" />
-              <span>Schedules</span>
+              <span>定时计划</span>
             </div>
           </TableHead>
         </TableRow>
@@ -455,8 +454,8 @@ function TriggerNodeSchedulesTable({ workflowId }: { workflowId: string }) {
             const label = isCron
               ? cron
               : every
-                ? `Every ${durationToHumanReadable(every)}`
-                : "Scheduled"
+                ? `每隔 ${durationToHumanReadable(every)}`
+                : "定时触发"
 
             const start = start_at ? new Date(start_at) : null
             const end = end_at ? new Date(end_at) : null
@@ -490,12 +489,12 @@ function TriggerNodeSchedulesTable({ workflowId }: { workflowId: string }) {
                             </TooltipTrigger>
                             <TooltipContent side="top" sideOffset={4}>
                               {hasStart && hasEnd && start && end
-                                ? `Active from ${start.toLocaleString()} to ${end.toLocaleString()}`
+                                ? `生效时间：${start.toLocaleString("zh-CN")} 至 ${end.toLocaleString("zh-CN")}`
                                 : hasStart && start
-                                  ? `Starts at ${start.toLocaleString()}`
+                                  ? `开始时间：${start.toLocaleString("zh-CN")}`
                                   : hasEnd && end
-                                    ? `Ends at ${end.toLocaleString()}`
-                                    : "Time window configured"}
+                                    ? `结束时间：${end.toLocaleString("zh-CN")}`
+                                    : "已配置时间窗口"}
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -526,10 +525,10 @@ function TriggerNodeSchedulesTable({ workflowId }: { workflowId: string }) {
                           </TooltipTrigger>
                           <TooltipContent side="top" sideOffset={4}>
                             {isUpcoming && start
-                              ? `Starts at ${start.toLocaleString()}`
+                              ? `开始时间：${start.toLocaleString("zh-CN")}`
                               : isExpired && end
-                                ? `Ended at ${end.toLocaleString()}`
-                                : "Schedule active"}
+                                ? `已于 ${end.toLocaleString("zh-CN")} 结束`
+                                : "定时计划已启用"}
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -547,7 +546,7 @@ function TriggerNodeSchedulesTable({ workflowId }: { workflowId: string }) {
               className="h-8 bg-muted-foreground/5 text-center"
               colSpan={4}
             >
-              No schedules
+              暂无定时计划
             </TableCell>
           </TableRow>
         )}

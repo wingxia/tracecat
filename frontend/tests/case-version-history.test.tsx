@@ -94,7 +94,7 @@ function renderHistory() {
 }
 
 async function openHistory(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: "Versions" }))
+  await user.click(screen.getByRole("button", { name: "版本" }))
 }
 
 describe("case version history and restore", () => {
@@ -184,22 +184,22 @@ describe("case version history and restore", () => {
     expect(compareVersion).not.toHaveBeenCalled()
 
     await openHistory(user)
-    expect(screen.getByText("Title v3")).toBeInTheDocument()
-    expect(screen.getByText("Description v2")).toBeInTheDocument()
-    expect(screen.getAllByText("Current")).toHaveLength(2)
+    expect(screen.getByText("标题 v3")).toBeInTheDocument()
+    expect(screen.getByText("描述 v2")).toBeInTheDocument()
+    expect(screen.getAllByText("当前")).toHaveLength(2)
     expect(screen.getByText(/Avery Analyst ·/)).toBeInTheDocument()
 
-    await user.click(screen.getByRole("menuitemradio", { name: "Title" }))
+    await user.click(screen.getByRole("menuitemradio", { name: "标题" }))
     await waitFor(() =>
       expect(listVersions).toHaveBeenCalledWith(
         expect.objectContaining({ ...SCOPE, field: "summary", limit: 50 })
       )
     )
-    await screen.findByText("Load more")
-    expect(screen.queryByText("Description v2")).not.toBeInTheDocument()
+    await screen.findByText("加载更多")
+    expect(screen.queryByText("描述 v2")).not.toBeInTheDocument()
 
-    await user.click(screen.getByText("Load more"))
-    await screen.findByText("Title v1")
+    await user.click(screen.getByText("加载更多"))
+    await screen.findByText("标题 v1")
     expect(listVersions).toHaveBeenCalledWith(
       expect.objectContaining({
         ...SCOPE,
@@ -208,22 +208,20 @@ describe("case version history and restore", () => {
       })
     )
 
-    await user.click(screen.getByText("Title v3"))
-    expect(
-      screen.getByRole("button", { name: "Restore version" })
-    ).toBeDisabled()
-    await user.click(screen.getByRole("button", { name: "Cancel" }))
+    await user.click(screen.getByText("标题 v3"))
+    expect(screen.getByRole("button", { name: "恢复版本" })).toBeDisabled()
+    await user.click(screen.getByRole("button", { name: "取消" }))
 
     await openHistory(user)
-    await user.click(screen.getByText("Title v1"))
-    expect(await screen.findByText("Baseline")).toBeInTheDocument()
+    await user.click(screen.getByText("标题 v1"))
+    expect(await screen.findByText("基准")).toBeInTheDocument()
     expect(screen.getByText("Original title")).toBeInTheDocument()
-    expect(screen.getByText(/unsaved title draft/)).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Cancel" }))
+    expect(screen.getByText(/未保存的标题草稿/)).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "取消" }))
 
     await openHistory(user)
-    await user.click(screen.getByText("Title v2"))
-    expect(await screen.findByText("Title v1 → Title v2")).toBeInTheDocument()
+    await user.click(screen.getByText("标题 v2"))
+    expect(await screen.findByText("标题 v1 → 标题 v2")).toBeInTheDocument()
     const diff = screen.getByTestId("prose-diff")
     const deletion = within(diff).getByText("Original")
     const addition = within(diff).getByText("Updated")
@@ -232,7 +230,7 @@ describe("case version history and restore", () => {
     expect(addition.tagName).toBe("INS")
     expect(addition).toHaveClass("bg-[hsl(var(--diff-added-emphasis))]")
 
-    await user.click(screen.getByRole("button", { name: "Restore version" }))
+    await user.click(screen.getByRole("button", { name: "恢复版本" }))
     await waitFor(() =>
       expect(restoreVersion).toHaveBeenCalledWith({
         ...SCOPE,

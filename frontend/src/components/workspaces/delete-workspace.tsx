@@ -33,23 +33,21 @@ export function ConfirmDelete({ workspaceName, onDelete }: ConfirmDeleteProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="destructive">Delete workspace</Button>
+        <Button variant="destructive">删除工作空间</Button>
       </DialogTrigger>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>
-            Are you sure you want to delete this workspace?
-          </DialogTitle>
+          <DialogTitle>确定要删除此工作空间吗？</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. Please type &quot;{workspaceName}
-            &quot; to confirm.
+            此操作无法撤销，请输入“{workspaceName}
+            ”以确认。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <Input
             value={confirmText}
             onChange={(e) => setConfirmText(e.target.value)}
-            placeholder={`Type "${workspaceName}" to confirm`}
+            placeholder={`输入“${workspaceName}”以确认`}
           />
         </DialogBody>
         <DialogFooter>
@@ -59,7 +57,7 @@ export function ConfirmDelete({ workspaceName, onDelete }: ConfirmDeleteProps) {
             onClick={handleDelete}
             disabled={confirmText !== workspaceName}
           >
-            Delete
+            删除
           </Button>
         </DialogFooter>
       </DialogContent>

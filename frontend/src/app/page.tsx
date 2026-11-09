@@ -38,7 +38,7 @@ export default function HomePage() {
       >
         <Link href="/sign-in" className="flex-column flex">
           <LogInIcon className="mr-3 size-5" />
-          <span>Sign in</span>
+          <span>登录</span>
         </Link>
       </div>
       <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
@@ -56,8 +56,8 @@ export default function HomePage() {
             className="mx-auto size-16"
           />
           <h2 className="text-md flex flex-col gap-2 text-muted-foreground">
-            <span className="text-lg font-semibold">Welcome back</span>
-            <span className="text-sm">Log in to your account</span>
+            <span className="text-lg font-semibold">欢迎回来</span>
+            <span className="text-sm">登录你的账号</span>
           </h2>
           <PrivacyPolicy />
         </div>

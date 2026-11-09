@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { TablesRouteLayout } from "@/components/tables/tables-route-layout"
 
 export const metadata: Metadata = {
-  title: "Tables",
+  title: "数据表",
 }
 
 export default function TablesLayout({

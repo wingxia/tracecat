@@ -32,16 +32,16 @@ export function WorkflowsCatalogViewToggle({
     {
       mode: WorkflowsCatalogViewMode.Workflows,
       icon: WorkflowIcon,
-      tooltip: "Workflows",
+      tooltip: "工作流",
       href: workflowsHref,
-      ariaLabel: "Workflows view",
+      ariaLabel: "工作流视图",
     },
     {
       mode: WorkflowsCatalogViewMode.Tags,
       icon: TagIcon,
-      tooltip: "Workflow tags",
+      tooltip: "工作流标签",
       href: tagsHref,
-      ariaLabel: "Workflow tags view",
+      ariaLabel: "工作流标签视图",
     },
   ] as const
 

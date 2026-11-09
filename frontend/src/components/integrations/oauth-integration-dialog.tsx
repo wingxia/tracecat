@@ -59,7 +59,7 @@ export function OAuthIntegrationDialog({
   const requiresConfig = Boolean(provider?.metadata.requires_config)
   const isAuthCodeGrant = provider?.grant_type === "authorization_code"
   const isEnabled = provider?.metadata.enabled ?? true
-  const connectLabel = "Connect"
+  const connectLabel = "连接"
   const ConnectIcon = isAuthCodeGrant ? ExternalLink : Zap
   const isConnectDisabled =
     !isEnabled ||
@@ -124,8 +124,7 @@ export function OAuthIntegrationDialog({
             <div className="space-y-1">
               <DialogTitle>{provider?.metadata.name}</DialogTitle>
               <DialogDescription>
-                {provider?.metadata.description ||
-                  "Configure the provider credentials and connect."}
+                {provider?.metadata.description || "配置提供商凭据并连接。"}
               </DialogDescription>
             </div>
           </div>
@@ -133,9 +132,7 @@ export function OAuthIntegrationDialog({
         <DialogBody>
           {providerIsLoading && <CenteredSpinner />}
           {providerError && (
-            <div className="text-sm text-destructive">
-              Failed to load provider details.
-            </div>
+            <div className="text-sm text-destructive">加载提供商详情失败。</div>
           )}
           {!providerIsLoading && provider && (
             <div className="space-y-6">
@@ -148,8 +145,7 @@ export function OAuthIntegrationDialog({
               />
               {integration?.status === "configured" && (
                 <p className="text-xs text-muted-foreground">
-                  Saved configuration will stay in place even if the connection
-                  is not completed.
+                  即使尚未完成连接，已保存的配置也会保留。
                 </p>
               )}
             </div>

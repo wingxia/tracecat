@@ -41,14 +41,14 @@ export function CaseInsertRowDialog({
   async function handleSubmit(data: TableRowFormData) {
     await insertCaseRow({ tableId, data })
     toast({
-      title: "Row added",
-      description: "Added the row and linked it to this case.",
+      title: "已添加行",
+      description: "已添加此行并关联到当前事件。",
     })
   }
 
-  let description = "Add a new row to this table and link it to this case."
+  let description = "向此数据表添加新行，并关联到当前事件。"
   if (tableName) {
-    description = `Add a new row to the "${tableName}" table and link it to this case.`
+    description = `向“${tableName}”数据表添加新行并关联到此事件。`
   }
 
   return (

@@ -17,7 +17,7 @@ export function AddWorkflowTag() {
         onClick={() => setDialogOpen(true)}
       >
         <Plus className="mr-1 h-3.5 w-3.5" />
-        Create tag
+        创建标签
       </Button>
       <AddWorkflowTagDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </>

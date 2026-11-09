@@ -33,13 +33,13 @@ export function MentionHint({
       {showWorkflows ? (
         <span className="flex items-center gap-1">
           <Kbd>/</Kbd>
-          Run workflow
+          运行工作流
         </span>
       ) : null}
       {showAgents ? (
         <span className="flex items-center gap-1">
           <Kbd>@</Kbd>
-          Mention agent
+          提及智能体
         </span>
       ) : null}
     </div>

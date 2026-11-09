@@ -204,7 +204,7 @@ export function OrgRbacGroups() {
   if (error) {
     return (
       <div className="flex items-center justify-center py-12 text-sm text-destructive">
-        Failed to load groups
+        加载用户组失败
       </div>
     )
   }
@@ -228,9 +228,7 @@ export function OrgRbacGroups() {
     if (filteredGroups.length === 0) {
       return (
         <RbacListEmpty
-          message={
-            searchQuery ? "No groups match your search" : "No groups found"
-          }
+          message={searchQuery ? "没有匹配的用户组" : "未找到用户组"}
         />
       )
     }
@@ -279,7 +277,7 @@ export function OrgRbacGroups() {
               <div className="relative">
                 <SearchIcon className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search groups..."
+                  placeholder={"搜索用户组…"}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-9 w-[250px] pl-8"
@@ -291,7 +289,7 @@ export function OrgRbacGroups() {
                 <DialogTrigger asChild>
                   <Button size="sm" onClick={() => setIsCreateOpen(true)}>
                     <PlusIcon className="mr-2 size-4" />
-                    Create group
+                    创建用户组
                   </Button>
                 </DialogTrigger>
               ) : null
@@ -303,22 +301,21 @@ export function OrgRbacGroups() {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete group</AlertDialogTitle>
+            <AlertDialogTitle>删除用户组</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the group{" "}
-              <span className="font-semibold">{selectedGroup?.name}</span>? This
-              action cannot be undone. All role assignments for this group will
-              be removed.
+              确定要删除用户组{" "}
+              <span className="font-semibold">{selectedGroup?.name}</span>
+              吗？此操作无法撤销，将移除此用户组的所有角色授权。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDeleteGroup}
               disabled={deleteGroupIsPending}
             >
-              {deleteGroupIsPending ? "Deleting..." : "Delete"}
+              {deleteGroupIsPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -326,8 +323,8 @@ export function OrgRbacGroups() {
 
       {isCreateOpen && canCreateGroup && (
         <GroupFormDialog
-          title="Create group"
-          description="Create a new group to organize users and assign roles."
+          title={"创建用户组"}
+          description={"创建用户组以组织用户并分配角色。"}
           onSubmit={handleCreateGroup}
           isPending={createGroupIsPending}
         />
@@ -335,8 +332,8 @@ export function OrgRbacGroups() {
 
       {isEditOpen && selectedGroup && canUpdateGroup && (
         <GroupFormDialog
-          title="Edit group"
-          description="Update the group's name and description."
+          title={"编辑用户组"}
+          description={"更新用户组的名称和描述。"}
           initialData={selectedGroup}
           onSubmit={(name, description) =>
             handleUpdateGroup(selectedGroup.id, name, description)
@@ -379,12 +376,12 @@ function GroupListItem({
       badges={
         <>
           <Badge variant="secondary" className="text-[10px]">
-            {group.member_count} member
+            {group.member_count} 个成员
             {group.member_count !== 1 && "s"}
           </Badge>
           {assignments.length > 0 && (
             <Badge variant="secondary" className="text-[10px]">
-              {assignments.length} role{assignments.length !== 1 && "s"}
+              {assignments.length} 个角色{assignments.length !== 1 && "s"}
             </Badge>
           )}
           {group.description && (
@@ -406,7 +403,7 @@ function GroupListItem({
               variant="ghost"
               className="size-8 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
             >
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">打开菜单</span>
               <DotsHorizontalIcon className="size-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -414,12 +411,12 @@ function GroupListItem({
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(group.id)}
             >
-              Copy group ID
+              复制用户组 ID
             </DropdownMenuItem>
             {hasGatedItems && <DropdownMenuSeparator />}
             {permissions.canUpdateGroup && (
               <DialogTrigger asChild>
-                <DropdownMenuItem onClick={onEdit}>Edit group</DropdownMenuItem>
+                <DropdownMenuItem onClick={onEdit}>编辑用户组</DropdownMenuItem>
               </DialogTrigger>
             )}
             {permissions.canDeleteGroup && (
@@ -428,7 +425,7 @@ function GroupListItem({
                   className="text-rose-500 focus:text-rose-600"
                   onClick={onDelete}
                 >
-                  Delete
+                  删除
                 </DropdownMenuItem>
               </AlertDialogTrigger>
             )}
@@ -476,7 +473,7 @@ function GroupExpandedContent({
     >
       <AccordionItem value="members" className="border-border/50">
         <AccordionTrigger className={SECTION_TRIGGER_CLASS_NAME}>
-          Members
+          成员
         </AccordionTrigger>
         <AccordionContent className="pb-2">
           <GroupMembersSection
@@ -489,7 +486,7 @@ function GroupExpandedContent({
       </AccordionItem>
       <AccordionItem value="roles" className="border-b-0">
         <AccordionTrigger className={SECTION_TRIGGER_CLASS_NAME}>
-          Roles
+          角色
         </AccordionTrigger>
         <AccordionContent className="pb-0">
           <GroupRolesSection
@@ -533,10 +530,10 @@ function GroupMembersSection({
       return <Skeleton className="h-4 w-48" />
     }
     if (error) {
-      return <p className="text-xs text-destructive">Failed to load members</p>
+      return <p className="text-xs text-destructive">加载成员失败</p>
     }
     if (members.length === 0) {
-      return <p className="text-xs text-muted-foreground">No members yet</p>
+      return <p className="text-xs text-muted-foreground">暂无成员</p>
     }
     return (
       <div className="max-h-64 overflow-y-auto">
@@ -565,7 +562,7 @@ function GroupMembersSection({
               <Button
                 variant="ghost"
                 size="sm"
-                aria-label="Remove member"
+                aria-label={"移除成员"}
                 onClick={() => handleRemoveMember(member.user_id)}
                 disabled={removeGroupMemberIsPending}
                 className="size-6 p-0 text-muted-foreground hover:text-foreground"
@@ -583,7 +580,7 @@ function GroupMembersSection({
     <div className="space-y-2">
       {isIdpManaged && (
         <p className="text-xs text-muted-foreground">
-          Membership is managed by your identity provider. Edit members there.
+          成员关系由身份提供商管理，请前往该平台编辑成员。
         </p>
       )}
       <div>
@@ -593,11 +590,11 @@ function GroupMembersSection({
             type="button"
             variant="ghost"
             size="sm"
-            aria-label="Add members"
+            aria-label={"添加成员"}
             className="w-full justify-between gap-2 px-0 font-normal text-muted-foreground hover:bg-transparent hover:text-foreground"
             onClick={() => setIsAddOpen(true)}
           >
-            Add members
+            添加成员
             <span className="flex size-6 shrink-0 items-center justify-center">
               <SquarePlusIcon className="size-3.5" />
             </span>
@@ -610,7 +607,7 @@ function GroupMembersSection({
               className="flex h-[min(85dvh,720px)] max-w-4xl flex-col gap-0 overflow-hidden p-0"
             >
               <DialogTitle className="px-6 pt-6 pr-10">
-                Add members - {groupName}
+                添加成员 - {groupName}
               </DialogTitle>
               {/* Radix unmounts the body on close, so it only fetches while open. */}
               <GroupAddMembersDialogBody
@@ -644,9 +641,9 @@ function statusBadgeVariant(
 }
 
 function getAddMembersLabel(count: number): string {
-  if (count === 0) return "Add members"
-  if (count === 1) return "Add 1 member"
-  return `Add ${count} members`
+  if (count === 0) return "添加成员"
+  if (count === 1) return "添加 1 位成员"
+  return `添加 ${count} 位成员`
 }
 
 function GroupAddMembersDialogBody({
@@ -726,11 +723,10 @@ function GroupAddMembersDialogBody({
   }
 
   function getEmptyMessage(): string {
-    if (loadFailed) return "Failed to load members"
-    if (orgMembersIsLoading) return "Loading members..."
-    if (query && addableMembers.length > 0)
-      return "No members match your search"
-    return "No members to add"
+    if (loadFailed) return "加载成员失败"
+    if (orgMembersIsLoading) return "正在加载成员…"
+    if (query && addableMembers.length > 0) return "没有匹配的成员"
+    return "没有可添加的成员"
   }
 
   return (
@@ -739,8 +735,8 @@ function GroupAddMembersDialogBody({
         <div className="relative">
           <SearchIcon className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search by email or name..."
-            aria-label="Search members"
+            placeholder={"按邮箱或姓名搜索…"}
+            aria-label={"搜索成员"}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="h-9 w-[280px] pl-8"
@@ -758,18 +754,18 @@ function GroupAddMembersDialogBody({
               <TableRow className="hover:bg-transparent">
                 <TableHead className="w-10 pl-6">
                   <Checkbox
-                    aria-label="Select all"
+                    aria-label={"全选"}
                     checked={allFilteredSelected}
                     onCheckedChange={toggleAllFiltered}
                   />
                 </TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Organization</TableHead>
-                <TableHead>Roles</TableHead>
-                <TableHead>Workspace</TableHead>
-                <TableHead>Groups</TableHead>
-                <TableHead className="pr-6">Status</TableHead>
+                <TableHead>邮箱</TableHead>
+                <TableHead>名称</TableHead>
+                <TableHead>组织</TableHead>
+                <TableHead>角色</TableHead>
+                <TableHead>工作空间</TableHead>
+                <TableHead>用户组</TableHead>
+                <TableHead className="pr-6">状态</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -784,7 +780,7 @@ function GroupAddMembersDialogBody({
                   >
                     <TableCell className="w-10 pl-6">
                       <Checkbox
-                        aria-label={`Select ${member.email}`}
+                        aria-label={`选择 ${member.email}`}
                         checked={isSelected}
                         onClick={(event) => event.stopPropagation()}
                         onCheckedChange={() => toggleMember(member.user_id)}
@@ -826,7 +822,7 @@ function GroupAddMembersDialogBody({
       </div>
       <div className="flex items-center justify-end gap-2 px-6 py-4">
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          取消
         </Button>
         <Button
           type="button"
@@ -873,7 +869,7 @@ function GroupRolesSection({
   return (
     <div>
       {assignments.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No roles</p>
+        <p className="text-xs text-muted-foreground">暂无角色</p>
       ) : (
         <div className="max-h-64 overflow-y-auto">
           {assignments.map((assignment) => (
@@ -891,7 +887,7 @@ function GroupRolesSection({
                 ) : (
                   <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
                     <GlobeIcon className="size-3" />
-                    Organization-wide
+                    整个组织
                   </span>
                 )}
               </div>
@@ -899,7 +895,7 @@ function GroupRolesSection({
                 <Button
                   variant="ghost"
                   size="sm"
-                  aria-label="Remove role"
+                  aria-label={"移除角色"}
                   onClick={() => handleRemoveRole(assignment.id)}
                   disabled={deleteAssignmentIsPending}
                   className="size-6 p-0 text-muted-foreground hover:text-foreground"
@@ -955,8 +951,8 @@ function GroupAddRoleControl({
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedRoleId} onValueChange={setSelectedRoleId}>
-        <SelectTrigger className="h-8 flex-1 text-xs" aria-label="Role">
-          <SelectValue placeholder="Select a role" />
+        <SelectTrigger className="h-8 flex-1 text-xs" aria-label={"角色"}>
+          <SelectValue placeholder={"选择角色"} />
         </SelectTrigger>
         <SelectContent>
           {rolesForScope(roles, workspaceId).map((role) => (
@@ -973,14 +969,14 @@ function GroupAddRoleControl({
           setSelectedRoleId("")
         }}
       >
-        <SelectTrigger className="h-8 w-[180px] text-xs" aria-label="Scope">
-          <SelectValue placeholder="Scope" />
+        <SelectTrigger className="h-8 w-[180px] text-xs" aria-label={"范围"}>
+          <SelectValue placeholder={"范围"} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="org-wide">
             <div className="flex items-center gap-2">
               <GlobeIcon className="size-4 text-blue-500" />
-              Organization
+              组织
             </div>
           </SelectItem>
           {workspaces?.map((workspace) => (
@@ -997,7 +993,7 @@ function GroupAddRoleControl({
         type="button"
         variant="ghost"
         size="sm"
-        aria-label="Add role"
+        aria-label={"添加角色"}
         className="size-6 p-0"
         onClick={handleAddRole}
         disabled={!selectedRoleId || isPending}
@@ -1010,9 +1006,9 @@ function GroupAddRoleControl({
 
 function getSubmitLabel(isEdit: boolean, isPending: boolean): string {
   if (isPending) {
-    return isEdit ? "Saving..." : "Creating..."
+    return isEdit ? "保存中…" : "创建中…"
   }
-  return isEdit ? "Save changes" : "Create group"
+  return isEdit ? "保存更改" : "创建用户组"
 }
 
 function GroupFormDialog({
@@ -1049,20 +1045,20 @@ function GroupFormDialog({
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="group-name">Group name</Label>
+              <Label htmlFor="group-name">用户组名称</Label>
               <Input
                 id="group-name"
-                placeholder="e.g., Security Team"
+                placeholder={"例如：安全团队"}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="group-description">Description (optional)</Label>
+              <Label htmlFor="group-description">描述（可选）</Label>
               <Textarea
                 id="group-description"
-                placeholder="Describe the purpose of this group"
+                placeholder={"描述此用户组的用途"}
                 value={groupDescription}
                 onChange={(e) => setGroupDescription(e.target.value)}
                 rows={3}

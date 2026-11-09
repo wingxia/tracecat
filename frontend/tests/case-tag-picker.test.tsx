@@ -65,7 +65,7 @@ function setup({
       appliedTags={appliedTags}
     />
   )
-  fireEvent.click(screen.getByRole("button", { name: "Manage tags" }))
+  fireEvent.click(screen.getByRole("button", { name: "管理标签" }))
   return { addCaseTag, removeCaseTag }
 }
 
@@ -85,12 +85,12 @@ describe("CaseTagPicker", () => {
     setup({ addCaseTag })
 
     const beta = await findTagOption(/beta/)
-    expect(within(beta).queryByText(", applied")).not.toBeInTheDocument()
+    expect(within(beta).queryByText("，已应用")).not.toBeInTheDocument()
 
     fireEvent.click(beta)
 
     expect(addCaseTag).toHaveBeenCalledWith({ tag_id: "tag-2" })
-    expect(within(beta).getByText(", applied")).toBeInTheDocument()
+    expect(within(beta).getByText("，已应用")).toBeInTheDocument()
   })
 
   it("reverts the applied state when the mutation fails", async () => {
@@ -100,10 +100,10 @@ describe("CaseTagPicker", () => {
 
     const beta = await findTagOption(/beta/)
     fireEvent.click(beta)
-    expect(within(beta).getByText(", applied")).toBeInTheDocument()
+    expect(within(beta).getByText("，已应用")).toBeInTheDocument()
 
     await waitFor(() =>
-      expect(within(beta).queryByText(", applied")).not.toBeInTheDocument()
+      expect(within(beta).queryByText("，已应用")).not.toBeInTheDocument()
     )
   })
 
@@ -128,12 +128,12 @@ describe("CaseTagPicker", () => {
     const { addCaseTag } = setup({ removeCaseTag })
 
     const alpha = await findTagOption(/alpha/)
-    expect(within(alpha).getByText(", applied")).toBeInTheDocument()
+    expect(within(alpha).getByText("，已应用")).toBeInTheDocument()
 
     fireEvent.click(alpha)
 
     expect(removeCaseTag).toHaveBeenCalledWith("tag-1")
     expect(addCaseTag).not.toHaveBeenCalled()
-    expect(within(alpha).queryByText(", applied")).not.toBeInTheDocument()
+    expect(within(alpha).queryByText("，已应用")).not.toBeInTheDocument()
   })
 })

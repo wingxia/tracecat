@@ -25,7 +25,7 @@ describe("ConfirmDestructiveDialog", () => {
     expect(
       screen.getByTestId("confirm-destructive-identifier")
     ).toHaveTextContent("wf_abc123")
-    expect(screen.getByRole("button", { name: "Cancel" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "取消" })).toBeInTheDocument()
   })
 
   it("only confirms once the exact phrase is typed", async () => {
@@ -33,8 +33,8 @@ describe("ConfirmDestructiveDialog", () => {
     const onConfirm = jest.fn()
     renderDialog(onConfirm)
 
-    const deleteButton = screen.getByRole("button", { name: "Delete" })
-    const input = screen.getByLabelText("Type the workflow ID to confirm")
+    const deleteButton = screen.getByRole("button", { name: "删除" })
+    const input = screen.getByLabelText("输入workflow ID以确认")
     expect(deleteButton).toBeDisabled()
 
     await user.type(input, "wf_abc12")
@@ -77,7 +77,7 @@ describe("ConfirmDestructiveDialog", () => {
     expect(
       screen.getByText("You will be deleting 3 workflows.")
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Cancel" })).toHaveFocus()
+    expect(screen.getByRole("button", { name: "取消" })).toHaveFocus()
 
     await user.click(screen.getByRole("button", { name: "Delete 3 workflows" }))
     expect(onConfirm).toHaveBeenCalledTimes(1)

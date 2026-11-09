@@ -12,10 +12,10 @@ export type TablePanelMode =
 
 /** Fallback panel heading per mode, for hosts with nothing more specific. */
 export const TABLE_PANEL_TITLES: Record<TablePanelMode, string> = {
-  "view-json": "View JSON",
-  "view-text": "View text",
-  "edit-text": "Edit text",
-  "edit-json": "Edit JSON",
+  "view-json": "查看 JSON",
+  "view-text": "查看文本",
+  "edit-text": "编辑文本",
+  "edit-json": "编辑 JSON",
 }
 
 interface TablePanelContent {

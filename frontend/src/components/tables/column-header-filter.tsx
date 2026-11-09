@@ -47,7 +47,7 @@ export function ColumnHeaderFilter({
         <button
           type="button"
           aria-label={
-            isActive ? `Filter ${columnName}, active` : `Filter ${columnName}`
+            isActive ? `筛选 ${columnName}，已启用` : `筛选 ${columnName}`
           }
           data-active={isActive}
           className={cn(
@@ -75,8 +75,8 @@ export function ColumnHeaderFilter({
             type="text"
             value={term}
             maxLength={1000}
-            aria-label={`Search ${columnName}`}
-            placeholder={`Search ${columnName}...`}
+            aria-label={`搜索 ${columnName}`}
+            placeholder={`搜索 ${columnName}…`}
             onChange={(event) =>
               onFilterChange({ column: columnName, term: event.target.value })
             }
@@ -85,7 +85,7 @@ export function ColumnHeaderFilter({
           <Button
             variant="ghost"
             size="sm"
-            aria-label="Clear filter"
+            aria-label={"清除筛选"}
             className="size-7 shrink-0 p-0 text-muted-foreground"
             disabled={term === ""}
             onClick={() => onFilterChange(null)}
@@ -108,13 +108,13 @@ export function FilteredRowsEmptyOverlay() {
   const filter = query?.appliedFilter
   const onFilterChange = query?.onFilterChange
   if (!onFilterChange || !isActiveFilter(filter)) {
-    return <span className="text-sm text-muted-foreground">No rows</span>
+    return <span className="text-sm text-muted-foreground">暂无行</span>
   }
   return (
     // The grid's overlay ignores the pointer; the button must not.
     <div className="pointer-events-auto flex flex-col items-center gap-2 px-4 text-center">
       <span className="text-sm text-muted-foreground">
-        No rows match &ldquo;{filter.term.trim()}&rdquo; in {filter.column}
+        没有匹配以下内容的行：“{filter.term.trim()}”，所在列为 {filter.column}
       </span>
       <Button
         variant="outline"
@@ -122,7 +122,7 @@ export function FilteredRowsEmptyOverlay() {
         className="h-7 text-xs"
         onClick={() => onFilterChange(null)}
       >
-        Clear filter
+        清除筛选
       </Button>
     </div>
   )

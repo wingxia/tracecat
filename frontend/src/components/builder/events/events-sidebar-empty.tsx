@@ -20,11 +20,11 @@ export interface EventsSidebarEmptyProps
 }
 
 export function EventsSidebarEmpty({
-  title = "No items yet",
-  description = "Get started by creating your first item",
+  title = "暂无条目",
+  description = "创建第一个条目以开始使用",
   action,
   icon: Icon = WorkflowIcon,
-  actionLabel = "Create item",
+  actionLabel = "创建条目",
   className,
   ...props
 }: EventsSidebarEmptyProps) {

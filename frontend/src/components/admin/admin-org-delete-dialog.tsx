@@ -63,15 +63,14 @@ export function AdminOrgDeleteDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete organization</AlertDialogTitle>
+          <AlertDialogTitle>删除组织</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete the organization &quot;{org.name}
-            &quot;? This action cannot be undone and will delete all associated
-            data.
+            确定要删除组织“{org.name}
+            ”吗？此操作无法撤销，将删除所有关联数据。
           </AlertDialogDescription>
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">
-              Type <span className="font-medium">{org.name}</span> to confirm.
+              输入 <span className="font-medium">{org.name}</span> 以确认。
             </p>
             <Input
               value={confirmation}
@@ -82,13 +81,13 @@ export function AdminOrgDeleteDialog({
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={handleDelete}
             disabled={confirmation.trim() !== org.name}
           >
-            Delete
+            删除
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

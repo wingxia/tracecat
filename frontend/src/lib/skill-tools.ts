@@ -53,14 +53,12 @@ export function readSkillFrontmatterTools(
 ): SkillFrontmatterToolsState {
   const document = parseDocument(frontmatter, { keepSourceTokens: true })
   if (document.errors.length > 0 || !isMap(document.contents)) {
-    return invalidToolsState("Fix the frontmatter YAML to edit tools here.")
+    return invalidToolsState("请先修复头部元数据的 YAML，才能在此编辑工具。")
   }
 
   const metadata = document.get("metadata", true)
   if (document.contents.has("<<") || (isMap(metadata) && metadata.has("<<"))) {
-    return invalidToolsState(
-      "Edit tools in the YAML editor when metadata uses merge keys."
-    )
+    return invalidToolsState("元数据使用合并键时，请在 YAML 编辑器中编辑工具。")
   }
   if (metadata === undefined || metadata === null) {
     return { valid: true, tools: [] }
@@ -88,7 +86,7 @@ export function readSkillFrontmatterTools(
   })
   if (hasReferencedValue) {
     return invalidToolsState(
-      "Edit tools in the YAML editor when other values reference metadata or its tools."
+      "其他值引用了元数据或其中的工具时，请在 YAML 编辑器中编辑工具。"
     )
   }
   if (tools === undefined || tools === null) {
@@ -111,7 +109,7 @@ export function readSkillFrontmatterTools(
   }
   if (values.length > MAX_SKILL_TOOLS) {
     return invalidToolsState(
-      `metadata.tools supports at most ${MAX_SKILL_TOOLS} tool IDs.`
+      `metadata.tools 最多支持 ${MAX_SKILL_TOOLS} 个工具 ID。`
     )
   }
 
@@ -133,7 +131,7 @@ export function readSkillFrontmatterTools(
   if (invalid.length > 0) {
     return {
       valid: false,
-      message: `Invalid tool IDs: ${invalid.join(", ")}. Remove them or fix them in the YAML editor.`,
+      message: `工具 ID 无效：${invalid.join(", ")}。请移除这些工具，或在 YAML 编辑器中修复。`,
       tools: normalized,
       canRemove: true,
     }
@@ -175,7 +173,7 @@ export function readSkillFrontmatterTools(
   if (unavailable.length > 0) {
     return {
       valid: false,
-      message: `Unavailable tool IDs: ${unavailable.join(", ")}. Remove them or restore their availability before adding tools.`,
+      message: `工具 ID 不可用：${unavailable.join(", ")}。请移除这些工具或恢复其可用性，再添加工具。`,
       tools: normalized,
       canRemove: true,
     }
@@ -210,7 +208,7 @@ export function updateSkillFrontmatterTools(
   }
 
   if (state.valid && normalized.some((tool) => !isCanonicalToolId(tool))) {
-    throw new Error("Tools must use canonical registry or MCP IDs.")
+    throw new Error("工具必须使用规范的注册表或 MCP ID。")
   }
 
   const document = parseDocument(frontmatter, { keepSourceTokens: true })
@@ -272,7 +270,7 @@ export function updateSkillFrontmatterTools(
       newline
     )
   }
-  throw new Error("Frontmatter must be a YAML mapping.")
+  throw new Error("头部元数据必须为 YAML 映射。")
 }
 
 function mappingIndent(mapping: YAMLMap): string {
@@ -288,7 +286,7 @@ function insertMappingEntry(
   newline: string
 ): string {
   if (!mapping.range) {
-    throw new Error("Cannot locate the YAML mapping in the source.")
+    throw new Error("无法在源码中定位 YAML 映射。")
   }
   const start = mapping.range[0]
   if (mapping.flow) {
@@ -346,8 +344,8 @@ export function buildSkillToolIndex(
     const wholeServer: ToolEntry = {
       ...entry(
         `mcp.${integration.slug}`,
-        "All tools",
-        integration.description || `Allow every tool from ${integration.name}.`
+        "所有工具",
+        integration.description || `允许使用 ${integration.name} 的全部工具。`
       ),
       grantsGroup: true,
     }

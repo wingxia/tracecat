@@ -121,9 +121,9 @@ export function ActionListbox({
   renderItem,
   query,
   onQueryChange,
-  placeholder = "Search actions...",
+  placeholder = "搜索动作…",
   heading,
-  empty = "No actions found.",
+  empty = "未找到动作。",
   estimateSize = 48,
   maxHeight = 300,
   fill = false,
@@ -131,7 +131,7 @@ export function ActionListbox({
   inputRef,
   inputClassName,
   className,
-  label = "Actions",
+  label = "动作",
 }: ActionListboxProps) {
   const listRef = useRef<HTMLDivElement>(null)
   const listId = useId()

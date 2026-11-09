@@ -119,17 +119,17 @@ it("writes agent tools, MCP integrations and approval overrides, then clears emp
   const user = userEvent.setup()
   render(<TestField />)
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   await user.click(await screen.findByRole("option", { name: /first/ }))
   await user.click(screen.getByRole("option", { name: /Test MCP/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values()).toMatchObject({
     actions: [action.action],
     mcp_integrations: [integration.id],
   })
   await user.click(screen.getByRole("button", { name: /Alpha tools.alpha/ }))
   const approval = screen.getByRole("button", {
-    name: `Require approval for ${action.action}`,
+    name: `要求 ${action.action} 进行审批`,
   })
   await user.click(approval)
   expect(values().tool_approvals).toEqual({ [action.action]: true })
@@ -139,7 +139,7 @@ it("writes agent tools, MCP integrations and approval overrides, then clears emp
   expect(currentForm.getValues("inputs.mcp_integrations")).toEqual([
     integration.id,
   ])
-  await user.click(screen.getByRole("button", { name: "Remove Test MCP" }))
+  await user.click(screen.getByRole("button", { name: "移除 Test MCP" }))
   expect(currentForm.getValues("inputs.mcp_integrations")).toBeUndefined()
   expect(currentForm.getValues("inputs.actions")).toEqual([action.action])
 })
@@ -159,12 +159,10 @@ it("keeps registry tools editable without integration read access", async () => 
     undefined,
     { enabled: false }
   )
-  expect(
-    screen.queryByText("Tools could not be loaded.")
-  ).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  expect(screen.queryByText("无法加载工具。")).not.toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   await user.click(await screen.findByRole("option", { name: /first/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values()).toEqual({
     actions: [action.action],
     mcp_integrations: [integration.id],
@@ -177,7 +175,7 @@ it("ignores cached MCP integrations without integration read access", async () =
   const user = userEvent.setup()
   render(<TestField inputs={{ mcp_integrations: [integration.id] }} />)
   expect(screen.queryByText("Test MCP")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   expect(await screen.findByRole("option", { name: /first/ })).toBeVisible()
   expect(
     screen.queryByRole("option", { name: /Test MCP/ })
@@ -192,20 +190,20 @@ it("waits for scopes before requesting MCP integrations", () => {
     undefined,
     { enabled: false }
   )
-  expect(screen.getByText("Loading tools...")).toBeInTheDocument()
+  expect(screen.getByText("正在加载工具…")).toBeInTheDocument()
 })
 
 it("limits preset-agent schemas to registry actions", async () => {
   const user = userEvent.setup()
   render(<TestField properties={presetProperties} />)
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
-  expect(screen.queryByText("MCP servers")).not.toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
+  expect(screen.queryByText("MCP 服务器")).not.toBeInTheDocument()
   await user.click(await screen.findByRole("option", { name: /first/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values()).toEqual({ actions: [action.action] })
   await user.click(screen.getByRole("button", { name: /Alpha tools.alpha/ }))
-  expect(screen.queryByText("Ask")).not.toBeInTheDocument()
-  expect(screen.queryByText("Auto")).not.toBeInTheDocument()
+  expect(screen.queryByText("询问")).not.toBeInTheDocument()
+  expect(screen.queryByText("自动")).not.toBeInTheDocument()
 })
 
 it("renders an actions expression without coercing it", () => {
@@ -215,7 +213,7 @@ it("renders an actions expression without coercing it", () => {
     expression
   )
   expect(
-    screen.queryByRole("button", { name: "Add tools" })
+    screen.queryByRole("button", { name: "添加工具" })
   ).not.toBeInTheDocument()
   expect(values()).toEqual({ actions: expression })
 })
@@ -228,9 +226,9 @@ it("does not fold or overwrite an MCP expression after picker changes", async ()
   ).toBeNull()
   const user = userEvent.setup()
   render(<TestField inputs={{ mcp_integrations: expression }} />)
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   await user.click(await screen.findByRole("option", { name: /first/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values()).toEqual({
     actions: [action.action],
     mcp_integrations: expression,
@@ -240,9 +238,9 @@ it("does not fold or overwrite an MCP expression after picker changes", async ()
 it("shows and preserves an unknown saved action on no-op Done", async () => {
   const user = userEvent.setup()
   render(<TestField inputs={{ actions: ["unknown.saved"] }} />)
-  expect(screen.getByText("Unavailable")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  expect(screen.getByText("不可用")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values()).toEqual({ actions: ["unknown.saved"] })
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
 })
@@ -256,8 +254,8 @@ it("does not offer an action agents cannot call", async () => {
   })
   const user = userEvent.setup()
   render(<TestField inputs={{ actions: ["core.script.run_python"] }} />)
-  expect(screen.getByText("Unavailable")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  expect(screen.getByText("不可用")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   expect(await screen.findByRole("option", { name: /first/ })).toBeVisible()
   expect(
     screen.queryByRole("option", { name: /run python/ })
@@ -273,7 +271,7 @@ it("mounts fewer than 40 action options for a 1,500-entry catalog", async () => 
   })
   const user = userEvent.setup()
   render(<TestField properties={presetProperties} />)
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   const options = await screen.findAllByRole("option")
   expect(options.length).toBeGreaterThan(0)
   expect(options.length).toBeLessThan(40)
@@ -290,7 +288,7 @@ it("keeps the expression editor while an expression is edited into plain text", 
     "${{ ACTIONS.result }"
   )
   expect(
-    screen.queryByRole("button", { name: "Add tools" })
+    screen.queryByRole("button", { name: "添加工具" })
   ).not.toBeInTheDocument()
   expect(currentForm.getValues("inputs.actions")).toBe("${{ ACTIONS.result }")
 })
@@ -306,17 +304,17 @@ it("treats null args like unset ones and writes nothing until a change", async (
   const nulls = { actions: null, mcp_integrations: null, tool_approvals: null }
   const user = userEvent.setup()
   render(<TestField inputs={nulls} />)
-  expect(screen.getByText("No tools selected.")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
-  expect(screen.getByText("MCP servers")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  expect(screen.getByText("尚未选择工具。")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
+  expect(screen.getByText("MCP 服务器")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(currentForm.getValues("inputs")).toEqual(nulls)
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
 
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   await user.click(await screen.findByRole("option", { name: /first/ }))
   await user.click(screen.getByRole("option", { name: /Test MCP/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(currentForm.getValues("inputs")).toEqual({
     actions: [action.action],
     mcp_integrations: [integration.id],
@@ -325,7 +323,7 @@ it("treats null args like unset ones and writes nothing until a change", async (
   await user.click(screen.getByRole("button", { name: /Alpha tools.alpha/ }))
   await user.click(
     screen.getByRole("button", {
-      name: `Require approval for ${action.action}`,
+      name: `要求 ${action.action} 进行审批`,
     })
   )
   expect(currentForm.getValues("inputs.tool_approvals")).toEqual({
@@ -336,9 +334,9 @@ it("treats null args like unset ones and writes nothing until a change", async (
 it("shows the count without repeating the Tools title of the form label", () => {
   render(<TestField inputs={{ actions: [action.action] }} />)
   expect(screen.queryByRole("heading", { name: "Tools" })).toBeNull()
-  expect(screen.getByText("1 selected")).toBeInTheDocument()
+  expect(screen.getByText("1 项已选择")).toBeInTheDocument()
   expect(
-    screen.getByRole("button", { name: "Search allowed tools" })
+    screen.getByRole("button", { name: "搜索允许的工具" })
   ).toBeInTheDocument()
 })
 
@@ -348,5 +346,5 @@ it("counts a selected MCP server in the header", () => {
       inputs={{ actions: [action.action], mcp_integrations: [integration.id] }}
     />
   )
-  expect(screen.getByText("2 selected")).toBeInTheDocument()
+  expect(screen.getByText("2 项已选择")).toBeInTheDocument()
 })

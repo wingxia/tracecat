@@ -24,9 +24,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const chatMessageSchema = z.object({
-  message: z
-    .string()
-    .max(2000, { message: "Message cannot be longer than 2000 characters" }),
+  message: z.string().max(2000, { message: "消息不能超过 2000 个字符" }),
 })
 
 type ChatMessageSchema = z.infer<typeof chatMessageSchema>
@@ -42,7 +40,7 @@ interface ChatInputProps {
 export function ChatInput({
   onSendMessage,
   disabled = false,
-  placeholder = "Type your message...",
+  placeholder = "输入消息…",
   chatId,
   entityType,
 }: ChatInputProps) {
@@ -183,11 +181,11 @@ function ChatControls({
               disabled
             >
               <PaperclipIcon className="size-3.5" />
-              <span className="sr-only">Attach file</span>
+              <span className="sr-only">添加附件</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Attach file</p>
+            <p>添加附件</p>
           </TooltipContent>
         </Tooltip>
 
@@ -201,11 +199,11 @@ function ChatControls({
               disabled={toolsDisabled}
             >
               <HammerIcon className="size-3.5" />
-              <span className="text-xs">Tools</span>
+              <span className="text-xs">工具</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Configure tools for the agent</p>
+            <p>配置智能体工具</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -222,7 +220,7 @@ function ChatControls({
           onClick={sendMessage}
         >
           <ArrowUpIcon className="size-3.5" />
-          <span className="sr-only">Send message</span>
+          <span className="sr-only">发送消息</span>
         </Button>
       </div>
       {/* Tools Modal */}

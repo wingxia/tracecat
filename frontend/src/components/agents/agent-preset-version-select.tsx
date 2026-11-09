@@ -36,16 +36,14 @@ export function formatAgentPresetVersionLabel({
   selectedVersionId?: string | null
 }): string {
   if (!selectedVersionId) {
-    return currentVersionNumber
-      ? `Version ${currentVersionNumber}, current`
-      : "Current"
+    return currentVersionNumber ? `版本 ${currentVersionNumber}，当前` : "当前"
   }
   if (selectedVersionId === currentVersionId) {
     return selectedVersionNumber
-      ? `Version ${selectedVersionNumber}, current`
-      : "Current version"
+      ? `版本 ${selectedVersionNumber}，当前`
+      : "当前版本"
   }
-  return selectedVersionNumber ? `Version ${selectedVersionNumber}` : "Version"
+  return selectedVersionNumber ? `版本 ${selectedVersionNumber}` : "版本"
 }
 
 export function getAgentPresetVersionFallbackLabel({
@@ -56,19 +54,19 @@ export function getAgentPresetVersionFallbackLabel({
   selectedVersionId?: string | null
 }): string {
   if (!selectedVersionId) {
-    return "Current"
+    return "当前"
   }
   if (selectedVersionId === currentVersionId) {
-    return "Current version"
+    return "当前版本"
   }
-  return "Pinned version"
+  return "固定版本"
 }
 
 function VersionLabel({
   label,
   versionNumber,
   isCurrent = false,
-  fallback = "Current",
+  fallback = "当前",
 }: {
   label?: string
   versionNumber?: number | null
@@ -78,11 +76,11 @@ function VersionLabel({
   return (
     <span className="flex items-center gap-2">
       <span>
-        {label ?? (versionNumber ? `Version ${versionNumber}` : fallback)}
+        {label ?? (versionNumber ? `版本 ${versionNumber}` : fallback)}
       </span>
       {isCurrent ? (
         <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">
-          Current
+          当前
         </Badge>
       ) : null}
     </span>
@@ -110,7 +108,7 @@ export function AgentPresetVersionSelect({
   currentVersionId,
   onSelect,
   disabled = false,
-  placeholder = "Select version",
+  placeholder = "选择版本",
   triggerClassName,
   allowCurrent = true,
 }: AgentPresetVersionSelectProps) {
@@ -152,7 +150,7 @@ export function AgentPresetVersionSelect({
           {versionsIsLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="size-3 animate-spin" />
-              Loading...
+              加载中…
             </span>
           ) : (
             <VersionLabel
@@ -173,24 +171,24 @@ export function AgentPresetVersionSelect({
       <SelectContent>
         {versionsIsLoading ? (
           <SelectItem value="__loading" disabled>
-            Loading versions...
+            正在加载版本…
           </SelectItem>
         ) : null}
         {versionsError ? (
           <SelectItem value="__error" disabled>
-            Failed to load versions
+            加载版本失败
           </SelectItem>
         ) : null}
         {!versionsIsLoading && !versionsError && allowCurrent ? (
           <SelectItem value={CURRENT_VERSION_VALUE}>
-            <VersionLabel label="Use latest" />
+            <VersionLabel label={"使用最新版本"} />
           </SelectItem>
         ) : null}
         {!versionsIsLoading &&
         !versionsError &&
         (versions?.length ?? 0) === 0 ? (
           <SelectItem value="__empty" disabled>
-            No versions found
+            未找到版本
           </SelectItem>
         ) : null}
         {versions?.map((version) => {
@@ -200,7 +198,7 @@ export function AgentPresetVersionSelect({
               <VersionLabel
                 versionNumber={version.version}
                 isCurrent={isCurrent}
-                fallback="Version"
+                fallback={"版本"}
               />
             </SelectItem>
           )

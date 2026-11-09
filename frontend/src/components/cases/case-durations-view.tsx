@@ -53,18 +53,18 @@ export function CaseDurationsView() {
           queryKey: ["case-duration-definitions", workspaceId],
         })
         toast({
-          title: "Duration deleted",
-          description: "The case duration definition was removed successfully.",
+          title: "已删除时长指标",
+          description: "已成功移除事件时长定义。",
         })
       },
       onError: (error: unknown) => {
         console.error("Failed to delete case duration definition", error)
         toast({
-          title: "Error deleting duration",
+          title: "删除时长指标出错",
           description:
             error instanceof Error
               ? error.message
-              : "Failed to delete the case duration definition. Please try again.",
+              : "删除事件时长定义失败，请重试。",
           variant: "destructive",
         })
       },
@@ -107,18 +107,18 @@ export function CaseDurationsView() {
         })
 
         toast({
-          title: "Duration updated",
-          description: "The case duration definition was updated successfully.",
+          title: "已更新时长指标",
+          description: "已成功更新事件时长定义。",
         })
       },
       onError: (error: unknown) => {
         console.error("Failed to update case duration definition", error)
         toast({
-          title: "Error updating duration",
+          title: "更新时长指标出错",
           description:
             error instanceof Error
               ? error.message
-              : "Failed to update the case duration definition. Please try again.",
+              : "更新事件时长定义失败，请重试。",
           variant: "destructive",
         })
       },
@@ -140,8 +140,8 @@ export function CaseDurationsView() {
       <div className="size-full overflow-auto">
         <div className="container flex h-full max-w-[1000px] items-center justify-center py-8">
           <EntitlementRequiredEmptyState
-            title="Enterprise only"
-            description="Case durations are only available on enterprise plans."
+            title={"仅限企业版"}
+            description={"事件时长指标仅适用于企业版套餐。"}
           >
             <Button
               variant="link"
@@ -154,7 +154,7 @@ export function CaseDurationsView() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>
@@ -170,22 +170,19 @@ export function CaseDurationsView() {
 
   if (workspaceError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Error loading workspace info."
-      />
+      <AlertNotification level="error" message={"加载工作空间信息出错。"} />
     )
   }
 
   if (!workspace) {
-    return <AlertNotification level="error" message="Workspace not found." />
+    return <AlertNotification level="error" message={"未找到工作空间。"} />
   }
 
   if (caseDurationDefinitionsError) {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading case duration definitions: ${caseDurationDefinitionsError.message}`}
+        message={`加载事件时长定义出错：${caseDurationDefinitionsError.message}`}
       />
     )
   }
@@ -199,9 +196,9 @@ export function CaseDurationsView() {
               <EmptyMedia variant="icon">
                 <Timer className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No durations defined yet</EmptyTitle>
+              <EmptyTitle>尚未定义时长指标</EmptyTitle>
               <EmptyDescription>
-                Add your first duration metric using the button in the header.
+                使用顶部按钮添加第一个时长指标。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

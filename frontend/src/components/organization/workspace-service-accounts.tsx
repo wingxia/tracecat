@@ -69,7 +69,7 @@ export function WorkspaceServiceAccounts() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading scopes: ${scopesError.message}`}
+        message={`加载权限范围出错：${scopesError.message}`}
       />
     )
   }
@@ -79,15 +79,15 @@ export function WorkspaceServiceAccounts() {
   if (!serviceAccountsEnabled) {
     return (
       <EntitlementRequiredEmptyState
-        title="Service accounts unavailable"
-        description="Service account access is not enabled for this organization."
+        title={"服务账号不可用"}
+        description={"此组织未启用服务账号访问。"}
       />
     )
   }
 
   return (
     <ServiceAccountsManager
-      kindLabel="Workspace"
+      kindLabel={"工作空间"}
       serviceAccounts={serviceAccounts}
       nextCursor={nextCursor}
       isLoading={isLoading || scopesLoading}

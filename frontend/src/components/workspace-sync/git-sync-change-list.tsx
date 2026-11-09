@@ -68,7 +68,7 @@ export function GitSyncPreviewEmpty({
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-2 px-6 py-16 text-center">
       <SearchIcon className="size-5 text-muted-foreground" />
-      <p className="text-sm font-medium text-foreground">No preview yet</p>
+      <p className="text-sm font-medium text-foreground">暂无预览</p>
       <p className="max-w-xs text-xs text-muted-foreground">{description}</p>
       <div className="mt-1">
         <GitSyncPreviewButton
@@ -242,26 +242,26 @@ export function GitSyncChangeList({
     <div className="flex flex-col">
       <div className="flex h-9 items-center gap-2 border-b bg-muted/40 px-5 text-xs text-muted-foreground">
         <span className="font-medium text-foreground">
-          Included in this {direction}
+          包含在此次操作中： {direction === "push" ? "推送" : "拉取"}
         </span>
         <span aria-hidden>·</span>
         <span className="min-w-0 truncate">{summary}</span>
         <span className="ml-auto shrink-0 font-mono text-[11px]">
-          {displayedCount} {displayedCount === 1 ? "file" : "files"}
+          {displayedCount} {displayedCount === 1 ? "文件" : "个文件"}
         </span>
       </div>
       {pagedOperationId && paged.isLoading ? (
         <p className="flex items-center gap-2 px-5 py-6 text-xs text-muted-foreground">
           <Loader2Icon className="size-3.5 animate-spin" />
-          Loading changes...
+          正在加载变更…
         </p>
       ) : pagedOperationId && paged.error ? (
         <p className="px-5 py-6 text-xs text-destructive">
-          Could not load changes. Preview again to refresh them.
+          无法加载变更，请再次预览以刷新。
         </p>
       ) : groups.length === 0 ? (
         <p className="px-5 py-6 text-xs text-muted-foreground">
-          Nothing to {direction}.
+          没有可操作的内容： {direction === "push" ? "推送" : "拉取"}.
         </p>
       ) : (
         <ul>
@@ -327,10 +327,7 @@ export function GitSyncChangeList({
       {hasSensitive && (
         <div className="flex items-start gap-2 border-b px-5 py-2.5 text-[11px] leading-relaxed text-muted-foreground">
           <LockIcon className="mt-0.5 size-3 shrink-0" />
-          <span>
-            Secret and variable values never go through Git. Only key names and
-            metadata do.
-          </span>
+          <span>密钥和变量的值不会通过 Git 传输，仅传输键名和元数据。</span>
         </div>
       )}
     </div>
@@ -372,7 +369,7 @@ function ChangeRow({
       <li className={cn(rowClassName, "border-t border-border/60")}>
         {content}
         <span className="shrink-0 text-xs text-muted-foreground/70">
-          Unchanged
+          未更改
         </span>
       </li>
     )
@@ -392,7 +389,7 @@ function ChangeRow({
       >
         {content}
         <span className="shrink-0 text-xs text-muted-foreground">
-          {isOpen ? "Hide diff" : "View diff"}
+          {isOpen ? "隐藏差异" : "查看差异"}
         </span>
       </button>
       {isOpen &&
@@ -523,10 +520,10 @@ function getPreviewLabel({
   hasPreview: boolean
 }): string {
   if (isLoading) {
-    return "Previewing..."
+    return "预览中…"
   }
   if (hasPreview) {
-    return "Preview again"
+    return "再次预览"
   }
-  return "Preview"
+  return "预览"
 }

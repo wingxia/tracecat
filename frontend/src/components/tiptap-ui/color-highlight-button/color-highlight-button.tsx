@@ -76,7 +76,7 @@ export const ColorHighlightButton = React.forwardRef<
     } = useColorHighlight({
       editor,
       highlightColor,
-      label: text || `Toggle highlight (${highlightColor})`,
+      label: text || `切换高亮（${highlightColor}）`,
       hideWhenUnavailable,
       onApplied,
     })

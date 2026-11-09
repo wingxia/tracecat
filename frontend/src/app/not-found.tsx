@@ -10,12 +10,10 @@ export default function NotFound() {
   return (
     <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
       <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
-      <h1 className="text-2xl font-medium">Page not found</h1>
-      <p className="text-sm text-muted-foreground">
-        The page you are looking for does not exist.
-      </p>
+      <h1 className="text-2xl font-medium">页面未找到</h1>
+      <p className="text-sm text-muted-foreground">你要访问的页面不存在。</p>
       <Button variant="outline" onClick={() => router.replace("/")}>
-        Return to the home page
+        返回首页
       </Button>
     </main>
   )

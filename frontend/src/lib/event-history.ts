@@ -16,11 +16,11 @@ export type WorkflowExecutionReadCompact =
 
 // Safe because refs are slugified. Use `workflow` to namespace from regular action refs.
 export const WF_TRIGGER_EVENT_REF = "__workflow_trigger__"
-export const WF_TRIGGER_EVENT_LABEL = "Trigger"
+export const WF_TRIGGER_EVENT_LABEL = "触发器"
 export const WF_FAILURE_EVENT_REF = "__workflow_failure__"
-export const WF_FAILURE_EVENT_LABEL = "Workflow Failure"
+export const WF_FAILURE_EVENT_LABEL = "工作流失败"
 export const WF_COMPLETED_EVENT_REF = "__workflow_completed__"
-export const WF_COMPLETED_EVENT_LABEL = "Workflow result"
+export const WF_COMPLETED_EVENT_LABEL = "工作流结果"
 
 export const ERROR_EVENT_TYPES: WorkflowEventType[] = [
   "WORKFLOW_EXECUTION_FAILED",
@@ -61,13 +61,13 @@ export function getRelativeTime(date: Date) {
   const months = Math.floor(days / 30)
   const years = Math.floor(months / 12)
 
-  if (years > 0) return `about ${years} year${years > 1 ? "s" : ""} ago`
-  if (months > 0) return `about ${months} month${months > 1 ? "s" : ""} ago`
-  if (days > 0) return `about ${days} day${days > 1 ? "s" : ""} ago`
-  if (hours > 0) return `about ${hours} hour${hours > 1 ? "s" : ""} ago`
-  if (minutes > 0) return `about ${minutes} minute${minutes > 1 ? "s" : ""} ago`
-  if (seconds > 0) return `${seconds} second${seconds > 1 ? "s" : ""} ago`
-  return "just now"
+  if (years > 0) return `约 ${years} 年前`
+  if (months > 0) return `约 ${months} 个月前`
+  if (days > 0) return `约 ${days} 天前`
+  if (hours > 0) return `约 ${hours} 小时前`
+  if (minutes > 0) return `约 ${minutes} 分钟前`
+  if (seconds > 0) return `${seconds} 秒前`
+  return "刚刚"
 }
 
 /**
@@ -283,9 +283,9 @@ export function formatStreamId(streamId: string) {
   const streamIdParts = parseStreamId(streamId)
   const lastPart = streamIdParts[streamIdParts.length - 1]
   if (lastPart.scope === "<root>" && lastPart.index === "0") {
-    return "global scope"
+    return "全局作用域"
   }
-  return `execution stream ${lastPart.scope}[${lastPart.index}]`
+  return `执行流 ${lastPart.scope}[${lastPart.index}]`
 }
 
 export function isAgentOutput(

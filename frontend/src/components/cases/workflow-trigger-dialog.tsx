@@ -109,7 +109,7 @@ export function WorkflowTriggerDialog({
       : null
 
   const selectedWorkflowName =
-    selectedWorkflowDetail?.title ?? workflowTitle ?? "this workflow"
+    selectedWorkflowDetail?.title ?? workflowTitle ?? "此工作流"
 
   const withTaskContextInputs = useCallback(
     (values: Record<string, unknown>) => ({
@@ -125,7 +125,7 @@ export function WorkflowTriggerDialog({
       return
     }
     toast({
-      title: "Workflow run started",
+      title: "工作流已开始运行",
       description: (
         <Link
           href={selectedWorkflowUrl}
@@ -134,7 +134,7 @@ export function WorkflowTriggerDialog({
         >
           <div className="flex items-center space-x-1">
             <ArrowUpRight className="size-3" />
-            <span>View workflow run</span>
+            <span>查看工作流运行记录</span>
           </div>
         </Link>
       ),
@@ -188,14 +188,12 @@ export function WorkflowTriggerDialog({
       <AlertDialogContent className="flex max-h-[85vh] max-w-md flex-col overflow-hidden [overflow-wrap:anywhere]">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-sm">
-            {triggerSchema
-              ? "Configure workflow inputs"
-              : "Confirm workflow trigger"}
+            {triggerSchema ? "配置工作流输入" : "确认触发工作流"}
           </AlertDialogTitle>
           <AlertDialogDescription className="text-xs">
             {triggerSchema
-              ? `Provide the inputs required by "${selectedWorkflowName}". Defaults are populated from the case where possible.`
-              : `Are you sure you want to trigger "${selectedWorkflowName}" with the following inputs?`}
+              ? `提供“${selectedWorkflowName}”所需的输入。可用的默认值会从事件数据中填充。`
+              : `确定使用以下输入触发“${selectedWorkflowName}”吗？`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {triggerSchema ? (
@@ -216,10 +214,9 @@ export function WorkflowTriggerDialog({
               <div className="space-y-3 pr-3">
                 <div className="flex items-center justify-between gap-3 rounded-md border border-border bg-muted/40 px-3 py-2">
                   <div className="space-y-1 text-xs">
-                    <div className="font-medium">Group case fields</div>
+                    <div className="font-medium">分组事件字段</div>
                     <p className="text-[11px] text-muted-foreground">
-                      Send case data under a single <code>case_fields</code>{" "}
-                      object.
+                      将事件数据放入单个 <code>case_fields</code> 对象中发送。
                     </p>
                   </div>
                   <Switch
@@ -238,7 +235,7 @@ export function WorkflowTriggerDialog({
               </div>
             </ScrollArea>
             <AlertDialogFooter>
-              <AlertDialogCancel className="text-xs">Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="text-xs">取消</AlertDialogCancel>
               <Button
                 type="button"
                 onClick={handleTriggerWithoutSchema}
@@ -246,7 +243,7 @@ export function WorkflowTriggerDialog({
                 disabled={createExecutionIsPending}
               >
                 <PlayIcon className="mr-1.5 h-3 w-3" />
-                Trigger
+                触发器
               </Button>
             </AlertDialogFooter>
           </>

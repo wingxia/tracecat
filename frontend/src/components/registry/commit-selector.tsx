@@ -74,16 +74,12 @@ export function CommitSelector({
   }
 
   if (error) {
-    return (
-      <div className="text-sm text-muted-foreground">
-        Failed to load commits
-      </div>
-    )
+    return <div className="text-sm text-muted-foreground">加载提交失败</div>
   }
 
   const displayCommit = currentCommit || {
     sha: effectiveCurrentSha || "unknown",
-    message: "Unknown commit",
+    message: "未知提交",
     author: "",
     author_email: "",
     date: "",
@@ -107,7 +103,7 @@ export function CommitSelector({
             )}
             {effectiveCurrentSha && !isCurrentHead && (
               <Badge variant="outline" className="text-xs">
-                Custom
+                自定义
               </Badge>
             )}
             {currentCommit?.tags?.map((tag) => (
@@ -120,7 +116,7 @@ export function CommitSelector({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-96">
-        <DropdownMenuLabel>Select commit</DropdownMenuLabel>
+        <DropdownMenuLabel>选择提交</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="max-h-64 overflow-y-auto p-1">
           {commits?.map((commit, index) => {
@@ -167,7 +163,7 @@ export function CommitSelector({
                         variant="outline"
                         className="border-transparent bg-primary/10 text-xs font-medium text-primary"
                       >
-                        Current
+                        当前
                       </Badge>
                     )}
                     {isHead && (
@@ -177,7 +173,7 @@ export function CommitSelector({
                     )}
                     <span
                       className="ml-auto whitespace-nowrap text-xs text-muted-foreground"
-                      title={commitDate.toLocaleString()}
+                      title={commitDate.toLocaleString("zh-CN")}
                     >
                       {relativeTime}
                     </span>
@@ -186,8 +182,8 @@ export function CommitSelector({
                     {commit.message}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {commit.author || "Unknown"} •{" "}
-                    {commitDate.toLocaleDateString()}
+                    {commit.author || "未知"} •{" "}
+                    {commitDate.toLocaleDateString("zh-CN")}
                   </p>
                   {commit.tags && commit.tags.length > 0 && (
                     <div className="mt-1.5 flex flex-wrap items-center gap-1">
@@ -210,7 +206,7 @@ export function CommitSelector({
         </div>
         {!commits?.length && (
           <div className="p-3 text-center text-sm text-muted-foreground">
-            No commits found
+            未找到提交
           </div>
         )}
       </DropdownMenuContent>

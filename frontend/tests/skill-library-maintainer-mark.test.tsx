@@ -24,7 +24,7 @@ describe("SkillLibraryMaintainerMark", () => {
     (provider) => {
       renderMark(provider)
       expect(
-        screen.getByRole("button", { name: `Maintained by ${provider}` })
+        screen.getByRole("button", { name: `由 ${provider} 维护` })
       ).toBeInTheDocument()
     }
   )

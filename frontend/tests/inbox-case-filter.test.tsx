@@ -194,9 +194,9 @@ describe("Inbox case filtering", () => {
       />
     )
 
-    expect(screen.getByText("Filtered by case")).toBeInTheDocument()
+    expect(screen.getByText("已按事件筛选")).toBeInTheDocument()
     expect(screen.getByText(CASE_ID.slice(0, 8))).toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "Clear case filter" }))
+    fireEvent.click(screen.getByRole("button", { name: "清除事件筛选" }))
     expect(onClearCaseFilter).toHaveBeenCalledTimes(1)
   })
 
@@ -206,7 +206,7 @@ describe("Inbox case filtering", () => {
     )
 
     expect(
-      screen.getByRole("link", { name: "View agent runs" })
+      screen.getByRole("link", { name: "查看智能体运行记录" })
     ).toHaveAttribute(
       "href",
       `/workspaces/workspace-test/inbox?caseId=${CASE_ID}`
@@ -217,7 +217,7 @@ describe("Inbox case filtering", () => {
       <CaseAgentRunsAction caseId={CASE_ID} workspaceId="workspace-test" />
     )
     expect(
-      screen.queryByRole("link", { name: "View agent runs" })
+      screen.queryByRole("link", { name: "查看智能体运行记录" })
     ).not.toBeInTheDocument()
 
     mockUseScopeCheck.mockReturnValue(true)
@@ -226,7 +226,7 @@ describe("Inbox case filtering", () => {
       <CaseAgentRunsAction caseId={CASE_ID} workspaceId="workspace-test" />
     )
     expect(
-      screen.queryByRole("link", { name: "View agent runs" })
+      screen.queryByRole("link", { name: "查看智能体运行记录" })
     ).not.toBeInTheDocument()
   })
 })

@@ -19,18 +19,17 @@ type AuthErrorCopy = {
 }
 
 const DEFAULT_ERROR_COPY: AuthErrorCopy = {
-  title: "Unable to login",
-  description:
-    "Unable to login, please try again and/or contact an administrator.",
+  title: "无法登录",
+  description: "无法登录，请重试或联系管理员。",
 }
 
 function getAuthErrorCopy(code: AuthErrorCode | null): AuthErrorCopy {
   switch (code) {
     case AUTH_ERROR_CODES.SAML_ENFORCED:
       return {
-        title: "Single sign-on required",
+        title: "需要单点登录",
         description:
-          "Your organization requires single sign-on. Go back to sign in and enter your work email to continue with SSO.",
+          "你的组织要求使用单点登录。请返回登录页面，输入工作邮箱以继续 SSO 登录。",
       }
     default:
       return DEFAULT_ERROR_COPY
@@ -47,7 +46,7 @@ function AuthErrorContent() {
       <Card className="w-full max-w-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardTitle>Authentication error</CardTitle>
+            <CardTitle>身份验证错误</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -60,7 +59,7 @@ function AuthErrorContent() {
           </Alert>
 
           <Button asChild className="w-full">
-            <Link href="/sign-in">Back to sign in</Link>
+            <Link href="/sign-in">返回登录</Link>
           </Button>
         </CardContent>
       </Card>

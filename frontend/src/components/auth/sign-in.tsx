@@ -97,7 +97,7 @@ export function SignIn({
   const allowedAuthTypes: string[] = appInfo?.auth_allowed_types ?? []
   const showBasicAuth = allowedAuthTypes.includes("basic")
   const showOidcAuth = allowedAuthTypes.includes("oidc")
-  const oidcProviderLabel = "Social login"
+  const oidcProviderLabel = "第三方登录"
   const oidcProviderIcon = "login"
   // Keep a manual SAML entry point for single-tenant self-hosted setups.
   // In multi-tenant mode, SAML login requires org context and should only be
@@ -121,23 +121,21 @@ export function SignIn({
 
       if (data.method === "basic") {
         if (!showBasicAuth) {
-          throw new Error("Password login is not enabled")
+          throw new Error("密码登录未启用")
         }
         setDiscoveredMethod("basic")
         return
       }
       if (data.method === "oidc") {
         if (!showOidcAuth) {
-          throw new Error("OIDC login is not enabled")
+          throw new Error("OIDC 登录未启用")
         }
         await startOidcLogin(returnUrl)
         return
       }
       if (data.method === "saml") {
         if (appInfo?.ee_multi_tenant && !data.next_url) {
-          throw new Error(
-            "SAML login requires organization context in multi-tenant mode"
-          )
+          throw new Error("多租户模式下，SAML 登录需要组织上下文")
         }
         await startSamlLogin(returnUrl, data.next_url)
         return
@@ -146,9 +144,8 @@ export function SignIn({
     } catch (error) {
       console.error("Error discovering auth method", error)
       toast({
-        title: "Unable to continue",
-        description:
-          "Could not determine authentication method for this email.",
+        title: "无法继续",
+        description: "无法确定此邮箱的身份验证方式。",
       })
     } finally {
       setIsDiscovering(false)
@@ -165,11 +162,11 @@ export function SignIn({
       <div className="flex w-full flex-1 flex-col justify-center gap-2 px-8 sm:max-w-md">
         <CardHeader className="items-center space-y-2 text-center">
           <Image src={TracecatIcon} alt="Tracecat" className="mb-8 size-16" />
-          <CardTitle className="text-2xl">Sign into your account</CardTitle>
+          <CardTitle className="text-2xl">登录你的账号</CardTitle>
           <CardDescription>
             {discoveredMethod === "basic"
-              ? "Enter your password to continue"
-              : "Enter your work email to continue"}
+              ? "输入密码以继续"
+              : "输入工作邮箱以继续"}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-col space-y-2">
@@ -188,7 +185,7 @@ export function SignIn({
               </div>
               <div className="relative my-6 flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
+                  或使用以下方式登录
                 </span>
               </div>
             </div>
@@ -208,9 +205,9 @@ export function SignIn({
         {showBasicAuth && (
           <CardFooter className="flex items-center justify-center text-sm text-muted-foreground">
             <div className="mt-4 text-center">
-              Don&apos;t have an account?{" "}
+              还没有账号？{" "}
               <Link href={signUpPath} className="underline">
-                Sign up
+                注册
               </Link>
             </div>
           </CardFooter>
@@ -221,7 +218,7 @@ export function SignIn({
 }
 
 const discoverySchema = z.object({
-  email: z.string().email().min(3, { message: "Required" }),
+  email: z.string().email().min(3, { message: "必填" }),
 })
 
 type DiscoveryFormValues = z.infer<typeof discoverySchema>
@@ -251,7 +248,7 @@ function EmailDiscoveryForm({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Email</FormLabel>
+                <FormLabel className="text-xs">邮箱</FormLabel>
                 <FormControl>
                   <Input placeholder="user@company.com" {...field} />
                 </FormControl>
@@ -263,7 +260,7 @@ function EmailDiscoveryForm({
             {isLoading && (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            Continue
+            继续
           </Button>
         </div>
       </form>
@@ -272,10 +269,8 @@ function EmailDiscoveryForm({
 }
 
 const basicLoginSchema = z.object({
-  email: z.string().email().min(3, { message: "Required" }),
-  password: z
-    .string()
-    .min(12, "Password needs to be at least 12 characters long"),
+  email: z.string().email().min(3, { message: "必填" }),
+  password: z.string().min(12, "密码至少需要 12 个字符"),
 })
 
 type BasicLoginFormValues = z.infer<typeof basicLoginSchema>
@@ -313,10 +308,8 @@ export function BasicLoginForm({ initialEmail }: { initialEmail?: string }) {
           ? getApiErrorDetail(error)
           : null
       toast({
-        title: "Error signing in",
-        description:
-          forbiddenDetail ??
-          "Please check your email and password and try again",
+        title: "登录出错",
+        description: forbiddenDetail ?? "请检查邮箱和密码后重试",
       })
     } finally {
       setIsLoading(false)
@@ -334,7 +327,7 @@ export function BasicLoginForm({ initialEmail }: { initialEmail?: string }) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs">Email</FormLabel>
+                    <FormLabel className="text-xs">邮箱</FormLabel>
                     <FormControl>
                       <Input placeholder="user@company.com" {...field} />
                     </FormControl>
@@ -350,7 +343,7 @@ export function BasicLoginForm({ initialEmail }: { initialEmail?: string }) {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs">Password</FormLabel>
+                      <FormLabel className="text-xs">密码</FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -369,7 +362,7 @@ export function BasicLoginForm({ initialEmail }: { initialEmail?: string }) {
             {isLoading && (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            Sign In
+            登录
           </Button>
         </div>
       </form>

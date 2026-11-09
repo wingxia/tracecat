@@ -278,24 +278,24 @@ describe("validateForm / validateEnvMap", () => {
     }
     const issues = validateForm(form)
     expect(issues.length).toBeGreaterThan(0)
-    expect(issues[0]).toContain("Add a collector endpoint")
+    expect(issues[0]).toContain("添加收集器端点")
   })
 
   it("rejects an unsupported key in the merged map", () => {
     expect(validateEnvMap({ NOT_AN_OTEL_VAR: "x" })).toEqual([
-      "NOT_AN_OTEL_VAR is not supported.",
+      "不支持 NOT_AN_OTEL_VAR。",
     ])
   })
 
   it("rejects a reserved key", () => {
     expect(validateEnvMap({ OTEL_EXPORTER_OTLP_HEADERS: "x" })).toEqual([
-      "OTEL_EXPORTER_OTLP_HEADERS is managed by Tracecat.",
+      "OTEL_EXPORTER_OTLP_HEADERS 由 Tracecat 管理。",
     ])
   })
 
   it("rejects a non-positive interval", () => {
     expect(validateEnvMap({ OTEL_METRIC_EXPORT_INTERVAL: "0" })).toEqual([
-      "OTEL_METRIC_EXPORT_INTERVAL must be a positive integer.",
+      "OTEL_METRIC_EXPORT_INTERVAL 必须为正整数。",
     ])
   })
 
@@ -303,7 +303,7 @@ describe("validateForm / validateEnvMap", () => {
     "rejects non-decimal interval value %s",
     (value) => {
       expect(validateEnvMap({ OTEL_METRIC_EXPORT_INTERVAL: value })).toEqual([
-        "OTEL_METRIC_EXPORT_INTERVAL must be a positive integer.",
+        "OTEL_METRIC_EXPORT_INTERVAL 必须为正整数。",
       ])
     }
   )
@@ -313,7 +313,7 @@ describe("validateForm / validateEnvMap", () => {
     ["OTEL_LOGS_EXPORT_INTERVAL", `1${"0".repeat(400)}`],
   ])("rejects an unsafe-integer interval for %s", (key, value) => {
     expect(validateEnvMap({ [key]: value })).toEqual([
-      `${key} must be at most ${Number.MAX_SAFE_INTEGER}.`,
+      `${key} 不能超过 ${Number.MAX_SAFE_INTEGER}。`,
     ])
   })
 
@@ -331,25 +331,22 @@ describe("validateForm / validateEnvMap", () => {
   })
 
   it.each([
-    [
-      "/v1/traces",
-      "OTEL_EXPORTER_OTLP_ENDPOINT must be an absolute HTTP(S) URL.",
-    ],
+    ["/v1/traces", "OTEL_EXPORTER_OTLP_ENDPOINT 必须为绝对 HTTP(S) URL。"],
     [
       "ftp://collector.example.com",
-      "OTEL_EXPORTER_OTLP_ENDPOINT must be an absolute HTTP(S) URL.",
+      "OTEL_EXPORTER_OTLP_ENDPOINT 必须为绝对 HTTP(S) URL。",
     ],
     [
       "https://user:password@collector.example.com",
-      "OTEL_EXPORTER_OTLP_ENDPOINT must not include credentials.",
+      "OTEL_EXPORTER_OTLP_ENDPOINT 不能包含凭据。",
     ],
     [
       "https://collector.example.com/v1/traces?token=secret",
-      "OTEL_EXPORTER_OTLP_ENDPOINT must not include a query string.",
+      "OTEL_EXPORTER_OTLP_ENDPOINT 不能包含查询字符串。",
     ],
     [
       "https://collector.example.com/base#fragment",
-      "OTEL_EXPORTER_OTLP_ENDPOINT must not include a fragment.",
+      "OTEL_EXPORTER_OTLP_ENDPOINT 不能包含片段标识。",
     ],
   ])("rejects invalid collector endpoint %s", (endpoint, expected) => {
     expect(validateEnvMap({ OTEL_EXPORTER_OTLP_ENDPOINT: endpoint })).toEqual([
@@ -359,7 +356,7 @@ describe("validateForm / validateEnvMap", () => {
 
   it("rejects unsupported boolean values", () => {
     expect(validateEnvMap({ OTEL_LOG_USER_PROMPTS: "yes" })).toEqual([
-      "OTEL_LOG_USER_PROMPTS supports true, false, 1, 0.",
+      "OTEL_LOG_USER_PROMPTS 支持 true、false、1、0。",
     ])
   })
 
@@ -377,7 +374,7 @@ describe("validateForm / validateEnvMap", () => {
     "rejects unsupported exporter value %s",
     (value) => {
       expect(validateEnvMap({ OTEL_LOGS_EXPORTER: value })).toEqual([
-        "OTEL_LOGS_EXPORTER supports otlp, none.",
+        "OTEL_LOGS_EXPORTER 支持 otlp、none。",
       ])
     }
   )
@@ -418,7 +415,7 @@ describe("validateForm / validateEnvMap", () => {
     "OTEL_EXPORTER_OTLP_TRACES_PROTOCOL",
   ])("rejects relay-managed protocol key %s", (key) => {
     expect(validateEnvMap({ [key]: "http/protobuf" })).toEqual([
-      `${key} is managed by Tracecat.`,
+      `${key} 由 Tracecat 管理。`,
     ])
   })
 })
@@ -430,7 +427,7 @@ describe("validateAgentOtelHeaderEntries", () => {
         { name: "Authorization", value: "Bearer first" },
         { name: " authorization ", value: "Bearer second" },
       ])
-    ).toEqual(["Header name authorization is duplicated."])
+    ).toEqual(["请求头名称 authorization 重复。"])
   })
 
   it("accepts unique non-empty headers", () => {
@@ -446,7 +443,7 @@ describe("validateAgentOtelHeaderEntries", () => {
     expect(
       validateAgentOtelHeaderEntries([{ name: "Bad Header", value: "x" }])
     ).toEqual([
-      "Header name Bad Header is not a valid HTTP header name (letters, digits, and !#$%&'*+-.^_`|~).",
+      "请求头名称 Bad Header 不是有效的 HTTP 请求头名称 (letters, digits, and !#$%&'*+-.^_`|~).",
     ])
   })
 
@@ -455,17 +452,15 @@ describe("validateAgentOtelHeaderEntries", () => {
     (value) => {
       expect(
         validateAgentOtelHeaderEntries([{ name: "Authorization", value }])
-      ).toEqual([
-        "Header Authorization value must contain only printable ASCII characters.",
-      ])
+      ).toEqual(["请求头 Authorization 的值只能包含可打印的 ASCII 字符。"])
     }
   )
 })
 
 describe("endpoint delimiters", () => {
   it.each([
-    ["https://c.example.com/base?", "must not include a query string."],
-    ["https://c.example.com/base#", "must not include a fragment."],
+    ["https://c.example.com/base?", "不能包含查询字符串。"],
+    ["https://c.example.com/base#", "不能包含片段标识。"],
   ])("rejects a bare delimiter in %s", (endpoint, message) => {
     expect(validateEnvMap({ OTEL_EXPORTER_OTLP_ENDPOINT: endpoint })).toEqual([
       `OTEL_EXPORTER_OTLP_ENDPOINT ${message}`,

@@ -69,7 +69,7 @@ describe("pruneGraphObject", () => {
         nodes: [createMockNode("node1", "udf"), createMockNode("node2", "udf")],
         edges: [{ id: "edge1", source: "node1", target: "node2" }],
       })
-    ).toThrow("Workflow cannot be saved without a trigger node")
+    ).toThrow("缺少触发节点，无法保存工作流")
   })
 })
 
@@ -88,7 +88,7 @@ describe("buildDuplicatedWorkflowDefinition", () => {
     )
 
     expect(duplicated.workflow_id).toBeNull()
-    expect(duplicated.definition.title).toBe("Copy of Child")
+    expect(duplicated.definition.title).toBe("Child 的副本")
     expect(duplicated.layout).toEqual({ nodes: [] })
   })
 })

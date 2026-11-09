@@ -94,11 +94,10 @@ function renderForm(props: Partial<FormRendererProps> = {}) {
   return { ...view, onSubmit, user, toggleRecipient }
 }
 
-const submitButton = () => screen.getByRole("button", { name: "Submit" })
+const submitButton = () => screen.getByRole("button", { name: "提交" })
 const why = () => screen.getByLabelText(/Justification/)
 const recipient = () => screen.queryByLabelText(/Recipient name/)
-const submitted = () =>
-  screen.findByRole("heading", { name: "Request submitted" })
+const submitted = () => screen.findByRole("heading", { name: "已提交请求" })
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -109,7 +108,7 @@ describe("FormRenderer", () => {
     renderForm({ submitterEmail: "maya.okafor@example.com" })
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Laptop request" })
+      screen.getByRole("heading", { level: 1, name: "笔记本电脑申请" })
     ).toBeVisible()
     expect(screen.getByText("Request a new laptop from IT.")).toBeVisible()
     expect(screen.getByRole("note")).toHaveTextContent(
@@ -125,9 +124,7 @@ describe("FormRenderer", () => {
     expect(screen.getByText("For someone else")).toHaveTextContent(
       /^For someone else$/
     )
-    expect(
-      screen.getByText("Submitting as maya.okafor@example.com")
-    ).toBeVisible()
+    expect(screen.getByText("提交身份：maya.okafor@example.com")).toBeVisible()
   })
 
   it("validates first, focuses the first invalid field and clears an error on change", async () => {
@@ -136,14 +133,14 @@ describe("FormRenderer", () => {
 
     await user.click(submitButton())
 
-    expect(await screen.findAllByText("This field is required")).toHaveLength(2)
+    expect(await screen.findAllByText("此字段为必填项")).toHaveLength(2)
     expect(why()).toHaveAttribute("aria-invalid", "true")
     expect(why()).toHaveFocus()
     expect(onSubmit).not.toHaveBeenCalled()
 
     await user.type(why(), "x")
     expect(why()).toHaveAttribute("aria-invalid", "false")
-    expect(screen.getAllByText("This field is required")).toHaveLength(1)
+    expect(screen.getAllByText("此字段为必填项")).toHaveLength(1)
   })
 
   it("submits a large whole-number float default unchanged", async () => {
@@ -181,13 +178,14 @@ describe("FormRenderer", () => {
     })
     expect(screen.getByText("IT will follow up by email.")).toBeVisible()
     expect(screen.getByText("FRM-8F3K2A1C")).toBeVisible()
-    expect(
-      screen.getByRole("link", { name: "My submissions" })
-    ).toHaveAttribute("href", "/forms?tab=submissions")
+    expect(screen.getByRole("link", { name: "我的提交" })).toHaveAttribute(
+      "href",
+      "/forms?tab=submissions"
+    )
     // Requesters never see the run behind a submission.
     expect(screen.queryByText(/running|completed|failed|status/i)).toBeNull()
 
-    await user.click(screen.getByRole("button", { name: "Submit another" }))
+    await user.click(screen.getByRole("button", { name: "再次提交" }))
     expect(why()).toHaveValue("")
   })
 
@@ -221,7 +219,7 @@ describe("FormRenderer", () => {
     [
       "the form changed",
       apiError(409, { code: "form_changed", message: "This form changed" }),
-      /This form was updated while you were filling it in/,
+      /填写期间表单已更新/,
     ],
     [
       "any other failure",
@@ -234,7 +232,7 @@ describe("FormRenderer", () => {
     [
       "a failure without a message",
       new Error("Network Error"),
-      "Something went wrong. Try again.",
+      "出现了问题，请重试。",
     ],
   ])("says so above the button when %s", async (_case, error, message) => {
     const { user, onSubmit } = renderForm()
@@ -269,9 +267,7 @@ describe("FormRenderer", () => {
   it("is read-only without permission to submit", () => {
     renderForm({ canSubmit: false })
 
-    expect(
-      screen.getByText("You can view this form but you can't submit it.")
-    ).toBeVisible()
+    expect(screen.getByText("你可以查看此表单，但无法提交。")).toBeVisible()
     expect(submitButton()).toBeDisabled()
     expect(why()).toBeDisabled()
   })
@@ -287,7 +283,7 @@ describe("FormRenderer", () => {
     await user.type(why(), "Screen cracked")
 
     await user.click(submitButton())
-    const pending = screen.getByRole("button", { name: "Submitting..." })
+    const pending = screen.getByRole("button", { name: "提交中…" })
     expect(pending).toBeDisabled()
     await user.click(pending)
     await user.keyboard("{Enter}")
@@ -336,18 +332,18 @@ describe("FormRenderer", () => {
 
     await user.click(submitButton())
 
-    await screen.findAllByText("This field is required")
+    await screen.findAllByText("此字段为必填项")
     expect(described(costCenter)).toEqual([
       "Ask your manager.",
-      "This field is required",
+      "此字段为必填项",
     ])
     expect(teams).toHaveAttribute("aria-invalid", "true")
-    expect(described(teams)).toEqual(["This field is required"])
+    expect(described(teams)).toEqual(["此字段为必填项"])
   })
 
   it("confirms a preview with PREVIEW and calls nothing", async () => {
     const { user, onSubmit } = renderForm({ mode: "preview" })
-    expect(screen.getByText("Preview. Nothing is submitted.")).toBeVisible()
+    expect(screen.getByText("仅预览，不会提交内容。")).toBeVisible()
 
     await user.type(why(), "Because")
     await user.click(submitButton())
@@ -355,7 +351,7 @@ describe("FormRenderer", () => {
     expect(await submitted()).toBeVisible()
     expect(screen.getByText("PREVIEW")).toBeVisible()
     expect(screen.getByText("IT will follow up by email.")).toBeVisible()
-    expect(screen.queryByRole("link", { name: "My submissions" })).toBeNull()
+    expect(screen.queryByRole("link", { name: "我的提交" })).toBeNull()
     expect(onSubmit).not.toHaveBeenCalled()
     expect(searchUsers).not.toHaveBeenCalled()
   })
@@ -378,7 +374,7 @@ describe("FormRenderer", () => {
       )
     }
     const confirmation = () =>
-      screen.queryByRole("heading", { name: "Request submitted" })
+      screen.queryByRole("heading", { name: "已提交请求" })
 
     it("shows the edited form in preview", async () => {
       await submitThenEdit("preview")
@@ -395,12 +391,12 @@ describe("FormRenderer", () => {
   })
 
   it.each([
-    ["date", "2026-10-22", "Needed by Oct 22, 2026"],
-    ["date", null, "Needed by Pick a date"],
+    ["date", "2026-10-22", "Needed by 2026年10月22日"],
+    ["date", null, "Needed by 选择日期"],
     [
       "datetime",
       new Date(2026, 9, 22, 9, 30).toISOString(),
-      "Needed by Oct 22, 2026",
+      "Needed by 2026年10月22日",
     ],
   ] as const)(
     "names a %s button by its label and what it shows",
@@ -433,10 +429,7 @@ describe("FormRenderer", () => {
 
     await user.click(screen.getByRole("combobox"))
     expect(await screen.findByText("eli.editor@example.com")).toBeVisible()
-    await user.type(
-      screen.getByPlaceholderText("Search by name or email"),
-      "av"
-    )
+    await user.type(screen.getByPlaceholderText("按姓名或邮箱搜索"), "av")
 
     // The debounced request has not gone out yet: the old list must be gone.
     expect(eli()).not.toBeInTheDocument()
@@ -453,10 +446,8 @@ describe("FormRenderer", () => {
 
     await user.click(screen.getByRole("combobox"))
 
-    expect(
-      await screen.findByText("Couldn't search people. Try again.")
-    ).toBeVisible()
-    expect(screen.queryByText("No people found.")).not.toBeInTheDocument()
+    expect(await screen.findByText("无法搜索人员，请重试。")).toBeVisible()
+    expect(screen.queryByText("未找到人员。")).not.toBeInTheDocument()
   })
 
   describe("file fields", () => {
@@ -488,7 +479,7 @@ describe("FormRenderer", () => {
 
       expect(screen.getByText("a.pdf")).toBeVisible()
       expect(uploadFile).not.toHaveBeenCalled()
-      await user.click(screen.getByRole("button", { name: "Remove a.pdf" }))
+      await user.click(screen.getByRole("button", { name: "移除 a.pdf" }))
       expect(screen.queryByText("a.pdf")).not.toBeInTheDocument()
     })
 
@@ -510,7 +501,7 @@ describe("FormRenderer", () => {
         })
       )
       expect(screen.queryByText("c.pdf")).not.toBeInTheDocument()
-      expect(screen.getByText("Choose files")).toBeDisabled()
+      expect(screen.getByText("选择多个文件")).toBeDisabled()
       await user.click(submitButton())
       await waitFor(() =>
         expect(onSubmit).toHaveBeenCalledWith({ photos: ["file-1", "file-2"] })
@@ -526,13 +517,11 @@ describe("FormRenderer", () => {
 
       await pick(pdf("big.pdf", "xxxx"), pdf("ok.pdf"))
 
-      expect(screen.getByText("Files can be at most 3 Bytes")).toBeVisible()
+      expect(screen.getByText("单个文件不能超过 3 Bytes")).toBeVisible()
       expect(await screen.findByText("Too large")).toBeVisible()
       expect(uploadFile).toHaveBeenCalledTimes(1)
       await user.click(submitButton())
-      expect(
-        await screen.findByText("Remove the files that failed to upload")
-      ).toBeVisible()
+      expect(await screen.findByText("移除上传失败的文件")).toBeVisible()
       expect(onSubmit).not.toHaveBeenCalled()
     })
 
@@ -575,7 +564,7 @@ describe("FormRenderer", () => {
       finishA({ id: "file-a" })
 
       await waitFor(() =>
-        expect(screen.queryByText("Uploading...")).not.toBeInTheDocument()
+        expect(screen.queryByText("上传中…")).not.toBeInTheDocument()
       )
       expect(screen.getByText("a.pdf")).toBeVisible()
       expect(screen.getByText("b.pdf")).toBeVisible()
@@ -628,7 +617,7 @@ describe("FormRenderer", () => {
 
       // An invalid group focuses its first card, its only tab stop for now.
       await user.click(submitButton())
-      await screen.findByText("This field is required")
+      await screen.findByText("此字段为必填项")
       expect(card("MacBook Air")).toHaveFocus()
       await user.tab()
       expect(submitButton()).toHaveFocus()
@@ -687,7 +676,7 @@ describe("FormRenderer", () => {
       const group = screen.getByRole("group", { name: /Laptop model/ })
       // `aria-required` is not allowed on a group.
       expect(group).not.toHaveAttribute("aria-required")
-      expect(group).toHaveAccessibleDescription("Required")
+      expect(group).toHaveAccessibleDescription("必填")
     })
 
     it("does not describe an optional list field as required", () => {
@@ -695,7 +684,7 @@ describe("FormRenderer", () => {
 
       expect(
         screen.getByRole("group", { name: /Laptop model/ })
-      ).not.toHaveAccessibleDescription(/Required/)
+      ).not.toHaveAccessibleDescription(/必填/)
     })
   })
 })

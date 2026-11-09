@@ -148,7 +148,7 @@ it("resets the page and selection when a refreshed preview replaces the operatio
       />
     </QueryClientProvider>
   )
-  fireEvent.click(await screen.findByText("Show more files"))
+  fireEvent.click(await screen.findByText("显示更多文件"))
   await waitFor(() =>
     expect(workflowsListSyncDiffs).toHaveBeenCalledWith({
       workspaceId: "workspace-example",
@@ -236,7 +236,7 @@ it.each([false, true])(
           <PushPreview />
         </QueryClientProvider>
       )
-      fireEvent.click(screen.getByRole("button", { name: "Preview changes" }))
+      fireEvent.click(screen.getByRole("button", { name: "预览变更" }))
       await waitFor(() =>
         expect(screen.getByRole("button", { name: "Push" })).toBeEnabled()
       )
@@ -248,10 +248,8 @@ it.each([false, true])(
         await jest.advanceTimersByTimeAsync(2100)
       })
       expect(screen.getByRole("button", { name: "Push" })).toBeDisabled()
-      expect(
-        screen.getByText(/Preview expired. Refresh the preview before pushing./)
-      ).toBeVisible()
-      const refresh = screen.getByRole("button", { name: "Refresh preview" })
+      expect(screen.getByText(/预览已过期，请刷新预览后再推送。/)).toBeVisible()
+      const refresh = screen.getByRole("button", { name: "刷新预览" })
       expect(refresh).toBeEnabled()
       const fresh = {
         ...ready,

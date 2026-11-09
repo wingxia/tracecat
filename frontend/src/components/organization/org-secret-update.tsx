@@ -122,8 +122,8 @@ export function UpdateOrgSecretDialog({
   const onValidationFailed = (errors: unknown) => {
     console.error("Form validation failed", errors)
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while editing the secret.",
+      title: "表单校验失败",
+      description: "编辑密钥时发生校验错误。",
     })
   }
 
@@ -137,18 +137,12 @@ export function UpdateOrgSecretDialog({
       {children}
       <DialogContent size="lg" className={className}>
         <DialogHeader>
-          <DialogTitle>Edit secret</DialogTitle>
+          <DialogTitle>编辑密钥</DialogTitle>
           <DialogDescription className="flex flex-col">
             {isSshKey ? (
-              <span>
-                SSH keys are write-once. Delete and recreate the secret to
-                rotate the key.
-              </span>
+              <span>SSH 密钥只能写入一次。要轮换密钥，请删除后重新创建。</span>
             ) : (
-              <span>
-                Leave a field blank to keep its existing value. You must update
-                all keys at once.
-              </span>
+              <span>字段留空可保留现有值。更新时必须一次提交所有键。</span>
             )}
           </DialogDescription>
         </DialogHeader>
@@ -164,18 +158,18 @@ export function UpdateOrgSecretDialog({
                 name="name"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
 
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={selectedSecret?.name || "Name"}
+                        placeholder={selectedSecret?.name || "名称"}
                         {...register("name")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("name") && "Name will be left unchanged."}
+                      {!methods.watch("name") && "名称保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -186,20 +180,17 @@ export function UpdateOrgSecretDialog({
                 name="description"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedSecret?.description || "Description"
-                        }
+                        placeholder={selectedSecret?.description || "描述"}
                         {...register("description")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("description") &&
-                        "Description will be left unchanged."}
+                      {!methods.watch("description") && "描述保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -210,20 +201,17 @@ export function UpdateOrgSecretDialog({
                 name="environment"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedSecret?.environment || "Environment"
-                        }
+                        placeholder={selectedSecret?.environment || "环境"}
                         {...register("environment")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("environment") &&
-                        "Environment will be left unchanged."}
+                      {!methods.watch("environment") && "环境保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -231,7 +219,7 @@ export function UpdateOrgSecretDialog({
               {!isSshKey && (
                 <>
                   <FormItem>
-                    <FormLabel className="text-sm">Keys</FormLabel>
+                    <FormLabel className="text-sm">键</FormLabel>
 
                     {fields.length > 0 &&
                       fields.map((keysItem, index) => (
@@ -249,7 +237,7 @@ export function UpdateOrgSecretDialog({
                                   <Input
                                     id={`key-${index}`}
                                     className="text-sm"
-                                    placeholder={"Key"}
+                                    placeholder={"键"}
                                     {...field}
                                   />
                                 </FormControl>
@@ -296,11 +284,11 @@ export function UpdateOrgSecretDialog({
                     className="w-full space-x-2 text-xs text-foreground/80"
                   >
                     <PlusCircle className="mr-2 size-4" />
-                    Add item
+                    添加条目
                   </Button>
                   {fields.length === 0 && (
                     <span className="text-xs text-foreground/50">
-                      Secrets will be left unchanged.
+                      密钥将保持不变。
                     </span>
                   )}
                 </>
@@ -310,7 +298,7 @@ export function UpdateOrgSecretDialog({
               <DialogClose asChild>
                 <Button size="sm" type="submit">
                   <SaveIcon className="mr-2 size-4" />
-                  Save
+                  保存
                 </Button>
               </DialogClose>
             </DialogFooter>

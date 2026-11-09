@@ -136,21 +136,21 @@ export function VersionHistoryMenu({
       return (
         <div className="flex items-center gap-2 px-3 py-3 text-sm text-muted-foreground">
           <Loader2 className="size-4 animate-spin" />
-          Loading versions…
+          正在加载版本…
         </div>
       )
     }
     if (loadError) {
       return (
         <div className="px-3 py-3 text-sm text-muted-foreground">
-          Couldn't load version history.
+          无法加载版本历史。
         </div>
       )
     }
     if (versions.length === 0) {
       return (
         <div className="px-3 py-3 text-sm text-muted-foreground">
-          No versions yet.
+          暂无版本。
         </div>
       )
     }
@@ -173,13 +173,13 @@ export function VersionHistoryMenu({
                     <span className="font-medium">{version.label}</span>
                     {isCurrent ? (
                       <span className="text-xs text-muted-foreground">
-                        Current
+                        当前
                       </span>
                     ) : null}
                   </div>
                   <div className="text-muted-foreground">
                     {version.description ??
-                      new Date(version.createdAt).toLocaleString()}
+                      new Date(version.createdAt).toLocaleString("zh-CN")}
                   </div>
                 </div>
               </DropdownMenuItem>
@@ -207,15 +207,15 @@ export function VersionHistoryMenu({
 
   function renderDialogDescription(): ReactNode {
     if (!selectedVersion) {
-      return "Restoring replaces unsaved changes."
+      return "恢复会替换未保存的更改。"
     }
 
     const comparison = renderComparisonDescription
       ? renderComparisonDescription(selectedVersion)
-      : `Compare ${selectedVersion.label} with the current draft of ${documentDescriptor.name}.`
+      : `比较 ${selectedVersion.label} 与 ${documentDescriptor.name} 的当前草稿。`
     const confirmation = renderRestoreConfirmationDescription
       ? renderRestoreConfirmationDescription(selectedVersion)
-      : "Restoring replaces unsaved changes."
+      : "恢复会替换未保存的更改。"
 
     return (
       <>
@@ -240,7 +240,7 @@ export function VersionHistoryMenu({
                   variant="outline"
                   className="h-6 gap-1 px-1.5 pl-2 font-mono text-xs font-normal shadow-none"
                   disabled={disabled}
-                  aria-label={`${triggerLabel}, open version history`}
+                  aria-label={`${triggerLabel}，打开版本历史`}
                 >
                   {triggerLabel}
                   <ChevronDown className="size-3 text-muted-foreground" />
@@ -253,19 +253,19 @@ export function VersionHistoryMenu({
                   disabled={disabled}
                 >
                   <History className="size-4" />
-                  <span className="sr-only">Versions</span>
+                  <span className="sr-only">版本</span>
                 </Button>
               )}
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent>Versions</TooltipContent>
+          <TooltipContent>版本</TooltipContent>
         </Tooltip>
         <DropdownMenuContent align={align} className="w-80 p-0">
           <div className="flex flex-col">
             <DropdownMenuLabel className="flex flex-col gap-1 px-3 py-2">
-              <div className="text-xs font-medium">Version history</div>
+              <div className="text-xs font-medium">版本历史</div>
               <div className="text-xs text-muted-foreground">
-                Select a version of this {entityLabel} to review and restore.
+                选择此资源的版本： {entityLabel} 以查看并恢复。
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="mx-0 my-0" />
@@ -296,7 +296,7 @@ export function VersionHistoryMenu({
       >
         <AlertDialogContent className="max-h-[85vh] max-w-5xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden">
           <AlertDialogHeader>
-            <AlertDialogTitle>Restore version</AlertDialogTitle>
+            <AlertDialogTitle>恢复版本</AlertDialogTitle>
             <AlertDialogDescription>
               {renderDialogDescription()}
             </AlertDialogDescription>
@@ -308,7 +308,7 @@ export function VersionHistoryMenu({
           ) : null}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={restorePending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(event) => {
@@ -322,10 +322,10 @@ export function VersionHistoryMenu({
               {restorePending ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
-                  Restoring…
+                  恢复中…
                 </>
               ) : (
-                "Restore version"
+                "恢复版本"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -38,13 +38,13 @@ export type ArtifactConfig = {
 
 export const ARTIFACT_REGISTRY = {
   alert: {
-    label: "Alerts",
+    label: "告警",
     singularLabel: "Alert",
     icon: Bell,
   },
   case: {
-    label: "Cases",
-    singularLabel: "Case",
+    label: "事件",
+    singularLabel: "事件",
     icon: LayersIcon,
     href: (artifact, workspaceId) => caseHref(workspaceId, artifact.id),
     invalidateQueries: (queryClient, workspaceId, artifact) => {
@@ -59,8 +59,8 @@ export const ARTIFACT_REGISTRY = {
     },
   },
   workflow: {
-    label: "Workflows",
-    singularLabel: "Workflow",
+    label: "工作流",
+    singularLabel: "工作流",
     icon: WorkflowIcon,
     href: (artifact, workspaceId) =>
       `/workspaces/${workspaceId}/workflows/${artifact.id}`,
@@ -72,8 +72,8 @@ export const ARTIFACT_REGISTRY = {
     },
   },
   run: {
-    label: "Runs",
-    singularLabel: "Run",
+    label: "运行记录",
+    singularLabel: "运行",
     icon: ListVideoIcon,
     href: (artifact, workspaceId) =>
       artifact.type === "run"
@@ -81,8 +81,8 @@ export const ARTIFACT_REGISTRY = {
         : "#",
   },
   table: {
-    label: "Tables",
-    singularLabel: "Table",
+    label: "数据表",
+    singularLabel: "数据表",
     icon: Table2Icon,
     href: (artifact, workspaceId) =>
       `/workspaces/${workspaceId}/tables/${artifact.id}`,
@@ -105,8 +105,8 @@ export const ARTIFACT_REGISTRY = {
     },
   },
   agent: {
-    label: "Agents",
-    singularLabel: "Agent",
+    label: "智能体",
+    singularLabel: "智能体",
     icon: MousePointerClickIcon,
     href: (artifact, workspaceId) =>
       `/workspaces/${workspaceId}/agents/${artifact.id}`,
@@ -126,8 +126,8 @@ export const ARTIFACT_REGISTRY = {
     },
   },
   form: {
-    label: "Forms",
-    singularLabel: "Form",
+    label: "表单",
+    singularLabel: "表单",
     icon: ClipboardListIcon,
     href: (artifact, workspaceId) =>
       `/workspaces/${workspaceId}/forms/${artifact.id}`,
@@ -139,25 +139,25 @@ export const ARTIFACT_REGISTRY = {
     },
   },
   integration: {
-    label: "Integrations",
+    label: "集成",
     singularLabel: "Integration",
     icon: BlocksIcon,
   },
   secret: {
-    label: "Secrets",
+    label: "密钥",
     singularLabel: "Secret",
     icon: KeyRound,
   },
   generic: {
-    label: "Results",
-    singularLabel: "Result",
+    label: "结果",
+    singularLabel: "结果",
     icon: FileText,
   },
 } satisfies Record<WorkspaceChatArtifact["type"], ArtifactConfig>
 
 const UNKNOWN_ARTIFACT_CONFIG: ArtifactConfig = {
-  label: "Results",
-  singularLabel: "Result",
+  label: "结果",
+  singularLabel: "结果",
   icon: FileText,
 }
 

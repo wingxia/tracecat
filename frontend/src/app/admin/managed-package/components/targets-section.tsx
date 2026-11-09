@@ -141,7 +141,7 @@ export function TargetsSection({
         ...created,
       ])
     } catch (err) {
-      toastApiError("Failed to start preview", err)
+      toastApiError("启动预览失败", err)
     }
   }
 
@@ -152,12 +152,12 @@ export function TargetsSection({
         (rollout) => rollout.status === "applying"
       ).length
       toast({
-        title: "Apply started",
-        description: `Applying ${started} target${started === 1 ? "" : "s"}.`,
+        title: "已开始应用",
+        description: `正在应用 ${started} 个目标${started === 1 ? "" : ""}。`,
       })
       await live.refetch()
     } catch (err) {
-      toastApiError("Failed to apply rollouts", err)
+      toastApiError("应用部署失败", err)
     }
   }
 
@@ -166,7 +166,7 @@ export function TargetsSection({
       const rollout = await unassignTarget.mutateAsync(target.id)
       setUnassign({ rolloutId: rollout.id, target })
     } catch (err) {
-      toastApiError("Failed to start unassign preview", err)
+      toastApiError("启动取消分配预览失败", err)
     }
   }
 
@@ -174,10 +174,9 @@ export function TargetsSection({
     <section className="space-y-4">
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold">Targets</h3>
+          <h3 className="text-lg font-semibold">目标</h3>
           <p className="text-sm text-muted-foreground">
-            Customer workspaces that receive the package. Select targets to
-            preview and apply a version.
+            接收软件包的客户工作空间。选择目标以预览并应用版本。
           </p>
         </div>
         <Button
@@ -187,7 +186,7 @@ export function TargetsSection({
           disabled={!hasSource || tags.length === 0}
         >
           <PlusIcon className="mr-1 size-3" />
-          Assign target
+          分配目标
         </Button>
       </div>
 
@@ -207,16 +206,16 @@ export function TargetsSection({
       )}
 
       {isLoading && (
-        <div className="text-sm text-muted-foreground">Loading targets...</div>
+        <div className="text-sm text-muted-foreground">正在加载目标…</div>
       )}
       {!isLoading && Boolean(error) && (
         <div className="text-sm text-destructive">
-          {getApiErrorDetail(error) ?? "Failed to load targets."}
+          {getApiErrorDetail(error) ?? "加载目标失败。"}
         </div>
       )}
       {!isLoading && !error && targets.length === 0 && (
         <div className="text-sm text-muted-foreground">
-          No targets yet. Assign a customer workspace to get started.
+          暂无目标，请先分配客户工作空间。
         </div>
       )}
       {!isLoading && !error && targets.length > 0 && (
@@ -226,7 +225,7 @@ export function TargetsSection({
               <TableRow>
                 <TableHead className="w-8">
                   <Checkbox
-                    aria-label="Select all targets"
+                    aria-label={"选择所有目标"}
                     checked={headerChecked}
                     onCheckedChange={(value) =>
                       setSelectedIds(
@@ -237,12 +236,12 @@ export function TargetsSection({
                     }
                   />
                 </TableHead>
-                <TableHead className="text-xs">Organization</TableHead>
-                <TableHead className="text-xs">Workspace</TableHead>
-                <TableHead className="text-xs">Pinned</TableHead>
-                <TableHead className="text-xs">Applied</TableHead>
-                <TableHead className="text-xs">Status</TableHead>
-                <TableHead className="text-xs">Last rollout</TableHead>
+                <TableHead className="text-xs">组织</TableHead>
+                <TableHead className="text-xs">工作空间</TableHead>
+                <TableHead className="text-xs">已固定</TableHead>
+                <TableHead className="text-xs">已应用</TableHead>
+                <TableHead className="text-xs">状态</TableHead>
+                <TableHead className="text-xs">上次部署</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -256,7 +255,7 @@ export function TargetsSection({
                 >
                   <TableCell>
                     <Checkbox
-                      aria-label={`Select ${target.workspace_name}`}
+                      aria-label={`选择 ${target.workspace_name}`}
                       checked={selectedIds.has(target.id)}
                       onCheckedChange={(value) =>
                         toggleTarget(target.id, value === true)
@@ -290,19 +289,19 @@ export function TargetsSection({
                           variant="ghost"
                           size="icon"
                           className="size-8"
-                          aria-label={`Actions for ${target.workspace_name}`}
+                          aria-label={`${target.workspace_name} 的操作`}
                         >
                           <MoreHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onSelect={() => setPinTarget(target)}>
-                          Change pin
+                          更改固定版本
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onSelect={() => setReferencesTarget(target)}
                         >
-                          References
+                          引用
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -310,7 +309,7 @@ export function TargetsSection({
                           disabled={unassignTarget.isPending}
                           onSelect={() => handleUnassign(target)}
                         >
-                          Unassign
+                          取消分配
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

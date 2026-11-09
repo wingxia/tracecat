@@ -63,8 +63,7 @@ import {
   SubagentStreamStore,
 } from "@/lib/subagent-stream"
 
-const DEFAULT_CHAT_ERROR_MESSAGE =
-  "The assistant couldn't complete that request. Please try again."
+const DEFAULT_CHAT_ERROR_MESSAGE = "助手无法完成此请求，请重试。"
 
 type UpdateableChatRecord =
   | AgentSessionsGetSessionResponse
@@ -150,7 +149,7 @@ function parseValidationError(error: unknown): string | null {
       (field === "tools" || field === "mcp_integrations") &&
       typeof maxLength === "number"
     ) {
-      const noun = field === "tools" ? "tools" : "MCP integrations"
+      const noun = field === "tools" ? "tools" : "MCP 集成"
       messages.push(
         `You can add at most ${maxLength} ${noun}. Remove some and try again.`
       )
@@ -747,7 +746,7 @@ export function useVercelChat({
   useEffect(() => {
     setLastError(
       droppedPromptRef.current?.prompt
-        ? { chatKey, message: "Connection dropped", disconnected: true }
+        ? { chatKey, message: "连接中断", disconnected: true }
         : null
     )
   }, [chatKey])
@@ -855,7 +854,7 @@ export function useVercelChat({
       })
       console.error("Error in Vercel chat:", error)
       toast({
-        title: "Chat error",
+        title: "对话错误",
         description: friendlyMessage,
       })
     },

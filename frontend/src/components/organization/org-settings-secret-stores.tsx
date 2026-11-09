@@ -66,7 +66,12 @@ const ROW_GRID =
 const USAGE_INLINE_LIMIT = 3
 
 function pluralize(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`
+  const labels: Record<string, string> = {
+    store: "个存储",
+    secret: "个密钥",
+    workspace: "个工作空间",
+  }
+  return `${count} ${labels[noun] ?? noun}`
 }
 
 /** Organization settings for external secret stores, grouped by provider. */
@@ -83,7 +88,7 @@ export function OrgSettingsSecretStores() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading secret stores: ${error.message}`}
+        message={`加载密钥存储出错：${error.message}`}
       />
     )
   }
@@ -102,8 +107,7 @@ export function OrgSettingsSecretStores() {
     <div className="space-y-8 pb-8">
       <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="max-w-xl text-sm text-muted-foreground">
-          Tracecat reads secret values from your secret manager when needed.
-          Values are never stored in Tracecat.
+          Tracecat 按需从密钥管理器读取密钥值，不会在 Tracecat 中存储这些值。
         </p>
         <ScopeGuard scope="org:secret:create">
           <AddStoreMenu
@@ -114,10 +118,9 @@ export function OrgSettingsSecretStores() {
       </div>
       {groups.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-lg border border-dashed px-6 py-12 text-center text-sm">
-          <p className="font-medium">No secret stores yet</p>
+          <p className="font-medium">暂无密钥存储</p>
           <p className="max-w-md text-muted-foreground">
-            Connect a secret manager so workspaces can reference its secrets.
-            Use Add store to choose a provider.
+            连接密钥管理器，让工作空间引用其中的密钥。点击“添加存储”选择提供商。
           </p>
         </div>
       ) : (
@@ -153,12 +156,12 @@ function AddStoreMenu({
       <DropdownMenuTrigger asChild>
         <Button size="sm" variant="outline" className="shrink-0 shadow-none">
           <PlusIcon className="mr-2 size-4" />
-          Add store
+          添加存储
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72 shadow-none">
         <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-          Choose a provider
+          选择提供商
         </DropdownMenuLabel>
         {providerKeys.map((key) => {
           const provider = SECRET_STORE_PROVIDERS[key]
@@ -232,7 +235,7 @@ function CreateSecretStoreDialog({
       {createdStore ? (
         <StoreSetupDialogContent
           store={createdStore}
-          cancelLabel="Finish later"
+          cancelLabel="稍后完成"
           onClose={onClose}
         />
       ) : (
@@ -247,7 +250,7 @@ function CreateSecretStoreDialog({
           >
             <DialogBody>
               <div className="space-y-2">
-                <Label htmlFor="store-name">Name</Label>
+                <Label htmlFor="store-name">名称</Label>
                 <Input
                   id="store-name"
                   value={name}
@@ -263,9 +266,9 @@ function CreateSecretStoreDialog({
               />
               <div className="flex items-center justify-between gap-4 border-t pt-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="store-all-workspaces">All workspaces</Label>
+                  <Label htmlFor="store-all-workspaces">所有工作空间</Label>
                   <p className="text-xs text-muted-foreground">
-                    Allow every current and future workspace.
+                    允许所有现有和未来的工作空间。
                   </p>
                 </div>
                 <Switch
@@ -282,7 +285,7 @@ function CreateSecretStoreDialog({
                 disabled={createStorePending}
                 className="shadow-none"
               >
-                {createStorePending ? "Saving…" : "Continue"}
+                {createStorePending ? "保存中…" : "继续"}
               </Button>
             </DialogFooter>
           </form>
@@ -306,7 +309,7 @@ function ProviderSection({
   const provider = SECRET_STORE_PROVIDERS[providerKey]
   return (
     <section
-      aria-label={`${provider.label} stores`}
+      aria-label={`${provider.label} 个存储`}
       className="flex flex-col rounded-lg border"
     >
       <div className="flex items-center gap-3 border-b px-4 py-3">
@@ -324,11 +327,11 @@ function ProviderSection({
               "bg-muted/40 py-2 text-xs text-muted-foreground"
             )}
           >
-            <span>Name</span>
+            <span>名称</span>
             <span>{provider.locationLabel}</span>
-            <span>Workspaces</span>
-            <span>Secrets</span>
-            <span>Status</span>
+            <span>工作空间</span>
+            <span>密钥</span>
+            <span>状态</span>
             <span />
           </div>
           {stores.map((store) => (
@@ -380,19 +383,18 @@ function StoreRow({
     }
   }
 
-  let status = "Disabled"
-  if (!setupComplete) status = "Setup incomplete"
-  else if (store.enabled) status = "Enabled"
+  let status = "已禁用"
+  if (!setupComplete) status = "设置未完成"
+  else if (store.enabled) status = "已启用"
 
-  const toggleLabel = store.enabled ? "Disable store" : "Enable store"
+  const toggleLabel = store.enabled ? "禁用存储" : "启用存储"
 
-  let confirmBody =
-    "Secrets created against this store will not resolve until you enable it again."
+  let confirmBody = "在此存储重新启用之前，引用它的密钥将无法解析。"
   if (confirm === "delete") {
     confirmBody =
-      "Tracecat removes the store and its external ID. Secrets in AWS are not changed. Remove the external ID from the role's trust policy too."
+      "Tracecat 将移除此存储及其外部 ID，AWS 中的密钥保持不变。也请从角色信任策略中移除此外部 ID。"
   } else if (referenceCount > 0) {
-    confirmBody = `${pluralize(referenceCount, "secret")} stop resolving in every workflow and agent until you enable the store again.`
+    confirmBody = `在此存储重新启用之前，所有工作流和智能体中的 ${pluralize(referenceCount, "secret")} 将无法解析。`
   }
 
   function handleToggle() {
@@ -436,7 +438,7 @@ function StoreRow({
             variant="outline"
             className={cn(
               "whitespace-nowrap font-normal",
-              status === "Disabled" && "text-muted-foreground"
+              status === "已禁用" && "text-muted-foreground"
             )}
           >
             {status}
@@ -450,7 +452,7 @@ function StoreRow({
                   size="icon"
                   variant="ghost"
                   className="size-7 text-muted-foreground"
-                  aria-label={`Actions for ${store.name}`}
+                  aria-label={`${store.name} 的操作`}
                   disabled={pending}
                 >
                   <EllipsisIcon className="size-4" />
@@ -462,7 +464,7 @@ function StoreRow({
                     className="text-xs"
                     onSelect={() => setSettingUp(true)}
                   >
-                    Finish setup
+                    完成设置
                   </DropdownMenuItem>
                 )}
                 {canUpdate && (
@@ -471,7 +473,7 @@ function StoreRow({
                     className="text-xs"
                     onSelect={() => setEditing(true)}
                   >
-                    Edit store
+                    编辑存储
                   </DropdownMenuItem>
                 )}
                 {canUpdate && setupComplete && (
@@ -487,12 +489,13 @@ function StoreRow({
                       onSelect={() => setConfirm("delete")}
                       className="text-xs text-destructive focus:text-destructive"
                     >
-                      Delete
+                      删除
                     </DropdownMenuItem>
                     {referenceCount > 0 && (
                       <p className="whitespace-nowrap px-2 pb-1.5 text-xs text-muted-foreground">
-                        In use by {pluralize(referenceCount, "secret")}. Remove
-                        them first.
+                        正在使用此存储的资源：{" "}
+                        {pluralize(referenceCount, "secret")}
+                        。请先移除这些资源。
                       </p>
                     )}
                   </>
@@ -507,8 +510,7 @@ function StoreRow({
         <div className="mx-4 mb-4 flex flex-col gap-4 rounded-lg border bg-background p-4">
           {!store.enabled && (
             <p className="rounded-md border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
-              This store is disabled. Every secret that uses it fails to resolve
-              until you enable it.
+              此存储已禁用，所有引用它的密钥都无法解析，直到重新启用。
             </p>
           )}
           <provider.Details
@@ -522,7 +524,7 @@ function StoreRow({
         {settingUp && (
           <StoreSetupDialogContent
             store={store}
-            cancelLabel="Cancel"
+            cancelLabel={"取消"}
             onClose={() => setSettingUp(false)}
           />
         )}
@@ -542,12 +544,12 @@ function StoreRow({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {confirm === "delete" ? "Delete" : "Disable"} {store.name}?
+              {confirm === "delete" ? "删除" : "禁用"} {store.name}?
             </AlertDialogTitle>
             <AlertDialogDescription>{confirmBody}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() =>
@@ -561,7 +563,7 @@ function StoreRow({
                 )
               }
             >
-              {confirm === "delete" ? "Delete" : "Disable"}
+              {confirm === "delete" ? "删除" : "禁用"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -643,7 +645,7 @@ function StoreSetupDialogContent({
               className="shadow-none"
               disabled={pending}
             >
-              {pending ? "Saving…" : "Save and enable"}
+              {pending ? "保存中…" : "保存并启用"}
             </Button>
           )}
         </DialogFooter>
@@ -665,14 +667,14 @@ function StoreUsage({ store }: { store: SecretStoreRead }) {
   const usage = store.workspace_usage ?? []
 
   if (usage.length === 0) {
-    return <span className="text-xs text-muted-foreground">No secrets yet</span>
+    return <span className="text-xs text-muted-foreground">暂无密钥</span>
   }
 
   const names = new Map(workspaces?.map((ws) => [ws.id, ws.name]))
   // GET /workspaces lists only workspaces the user can open; link just those.
   const rows = usage.map((entry) => ({
     id: entry.workspace_id,
-    name: names.get(entry.workspace_id) ?? "Unknown workspace",
+    name: names.get(entry.workspace_id) ?? "未知工作空间",
     count: entry.secret_count,
     canOpen: names.has(entry.workspace_id),
   }))
@@ -683,7 +685,7 @@ function StoreUsage({ store }: { store: SecretStoreRead }) {
   return (
     <div className="flex flex-col gap-1.5 text-xs">
       <span>
-        {pluralize(total, "secret")} in {pluralize(rows.length, "workspace")}
+        {pluralize(total, "secret")} 位于 {pluralize(rows.length, "workspace")}
       </span>
       {rows.slice(0, USAGE_INLINE_LIMIT).map((row) => (
         <span key={row.id} className="flex justify-between gap-3">
@@ -713,7 +715,7 @@ function StoreUsage({ store }: { store: SecretStoreRead }) {
               type="button"
               className="self-start text-primary hover:underline"
             >
-              View all {rows.length} workspaces
+              查看全部 {rows.length} 个工作空间
             </button>
           </PopoverTrigger>
           <PopoverContent align="end" className="w-80 p-0 shadow-none">
@@ -722,8 +724,8 @@ function StoreUsage({ store }: { store: SecretStoreRead }) {
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search workspaces"
-                aria-label="Search workspaces using this store"
+                placeholder={"搜索工作空间"}
+                aria-label={"搜索使用此存储的工作空间"}
                 className="h-9 min-w-0 flex-1 bg-transparent text-xs outline-none"
               />
             </div>
@@ -755,12 +757,12 @@ function StoreUsage({ store }: { store: SecretStoreRead }) {
               })}
               {matching.length === 0 && (
                 <p className="px-2 py-1.5 text-xs text-muted-foreground">
-                  No workspaces match.
+                  没有匹配的工作空间。
                 </p>
               )}
             </div>
             <p className="border-t px-3 py-1.5 text-xs text-muted-foreground">
-              Sorted by number of secrets
+              按密钥数量排序
             </p>
           </PopoverContent>
         </Popover>
@@ -801,15 +803,15 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
   const matchingWorkspaces = workspaces?.filter((workspace) =>
     workspace.name.toLowerCase().includes(needle)
   )
-  let summary = "Select workspaces"
+  let summary = "选择工作空间"
   if (store.all_workspaces) {
-    summary = "All workspaces"
+    summary = "所有工作空间"
   } else if (authorizedIds.size === 1) {
     summary =
       workspaces?.find((workspace) => authorizedIds.has(workspace.id))?.name ??
       "1 workspace"
   } else if (authorizedIds.size > 1) {
-    summary = `${authorizedIds.size} workspaces`
+    summary = `${authorizedIds.size} 个工作空间`
   }
 
   return (
@@ -825,7 +827,7 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
           size="sm"
           variant="outline"
           className="h-7 max-w-full justify-self-start gap-1.5 px-2 text-xs font-normal shadow-none"
-          aria-label={`Workspaces: ${summary}`}
+          aria-label={`工作空间：${summary}`}
         >
           <span className="truncate">{summary}</span>
           <ChevronDownIcon className="size-3.5 shrink-0 text-muted-foreground" />
@@ -852,7 +854,7 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
             onSelect={(event) => event.preventDefault()}
             className="py-2 text-xs"
           >
-            All workspaces
+            所有工作空间
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
             value="selected"
@@ -860,7 +862,7 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
             onSelect={(event) => event.preventDefault()}
             className="py-2 text-xs"
           >
-            Selected workspaces
+            所选工作空间
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
         {!store.all_workspaces && (
@@ -868,14 +870,14 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
             <DropdownMenuSeparator />
             {workspacesLoading && (
               <p className="px-2 py-2 text-xs text-muted-foreground">
-                Loading workspaces…
+                正在加载工作空间…
               </p>
             )}
             {workspacesError && (
               <p className="px-2 py-2 text-xs text-destructive">
                 {canListWorkspaces === false
-                  ? "You need permission to view workspaces to choose them."
-                  : "Could not load workspaces. Refresh to try again."}
+                  ? "需要查看工作空间的权限才能选择。"
+                  : "无法加载工作空间，请刷新后重试。"}
               </p>
             )}
             {workspaces && workspaces.length > 0 && (
@@ -885,8 +887,8 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
                   onChange={(event) => setQuery(event.target.value)}
                   // Keep menu typeahead from stealing keystrokes.
                   onKeyDown={(event) => event.stopPropagation()}
-                  placeholder="Search workspaces"
-                  aria-label="Search workspaces"
+                  placeholder={"搜索工作空间"}
+                  aria-label={"搜索工作空间"}
                   className="h-8 text-xs shadow-none"
                 />
               </div>
@@ -895,7 +897,7 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
               workspaces &&
               workspaces.length > 0 && (
                 <p className="px-2 py-2 text-xs text-muted-foreground">
-                  No workspaces match.
+                  没有匹配的工作空间。
                 </p>
               )}
             <div className="max-h-64 overflow-y-auto">
@@ -926,7 +928,7 @@ function WorkspaceAccessMenu({ store }: { store: SecretStoreRead }) {
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem className="justify-center py-2 text-xs">
-          Done
+          完成
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -980,16 +982,15 @@ function EditSecretStoreDialog({
     >
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Edit {store.name}</DialogTitle>
+          <DialogTitle>编辑 {store.name}</DialogTitle>
           <DialogDescription>
-            Update the store connection. The external ID stays the same, so the
-            trust policy keeps working.
+            更新存储连接。外部 ID 保持不变，现有信任策略仍可使用。
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <DialogBody>
             <div className="space-y-2">
-              <Label htmlFor="edit-store-name">Name</Label>
+              <Label htmlFor="edit-store-name">名称</Label>
               <Input
                 id="edit-store-name"
                 value={name}
@@ -1010,7 +1011,7 @@ function EditSecretStoreDialog({
               className="shadow-none"
               disabled={pending}
             >
-              {pending ? "Saving…" : "Save changes"}
+              {pending ? "保存中…" : "保存更改"}
             </Button>
           </DialogFooter>
         </form>

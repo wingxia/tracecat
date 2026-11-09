@@ -46,9 +46,9 @@ const bitbucketDataCenterTokenFormSchema = z.object({
   base_url: z
     .string()
     .trim()
-    .url("Enter your HTTPS instance URL")
+    .url("输入实例的 HTTPS URL")
     .startsWith("https://"),
-  token: z.string().trim().min(1, "Token is required"),
+  token: z.string().trim().min(1, "令牌不能为空"),
 })
 
 type BitbucketDataCenterTokenFormData = z.infer<
@@ -71,12 +71,11 @@ export function BitbucketDataCenterTokenSetup() {
   const isConfigured = credentialsStatus?.exists ?? false
   const isCorrupted = credentialsStatus?.is_corrupted ?? false
 
-  let statusLabel = "Not connected"
+  let statusLabel = "未连接"
   if (isCorrupted) {
-    statusLabel =
-      "Stored credentials are unreadable. Re-enter the API token to reconnect."
+    statusLabel = "无法读取已存储的凭据，请重新输入 API 令牌以恢复连接。"
   } else if (isConfigured) {
-    statusLabel = credentialsStatus?.base_url ?? "Unknown server"
+    statusLabel = credentialsStatus?.base_url ?? "未知服务器"
   }
 
   async function handleDelete() {
@@ -84,17 +83,13 @@ export function BitbucketDataCenterTokenSetup() {
       await deleteCredentials.mutateAsync()
       setDeleteDialogOpen(false)
       toast({
-        title: "Bitbucket Data Center credentials deleted",
-        description:
-          "Bitbucket Data Center workspace sync has been disconnected.",
+        title: "已删除 Bitbucket Data Center 凭据",
+        description: "Bitbucket Data Center 工作空间同步已断开。",
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to delete credentials",
+        title: "错误",
+        description: error instanceof Error ? error.message : "删除凭据失败",
         variant: "destructive",
       })
     }
@@ -107,9 +102,9 @@ export function BitbucketDataCenterTokenSetup() {
   if (credentialsStatusError) {
     return (
       <p className="text-sm text-destructive">
-        Unable to load Bitbucket Data Center credentials.{" "}
+        无法加载 Bitbucket Data Center 凭据。{" "}
         <Button variant="link" onClick={() => refetchCredentialsStatus()}>
-          Retry
+          重试
         </Button>
       </p>
     )
@@ -133,12 +128,12 @@ export function BitbucketDataCenterTokenSetup() {
                 size="sm"
                 onClick={() => setDialogOpen(true)}
               >
-                {isCorrupted ? "Reconnect" : "Update"}
+                {isCorrupted ? "重新连接" : "更新"}
               </Button>
               <Button
                 variant="destructive"
                 size="sm"
-                aria-label="Delete Bitbucket Data Center credentials"
+                aria-label={"删除 Bitbucket Data Center 凭据"}
                 onClick={() => setDeleteDialogOpen(true)}
               >
                 <Trash2Icon className="size-3.5" />
@@ -146,7 +141,7 @@ export function BitbucketDataCenterTokenSetup() {
             </>
           ) : (
             <Button size="sm" onClick={() => setDialogOpen(true)}>
-              Connect
+              连接
             </Button>
           )}
         </div>
@@ -160,9 +155,8 @@ export function BitbucketDataCenterTokenSetup() {
           setDialogOpen(false)
           refetchCredentialsStatus()
           toast({
-            title: "Bitbucket Data Center credentials saved",
-            description:
-              "Bitbucket Data Center workspace sync credentials are ready.",
+            title: "已保存 Bitbucket Data Center 凭据",
+            description: "Bitbucket Data Center 工作空间同步凭据已就绪。",
           })
         }}
       />
@@ -170,25 +164,22 @@ export function BitbucketDataCenterTokenSetup() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Delete Bitbucket Data Center credentials
-            </AlertDialogTitle>
+            <AlertDialogTitle>删除 Bitbucket Data Center 凭据</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the Bitbucket Data Center token
-              credentials? Bitbucket Data Center workspace sync will stop
-              working until credentials are reconnected.
+              确定要删除 Bitbucket Data Center
+              令牌凭据吗？重新连接凭据前，工作空间同步将停止工作。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteCredentials.isPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteCredentials.isPending}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {deleteCredentials.isPending ? "Deleting..." : "Delete"}
+              {deleteCredentials.isPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -231,11 +222,11 @@ function BitbucketDataCenterConnectionDialog({
       onFormSuccess()
     } catch (error) {
       toast({
-        title: "Error",
+        title: "错误",
         description:
           error instanceof Error
             ? error.message
-            : "Failed to save Bitbucket Data Center credentials",
+            : "保存 Bitbucket Data Center 凭据失败",
         variant: "destructive",
       })
     }
@@ -245,9 +236,7 @@ function BitbucketDataCenterConnectionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>
-            Bitbucket Data Center workspace sync credential
-          </DialogTitle>
+          <DialogTitle>Bitbucket Data Center 工作空间同步凭据</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Form {...form}>
@@ -257,7 +246,7 @@ function BitbucketDataCenterConnectionDialog({
                 name="base_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Instance URL</FormLabel>
+                    <FormLabel>实例 URL</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://bitbucket.example.com"
@@ -265,8 +254,7 @@ function BitbucketDataCenterConnectionDialog({
                       />
                     </FormControl>
                     <FormDescription>
-                      Use the HTTPS instance URL, including its context path if
-                      configured.
+                      使用实例的 HTTPS URL；若配置了上下文路径，也请包含该路径。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -277,25 +265,24 @@ function BitbucketDataCenterConnectionDialog({
                 name="token"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Credential token</FormLabel>
+                    <FormLabel>凭据令牌</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         autoComplete="off"
-                        placeholder="HTTP access token"
+                        placeholder={"HTTP 访问令牌"}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Use a Data Center HTTP access token with repository write
-                      permission.{" "}
+                      使用具有仓库写入权限的 Data Center HTTP 访问令牌。{" "}
                       <a
                         className="underline"
                         href="https://confluence.atlassian.com/bitbucketserver/http-access-tokens-939515499.html"
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Token permissions
+                        令牌权限
                       </a>
                     </FormDescription>
                     <FormMessage />
@@ -308,10 +295,10 @@ function BitbucketDataCenterConnectionDialog({
                   variant="outline"
                   onClick={() => onOpenChange(false)}
                 >
-                  Cancel
+                  取消
                 </Button>
                 <Button type="submit" disabled={saveCredentials.isPending}>
-                  {saveCredentials.isPending ? "Saving..." : "Save"}
+                  {saveCredentials.isPending ? "保存中…" : "保存"}
                 </Button>
               </div>
             </form>

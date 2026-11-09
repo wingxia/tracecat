@@ -96,7 +96,7 @@ function DetachButton({
         }}
       >
         <UnlinkIcon className="size-3" />
-        Detach to editable copy
+        创建可编辑副本
       </Button>
       <DetachDialog
         open={detachOpen}

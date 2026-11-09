@@ -4,9 +4,9 @@ import type { PullResourceDiff } from "@/client"
 import { getWorkspaceSyncResourceLabel } from "@/components/workspace-sync/resource-metadata"
 
 const CHANGE_GROUPS = [
-  { change: "added", label: "Added to the package" },
-  { change: "modified", label: "Updated in the package" },
-  { change: "deleted", label: "Removed from the package" },
+  { change: "added", label: "已添加到软件包" },
+  { change: "modified", label: "已在软件包中更新" },
+  { change: "deleted", label: "已从软件包移除" },
 ] as const
 
 /** One changed resource, summarised over every file it changed. */
@@ -70,11 +70,11 @@ export function PackagePublishSummary({
   return (
     <div className="space-y-2 border-b px-5 py-3 text-xs">
       <p className="font-medium">
-        What this publish changes, compared with {compareRef ?? "the branch"}
+        此次发布的变更，相比于 {compareRef ?? "此分支"}
       </p>
       {groups.length === 0 ? (
         <p className="text-muted-foreground">
-          Nothing. The package on the branch already matches your selection.
+          没有变更，分支中的软件包已与所选内容一致。
         </p>
       ) : (
         groups.map((group) => (

@@ -111,9 +111,7 @@ describe("CaseInsertRowDialog", () => {
     renderDialog()
 
     expect(
-      screen.getByText(
-        'Add a new row to the "Alerts" table and link it to this case.'
-      )
+      screen.getByText("向“Alerts”数据表添加新行并关联到此事件。")
     ).toBeInTheDocument()
   })
 
@@ -121,17 +119,17 @@ describe("CaseInsertRowDialog", () => {
     renderDialog(null)
 
     expect(
-      screen.getByText("Add a new row to this table and link it to this case.")
+      screen.getByText("向此数据表添加新行，并关联到当前事件。")
     ).toBeInTheDocument()
   })
 
   it("marks only the columns the backend insists on as required", () => {
     renderDialog()
 
-    expect(screen.getAllByText("(required)")).toHaveLength(1)
-    expect(label("title")).toHaveTextContent("(required)")
-    expect(label("note")).not.toHaveTextContent("(required)")
-    expect(label("source")).not.toHaveTextContent("(required)")
+    expect(screen.getAllByText("（必填）")).toHaveLength(1)
+    expect(label("title")).toHaveTextContent("（必填）")
+    expect(label("note")).not.toHaveTextContent("（必填）")
+    expect(label("source")).not.toHaveTextContent("（必填）")
   })
 
   it("inserts the row for the case and closes", async () => {
@@ -142,7 +140,7 @@ describe("CaseInsertRowDialog", () => {
     await user.type(field("note"), "from the SIEM")
     await user.type(field("source"), "siem")
     await user.type(field("score"), "42")
-    await user.click(screen.getByRole("button", { name: "Insert row" }))
+    await user.click(screen.getByRole("button", { name: "插入行" }))
 
     await waitFor(() => {
       expect(mockInsertCaseRow).toHaveBeenCalledWith({
@@ -159,8 +157,8 @@ describe("CaseInsertRowDialog", () => {
       expect(onOpenChange).toHaveBeenCalledWith(false)
     })
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Row added",
-      description: "Added the row and linked it to this case.",
+      title: "已添加行",
+      description: "已添加此行并关联到当前事件。",
     })
   })
 
@@ -169,7 +167,7 @@ describe("CaseInsertRowDialog", () => {
     renderDialog()
 
     await user.type(field("title"), "Suspicious login")
-    await user.click(screen.getByRole("button", { name: "Insert row" }))
+    await user.click(screen.getByRole("button", { name: "插入行" }))
 
     await waitFor(() => {
       expect(mockInsertCaseRow).toHaveBeenCalledTimes(1)
@@ -186,9 +184,9 @@ describe("CaseInsertRowDialog", () => {
     const { onOpenChange } = renderDialog()
 
     await user.type(field("note"), "no title given")
-    await user.click(screen.getByRole("button", { name: "Insert row" }))
+    await user.click(screen.getByRole("button", { name: "插入行" }))
 
-    expect(await screen.findByText("title is required")).toBeInTheDocument()
+    expect(await screen.findByText("title 不能为空")).toBeInTheDocument()
     expect(mockInsertCaseRow).not.toHaveBeenCalled()
     expect(onOpenChange).not.toHaveBeenCalled()
   })
@@ -199,11 +197,9 @@ describe("CaseInsertRowDialog", () => {
 
     await user.type(field("title"), "Suspicious login")
     await user.type(field("score"), "4.5")
-    await user.click(screen.getByRole("button", { name: "Insert row" }))
+    await user.click(screen.getByRole("button", { name: "插入行" }))
 
-    expect(
-      await screen.findByText("score must be an integer")
-    ).toBeInTheDocument()
+    expect(await screen.findByText("score 必须是整数")).toBeInTheDocument()
     expect(mockInsertCaseRow).not.toHaveBeenCalled()
   })
 
@@ -217,7 +213,7 @@ describe("CaseInsertRowDialog", () => {
     const { onOpenChange } = renderDialog()
 
     await user.type(field("title"), "Suspicious login")
-    await user.click(screen.getByRole("button", { name: "Insert row" }))
+    await user.click(screen.getByRole("button", { name: "插入行" }))
 
     await waitFor(() => {
       expect(mockInsertCaseRow).toHaveBeenCalled()

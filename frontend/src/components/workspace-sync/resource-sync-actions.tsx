@@ -90,7 +90,7 @@ export function WorkspaceResourceSyncActions({
     hasEntitlement("git_sync")
   const { workspace } = useWorkspaceDetails()
   const [open, setOpen] = useState(false)
-  const [exportMessage, setExportMessage] = useState(`Push ${label}`)
+  const [exportMessage, setExportMessage] = useState(`推送 ${label}`)
   const { exportWorkspace, exportWorkspaceIsPending } =
     useWorkspaceSyncExport(workspaceId)
   const gitRepoUrl = workspace?.settings?.git_repo_url || undefined
@@ -175,7 +175,7 @@ export function WorkspaceResourceSyncActions({
   })
   const reviewRequestLabel = getReviewRequestLabel(provider)
   const reviewRequestTitle =
-    reviewRequestLabel === "merge request" ? "Merge request" : "Pull request"
+    reviewRequestLabel === "merge request" ? "合并请求" : "拉取请求"
   const previewErrorMessage = previewError ? (
     <ExportErrorMessage error={previewError} workspaceId={workspaceId} />
   ) : undefined
@@ -200,7 +200,7 @@ export function WorkspaceResourceSyncActions({
       return
     }
     resetBranchCreation()
-    setExportMessage(`Push ${label}`)
+    setExportMessage(`推送 ${label}`)
     setPreviewRequested(false)
   }, [label, open, resetBranchCreation])
 
@@ -222,14 +222,14 @@ export function WorkspaceResourceSyncActions({
       const result = await exportWorkspace({ operationId: previewOperationId })
       const prUrl = result.commit.pr_url
       toast({
-        title: prUrl ? `${reviewRequestTitle} ready` : "Push complete",
+        title: prUrl ? `${reviewRequestTitle} 已就绪` : "推送完成",
         description: result.commit.message ?? result.commit.sha ?? undefined,
         action: prUrl ? (
           <ToastAction
-            altText={`Open ${reviewRequestLabel}`}
+            altText={`打开${reviewRequestLabel}`}
             onClick={() => window.open(prUrl, "_blank", "noopener,noreferrer")}
           >
-            View {getReviewRequestAbbreviation(provider)}
+            视图 {getReviewRequestAbbreviation(provider)}
           </ToastAction>
         ) : undefined,
       })
@@ -237,7 +237,7 @@ export function WorkspaceResourceSyncActions({
     } catch (error) {
       if (error instanceof SyncOperationWaitCancelled) return
       toast({
-        title: "Push failed",
+        title: "推送失败",
         description: (
           <ExportErrorMessage error={error} workspaceId={workspaceId} />
         ),
@@ -264,7 +264,7 @@ export function WorkspaceResourceSyncActions({
           disabled={disabled}
         >
           <GitBranchIcon className="size-3.5" />
-          Push
+          推送
         </Button>
       </DialogTrigger>
       <DialogContent size="md" className="max-w-2xl">
@@ -273,7 +273,7 @@ export function WorkspaceResourceSyncActions({
             <GitBranchIcon className="size-[18px]" />
           </div>
           <div className="min-w-0 space-y-1">
-            <DialogTitle className="text-base">Push {label}</DialogTitle>
+            <DialogTitle className="text-base">推送 {label}</DialogTitle>
             <DialogDescription>
               {describePush({ gitRepoUrl, label })}
             </DialogDescription>
@@ -311,7 +311,7 @@ export function WorkspaceResourceSyncActions({
                   className="text-sm font-medium"
                   htmlFor={`sync-message-${branchSlug}`}
                 >
-                  Commit message
+                  提交说明
                 </label>
                 <Textarea
                   id={`sync-message-${branchSlug}`}
@@ -326,7 +326,7 @@ export function WorkspaceResourceSyncActions({
                   className="text-sm font-medium"
                   htmlFor={`sync-branch-${branchSlug}`}
                 >
-                  Target branch
+                  目标分支
                 </label>
                 <WorkspaceSyncBranchSelector
                   id={`sync-branch-${branchSlug}`}
@@ -347,9 +347,7 @@ export function WorkspaceResourceSyncActions({
                 />
                 {workspacePackageError && (
                   <p className="text-xs text-destructive">
-                    Could not check whether this workspace is the managed
-                    resources source, so pushing is off. Close and reopen this
-                    dialog to try again.
+                    无法确认此工作空间是否为托管资源来源，已禁用推送。请关闭后重新打开对话框以重试。
                   </p>
                 )}
               </div>
@@ -358,10 +356,9 @@ export function WorkspaceResourceSyncActions({
             <div className="space-y-3">
               {showPackageNotice && (
                 <p className="text-sm text-muted-foreground">
-                  This workspace is the managed resources source. Every push
-                  exports the whole package listed in{" "}
-                  {`${PACKAGE_INCLUDE_FILENAME},`} so pushing one resource type
-                  is off. Choose the package and push it from the Git sync page.
+                  此工作空间是托管资源来源，每次推送都会导出此处列出的完整软件包：{" "}
+                  {`${PACKAGE_INCLUDE_FILENAME},`} 因此无法只推送单种资源。请在
+                  Git 同步页面选择软件包并推送。
                 </p>
               )}
               <Button asChild variant="outline" size="sm" className="gap-1.5">
@@ -369,7 +366,7 @@ export function WorkspaceResourceSyncActions({
                   href={`/workspaces/${workspaceId}/git-sync`}
                   onClick={() => setOpen(false)}
                 >
-                  Open Git sync
+                  打开 Git 同步
                   <ArrowUpRightIcon className="size-3.5" />
                 </Link>
               </Button>
@@ -438,7 +435,7 @@ function PushFlow({
     <div className="flex items-stretch gap-2 rounded-lg border bg-muted/30 p-3">
       <FlowNode
         icon={<LayersIcon className="size-3.5" />}
-        title="Source"
+        title={"来源"}
         value={
           isLoading && total === undefined ? (
             <Skeleton className="h-4 w-16 rounded-sm" />
@@ -450,7 +447,7 @@ function PushFlow({
       <FlowArrow />
       <FlowNode
         icon={<GitBranchIcon className="size-3.5" />}
-        title="Branch"
+        title={"分支"}
         value={
           <span className="flex items-center gap-1.5">
             <span className="truncate">{targetBranch || "—"}</span>
@@ -474,7 +471,7 @@ function PushFlow({
             <GitBranchIcon className="size-3.5" />
           )
         }
-        title="Result"
+        title={"结果"}
         value={getWorkspaceSyncPushResultLabel({
           outcome,
           defaultBranch,
@@ -523,7 +520,7 @@ interface DescribePushOptions {
  */
 function describePush({ gitRepoUrl, label }: DescribePushOptions): string {
   if (!gitRepoUrl) {
-    return "Connect a Git repository on the Git sync page first."
+    return "请先在 Git 同步页面连接 Git 仓库。"
   }
-  return `Commit all ${label} in this workspace to the selected Git branch.`
+  return `将此工作空间的所有${label}提交到所选 Git 分支。`
 }

@@ -134,7 +134,7 @@ function adminListPlatformCatalog({
       limit,
     },
     errors: {
-      422: "Validation Error",
+      422: "校验错误",
     },
   })
 }
@@ -978,8 +978,8 @@ export function useAdminAuditSettings() {
       onError: (error) => {
         console.error("Failed to test platform audit webhook", error)
         toast({
-          title: "Failed to test audit webhook",
-          description: getApiErrorDetail(error) ?? "Unknown error",
+          title: "测试审计 Webhook 失败",
+          description: getApiErrorDetail(error) ?? "未知错误",
         })
       },
     })
@@ -1028,14 +1028,14 @@ export function useAdminSecuritySettings() {
         queryKey: ADMIN_SECURITY_SETTINGS_QUERY_KEY,
       })
       toast({
-        title: "Updated IP allowlist",
-        description: "Platform admin IP allowlist saved successfully.",
+        title: "已更新 IP 白名单",
+        description: "已成功保存平台管理员 IP 白名单。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to update IP allowlist",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "更新 IP 白名单失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },

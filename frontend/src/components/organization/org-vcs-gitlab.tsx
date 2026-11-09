@@ -45,9 +45,9 @@ const gitLabTokenFormSchema = z.object({
   base_url: z
     .string()
     .trim()
-    .url("Please enter a valid URL")
+    .url("请输入有效的 URL")
     .default("https://gitlab.com"),
-  token: z.string().trim().min(1, "Token is required"),
+  token: z.string().trim().min(1, "令牌不能为空"),
 })
 
 type GitLabTokenFormData = z.infer<typeof gitLabTokenFormSchema>
@@ -71,16 +71,13 @@ export function GitLabTokenSetup() {
       await deleteCredentials.mutateAsync()
       setDeleteDialogOpen(false)
       toast({
-        title: "GitLab credentials deleted",
-        description: "GitLab workspace sync has been disconnected.",
+        title: "已删除 GitLab 凭据",
+        description: "GitLab 工作空间同步已断开。",
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to delete credentials",
+        title: "错误",
+        description: error instanceof Error ? error.message : "删除凭据失败",
         variant: "destructive",
       })
     }
@@ -99,10 +96,10 @@ export function GitLabTokenSetup() {
             <p className="text-sm font-medium">GitLab</p>
             <p className="text-xs text-muted-foreground">
               {isCorrupted
-                ? "Stored credentials are unreadable. Re-enter the GitLab token to reconnect."
+                ? "已保存的凭据无法读取，请重新输入 GitLab 令牌以连接。"
                 : isConfigured
-                  ? (credentialsStatus?.base_url ?? "Unknown server")
-                  : "Not connected"}
+                  ? (credentialsStatus?.base_url ?? "未知服务器")
+                  : "未连接"}
             </p>
           </div>
         </div>
@@ -114,7 +111,7 @@ export function GitLabTokenSetup() {
                 size="sm"
                 onClick={() => setDialogOpen(true)}
               >
-                {isCorrupted ? "Reconnect" : "Update"}
+                {isCorrupted ? "重新连接" : "更新"}
               </Button>
               <Button
                 variant="destructive"
@@ -126,7 +123,7 @@ export function GitLabTokenSetup() {
             </>
           ) : (
             <Button size="sm" onClick={() => setDialogOpen(true)}>
-              Connect
+              连接
             </Button>
           )}
         </div>
@@ -140,8 +137,8 @@ export function GitLabTokenSetup() {
           setDialogOpen(false)
           refetchCredentialsStatus()
           toast({
-            title: "GitLab credentials saved",
-            description: "GitLab workspace sync credentials are ready.",
+            title: "已保存 GitLab 凭据",
+            description: "GitLab 工作空间同步凭据已就绪。",
           })
         }}
       />
@@ -149,23 +146,22 @@ export function GitLabTokenSetup() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete GitLab credentials</AlertDialogTitle>
+            <AlertDialogTitle>删除 GitLab 凭据</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the GitLab token credentials?
-              GitLab workspace sync will stop working until credentials are
-              reconnected.
+              确定要删除 GitLab
+              令牌凭据吗？重新连接凭据前，工作空间同步将停止工作。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteCredentials.isPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteCredentials.isPending}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {deleteCredentials.isPending ? "Deleting..." : "Delete"}
+              {deleteCredentials.isPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -211,11 +207,9 @@ function GitLabConnectionDialog({
       onFormSuccess()
     } catch (error) {
       toast({
-        title: "Error",
+        title: "错误",
         description:
-          error instanceof Error
-            ? error.message
-            : "Failed to save GitLab credentials",
+          error instanceof Error ? error.message : "保存 GitLab 凭据失败",
         variant: "destructive",
       })
     }
@@ -225,7 +219,7 @@ function GitLabConnectionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>GitLab workspace sync credential</DialogTitle>
+          <DialogTitle>GitLab 工作空间同步凭据</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Form {...form}>
@@ -235,13 +229,12 @@ function GitLabConnectionDialog({
                 name="base_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Base URL</FormLabel>
+                    <FormLabel>基础 URL</FormLabel>
                     <FormControl>
                       <Input placeholder="https://gitlab.com" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Use your self-managed GitLab URL when not using
-                      GitLab.com.
+                      不使用 GitLab.com 时，请填写自建 GitLab 的 URL。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -252,7 +245,7 @@ function GitLabConnectionDialog({
                 name="token"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Credential token</FormLabel>
+                    <FormLabel>凭据令牌</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
@@ -262,12 +255,10 @@ function GitLabConnectionDialog({
                       />
                     </FormControl>
                     <FormDescription>
-                      Use a GitLab project or group access token with both api
-                      and write_repository scopes. Replace existing api-only
-                      project or group tokens before pushing with durable Git
-                      sync. Tracecat stores this token as the GitLab credential
-                      for workspace sync; prefer it over a personal access token
-                      for long-lived sync.
+                      使用同时具有 api 和 write_repository 权限范围的 GitLab
+                      项目或用户组访问令牌。通过持久 Git 同步推送前，请替换仅有
+                      api 权限的旧令牌。Tracecat 将此令牌保存为工作空间同步的
+                      GitLab 凭据；长期同步建议优先使用它，而非个人访问令牌。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -279,10 +270,10 @@ function GitLabConnectionDialog({
                   variant="outline"
                   onClick={() => onOpenChange(false)}
                 >
-                  Cancel
+                  取消
                 </Button>
                 <Button type="submit" disabled={saveCredentials.isPending}>
-                  {saveCredentials.isPending ? "Saving..." : "Save"}
+                  {saveCredentials.isPending ? "保存中…" : "保存"}
                 </Button>
               </div>
             </form>

@@ -45,7 +45,7 @@ export function GithubOAuthButton({
 
 export function OidcOAuthButton({
   returnUrl,
-  providerLabel = "Social login",
+  providerLabel = "第三方登录",
   providerIcon = "login",
   ...props
 }: OidcOAuthButtonProps) {

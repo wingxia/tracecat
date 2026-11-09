@@ -47,13 +47,13 @@ export function useRegistryVersions(repositoryId: string | null) {
     switch (error.status) {
       case 403:
         return toast({
-          title: "Forbidden",
-          description: "You are not authorized to perform this action",
+          title: "禁止访问",
+          description: "你无权执行此操作",
         })
       default:
         return toast({
           title,
-          description: getApiErrorDetail(error) ?? "Please try again.",
+          description: getApiErrorDetail(error) ?? "请重试。",
           variant: "destructive",
         })
     }
@@ -78,12 +78,12 @@ export function useRegistryVersions(repositoryId: string | null) {
       onSuccess: (_, { versionName }) => {
         invalidateVersionQueries()
         toast({
-          title: "Version promoted",
-          description: `Version ${versionName} is now active.`,
+          title: "已提升版本",
+          description: `版本 ${versionName} 现已生效。`,
         })
       },
       onError: (error: TracecatApiError) =>
-        toastVersionError("Couldn't promote version", error),
+        toastVersionError("提升版本失败", error),
     })
 
   const { mutateAsync: deleteVersion, isPending: deleteVersionIsPending } =
@@ -100,12 +100,12 @@ export function useRegistryVersions(repositoryId: string | null) {
       onSuccess: () => {
         invalidateVersionQueries()
         toast({
-          title: "Version deleted",
-          description: "The version has been deleted.",
+          title: "已删除版本",
+          description: "已删除此版本。",
         })
       },
       onError: (error: TracecatApiError) =>
-        toastVersionError("Couldn't delete version", error),
+        toastVersionError("删除版本失败", error),
     })
 
   return {
@@ -142,7 +142,7 @@ export function useRegistryVersionDiff({
     queryKey: ["registry_version_diff", repositoryId, baseId, compareToId],
     queryFn: async () => {
       if (!repositoryId || !baseId || !compareToId) {
-        throw new Error("Both versions are required")
+        throw new Error("必须选择两个版本")
       }
       return await registryRepositoriesCompareRegistryVersions({
         repositoryId,

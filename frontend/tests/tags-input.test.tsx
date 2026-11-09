@@ -26,7 +26,7 @@ describe("MultiTagCommandInput", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Remove Alpha tool" })
+      screen.getByRole("button", { name: "移除 Alpha tool" })
     ).toBeInTheDocument()
   })
 
@@ -49,7 +49,7 @@ describe("MultiTagCommandInput", () => {
       />
     )
 
-    const input = screen.getByPlaceholderText("Add tags...")
+    const input = screen.getByPlaceholderText("添加标签…")
     fireEvent.focus(input)
     fireEvent.mouseDown(screen.getByText("Locked action"))
     fireEvent.click(screen.getByText("Locked action"))
@@ -77,7 +77,7 @@ describe("MultiTagCommandInput", () => {
       />
     )
 
-    const input = screen.getByPlaceholderText("Add tags...")
+    const input = screen.getByPlaceholderText("添加标签…")
     fireEvent.focus(input)
 
     expect(screen.getByText("Unsafe MCP action")).toBeInTheDocument()
@@ -174,7 +174,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       fireEvent.change(input, { target: { value: "gamma" } })
       fireEvent.keyDown(input, { key: "Enter" })
@@ -192,7 +192,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       fireEvent.keyDown(input, { key: "ArrowDown" })
       fireEvent.keyDown(input, { key: "Enter" })
@@ -211,11 +211,11 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       fireEvent.change(input, { target: { value: "tools.custom.thing" } })
 
-      const addRow = screen.getByText('Add "tools.custom.thing"')
+      const addRow = screen.getByText("添加“tools.custom.thing”")
       fireEvent.mouseDown(addRow)
       fireEvent.click(addRow)
 
@@ -233,7 +233,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       fireEvent.keyDown(input, { key: "Enter" })
 
@@ -248,7 +248,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       expect(screen.getByText("Alpha tool")).toBeInTheDocument()
 
@@ -266,7 +266,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       expect(screen.getByText("Alpha tool")).toBeInTheDocument()
 
@@ -288,7 +288,7 @@ describe("MultiTagCommandInput", () => {
         />
       )
 
-      const input = screen.getByPlaceholderText("Add tags...")
+      const input = screen.getByPlaceholderText("添加标签…")
       fireEvent.focus(input)
       fireEvent.change(input, { target: { value: "zzzzqqqq" } })
       fireEvent.keyDown(input, { key: "Enter" })
@@ -314,8 +314,6 @@ it("distinguishes removal buttons for whole-server grants", () => {
       }))}
     />
   )
-  fireEvent.click(
-    screen.getByRole("button", { name: "Remove beta · All tools" })
-  )
+  fireEvent.click(screen.getByRole("button", { name: "移除 beta · All tools" }))
   expect(onChange).toHaveBeenCalledWith(["mcp.alpha"])
 })

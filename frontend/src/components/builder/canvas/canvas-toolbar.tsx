@@ -59,7 +59,7 @@ interface ActionCategory {
 const ACTION_CATEGORIES: ActionCategory[] = [
   {
     id: "core",
-    label: "Core",
+    label: "核心",
     namespace: "core",
     icon: BoxIcon,
     align: "center",
@@ -73,35 +73,35 @@ const ACTION_CATEGORIES: ActionCategory[] = [
   },
   {
     id: "agent",
-    label: "Agent",
+    label: "智能体",
     namespace: "ai",
     icon: MousePointerClickIcon,
     align: "center",
   },
   {
     id: "core.workflow",
-    label: "Workflow",
+    label: "工作流",
     namespace: "core.workflow",
     icon: WorkflowIcon,
     align: "center",
   },
   {
     id: "core.transform",
-    label: "Transform",
+    label: "转换",
     namespace: "core.transform",
     icon: SquareFunctionIcon,
     align: "center",
   },
   {
     id: "core.cases",
-    label: "Cases",
+    label: "事件",
     namespace: "core.cases",
     icon: LayersIcon,
     align: "center",
   },
   {
     id: "core.table",
-    label: "Tables",
+    label: "数据表",
     namespace: "core.table",
     icon: Table2Icon,
     align: "center",
@@ -115,7 +115,7 @@ const ACTION_CATEGORIES: ActionCategory[] = [
   },
   {
     id: "tools",
-    label: "Tools",
+    label: "工具",
     namespace: "tools",
     icon: BlocksIcon,
     align: "center",
@@ -422,7 +422,7 @@ export function CanvasToolbar({
         ) : (
           <button
             type="button"
-            aria-label="Show actions"
+            aria-label={"显示动作"}
             onClick={() => setHovered(true)}
             className="flex items-center gap-1 rounded-full border bg-background/95 px-2 py-0.5 text-muted-foreground backdrop-blur transition-colors duration-150 animate-in fade-in-0 zoom-in-95 hover:text-foreground supports-[backdrop-filter]:bg-background/80"
           >
@@ -546,7 +546,7 @@ export function ToggleConditionsButton() {
     () => parseShortcutKeys({ shortcutKeys: TOGGLE_CONDITIONS_SHORTCUT }),
     []
   )
-  const label = showAll ? "Hide all conditions" : "Show all conditions"
+  const label = showAll ? "隐藏所有条件" : "显示所有条件"
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -694,8 +694,8 @@ function ToolbarCategoryDropdown({
             results={results}
             autoFocus
             heading={`${category.label} actions`}
-            label={`${category.label} actions`}
-            empty="No actions found"
+            label={`${category.label} 个动作`}
+            empty="未找到动作"
             onSelect={handleSelect}
             renderItem={renderActionItem}
           />

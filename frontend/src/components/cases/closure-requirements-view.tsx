@@ -159,8 +159,8 @@ export function ClosureRequirementsView() {
       <div className="size-full overflow-auto">
         <div className="container flex h-full max-w-[1000px] items-center justify-center py-8">
           <EntitlementRequiredEmptyState
-            title="Enterprise only"
-            description="Closure requirements are only available on enterprise plans."
+            title={"仅限企业版"}
+            description={"关闭条件仅适用于企业版套餐。"}
           >
             <Button
               variant="link"
@@ -173,7 +173,7 @@ export function ClosureRequirementsView() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>
@@ -188,15 +188,12 @@ export function ClosureRequirementsView() {
 
   if (workspaceError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Error loading workspace info."
-      />
+      <AlertNotification level="error" message={"加载工作空间信息出错。"} />
     )
   }
 
   if (!workspace) {
-    return <AlertNotification level="error" message="Workspace not found." />
+    return <AlertNotification level="error" message={"未找到工作空间。"} />
   }
 
   if (caseFieldsError) {
@@ -207,7 +204,7 @@ export function ClosureRequirementsView() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading dropdowns: ${dropdownDefinitionsError.message}`}
+        message={`加载下拉字段出错：${dropdownDefinitionsError.message}`}
       />
     )
   }
@@ -245,10 +242,9 @@ export function ClosureRequirementsView() {
               <EmptyMedia variant="icon">
                 <ShieldCheck className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No fields or dropdowns defined yet</EmptyTitle>
+              <EmptyTitle>尚未定义字段或下拉选项</EmptyTitle>
               <EmptyDescription>
-                Create custom fields or dropdowns first, then configure which
-                ones are required before a case can be closed or resolved.
+                先创建自定义字段或下拉选项，再配置关闭或解决事件前需要填写的内容。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -268,14 +264,14 @@ export function ClosureRequirementsView() {
         })
       }
       toast({
-        title: checked ? "Marked as required" : "Requirement removed",
-        description: `${row.name} ${checked ? "will be" : "is no longer"} required on closure.`,
+        title: checked ? "已标记为必填" : "已取消必填要求",
+        description: `${row.name} ${checked ? "将设为" : "不再"}在关闭时必填。`,
       })
     } catch {
       toast({
         variant: "destructive",
-        title: "Failed to update",
-        description: "Please try again.",
+        title: "更新失败",
+        description: "请重试。",
       })
     }
   }
@@ -289,7 +285,7 @@ export function ClosureRequirementsView() {
             toolbarProps={{
               filterProps: {
                 column: "name",
-                placeholder: "Filter by name...",
+                placeholder: "按名称筛选…",
               },
             }}
             columns={[
@@ -299,7 +295,7 @@ export function ClosureRequirementsView() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Name"
+                    title={"名称"}
                   />
                 ),
                 cell: ({ row }) => (
@@ -316,7 +312,7 @@ export function ClosureRequirementsView() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Type"
+                    title={"输入"}
                   />
                 ),
                 cell: ({ row }) => (
@@ -333,7 +329,7 @@ export function ClosureRequirementsView() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Required"
+                    title={"必填"}
                   />
                 ),
                 cell: ({ row }) => (

@@ -31,15 +31,12 @@ import { useAdminOrganizations } from "@/hooks/use-admin"
 import { useAppInfo } from "@/lib/hooks"
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  name: z.string().min(1, "名称不能为空").max(100, "名称过长"),
   slug: z
     .string()
-    .min(1, "Slug is required")
-    .max(50, "Slug is too long")
-    .regex(
-      /^[a-z0-9-]+$/,
-      "Slug must contain only lowercase letters, numbers, and hyphens"
-    ),
+    .min(1, "标识不能为空")
+    .max(50, "标识过长")
+    .regex(/^[a-z0-9-]+$/, "标识只能包含小写字母、数字和连字符"),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -64,8 +61,8 @@ export function CreateOrganizationDialog() {
   const onSubmit = async (values: FormValues) => {
     if (!multiTenantEnabled) {
       toast({
-        title: "Organization creation is disabled",
-        description: "Enable multi-tenant mode to create new organizations.",
+        title: "已禁用组织创建",
+        description: "启用多租户模式后才能创建组织。",
         variant: "destructive",
       })
       return
@@ -74,16 +71,16 @@ export function CreateOrganizationDialog() {
     try {
       await createOrganization(values)
       toast({
-        title: "Organization created",
-        description: `${values.name} has been created successfully.`,
+        title: "已创建组织",
+        description: `已成功创建 ${values.name}。`,
       })
       form.reset()
       setOpen(false)
     } catch (error) {
       console.error("Failed to create organization", error)
       toast({
-        title: "Failed to create organization",
-        description: "Please try again.",
+        title: "创建组织失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -104,22 +101,16 @@ export function CreateOrganizationDialog() {
         <Button
           size="sm"
           disabled={createDisabled}
-          title={
-            createDisabled
-              ? "Enable multi-tenant mode to create new organizations."
-              : undefined
-          }
+          title={createDisabled ? "启用多租户模式后才能创建组织。" : undefined}
         >
           <PlusIcon className="mr-2 size-4" />
-          Create organization
+          创建组织
         </Button>
       </DialogTrigger>
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Create organization</DialogTitle>
-          <DialogDescription>
-            Create a new organization on the platform.
-          </DialogDescription>
+          <DialogTitle>创建组织</DialogTitle>
+          <DialogDescription>在平台上创建新组织。</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -132,10 +123,10 @@ export function CreateOrganizationDialog() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Acme Inc"
+                        placeholder={"示例公司"}
                         {...field}
                         onChange={(e) => {
                           field.onChange(e)
@@ -143,9 +134,7 @@ export function CreateOrganizationDialog() {
                         }}
                       />
                     </FormControl>
-                    <FormDescription>
-                      The display name of the organization.
-                    </FormDescription>
+                    <FormDescription>组织的显示名称。</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -155,12 +144,12 @@ export function CreateOrganizationDialog() {
                 name="slug"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Slug</FormLabel>
+                    <FormLabel>标识</FormLabel>
                     <FormControl>
                       <Input placeholder="acme-inc" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Unique identifier for the organization. Used in URLs.
+                      组织的唯一标识，用于 URL。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -173,7 +162,7 @@ export function CreateOrganizationDialog() {
                 type="submit"
                 disabled={createPending || createDisabled}
               >
-                {createPending ? "Creating..." : "Create organization"}
+                {createPending ? "创建中…" : "创建组织"}
               </Button>
             </DialogFooter>
           </form>

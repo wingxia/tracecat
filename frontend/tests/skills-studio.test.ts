@@ -290,28 +290,28 @@ Use this skill for triage.`
 
   it("validates draft file paths against backend normalization rules", () => {
     expect(validateSkillDraftPath("docs/readme.md")).toBeNull()
-    expect(validateSkillDraftPath("")).toBe("File path is required.")
+    expect(validateSkillDraftPath("")).toBe("文件路径不能为空。")
     expect(validateSkillDraftPath("../notes.md")).toBe(
-      "File path cannot escape the skill root."
+      "文件路径不能超出技能根目录。"
     )
     expect(validateSkillDraftPath("foo//bar.md")).toBe(
-      "Use a normalized path without duplicate, leading, or trailing separators."
+      "请使用规范化路径，不包含重复、开头或结尾的分隔符。"
     )
     expect(validateSkillDraftPath("./SKILL.md")).toBe(
-      "Use a normalized path without duplicate, leading, or trailing separators."
+      "请使用规范化路径，不包含重复、开头或结尾的分隔符。"
     )
     expect(validateSkillDraftPath("docs\\notes.md")).toBe(
-      "Use forward slashes instead of backslashes."
+      "请使用正斜杠，不要使用反斜杠。"
     )
   })
 
   it("validates skill names with the Zod-backed schema", () => {
     expect(validateSkillName("threat-intel")).toBeNull()
     expect(validateSkillName("threat--intel")).toBe(
-      "Use lowercase letters, numbers, and single hyphens (e.g. threat-intel)."
+      "使用小写字母、数字和单个连字符（如 threat-intel）。"
     )
-    expect(validateSkillName("threat-")).toBe("Name cannot end with a hyphen.")
-    expect(validateSkillName("")).toBe("Name is required.")
+    expect(validateSkillName("threat-")).toBe("名称不能以连字符结尾。")
+    expect(validateSkillName("")).toBe("名称不能为空。")
   })
 })
 

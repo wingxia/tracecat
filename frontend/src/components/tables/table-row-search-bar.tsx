@@ -41,8 +41,8 @@ export function TableRowSearchBar({
   return (
     <header className="flex h-10 shrink-0 items-center gap-3 border-b pl-3 pr-4">
       <ListHeaderSearch
-        aria-label="Search rows"
-        placeholder={canSearch ? "Search rows..." : "No text columns to search"}
+        aria-label={"搜索行"}
+        placeholder={canSearch ? "搜索行…" : "没有可搜索的文本列"}
         value={term}
         maxLength={1000}
         onChange={(event) => onTermChange(event.target.value)}
@@ -53,7 +53,7 @@ export function TableRowSearchBar({
         {canSearch && column && (
           <Select value={column} onValueChange={onColumnChange}>
             <SelectTrigger
-              aria-label="Column to search"
+              aria-label={"搜索列"}
               className="h-6 w-auto max-w-48 gap-1.5 px-2 text-xs font-medium shadow-none"
             >
               <SelectValue />
@@ -69,7 +69,7 @@ export function TableRowSearchBar({
         )}
         {rowCount !== undefined && rowCount > 0 && (
           <span className="text-xs text-muted-foreground tabular-nums">
-            {rowCount} {rowCount === 1 ? "row" : "rows"}
+            {rowCount} {rowCount === 1 ? "行" : "行"}
           </span>
         )}
       </div>

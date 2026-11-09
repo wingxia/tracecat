@@ -142,7 +142,7 @@ function tools(): string[] {
 
 /** The count beside the list's "Tools" heading, or null when none is shown. */
 function headerCount(): string | null {
-  const heading = screen.getByRole("heading", { name: "Tools" })
+  const heading = screen.getByRole("heading", { name: "工具" })
   return heading.nextElementSibling?.tagName === "SPAN"
     ? heading.nextElementSibling.textContent
     : null
@@ -172,28 +172,28 @@ metadata:
     expect(within(synthetic).getByText("1 of 2")).toBeInTheDocument()
     await user.click(synthetic)
     expect(screen.getByTitle("mcp.synthetic.read")).toBeInTheDocument()
-    expect(screen.queryByText("All tools")).not.toBeInTheDocument()
-    expect(screen.queryByText("Auto")).not.toBeInTheDocument()
-    expect(screen.queryByText("Unavailable")).not.toBeInTheDocument()
+    expect(screen.queryByText("所有工具")).not.toBeInTheDocument()
+    expect(screen.queryByText("自动")).not.toBeInTheDocument()
+    expect(screen.queryByText("不可用")).not.toBeInTheDocument()
   })
 
   it("counts a server's tools without its whole-server entry in the picker", async () => {
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     const rail = await screen.findByRole("button", { name: /^Synthetic/ })
     expect(within(rail).getByText("2")).toBeInTheDocument()
     await user.click(rail)
-    expect(screen.getByText("0 of 2 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 0/2 项")).toBeInTheDocument()
     await user.click(
       screen.getByRole("option", { name: /mcp\.synthetic\.read/ })
     )
     expect(within(rail).getByText("1/2")).toBeInTheDocument()
-    expect(screen.getByText("1 of 2 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 1/2 项")).toBeInTheDocument()
     expect(
-      screen.getByRole("checkbox", { name: "Select all in Synthetic" })
+      screen.getByRole("checkbox", { name: "全选 Synthetic 中的项目" })
     ).toHaveAttribute("aria-checked", "mixed")
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic.read"])
   })
 
@@ -203,15 +203,15 @@ metadata:
       "# keep\nname: triage # inline\nmetadata:\n  owner: team\n  tools: "
     const after = "\nlicense: 0123\n"
     render(<Panel initial={`${before}["core.cases.get_case"]${after}`} />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("option", { name: /List cases/ }))
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(currentFrontmatter).toBe(
       `${before}["core.cases.get_case","core.cases.list_cases"]${after}`
     )
     await user.click(screen.getByRole("button", { name: /Cases core\.cases/ }))
     await user.click(
-      screen.getByRole("button", { name: "Remove core.cases.get_case" })
+      screen.getByRole("button", { name: "移除 core.cases.get_case" })
     )
     expect(currentFrontmatter).toBe(
       `${before}["core.cases.list_cases"]${after}`
@@ -221,76 +221,76 @@ metadata:
   it("replaces a server's per-tool grants with the whole-server grant", async () => {
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    expect(screen.getByText("No tools selected.")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    expect(screen.getByText("尚未选择工具。")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(
       await screen.findByRole("option", { name: /mcp\.synthetic\.read/ })
     )
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic.read"])
 
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
-    await user.click(await screen.findByRole("option", { name: /All tools/ }))
-    expect(screen.getByText("1 of 64 tools")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
+    await user.click(await screen.findByRole("option", { name: /所有工具/ }))
+    expect(screen.getByText("1/64 个工具")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic"])
 
     // The server's tools are covered, so they cannot be ticked on top.
     onChange.mockClear()
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     const write = await screen.findByRole("option", {
       name: /mcp\.synthetic\.write/,
     })
     expect(write).toHaveAttribute("aria-selected", "true")
     expect(write).toHaveAttribute("aria-disabled", "true")
     await user.click(write)
-    expect(screen.getByText("1 of 64 tools")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    expect(screen.getByText("1/64 个工具")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic"])
     expect(onChange).not.toHaveBeenCalled()
 
     // Clearing the whole-server grant makes the tools selectable again.
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
-    await user.click(await screen.findByRole("option", { name: /All tools/ }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
+    await user.click(await screen.findByRole("option", { name: /所有工具/ }))
     await user.click(
       screen.getByRole("option", { name: /mcp\.synthetic\.write/ })
     )
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic.write"])
   })
 
   it("stores only the whole-server grant when a server's group is selected", async () => {
     const user = userEvent.setup()
     render(<Panel initial="metadata: {tools: [mcp.synthetic.read]}" />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     const rail = await screen.findByRole("button", { name: /^Synthetic/ })
     await user.click(rail)
     const selectAll = screen.getByRole("checkbox", {
-      name: "Select all in Synthetic",
+      name: "全选 Synthetic 中的项目",
     })
     await user.click(selectAll)
     expect(selectAll).toHaveAttribute("aria-checked", "true")
-    expect(within(rail).getByText("All tools")).toBeInTheDocument()
-    expect(screen.queryByText(/of 2 selected/)).not.toBeInTheDocument()
-    expect(screen.getByText("1 of 64 tools")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    expect(within(rail).getByText("所有工具")).toBeInTheDocument()
+    expect(screen.queryByText(/已选择 of 2/)).not.toBeInTheDocument()
+    expect(screen.getByText("1/64 个工具")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic"])
 
     const synthetic = screen.getByRole("button", {
       name: /Synthetic synthetic/,
     })
-    expect(within(synthetic).getByText("All tools")).toBeInTheDocument()
+    expect(within(synthetic).getByText("所有工具")).toBeInTheDocument()
     await user.click(synthetic)
     expect(screen.getByTitle("mcp.synthetic")).toBeInTheDocument()
 
     // The checkbox clears the grant again.
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("button", { name: /^Synthetic/ }))
     await user.click(
-      screen.getByRole("checkbox", { name: "Select all in Synthetic" })
+      screen.getByRole("checkbox", { name: "全选 Synthetic 中的项目" })
     )
-    expect(screen.getByText("0 of 2 selected")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    expect(screen.getByText("已选择 0/2 项")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual([])
   })
 
@@ -308,14 +308,14 @@ metadata:
     ]
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("button", { name: /^Big/ }))
-    expect(screen.getByText("0 of 70 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 0/70 项")).toBeInTheDocument()
     await user.click(
-      screen.getByRole("checkbox", { name: "Select all in Big" })
+      screen.getByRole("checkbox", { name: "全选 Big 中的项目" })
     )
-    expect(screen.getByText("1 of 64 tools")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    expect(screen.getByText("1/64 个工具")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.big"])
   })
 
@@ -331,21 +331,21 @@ metadata:
     ]
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("button", { name: /^Synthetic/ }))
     expect(screen.queryByText(/of 0/)).not.toBeInTheDocument()
     const selectAll = screen.getByRole("checkbox", {
-      name: "Select all in Synthetic",
+      name: "全选 Synthetic 中的项目",
     })
     expect(selectAll).toBeEnabled()
     await user.click(selectAll)
     expect(selectAll).toHaveAttribute("aria-checked", "true")
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(tools()).toEqual(["mcp.synthetic"])
     expect(
       within(
         screen.getByRole("button", { name: /Synthetic synthetic/ })
-      ).getByText("All tools")
+      ).getByText("所有工具")
     ).toBeInTheDocument()
   })
 
@@ -356,31 +356,29 @@ metadata:
     )
     expect(screen.queryByText(/tool IDs/)).not.toBeInTheDocument()
     expect(headerCount()).toBe("3")
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
     const synthetic = screen.getByRole("button", {
       name: /Synthetic synthetic/,
     })
-    expect(within(synthetic).getByText("All tools")).toBeInTheDocument()
+    expect(within(synthetic).getByText("所有工具")).toBeInTheDocument()
     await user.click(synthetic)
     expect(screen.getByTitle("mcp.synthetic")).toBeInTheDocument()
     expect(screen.queryByTitle("mcp.synthetic.read")).not.toBeInTheDocument()
     // An edit elsewhere leaves the server's grants as written.
     await user.click(screen.getByRole("button", { name: /Cases core\.cases/ }))
     await user.click(
-      screen.getByRole("button", { name: "Remove core.cases.get_case" })
+      screen.getByRole("button", { name: "移除 core.cases.get_case" })
     )
     expect(tools()).toEqual(["mcp.synthetic.read", "mcp.synthetic"])
     // The picker shows the server as granted whole.
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("button", { name: /^Synthetic/ }))
     expect(
-      screen.getByRole("checkbox", { name: "Select all in Synthetic" })
+      screen.getByRole("checkbox", { name: "全选 Synthetic 中的项目" })
     ).toHaveAttribute("aria-checked", "true")
-    await user.click(screen.getByRole("button", { name: "Cancel" }))
+    await user.click(screen.getByRole("button", { name: "取消" }))
     // Removing the single row removes both stored forms.
-    await user.click(
-      screen.getByRole("button", { name: "Remove mcp.synthetic" })
-    )
+    await user.click(screen.getByRole("button", { name: "移除 mcp.synthetic" }))
     expect(tools()).toEqual([])
   })
 
@@ -394,19 +392,17 @@ metadata:
     ]
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("option", { name: /Locked case/ }))
-    expect(
-      await screen.findAllByText("Upgrade to unlock this feature")
-    ).not.toHaveLength(0)
+    expect(await screen.findAllByText("升级以解锁此功能")).not.toHaveLength(0)
     expect(onChange).not.toHaveBeenCalled()
   })
 
   it("returns focus to Add tools when the picker closes", async () => {
     const user = userEvent.setup()
     render(<Panel initial="name: triage" />)
-    const add = screen.getByRole("button", { name: "Add tools" })
-    for (const close of ["Cancel", "Done", "Escape"]) {
+    const add = screen.getByRole("button", { name: "添加工具" })
+    for (const close of ["取消", "完成", "Escape"]) {
       await user.click(add)
       expect(await screen.findByRole("dialog")).toBeInTheDocument()
       if (close === "Escape") await user.keyboard("{Escape}")
@@ -428,18 +424,18 @@ metadata:
     render(
       <Panel initial={`metadata: { tools: ${JSON.stringify(declared)} }`} />
     )
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
-    expect(screen.getByText("64 of 64 tools")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
+    expect(screen.getByText("64/64 个工具")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
     await user.click(screen.getByRole("button", { name: /^Tools vendor/ }))
     await user.click(
-      screen.getByRole("checkbox", { name: "Select all in Tools vendor" })
+      screen.getByRole("checkbox", { name: "全选 Tools vendor 中的项目" })
     )
     expect(
-      screen.getByText("65 of 64 tools · remove 1 to continue")
+      screen.getByText("65/64 个工具 · 请移除 1 个后继续")
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Done" })).toBeDisabled()
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    expect(screen.getByRole("button", { name: "完成" })).toBeDisabled()
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(onChange).not.toHaveBeenCalled()
   })
 
@@ -455,10 +451,10 @@ metadata:
       screen.getByText("metadata.tools must be a YAML list.")
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Add tools" })
+      screen.queryByRole("button", { name: "添加工具" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /^Remove/ })
+      screen.queryByRole("button", { name: /^移除/ })
     ).not.toBeInTheDocument()
     // Unreadable tools have no count, rather than a misleading zero.
     expect(headerCount()).toBeNull()
@@ -468,18 +464,20 @@ metadata:
   it("shows malformed IDs as unavailable and lets users remove them", async () => {
     const user = userEvent.setup()
     render(
-      <Panel initial='metadata: { tools: ["not-a-tool", "core.cases.get_case"] }' />
+      <Panel
+        initial={'metadata: { tools: ["not-a-tool", "core.cases.get_case"] }'}
+      />
     )
-    expect(screen.getByText(/Invalid tool IDs: not-a-tool/)).toBeInTheDocument()
-    expect(screen.getByText("Unavailable")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
-    await user.click(screen.getByRole("button", { name: "Remove not-a-tool" }))
+    expect(screen.getByText(/工具 ID 无效：not-a-tool/)).toBeInTheDocument()
+    expect(screen.getByText("不可用")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
+    await user.click(screen.getByRole("button", { name: "移除 not-a-tool" }))
     expect(readSkillFrontmatterTools(currentFrontmatter)).toEqual({
       valid: true,
       tools: ["core.cases.get_case"],
     })
-    expect(screen.queryByText(/Invalid tool IDs/)).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.queryByText(/工具 ID 无效/)).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
   })
 
   it("warns about individual stdio grants and allows their removal", async () => {
@@ -497,11 +495,11 @@ metadata:
       <Panel initial="metadata: {tools: [mcp.synthetic.read, mcp.synthetic]}" />
     )
     expect(
-      screen.getByText(/Invalid tool IDs: mcp.synthetic.read/)
+      screen.getByText(/工具 ID 无效：mcp\.synthetic\.read/)
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
     await user.click(
-      screen.getByRole("button", { name: "Remove mcp.synthetic.read" })
+      screen.getByRole("button", { name: "移除 mcp.synthetic.read" })
     )
     expect(
       readSkillFrontmatterTools(currentFrontmatter, mockMcpIntegrations)
@@ -514,9 +512,9 @@ metadata:
       <Panel initial="metadata: {tools: [core.cases.removed, core.cases.get_case]}" />
     )
     expect(
-      screen.getByText(/Unavailable tool IDs: core.cases.removed/)
+      screen.getByText(/工具 ID 不可用：core\.cases\.removed/)
     ).toBeInTheDocument()
-    const heading = screen.getByRole("heading", { name: "Unavailable" })
+    const heading = screen.getByRole("heading", { name: "不可用" })
     expect(
       within(heading.parentElement as HTMLElement).getByTitle(
         "core.cases.removed"
@@ -525,13 +523,13 @@ metadata:
     // Only tools in the catalogue count as selected; the ID is still stored.
     expect(headerCount()).toBe("1")
     expect(tools()).toEqual(["core.cases.removed", "core.cases.get_case"])
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
     await user.click(
-      screen.getByRole("button", { name: "Remove core.cases.removed" })
+      screen.getByRole("button", { name: "移除 core.cases.removed" })
     )
     expect(tools()).toEqual(["core.cases.get_case"])
-    expect(screen.queryByText("Unavailable")).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.queryByText("不可用")).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
   })
 
   it("reports a declared action that agents cannot call as unavailable", async () => {
@@ -541,14 +539,14 @@ metadata:
       <Panel initial="metadata: {tools: [core.script.run_python, core.cases.get_case]}" />
     )
     expect(
-      screen.getByText(/Unavailable tool IDs: core.script.run_python/)
+      screen.getByText(/工具 ID 不可用：core\.script\.run_python/)
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
     await user.click(
-      screen.getByRole("button", { name: "Remove core.script.run_python" })
+      screen.getByRole("button", { name: "移除 core.script.run_python" })
     )
     expect(tools()).toEqual(["core.cases.get_case"])
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
   })
 
   it("shows no count and no fallback list while the catalogue loads", () => {
@@ -556,14 +554,12 @@ metadata:
     render(
       <Panel initial="metadata: {tools: [core.cases.removed, mcp.deleted]}" />
     )
-    expect(screen.getByText("Loading tools...")).toBeInTheDocument()
+    expect(screen.getByText("正在加载工具…")).toBeInTheDocument()
     expect(headerCount()).toBeNull()
-    expect(screen.queryByText(/Unavailable/)).not.toBeInTheDocument()
-    expect(
-      screen.queryByText("Existing tool IDs are preserved.")
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText(/不可用/)).not.toBeInTheDocument()
+    expect(screen.queryByText("现有工具 ID 保持不变。")).not.toBeInTheDocument()
     expect(screen.queryByTitle("core.cases.removed")).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
   })
 
   it("preserves IDs without declaring them unavailable on a load error", async () => {
@@ -572,15 +568,13 @@ metadata:
     render(
       <Panel initial="metadata: {tools: [core.cases.removed, mcp.deleted]}" />
     )
-    expect(screen.getByText("Tools could not be loaded.")).toBeInTheDocument()
+    expect(screen.getByText("无法加载工具。")).toBeInTheDocument()
     expect(headerCount()).toBeNull()
-    expect(screen.queryByText(/Unavailable/)).not.toBeInTheDocument()
-    expect(
-      screen.getByText("Existing tool IDs are preserved.")
-    ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.queryByText(/不可用/)).not.toBeInTheDocument()
+    expect(screen.getByText("现有工具 ID 保持不变。")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
     expect(screen.getByTitle("core.cases.removed")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Remove mcp.deleted" }))
+    await user.click(screen.getByRole("button", { name: "移除 mcp.deleted" }))
     expect(tools()).toEqual(["core.cases.removed"])
   })
 
@@ -590,7 +584,7 @@ metadata:
     expect(
       screen.getByRole("button", { name: /Synthetic synthetic/ })
     ).toBeInTheDocument()
-    expect(screen.queryByText("MCP tools")).not.toBeInTheDocument()
+    expect(screen.queryByText("MCP 工具")).not.toBeInTheDocument()
   })
 
   it("keeps registry tools editable and MCP IDs intact without integration read access", async () => {
@@ -611,36 +605,34 @@ metadata:
       />
     )
     expect(mockMcpQueryOptions).toEqual({ enabled: false })
-    expect(
-      screen.queryByText("Tools could not be loaded.")
-    ).not.toBeInTheDocument()
-    expect(screen.queryByText("Loading tools...")).not.toBeInTheDocument()
-    expect(screen.queryByText(/Unavailable/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/Invalid tool IDs/)).not.toBeInTheDocument()
+    expect(screen.queryByText("无法加载工具。")).not.toBeInTheDocument()
+    expect(screen.queryByText("正在加载工具…")).not.toBeInTheDocument()
+    expect(screen.queryByText(/不可用/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/工具 ID 无效/)).not.toBeInTheDocument()
     // Declared MCP IDs are listed by ID under a neutral heading.
-    const heading = screen.getByRole("heading", { name: "MCP tools" })
+    const heading = screen.getByRole("heading", { name: "MCP 工具" })
     const section = within(heading.parentElement as HTMLElement)
     expect(section.getByTitle("mcp.synthetic.read")).toBeInTheDocument()
     expect(section.getByTitle("mcp.other")).toBeInTheDocument()
     expect(headerCount()).toBe("1")
 
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     expect(screen.queryByRole("button", { name: /^Synthetic/ })).toBeNull()
     await user.click(await screen.findByRole("option", { name: /List cases/ }))
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
     expect(currentFrontmatter).toBe(
       `${before}["mcp.synthetic.read","core.cases.get_case","mcp.other","core.cases.list_cases"]${after}`
     )
     await user.click(screen.getByRole("button", { name: /Cases core\.cases/ }))
     await user.click(
-      screen.getByRole("button", { name: "Remove core.cases.get_case" })
+      screen.getByRole("button", { name: "移除 core.cases.get_case" })
     )
     expect(currentFrontmatter).toBe(
       `${before}["mcp.synthetic.read","mcp.other","core.cases.list_cases"]${after}`
     )
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
     // A declared MCP ID can still be removed on purpose.
-    await user.click(screen.getByRole("button", { name: "Remove mcp.other" }))
+    await user.click(screen.getByRole("button", { name: "移除 mcp.other" }))
     expect(currentFrontmatter).toBe(
       `${before}["mcp.synthetic.read","core.cases.list_cases"]${after}`
     )
@@ -652,9 +644,9 @@ metadata:
       <Panel initial="metadata: {tools: [core.cases.get_case, mcp.synthetic]}" />
     )
     expect(mockMcpQueryOptions).toEqual({ enabled: false })
-    expect(screen.getByText("Loading tools...")).toBeInTheDocument()
-    expect(screen.queryByText("MCP tools")).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByText("正在加载工具…")).toBeInTheDocument()
+    expect(screen.queryByText("MCP 工具")).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
   })
 
   it.each(["loading", "error"])(
@@ -662,7 +654,7 @@ metadata:
     async (state) => {
       const user = userEvent.setup()
       const { rerender } = render(<Panel initial="name: triage" />)
-      await user.click(screen.getByRole("button", { name: "Add tools" }))
+      await user.click(screen.getByRole("button", { name: "添加工具" }))
       expect(await screen.findByRole("dialog")).toBeInTheDocument()
       mockLoading = state === "loading"
       mockError = state === "error" ? new Error("Catalogue unavailable") : null
@@ -673,7 +665,7 @@ metadata:
       mockLoading = false
       mockError = null
       rerender(<Panel initial="name: triage" />)
-      expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+      expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     }
   )
@@ -793,14 +785,14 @@ describe("skill editor split", () => {
     window.history.replaceState(null, "", "/skills/skill-1?view=tools")
     render(<Studio />)
     expect(screen.queryByRole("tab")).not.toBeInTheDocument()
-    expect(screen.getByText("Frontmatter")).toBeInTheDocument()
-    expect(screen.getByText("Instructions")).toBeInTheDocument()
-    expect(screen.getByRole("heading", { name: "Tools" })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeEnabled()
+    expect(screen.getByText("元数据")).toBeInTheDocument()
+    expect(screen.getByText("指令")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "工具" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeEnabled()
     // The file tree divider plus the editor and tools divider.
     expect(screen.getAllByRole("separator")).toHaveLength(2)
-    expect(screen.getByRole("button", { name: "Replace" })).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "替换" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "删除" })).toBeInTheDocument()
     expect(new URLSearchParams(window.location.search).get("view")).toBe(
       "tools"
     )
@@ -814,13 +806,13 @@ describe("skill editor split", () => {
     render(<Studio />)
     expect(studio.selectedPath).toBe("README.md")
     expect(
-      screen.queryByRole("heading", { name: "Tools" })
+      screen.queryByRole("heading", { name: "工具" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Add tools" })
+      screen.queryByRole("button", { name: "添加工具" })
     ).not.toBeInTheDocument()
     expect(screen.getAllByRole("separator")).toHaveLength(1)
-    expect(screen.getByRole("button", { name: "Replace" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "替换" })).toBeInTheDocument()
   })
 
   it("keeps the full-width editor for a SKILL.md without frontmatter", () => {
@@ -828,7 +820,7 @@ describe("skill editor split", () => {
     render(<Studio />)
     expect(studio.selectedPath).toBe("SKILL.md")
     expect(
-      screen.queryByRole("heading", { name: "Tools" })
+      screen.queryByRole("heading", { name: "工具" })
     ).not.toBeInTheDocument()
     expect(screen.getAllByRole("separator")).toHaveLength(1)
   })
@@ -837,9 +829,9 @@ describe("skill editor split", () => {
     const user = userEvent.setup()
     render(<Studio />)
     expect(studio.hasUnsavedChanges).toBe(false)
-    await user.click(screen.getByRole("button", { name: "Add tools" }))
+    await user.click(screen.getByRole("button", { name: "添加工具" }))
     await user.click(await screen.findByRole("option", { name: /Get case/ }))
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
 
     expect(studio.hasUnsavedChanges).toBe(true)
     expect(studio.selectedFile?.change).toMatchObject({ kind: "text" })
@@ -853,7 +845,7 @@ describe("skill editor split", () => {
     expect(studio.markdownEditorActivatedRef.current).toBe(false)
 
     // Reset reverts the tool change.
-    await user.click(screen.getByRole("button", { name: "Reset" }))
+    await user.click(screen.getByRole("button", { name: "重置" }))
     expect(studio.hasUnsavedChanges).toBe(false)
     expect(headerCount()).toBe("0")
     await act(async () => {})

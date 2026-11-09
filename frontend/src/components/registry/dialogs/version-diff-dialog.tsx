@@ -42,11 +42,9 @@ export function VersionDiffDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <DiffIcon className="size-5" />
-            Compare versions
+            比较版本
           </DialogTitle>
-          <DialogDescription>
-            View the actions that changed between two versions.
-          </DialogDescription>
+          <DialogDescription>查看两个版本之间的动作变更。</DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div>

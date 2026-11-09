@@ -162,21 +162,21 @@ function CompactWorkflowEventsList({ executionId }: { executionId: string }) {
   }, [sidebarRef, activeTab])
 
   if (executionIsLoading) {
-    return <EventsLoading message="Fetching events..." />
+    return <EventsLoading message={"正在获取执行事件…"} />
   }
   if (executionError) {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading execution: ${executionError.message}`}
+        message={`加载执行记录出错：${executionError.message}`}
       />
     )
   }
   if (!execution) {
     return (
       <EventsSidebarEmpty
-        title="Could not find execution"
-        description="Please refresh the page and try again"
+        title={"未找到执行记录"}
+        description={"请刷新页面后重试"}
       />
     )
   }

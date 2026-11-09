@@ -202,7 +202,7 @@ export async function validateTemplateExpression(
       errors: [
         {
           loc: [0],
-          msg: "Validation service unavailable",
+          msg: "校验服务不可用",
           type: "service_error",
         },
       ],
@@ -480,7 +480,7 @@ export class InnerContentWidget extends WidgetType {
           const errorMessages = this.validation.errors
             .map((e) => e.msg)
             .join(", ")
-          span.title = `Template Expression Error: ${errorMessages}`
+          span.title = `模板表达式错误：${errorMessages}`
 
           const errorIcon = document.createElement("span")
           errorIcon.className = "cm-template-error-icon"
@@ -503,7 +503,7 @@ export class InnerContentWidget extends WidgetType {
       // Ultimate fallback - return a simple error indicator
       const fallbackSpan = document.createElement("span")
       fallbackSpan.className = "cm-template-pill cm-template-error"
-      fallbackSpan.textContent = "[Error]"
+      fallbackSpan.textContent = "[错误]"
       fallbackSpan.title = `Template pill error: ${error instanceof Error ? error.message : String(error)}`
       return fallbackSpan
     }
@@ -696,12 +696,12 @@ export class TemplatePillPluginView {
           } catch (widgetError) {
             console.warn("Failed to create template pill widget:", widgetError)
             // Create a simple error widget
-            widget = new InnerContentWidget("[Error]", {
+            widget = new InnerContentWidget("[错误]", {
               isValid: false,
               errors: [
                 {
                   loc: [],
-                  msg: "Widget creation failed",
+                  msg: "创建控件失败",
                   type: "render_error",
                 },
               ],
@@ -945,7 +945,7 @@ export async function createNodeTooltipContent(
     // Generic token info
     const info = document.createElement("div")
     info.className = "cm-tooltip-generic-info"
-    info.textContent = `Token type: ${token.type}`
+    info.textContent = `词元类型：${token.type}`
     container.appendChild(info)
   }
 
@@ -982,24 +982,16 @@ function addActionTooltipInfo(container: HTMLElement, value: string) {
     if (propertyPath) {
       appendTooltipLine(info, "action-prop", "Property: ", propertyPath)
     }
-    appendTooltipLine(info, "action-desc", "References output from action step")
+    appendTooltipLine(info, "action-desc", "引用动作步骤的输出")
   } else {
     // Fallback for partial matches or just "ACTIONS"
     const cleanValue = value.replace(/^ACTIONS\.?/, "")
     if (cleanValue) {
-      appendTooltipLine(info, "action-ref", "Action reference: ", cleanValue)
-      appendTooltipLine(
-        info,
-        "action-desc",
-        "References output from action step"
-      )
+      appendTooltipLine(info, "action-ref", "动作引用：", cleanValue)
+      appendTooltipLine(info, "action-desc", "引用动作步骤的输出")
     } else {
-      appendTooltipLine(info, "action-ref", "Action namespace")
-      appendTooltipLine(
-        info,
-        "action-desc",
-        "Used to reference outputs from workflow actions"
-      )
+      appendTooltipLine(info, "action-ref", "动作命名空间")
+      appendTooltipLine(info, "action-desc", "用于引用工作流动作的输出")
     }
   }
 
@@ -1029,18 +1021,14 @@ async function addFunctionTooltipInfo(
       cleanValue ? (
         <div>
           <div className="function-name">
-            Function reference: <strong>{cleanValue}</strong>
+            函数引用： <strong>{cleanValue}</strong>
           </div>
-          <div className="function-desc">
-            Built-in function for data processing
-          </div>
+          <div className="function-desc">用于数据处理的内置函数</div>
         </div>
       ) : (
         <div>
-          <div className="function-name">Function namespace</div>
-          <div className="function-desc">
-            Used to call built-in functions for data processing
-          </div>
+          <div className="function-name">函数命名空间</div>
+          <div className="function-desc">用于调用内置数据处理函数</div>
         </div>
       )
     )
@@ -1060,28 +1048,16 @@ function addSecretTooltipInfo(container: HTMLElement, value: string) {
     if (key) {
       appendTooltipLine(info, "secret-key", "Key: ", key)
     }
-    appendTooltipLine(
-      info,
-      "secret-desc",
-      "References stored secret credential"
-    )
+    appendTooltipLine(info, "secret-desc", "引用已存储的密钥凭据")
   } else {
     // Fallback for partial matches or just "SECRETS"
     const cleanValue = value.replace(/^SECRETS\.?/, "")
     if (cleanValue) {
-      appendTooltipLine(info, "secret-name", "Secret reference: ", cleanValue)
-      appendTooltipLine(
-        info,
-        "secret-desc",
-        "References stored secret credential"
-      )
+      appendTooltipLine(info, "secret-name", "密钥引用：", cleanValue)
+      appendTooltipLine(info, "secret-desc", "引用已存储的密钥凭据")
     } else {
-      appendTooltipLine(info, "secret-name", "Secrets namespace")
-      appendTooltipLine(
-        info,
-        "secret-desc",
-        "Used to reference stored secret credentials"
-      )
+      appendTooltipLine(info, "secret-name", "密钥命名空间")
+      appendTooltipLine(info, "secret-desc", "用于引用已存储的密钥凭据")
     }
   }
 
@@ -1099,20 +1075,16 @@ function addVarsTooltipInfo(container: HTMLElement, value: string) {
     if (key) {
       appendTooltipLine(info, "vars-key", "Key: ", key)
     }
-    appendTooltipLine(info, "vars-desc", "References workspace variable")
+    appendTooltipLine(info, "vars-desc", "引用工作空间变量")
   } else {
     // Fallback for partial matches or just "VARS"
     const cleanValue = value.replace(/^VARS\.?/, "")
     if (cleanValue) {
-      appendTooltipLine(info, "vars-name", "Variable reference: ", cleanValue)
-      appendTooltipLine(info, "vars-desc", "References workspace variable")
+      appendTooltipLine(info, "vars-name", "变量引用：", cleanValue)
+      appendTooltipLine(info, "vars-desc", "引用工作空间变量")
     } else {
-      appendTooltipLine(info, "vars-name", "Variables namespace")
-      appendTooltipLine(
-        info,
-        "vars-desc",
-        "Used to reference workspace variables"
-      )
+      appendTooltipLine(info, "vars-name", "变量命名空间")
+      appendTooltipLine(info, "vars-desc", "用于引用工作空间变量")
     }
   }
 
@@ -1127,28 +1099,16 @@ function addEnvTooltipInfo(container: HTMLElement, value: string) {
   if (match) {
     const [, envPath] = match
     appendTooltipLine(info, "env-path", "Path: ", envPath)
-    appendTooltipLine(
-      info,
-      "env-desc",
-      "References environment variable or configuration"
-    )
+    appendTooltipLine(info, "env-desc", "引用环境变量或配置")
   } else {
     // Fallback for partial matches or just "ENV"
     const cleanValue = value.replace(/^ENV\.?/, "")
     if (cleanValue) {
-      appendTooltipLine(info, "env-path", "Environment variable: ", cleanValue)
-      appendTooltipLine(
-        info,
-        "env-desc",
-        "References environment variable or configuration"
-      )
+      appendTooltipLine(info, "env-path", "环境变量：", cleanValue)
+      appendTooltipLine(info, "env-desc", "引用环境变量或配置")
     } else {
-      appendTooltipLine(info, "env-path", "Environment namespace")
-      appendTooltipLine(
-        info,
-        "env-desc",
-        "Used to reference environment variables and configuration"
-      )
+      appendTooltipLine(info, "env-path", "环境命名空间")
+      appendTooltipLine(info, "env-desc", "用于引用环境变量和配置")
     }
   }
 
@@ -1165,15 +1125,11 @@ function addTriggerTooltipInfo(container: HTMLElement, value: string) {
     if (triggerPath) {
       appendTooltipLine(info, "trigger-path", "Path: ", triggerPath)
     } else {
-      appendTooltipLine(info, "trigger-root", "Trigger data")
+      appendTooltipLine(info, "trigger-root", "触发器数据")
     }
-    appendTooltipLine(
-      info,
-      "trigger-desc",
-      "References workflow trigger input data"
-    )
+    appendTooltipLine(info, "trigger-desc", "引用工作流触发器的输入数据")
   } else {
-    info.textContent = "Trigger reference"
+    info.textContent = "触发器引用"
   }
 
   container.appendChild(info)
@@ -1183,43 +1139,43 @@ function addTriggerTooltipInfo(container: HTMLElement, value: string) {
 export const TEMPLATE_SUGGESTIONS = [
   {
     label: "ACTIONS",
-    detail: "Previous action results",
-    info: "Access results from previous workflow actions",
+    detail: "前序动作结果",
+    info: "访问工作流前序动作的结果",
   },
   {
     label: "FN",
-    detail: "Built-in functions",
-    info: "Built-in functions for data processing",
+    detail: "内置函数",
+    info: "用于数据处理的内置函数",
   },
   {
     label: "TRIGGER",
-    detail: "Trigger input data",
-    info: "Data from the workflow trigger event",
+    detail: "触发器输入数据",
+    info: "来自工作流触发事件的数据",
   },
   {
     label: "SECRETS",
-    detail: "Workspace secrets",
-    info: "Access configured secrets and credentials",
+    detail: "工作空间密钥",
+    info: "访问已配置的密钥和凭据",
   },
   {
     label: "VARS",
-    detail: "Workspace variables",
-    info: "Access configured workspace variables",
+    detail: "工作空间变量",
+    info: "访问已配置的工作空间变量",
   },
   {
     label: "ENV",
-    detail: "Runtime environment variables",
-    info: "Environment variables available at runtime",
+    detail: "运行时环境变量",
+    info: "运行时可用的环境变量",
   },
   {
     label: "var",
-    detail: "Workflow variables",
-    info: "Custom variables defined in the workflow",
+    detail: "工作流变量",
+    info: "在工作流中定义的自定义变量",
   },
   {
     label: "foreach",
-    detail: "For each item in the array",
-    info: "For each item in the array",
+    detail: "遍历数组中的每一项",
+    info: "遍历数组中的每一项",
   },
 ]
 
@@ -1390,15 +1346,15 @@ function FunctionTooltip({ fn }: { fn: EditorFunctionRead }) {
         {signature}
       </div>
       <div className="p-3 text-xs leading-6 text-foreground">
-        {fn.description || "No description available"}
+        {fn.description || "暂无描述"}
       </div>
       {/*parameters*/}
       <div className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
-        Parameters: {params}
+        参数： {params}
       </div>
       {/*return type*/}
       <div className="px-3 py-2 font-mono text-[11px] text-muted-foreground">
-        Returns: {fn.return_type || "any"}
+        返回值： {fn.return_type || "any"}
       </div>
     </div>
   )
@@ -1576,7 +1532,7 @@ export function createSecretsCompletion(workspaceId: string) {
           options: filteredKeys.map((key) => ({
             label: key,
             detail: "secret key",
-            info: `Secret key: ${secretName}.${key}`,
+            info: `密钥键：${secretName}.${key}`,
             apply: (
               view: EditorView,
               completion: Completion,
@@ -1688,7 +1644,7 @@ export function createVarsCompletion(workspaceId: string) {
           options: filteredKeys.map((key) => ({
             label: key,
             detail: "variable key",
-            info: `Variable key: ${variableName}.${key}`,
+            info: `变量键：${variableName}.${key}`,
             apply: (
               view: EditorView,
               completion: Completion,
@@ -1770,28 +1726,28 @@ export function createEnvCompletion() {
       const workflowProperties = [
         {
           label: "start_time",
-          detail: "Workflow start time",
-          info: "ISO timestamp when the workflow execution started",
+          detail: "工作流开始时间",
+          info: "工作流执行开始时的 ISO 时间戳",
         },
         {
           label: "dispatch_type",
-          detail: "Dispatch type",
-          info: "How the workflow was triggered (e.g., 'manual', 'webhook')",
+          detail: "调度类型",
+          info: "工作流的触发方式，例如 manual、webhook",
         },
         {
           label: "execution_id",
-          detail: "Execution ID",
-          info: "Unique identifier for this workflow execution",
+          detail: "执行 ID",
+          info: "此次工作流执行的唯一标识符",
         },
         {
           label: "run_id",
-          detail: "Run ID",
-          info: "Unique identifier for this workflow run",
+          detail: "运行 ID",
+          info: "此次工作流运行的唯一标识符",
         },
         {
           label: "trigger_type",
-          detail: "Trigger type",
-          info: "Type of trigger that initiated this workflow ('manual', 'scheduled', 'webhook', 'case' or 'form')",
+          detail: "触发类型",
+          info: "启动此工作流的触发器类型：manual、scheduled、webhook、case 或 form",
         },
       ]
 
@@ -1834,20 +1790,20 @@ export function createEnvCompletion() {
     const envSuggestions = [
       {
         label: "workflow",
-        detail: "Workflow metadata",
-        info: "Contains workflow execution metadata (start_time, dispatch_type, execution_id, run_id, trigger_type)",
+        detail: "工作流元数据",
+        info: "包含工作流执行元数据：start_time、dispatch_type、execution_id、run_id、trigger_type",
         hasChildren: true,
       },
       {
         label: "environment",
-        detail: "Target environment",
-        info: "The current workflow environment (e.g., 'default', 'production')",
+        detail: "目标环境",
+        info: "当前工作流环境，例如 default、production",
         hasChildren: false,
       },
       {
         label: "registry_version",
-        detail: "Registry version",
-        info: "The registry version used for this workflow",
+        detail: "注册表版本",
+        info: "此工作流使用的注册表版本",
         hasChildren: false,
       },
     ]
@@ -1932,8 +1888,8 @@ export function createVarCompletion(
         label: varName,
         detail: parsedVariables.has(varName) ? "loop variable" : "variable",
         info: parsedVariables.has(varName)
-          ? `Loop variable from for_each: ${varName}`
-          : `Common loop variable: ${varName}`,
+          ? `来自 for_each 的循环变量：${varName}`
+          : `常用循环变量：${varName}`,
         apply: (
           view: EditorView,
           completion: Completion,

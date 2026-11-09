@@ -34,16 +34,16 @@ const pemFileExtensionRegex = /\.pem$/i
 const gitHubAppCredentialsSchema = z.object({
   app_id: z
     .string()
-    .min(1, "App ID is required")
-    .regex(/^\d+$/, "App ID must be numeric"),
+    .min(1, "应用 ID 不能为空")
+    .regex(/^\d+$/, "应用 ID 必须为数字"),
   private_key: z
     .string()
-    .min(1, "Private key is required")
+    .min(1, "私钥不能为空")
     .refine(
       (val) =>
         val.includes("BEGIN RSA PRIVATE KEY") ||
         val.includes("BEGIN PRIVATE KEY"),
-      "Private key must be in PEM format with BEGIN/END markers"
+      "私钥必须是包含 BEGIN/END 标记的 PEM 格式"
     ),
   webhook_secret: z.string().optional(),
   client_id: z.string().optional(),
@@ -108,7 +108,7 @@ export function GitHubAppManualForm({
         })
         form.setError("private_key", {
           type: "manual",
-          message: "Upload a .pem file.",
+          message: "请上传 .pem 文件。",
         })
         resetPrivateKeyFileInput()
         return
@@ -152,7 +152,7 @@ export function GitHubAppManualForm({
         })
         form.setError("private_key", {
           type: "manual",
-          message: "Failed to read the uploaded PEM file.",
+          message: "读取上传的 PEM 文件失败。",
         })
         resetPrivateKeyFileInput()
       }
@@ -232,8 +232,8 @@ export function GitHubAppManualForm({
 
       const action = hasStoredCredentials ? "updated" : "registered"
       toast({
-        title: `GitHub App ${action} successfully`,
-        description: `Your GitHub App credentials have been ${action}.`,
+        title: `GitHub 应用已成功${action}`,
+        description: `GitHub 应用凭据已${action}。`,
       })
 
       // Clear sensitive data from form
@@ -249,11 +249,9 @@ export function GitHubAppManualForm({
     } catch (error) {
       console.error("Failed to save GitHub App credentials:", error)
       toast({
-        title: "Error",
+        title: "错误",
         description:
-          error instanceof Error
-            ? error.message
-            : "Failed to save GitHub App credentials",
+          error instanceof Error ? error.message : "保存 GitHub 应用凭据失败",
         variant: "destructive",
       })
     } finally {
@@ -261,7 +259,7 @@ export function GitHubAppManualForm({
     }
   }
 
-  const buttonLabel = hasStoredCredentials ? "Save changes" : "Save credentials"
+  const buttonLabel = hasStoredCredentials ? "保存更改" : "保存凭据"
 
   const containerClass = className ? `space-y-4 ${className}` : "space-y-4"
 
@@ -276,7 +274,7 @@ export function GitHubAppManualForm({
                 name="app_id"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>GitHub App ID *</FormLabel>
+                    <FormLabel>GitHub 应用 ID *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -285,7 +283,7 @@ export function GitHubAppManualForm({
                       />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">
-                      Find this in GitHub → Settings → GitHub Apps
+                      在 GitHub → Settings → GitHub Apps 中查找
                     </p>
                     <FormMessage />
                   </FormItem>
@@ -298,7 +296,7 @@ export function GitHubAppManualForm({
                 render={({ field, fieldState }) => {
                   return (
                     <FormItem className="space-y-2">
-                      <FormLabel>Private Key *</FormLabel>
+                      <FormLabel>私钥 *</FormLabel>
                       <input
                         ref={privateKeyFileInputRef}
                         type="file"
@@ -310,7 +308,7 @@ export function GitHubAppManualForm({
                         data-testid="github-app-private-key-dropzone"
                         role="button"
                         tabIndex={0}
-                        aria-label="Choose GitHub App private key PEM file"
+                        aria-label={"选择 GitHub 应用私钥 PEM 文件"}
                         onClick={handlePrivateKeyDropzoneClick}
                         onKeyDown={handlePrivateKeyDropzoneKeyDown}
                         onDrop={handlePrivateKeyDrop}
@@ -350,19 +348,17 @@ export function GitHubAppManualForm({
                                 {privateKeyFileName}
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                Click to replace, or paste below
+                                点击替换，或在下方粘贴
                               </p>
                             </>
                           ) : (
                             <>
                               <p className="text-sm font-medium">
-                                Drop .pem file here, or{" "}
-                                <span className="text-primary">
-                                  click to browse
-                                </span>
+                                将 .pem 文件拖到此处，或{" "}
+                                <span className="text-primary">点击浏览</span>
                               </p>
                               <p className="text-xs text-muted-foreground">
-                                You can also paste it below
+                                也可以在下方粘贴
                               </p>
                             </>
                           )}
@@ -397,17 +393,17 @@ hQ4kR2bJ8nVwPzL0aXmS9tE1yU6sJ0oZ4eY7dWfL5mC
                 name="webhook_secret"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>Webhook Secret (optional)</FormLabel>
+                    <FormLabel>Webhook 密钥（可选）</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="password"
-                        placeholder="Enter webhook secret"
+                        placeholder={"输入 Webhook 密钥"}
                         className="max-w-md"
                       />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">
-                      Needed only if you configured a webhook secret in GitHub
+                      仅在 GitHub 中配置了 Webhook 密钥时需要
                     </p>
                     <FormMessage />
                   </FormItem>
@@ -419,7 +415,7 @@ hQ4kR2bJ8nVwPzL0aXmS9tE1yU6sJ0oZ4eY7dWfL5mC
                 name="client_id"
                 render={({ field }) => (
                   <FormItem className="space-y-2">
-                    <FormLabel>Client ID (optional)</FormLabel>
+                    <FormLabel>客户端 ID（可选）</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -428,7 +424,7 @@ hQ4kR2bJ8nVwPzL0aXmS9tE1yU6sJ0oZ4eY7dWfL5mC
                       />
                     </FormControl>
                     <p className="text-xs text-muted-foreground">
-                      Found alongside the App ID in GitHub
+                      在 GitHub 中与应用 ID 一同显示
                     </p>
                     <FormMessage />
                   </FormItem>
@@ -442,7 +438,7 @@ hQ4kR2bJ8nVwPzL0aXmS9tE1yU6sJ0oZ4eY7dWfL5mC
               className="min-w-32"
             >
               {isSubmitting || saveCredentials.isPending
-                ? "Saving..."
+                ? "保存中…"
                 : buttonLabel}
             </Button>
           </div>
@@ -455,7 +451,7 @@ hQ4kR2bJ8nVwPzL0aXmS9tE1yU6sJ0oZ4eY7dWfL5mC
           message={
             saveCredentials.error instanceof Error
               ? saveCredentials.error.message
-              : "Failed to save GitHub App credentials"
+              : "保存 GitHub 应用凭据失败"
           }
         />
       )}

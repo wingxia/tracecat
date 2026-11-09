@@ -62,7 +62,7 @@ const csvImportSchema = z.object({
       return file.type === "text/csv" || file.name.endsWith(".csv")
     },
     (file) => ({
-      message: `Please upload a CSV file under 5MB. Current file size: ${(file.size / BYTES_PER_MB).toFixed(2)}MB`,
+      message: `请上传小于 5MB 的 CSV 文件，当前文件大小为 ${(file.size / BYTES_PER_MB).toFixed(2)}MB`,
     })
   ),
   columnMapping: z
@@ -72,7 +72,7 @@ const csvImportSchema = z.object({
         Object.values(mapping).some(
           (value) => typeof value === "string" && value !== "skip"
         ),
-      "Please map at least one column"
+      "请至少映射一列"
     ),
 })
 
@@ -157,8 +157,8 @@ export function TableImportCsvDialog({
     } catch (error) {
       console.error("Error parsing CSV preview:", error)
       toast({
-        title: "Error",
-        description: "Failed to parse CSV file",
+        title: "错误",
+        description: "解析 CSV 文件失败",
       })
     } finally {
       setIsUploading(false)
@@ -180,7 +180,7 @@ export function TableImportCsvDialog({
       if (!hasMappedColumns) {
         form.setError("root", {
           type: "manual",
-          message: "Please map at least one column before importing.",
+          message: "导入前请至少映射一列。",
         })
         return
       }
@@ -193,8 +193,8 @@ export function TableImportCsvDialog({
         workspaceId,
       })
       toast({
-        title: "Import successful",
-        description: `${response.rows_inserted} rows imported`,
+        title: "导入成功",
+        description: `已导入 ${response.rows_inserted} 行`,
       })
       onOpenChange?.(false)
     } catch (error) {
@@ -213,18 +213,17 @@ export function TableImportCsvDialog({
           detail?.includes("already exists")
         ) {
           message =
-            "A column in your CSV conflicts with an existing column. Check for protected names like id, created_at, or updated_at."
+            "CSV 中的列与现有列冲突，请检查是否使用了 id、created_at 或 updated_at 等受保护名称。"
         } else if (detail && error.status !== 500) {
           message = detail
         } else {
-          message =
-            "Failed to import data. Please check your CSV file and try again."
+          message = "导入数据失败，请检查 CSV 文件后重试。"
         }
         form.setError("root", { type: "manual", message })
       } else {
         form.setError("root", {
           type: "manual",
-          message: "Failed to import data. Please try again.",
+          message: "导入数据失败，请重试。",
         })
       }
     }
@@ -238,10 +237,8 @@ export function TableImportCsvDialog({
         aria-describedby="csv-import-description"
       >
         <DialogHeader>
-          <DialogTitle>Import from CSV</DialogTitle>
-          <DialogDescription>
-            Import data from a CSV file into your table.
-          </DialogDescription>
+          <DialogTitle>从 CSV 导入</DialogTitle>
+          <DialogDescription>从 CSV 文件向数据表导入数据。</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...form}>
@@ -295,10 +292,10 @@ export function TableImportCsvDialog({
                   {isUploading ? (
                     <>
                       <Spinner className="mr-2" />
-                      Uploading...
+                      上传中…
                     </>
                   ) : (
-                    "Next"
+                    "下一页"
                   )}
                 </Button>
               </DialogFooter>
@@ -321,7 +318,7 @@ export function TableImportCsvDialog({
                     form.reset({ columnMapping: {} })
                   }}
                 >
-                  Back
+                  返回
                 </Button>
                 <Button
                   size="sm"
@@ -336,10 +333,10 @@ export function TableImportCsvDialog({
                   {importCsvIsPending ? (
                     <>
                       <Spinner className="mr-2 size-4" />
-                      Importing...
+                      导入中…
                     </>
                   ) : (
-                    "Import Data"
+                    "导入数据"
                   )}
                 </Button>
               </DialogFooter>
@@ -360,7 +357,7 @@ function CsvUploadForm() {
         name="file"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>CSV file</FormLabel>
+            <FormLabel>CSV 文件</FormLabel>
             <FormControl>
               <Input
                 type="file"
@@ -375,7 +372,7 @@ function CsvUploadForm() {
               />
             </FormControl>
             <FormDescription>
-              Upload file (max {FILE_SIZE_LIMIT_MB}MB)
+              上传文件（最大 {FILE_SIZE_LIMIT_MB}MB）
             </FormDescription>
             <FormMessage />
           </FormItem>
@@ -393,10 +390,9 @@ export function CsvPreview({ csvData }: CsvPreviewProps) {
   return (
     <div className="min-w-0 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium">Preview</span>
+        <span className="text-sm font-medium">预览</span>
         <span className="text-xs text-muted-foreground">
-          {csvData.headers.length} columns &middot; {csvData.preview.length}{" "}
-          rows
+          {csvData.headers.length} 列 · {csvData.preview.length} 行
         </span>
       </div>
       <div className="no-scrollbar max-h-[240px] overflow-auto rounded-md border border-border/50">
@@ -472,9 +468,7 @@ function ColumnMapping({
 
   return (
     <div className="space-y-4">
-      <div className="text-sm font-medium">
-        Map CSV columns to table columns
-      </div>
+      <div className="text-sm font-medium">将 CSV 列映射到数据表列</div>
       <FormField
         control={form.control}
         name="columnMapping"
@@ -489,10 +483,10 @@ function ColumnMapping({
                     onValueChange={(value) => onChange(header, value)}
                   >
                     <SelectTrigger className="w-2/3">
-                      <SelectValue placeholder="Select a column" />
+                      <SelectValue placeholder={"选择列"} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="skip">Skip this column</SelectItem>
+                      <SelectItem value="skip">跳过此列</SelectItem>
                       {table.columns.map((column) => (
                         <SelectItem key={column.name} value={column.name}>
                           <div className="flex w-full items-center justify-between gap-2">

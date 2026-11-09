@@ -64,7 +64,7 @@ function MappingRequirementRows({
         const isMatched = item.candidates.some(
           (candidate) => candidate.value === selections[item.key]
         )
-        let status = isMatched ? "Matched" : "Needs a match"
+        let status = isMatched ? "已匹配" : "Needs a match"
         if (item.optional) {
           status =
             isMatched && selections[item.key] !== LEAVE_UNLINKED
@@ -106,7 +106,7 @@ function MappingRequirementRows({
               </SelectContent>
             </Select>
             <p className="text-[11px] text-muted-foreground">
-              Used by {item.affects}
+              使用者 {item.affects}
             </p>
           </div>
         )
@@ -127,10 +127,10 @@ function mappingAffectsSummary(requirement: {
     ...requirement.affected_presets.map((preset) =>
       preset.version === null
         ? `${preset.preset_name} head`
-        : `${preset.preset_name} version ${preset.version}`
+        : `${preset.preset_name} 版本 ${preset.version}`
     ),
     ...requirement.affected_workflows.map(
-      (workflow) => `${workflow.workflow_title} action ${workflow.action_ref}`
+      (workflow) => `${workflow.workflow_title} 动作 ${workflow.action_ref}`
     ),
   ].join(", ")
 }
@@ -177,8 +177,8 @@ export function CatalogMappingRequirements({
         return {
           key: requirement.source_catalog_id,
           title: requirement.model_name,
-          subtitle: `Model · ${requirement.model_provider}`,
-          ariaLabel: `Target model for ${requirement.model_name} (${requirement.model_provider})`,
+          subtitle: `模型 · ${requirement.model_provider}`,
+          ariaLabel: `${requirement.model_name}（${requirement.model_provider}）的目标模型`,
           candidates,
           affects: mappingAffectsSummary(requirement),
         }
@@ -188,7 +188,7 @@ export function CatalogMappingRequirements({
 
   return (
     <MappingRequirementRows
-      placeholder="Choose a model"
+      placeholder={"选择模型"}
       items={items}
       selections={selections}
       onChange={onChange}
@@ -259,10 +259,8 @@ export function McpIntegrationMappingRequirements({
             requirement.name ??
             requirement.slug ??
             requirement.source_mcp_integration_id,
-          subtitle: "MCP integration",
-          ariaLabel: `Target MCP integration for ${
-            requirement.slug ?? requirement.source_mcp_integration_id
-          }`,
+          subtitle: "MCP 集成",
+          ariaLabel: `${requirement.slug ?? requirement.source_mcp_integration_id} 的目标 MCP 集成`,
           candidates,
           affects: mappingAffectsSummary(requirement),
         }
@@ -272,7 +270,7 @@ export function McpIntegrationMappingRequirements({
 
   return (
     <MappingRequirementRows
-      placeholder="Choose an MCP integration"
+      placeholder={"选择 MCP 集成"}
       items={items}
       selections={selections}
       onChange={onChange}
@@ -302,8 +300,8 @@ export function SecretStoreMappingRequirements({
         (requirement): MappingRequirementItem => ({
           key: requirement.source_store,
           title: requirement.source_store,
-          subtitle: "Secret store",
-          ariaLabel: `Target store for ${requirement.source_store}`,
+          subtitle: "密钥存储",
+          ariaLabel: `${requirement.source_store} 的目标存储`,
           candidates: [
             ...requirement.candidates.map((candidate) => ({
               value: candidate.store_id,
@@ -311,7 +309,7 @@ export function SecretStoreMappingRequirements({
                 ? `${candidate.name} (${candidate.region})`
                 : candidate.name,
             })),
-            { value: LEAVE_UNLINKED, label: "Leave unlinked" },
+            { value: LEAVE_UNLINKED, label: "保持未关联" },
           ],
           affects: requirement.affected_secrets
             .map((secret) => secret.secret_name)
@@ -324,7 +322,7 @@ export function SecretStoreMappingRequirements({
 
   return (
     <MappingRequirementRows
-      placeholder="Leave unlinked"
+      placeholder={"保持未关联"}
       items={items}
       selections={selections}
       onChange={onChange}

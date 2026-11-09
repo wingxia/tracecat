@@ -96,7 +96,7 @@ describe("GitHubAppManualForm", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Private Key *")).toHaveValue(pem)
+      expect(screen.getByLabelText("私钥 *")).toHaveValue(pem)
     })
     expect(screen.getByText("github-app.private-key.pem")).toBeInTheDocument()
   })
@@ -113,7 +113,7 @@ describe("GitHubAppManualForm", () => {
 
     render(<GitHubAppManualForm />)
 
-    const privateKeyInput = screen.getByLabelText("Private Key *")
+    const privateKeyInput = screen.getByLabelText("私钥 *")
     fireEvent.change(privateKeyInput, {
       target: { value: existingPem },
     })
@@ -124,7 +124,7 @@ describe("GitHubAppManualForm", () => {
     })
 
     expect(privateKeyInput).toHaveValue("")
-    expect(screen.getByText("Upload a .pem file.")).toBeInTheDocument()
+    expect(screen.getByText("请上传 .pem 文件。")).toBeInTheDocument()
   })
 
   it("ignores stale PEM reads after a rejected replacement", () => {
@@ -145,7 +145,7 @@ describe("GitHubAppManualForm", () => {
       render(<GitHubAppManualForm />)
 
       const dropzone = screen.getByTestId("github-app-private-key-dropzone")
-      const privateKeyInput = screen.getByLabelText("Private Key *")
+      const privateKeyInput = screen.getByLabelText("私钥 *")
 
       fireEvent.drop(dropzone, {
         dataTransfer: createDataTransfer(pemFile),
@@ -156,7 +156,7 @@ describe("GitHubAppManualForm", () => {
         dataTransfer: createDataTransfer(invalidFile),
       })
       expect(privateKeyInput).toHaveValue("")
-      expect(screen.getByText("Upload a .pem file.")).toBeInTheDocument()
+      expect(screen.getByText("请上传 .pem 文件。")).toBeInTheDocument()
 
       deferredReader.result = stalePem
       act(() => {
@@ -194,10 +194,10 @@ describe("GitHubAppManualForm", () => {
     try {
       render(<GitHubAppManualForm />)
 
-      fireEvent.change(screen.getByLabelText("GitHub App ID *"), {
+      fireEvent.change(screen.getByLabelText("GitHub 应用 ID *"), {
         target: { value: "123456" },
       })
-      const privateKeyInput = screen.getByLabelText("Private Key *")
+      const privateKeyInput = screen.getByLabelText("私钥 *")
       fireEvent.change(privateKeyInput, {
         target: { value: existingPem },
       })
@@ -210,10 +210,10 @@ describe("GitHubAppManualForm", () => {
       expect(deferredReader.readAsText).toHaveBeenCalledWith(file)
       expect(privateKeyInput).toHaveValue("")
 
-      fireEvent.click(screen.getByRole("button", { name: "Save credentials" }))
+      fireEvent.click(screen.getByRole("button", { name: "保存凭据" }))
 
       await waitFor(() => {
-        expect(screen.getByText("Private key is required")).toBeInTheDocument()
+        expect(screen.getByText("私钥不能为空")).toBeInTheDocument()
       })
       expect(mockMutateAsync).not.toHaveBeenCalled()
     } finally {

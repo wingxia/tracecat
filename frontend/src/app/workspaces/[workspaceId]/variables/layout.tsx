@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Variables",
+  title: "变量",
 }
 
 /** Applies shared metadata and renders the nested Variables route content. */

@@ -89,7 +89,7 @@ export function TableSelectionActionsBar() {
   return (
     <>
       <span className="text-xs text-muted-foreground tabular-nums">
-        {selectedCount} selected
+        {selectedCount} 已选择
       </span>
       <Button
         variant="ghost"
@@ -99,7 +99,7 @@ export function TableSelectionActionsBar() {
         onClick={() => setEditOpen(true)}
       >
         <PencilIcon className="mr-1 size-3" />
-        Edit
+        编辑
       </Button>
       {canDeleteRows && (
         <Button
@@ -110,22 +110,21 @@ export function TableSelectionActionsBar() {
           onClick={() => setConfirmDeleteOpen(true)}
         >
           <Trash2 className="mr-1 size-3" />
-          Delete
+          删除
         </Button>
       )}
 
       <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+            <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {selectedCount} selected
-              {selectedCount === 1 ? " row" : " rows"}? This action cannot be
-              undone.
+              确定要删除 {selectedCount} 已选择
+              {selectedCount === 1 ? " 行" : " 行"}吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={batchDeleteRowsIsPending}
@@ -134,10 +133,10 @@ export function TableSelectionActionsBar() {
               {batchDeleteRowsIsPending ? (
                 <span className="flex items-center">
                   <Spinner className="size-4" />
-                  <span className="ml-2">Deleting...</span>
+                  <span className="ml-2">删除中…</span>
                 </span>
               ) : (
-                "Delete"
+                "删除"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -225,18 +224,18 @@ function BulkEditDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Edit {selectedCount} row(s)</DialogTitle>
+          <DialogTitle>编辑 {selectedCount} 行</DialogTitle>
           <DialogDescription>
-            Select a column and set the new value to apply to all selected rows.
+            选择列并设置新值，将应用到所有选中行。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Column</label>
+              <label className="text-sm font-medium">列</label>
               <Select value={selectedColumn} onValueChange={setSelectedColumn}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a column" />
+                  <SelectValue placeholder={"选择列"} />
                 </SelectTrigger>
                 <SelectContent>
                   {columns.map((col) => (
@@ -257,7 +256,7 @@ function BulkEditDialog({
                   name={selectedColumn}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>New value</FormLabel>
+                      <FormLabel>新值</FormLabel>
                       <FormControl>
                         <DynamicInput column={column} field={field} />
                       </FormControl>
@@ -274,7 +273,7 @@ function BulkEditDialog({
             onClick={handleApply}
             disabled={!selectedColumn || batchUpdateRowsIsPending}
           >
-            {batchUpdateRowsIsPending ? "Applying..." : "Apply"}
+            {batchUpdateRowsIsPending ? "应用中…" : "应用"}
           </Button>
         </DialogFooter>
       </DialogContent>

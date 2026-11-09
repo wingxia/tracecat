@@ -29,9 +29,9 @@ describe("GitSyncCommitPicker", () => {
     )
 
     expect(
-      screen.getByRole("combobox", { name: "Commit bbbbbbb" })
-    ).toHaveTextContent("bbbbbbbNot in recent commits")
-    expect(screen.queryByText("Pick a commit")).not.toBeInTheDocument()
+      screen.getByRole("combobox", { name: "提交 bbbbbbb" })
+    ).toHaveTextContent("bbbbbbb不在最近提交中")
+    expect(screen.queryByText("选择提交")).not.toBeInTheDocument()
   })
 
   it("keeps a selected commit visible when the list comes back empty", () => {
@@ -46,8 +46,8 @@ describe("GitSyncCommitPicker", () => {
     )
 
     expect(
-      screen.getByRole("combobox", { name: "Commit bbbbbbb" })
+      screen.getByRole("combobox", { name: "提交 bbbbbbb" })
     ).toBeInTheDocument()
-    expect(screen.queryByText("No commits yet.")).not.toBeInTheDocument()
+    expect(screen.queryByText("暂无提交。")).not.toBeInTheDocument()
   })
 })

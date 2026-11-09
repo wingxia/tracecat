@@ -68,7 +68,7 @@ function PeopleList({
         <div key={line.key} className="flex items-center gap-2.5 px-3 py-2">
           <Avatar email={line.email} />
           <span className="min-w-0 flex-1 truncate text-sm">
-            {line.email || "User details unavailable"}
+            {line.email || "用户详情不可用"}
           </span>
           {line.note ? (
             <span className="shrink-0 text-xs text-muted-foreground">
@@ -80,7 +80,7 @@ function PeopleList({
       {loading ? (
         <div className="flex items-center gap-2 px-3 py-2 text-xs text-muted-foreground">
           <Loader2 className="size-3 animate-spin" />
-          Loading everyone…
+          正在加载所有人…
         </div>
       ) : null}
     </div>
@@ -154,15 +154,15 @@ function CollapsedRow({
 function groupNote(group: ScimGroupTransitionRead, activation: boolean) {
   if (activation) {
     return group.added_sources.length > 0
-      ? `from ${group.added_sources.join(", ")}`
+      ? `来自 ${group.added_sources.join("、")}`
       : null
   }
   const parts = [
     group.added_sources.length > 0
-      ? `Added ${group.added_sources.join(", ")}`
+      ? `已添加 ${group.added_sources.join(", ")}`
       : null,
     group.removed_sources.length > 0
-      ? `removed ${group.removed_sources.join(", ")}`
+      ? `已移除 ${group.removed_sources.join(", ")}`
       : null,
   ].filter(Boolean)
   return parts.length > 0 ? parts.join(" · ") : null
@@ -173,7 +173,7 @@ function TakeoverNote({ group }: { group: ScimGroupTransitionRead }) {
   const sources = group.added_sources.join(", ")
   return (
     <p className="mt-0.5 text-xs text-muted-foreground">
-      Becomes IdP-managed.
+      将由 IdP 管理。
       {group.lost > 0 ? (
         <>
           {" "}
@@ -183,18 +183,12 @@ function TakeoverNote({ group }: { group: ScimGroupTransitionRead }) {
                 tabIndex={0}
                 className="cursor-help underline decoration-dotted underline-offset-2 outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
-                Removes{" "}
-                {plural(
-                  group.lost,
-                  "previously added member",
-                  "previously added members"
-                )}
-                .
+                移除 {group.lost} 位此前添加的成员。
               </span>
             </TooltipTrigger>
             <TooltipContent className="max-w-xs">
-              Membership now comes from {sources}. People added to this group
-              before who are not in {sources} are removed.
+              成员关系现在来源于 {sources}
+              。此前添加到此用户组但不在以下组中的成员： {sources} 将被移除。
             </TooltipContent>
           </Tooltip>
         </>
@@ -205,10 +199,10 @@ function TakeoverNote({ group }: { group: ScimGroupTransitionRead }) {
 
 function groupCounts(group: ScimGroupTransitionRead): string {
   const parts = [
-    group.gained > 0 ? `${group.gained} added` : null,
-    group.lost > 0 ? `${group.lost} removed` : null,
+    group.gained > 0 ? `新增 ${group.gained} 人` : null,
+    group.lost > 0 ? `移除 ${group.lost} 人` : null,
   ].filter(Boolean)
-  return parts.length > 0 ? parts.join(" · ") : "No membership change"
+  return parts.length > 0 ? parts.join(" · ") : "成员关系无变化"
 }
 
 function reviewSummary(
@@ -217,15 +211,15 @@ function reviewSummary(
   loseCount: number
 ): string {
   if (activation) {
-    const joins = `${plural(joinCount, "person joins", "people join")} the organization`
+    const joins = `${joinCount} 人将加入组织`
     return loseCount > 0
-      ? `${joins} and ${plural(loseCount, "person loses", "people lose")} access.`
-      : `${joins}.`
+      ? `${joins}，${loseCount} 人将失去访问权限。`
+      : `${joins}。`
   }
   if (loseCount > 0) {
-    return `${plural(loseCount, "person loses", "people lose")} group access.`
+    return `${loseCount} 人将失去用户组访问权限。`
   }
-  return "No one loses access."
+  return "没有人会失去访问权限。"
 }
 
 function isTruncated(people: ScimReviewPeople): boolean {
@@ -283,8 +277,8 @@ export function ScimReviewDialog({
     {
       section: "leave" as const,
       people: leaving,
-      label: `${plural(leaving.count, "person leaves", "people leave")} the organization`,
-      hint: "Your IdP marks them inactive, so turning on SCIM removes them from this organization.",
+      label: `${leaving.count} 人将离开组织`,
+      hint: "身份提供商将他们标记为不活跃，因此启用 SCIM 后会将他们从此组织中移除。",
       lines: leaving.items.map((person) => ({
         key: `leave-${person.user_id}`,
         email: person.email,
@@ -293,12 +287,12 @@ export function ScimReviewDialog({
     {
       section: "lose" as const,
       people: review.losing,
-      label: `${plural(review.losing.count, "person loses", "people lose")} group access`,
-      hint: "Your IdP doesn't list them in the groups mapped to these Tracecat groups, so they're removed from them.",
+      label: `${review.losing.count} 人将失去用户组访问权限`,
+      hint: "身份提供商中的对应用户组不包含这些成员，因此他们将从映射的 Tracecat 用户组中移除。",
       lines: review.losing.items.map((person) => ({
         key: `lose-${person.user_id}`,
         email: person.email,
-        note: `Removed from ${(person.groups ?? []).join(", ")}`,
+        note: `已从 ${(person.groups ?? []).join("、")} 移除`,
       })),
     },
   ].filter((loss) => loss.people.count > 0)
@@ -307,12 +301,12 @@ export function ScimReviewDialog({
     {
       section: "to_idp" as const,
       people: review.to_idp,
-      label: `${plural(review.to_idp.count, "manual member becomes", "manual members become")} IdP-managed`,
+      label: `${review.to_idp.count} 位手动成员将改为由 IdP 管理`,
     },
     {
       section: "to_manual" as const,
       people: review.to_manual,
-      label: `${plural(review.to_manual.count, "IdP member becomes", "IdP members become")} manual`,
+      label: `${review.to_manual.count} 位 IdP 成员将改为手动管理`,
     },
   ].filter((move) => move.people.count > 0)
 
@@ -329,8 +323,8 @@ export function ScimReviewDialog({
   const lastRequest = formatRelative(lastRequestAt)
   const summary = reviewSummary(activation, joining.count, loseCount)
   const confirmLabel = activation
-    ? `Activate for ${plural(joining.count, "user", "users")}`
-    : `Apply ${plural(changeCount, "change", "changes")}`
+    ? `为 ${joining.count} 位用户启用`
+    : `应用 ${changeCount} 项更改`
   const nothingChanges =
     loseCount === 0 &&
     joining.count === 0 &&
@@ -347,18 +341,14 @@ export function ScimReviewDialog({
       <DialogContent size="lg" className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {activation
-              ? "Activate SCIM provisioning"
-              : "Review mapping changes"}
+            {activation ? "激活 SCIM 用户配置" : "审核映射更改"}
           </DialogTitle>
           <DialogDescription className="text-foreground/80">
             {summary}
           </DialogDescription>
           <p className="text-xs text-muted-foreground">
-            {lastRequest
-              ? `Last request from your identity provider ${lastRequest}. `
-              : null}
-            Access from other roles and groups is unchanged.
+            {lastRequest ? `身份提供商最近一次请求：${lastRequest}。` : null}
+            来自其他角色和用户组的访问权限保持不变。
           </p>
         </DialogHeader>
         <DialogBody>
@@ -366,7 +356,7 @@ export function ScimReviewDialog({
             {loseCount > 0 && (
               <section className="space-y-2">
                 <h3 className="text-xs font-semibold text-rose-700 dark:text-rose-400">
-                  Lose access · {loseCount}
+                  失去访问权限 · {loseCount}
                 </h3>
                 {losses.map((loss) => (
                   <CollapsedRow
@@ -382,7 +372,7 @@ export function ScimReviewDialog({
                     }
                     label={loss.label}
                     hint={loss.hint}
-                    trailing={open.has(loss.section) ? "Hide" : "Show all"}
+                    trailing={open.has(loss.section) ? "隐藏" : "显示全部"}
                   >
                     <PeopleList
                       lines={loss.lines}
@@ -397,7 +387,7 @@ export function ScimReviewDialog({
             {joining.count > 0 && (
               <section className="space-y-2">
                 <h3 className="text-xs font-semibold">
-                  Join the organization · {joining.count}
+                  加入组织 · {joining.count}
                 </h3>
                 <CollapsedRow
                   open={open.has("join")}
@@ -413,8 +403,8 @@ export function ScimReviewDialog({
                       ))}
                     </span>
                   }
-                  label={`${plural(joining.count, "person", "people")} from your directory`}
-                  trailing={open.has("join") ? "Hide" : "Show all"}
+                  label={`来自目录的 ${plural(joining.count, "person", "people")}`}
+                  trailing={open.has("join") ? "隐藏" : "显示全部"}
                 >
                   <PeopleList
                     lines={joining.items.map((person) => ({
@@ -430,7 +420,7 @@ export function ScimReviewDialog({
 
             {review.groups.length > 0 && (
               <section className="space-y-2">
-                <h3 className="text-xs font-semibold">Group access</h3>
+                <h3 className="text-xs font-semibold">用户组访问权限</h3>
                 <div className="divide-y rounded-md border">
                   {review.groups.map((group) => {
                     const note = groupNote(group, activation)
@@ -468,7 +458,7 @@ export function ScimReviewDialog({
                 open={open.has(move.section)}
                 onToggle={() => toggle(move.section, [move.people])}
                 label={move.label}
-                trailing="No access change"
+                trailing="访问权限不变"
               >
                 <PeopleList
                   lines={move.people.items.map((person) => ({
@@ -484,15 +474,14 @@ export function ScimReviewDialog({
 
             {nothingChanges && (
               <p className="text-sm text-muted-foreground">
-                No one&apos;s access changes.
+                所有人的访问权限均保持不变。
               </p>
             )}
           </div>
 
           {missingLabels && (
             <p role="alert" className="text-sm text-destructive">
-              Affected user details could not be loaded. Close this review and
-              try again before confirming.
+              无法加载受影响用户的详情，请关闭此审核并重试后再确认。
             </p>
           )}
         </DialogBody>
@@ -504,7 +493,7 @@ export function ScimReviewDialog({
               void onConfirm().catch(() => {})
             }}
           >
-            {pending ? "Applying…" : confirmLabel}
+            {pending ? "应用中…" : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -111,7 +111,7 @@ export function CaseTaskFieldMenu({
                   />
                   {/* Menu items carry no checked state, so current-ness rides
                       on the accessible name instead. */}
-                  <span className="sr-only">{", current"}</span>
+                  <span className="sr-only">{"，当前"}</span>
                 </>
               )}
             </DropdownMenuItem>

@@ -104,8 +104,8 @@ export function CasePanelDescription({
         <Button
           type="button"
           data-style="ghost"
-          aria-label="Saving description"
-          tooltip="Saving..."
+          aria-label={"正在保存描述"}
+          tooltip={"保存中…"}
           disabled
           data-disabled
         >
@@ -120,10 +120,10 @@ export function CasePanelDescription({
         <Button
           type="button"
           data-style="ghost"
-          aria-label="Save case description"
+          aria-label={"保存事件描述"}
           tooltip={
             <span className="flex items-center gap-2">
-              <span>Save changes</span>
+              <span>保存更改</span>
               <span className="font-mono text-xs text-muted-foreground/80">
                 {shortcut}
               </span>
@@ -140,8 +140,8 @@ export function CasePanelDescription({
       <Button
         type="button"
         data-style="ghost"
-        aria-label="Description saved"
-        tooltip="Description up to date"
+        aria-label={"已保存描述"}
+        tooltip={"描述已是最新"}
         disabled
         data-disabled
       >

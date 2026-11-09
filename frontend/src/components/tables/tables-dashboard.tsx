@@ -57,9 +57,9 @@ const DEFAULT_TABLES_SORT: TablesSortValue = {
 }
 
 const TABLES_SORT_OPTIONS: Array<ListSortFieldOption<TablesSortField>> = [
-  { value: "name", label: "Name", icon: TypeIcon },
-  { value: "created_at", label: "Created", icon: CalendarIcon },
-  { value: "updated_at", label: "Updated", icon: Clock3 },
+  { value: "name", label: "名称", icon: TypeIcon },
+  { value: "created_at", label: "创建时间", icon: CalendarIcon },
+  { value: "updated_at", label: "更新时间", icon: Clock3 },
 ]
 
 function compareTableNames(a: TableReadMinimal, b: TableReadMinimal): number {
@@ -100,7 +100,7 @@ function TableColumnsPreview({ tableId }: { tableId: string }) {
     return (
       <div className="flex items-center gap-2 px-12 py-4 text-xs text-muted-foreground">
         <Loader2 className="size-3.5 animate-spin" />
-        Loading columns...
+        正在加载列…
       </div>
     )
   }
@@ -108,9 +108,7 @@ function TableColumnsPreview({ tableId }: { tableId: string }) {
   if (tableError) {
     return (
       <div className="flex items-center justify-between gap-3 px-12 py-4">
-        <span className="text-xs text-destructive">
-          Failed to load columns.
-        </span>
+        <span className="text-xs text-destructive">加载列失败。</span>
         <Button
           variant="outline"
           size="sm"
@@ -120,7 +118,7 @@ function TableColumnsPreview({ tableId }: { tableId: string }) {
             void refetchTable()
           }}
         >
-          Retry
+          重试
         </Button>
       </div>
     )
@@ -129,7 +127,7 @@ function TableColumnsPreview({ tableId }: { tableId: string }) {
   if (!table || table.columns.length === 0) {
     return (
       <div className="px-12 py-4 text-xs text-muted-foreground">
-        No columns configured.
+        尚未配置列。
       </div>
     )
   }
@@ -191,7 +189,7 @@ export function TablesDashboard() {
     return (
       <AlertNotification
         level="error"
-        message={tablesError?.message || "Error loading tables."}
+        message={tablesError?.message || "加载数据表出错。"}
       />
     )
   }
@@ -210,7 +208,7 @@ export function TablesDashboard() {
         <CatalogHeader
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
-          searchPlaceholder="Search tables..."
+          searchPlaceholder={"搜索数据表…"}
           displayCount={filteredTables.length}
           countLabel="tables"
           actions={
@@ -231,12 +229,12 @@ export function TablesDashboard() {
                     <Table2Icon className="size-5 text-muted-foreground/60" />
                   </EmptyMedia>
                   <EmptyTitle>
-                    {hasActiveSearch ? "No tables found" : "No tables yet"}
+                    {hasActiveSearch ? "未找到数据表" : "暂无数据表"}
                   </EmptyTitle>
                   <EmptyDescription>
                     {hasActiveSearch
-                      ? "No tables found matching your criteria."
-                      : "Create a table to store lookup data for workflows."}
+                      ? "没有符合条件的数据表。"
+                      : "创建数据表，为工作流存储查询数据。"}
                   </EmptyDescription>
                 </EmptyHeader>
               </Empty>
@@ -271,8 +269,8 @@ export function TablesDashboard() {
                               className="flex h-7 w-7 shrink-0 items-center justify-center [&[data-state=open]_.chevron]:rotate-90"
                               aria-label={
                                 isExpanded
-                                  ? `Collapse ${table.name} columns`
-                                  : `Expand ${table.name} columns`
+                                  ? `折叠 ${table.name} 列`
+                                  : `展开 ${table.name} 列`
                               }
                             >
                               <ChevronRight className="chevron size-4 text-muted-foreground transition-transform duration-200" />
@@ -320,7 +318,7 @@ export function TablesDashboard() {
                                   className="size-7 p-0"
                                   onClick={(event) => event.stopPropagation()}
                                 >
-                                  <span className="sr-only">Open menu</span>
+                                  <span className="sr-only">打开菜单</span>
                                   <DotsHorizontalIcon className="size-4" />
                                 </Button>
                               </DropdownMenuTrigger>

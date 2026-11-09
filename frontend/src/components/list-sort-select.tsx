@@ -50,7 +50,7 @@ export function ListSortSelect<TField extends string>({
         }
       >
         <SelectTrigger className="h-6 w-[145px] rounded-r-none border-0 bg-transparent px-2 text-xs font-medium shadow-none focus:ring-0">
-          <span className="text-muted-foreground">Sort by</span>
+          <span className="text-muted-foreground">排序方式</span>
           <span className="text-foreground">{selectedLabel}</span>
         </SelectTrigger>
         <SelectContent align="start">
@@ -76,9 +76,7 @@ export function ListSortSelect<TField extends string>({
             direction: value.direction === "asc" ? "desc" : "asc",
           })
         }
-        aria-label={
-          value.direction === "asc" ? "Sort ascending" : "Sort descending"
-        }
+        aria-label={value.direction === "asc" ? "升序排序" : "降序排序"}
       >
         {value.direction === "asc" ? (
           <ArrowUpIcon className="size-3.5" />

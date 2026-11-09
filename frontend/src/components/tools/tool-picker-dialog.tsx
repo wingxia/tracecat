@@ -113,7 +113,7 @@ export function ToolPickerDialog({ open, ...props }: ToolPickerDialogProps) {
           }}
           className="flex h-[min(92dvh,960px)] w-[min(96vw,1440px)] max-w-none flex-col gap-0 overflow-hidden p-0 shadow-none [&>button]:hidden"
         >
-          <DialogTitle className="sr-only">Add tools</DialogTitle>
+          <DialogTitle className="sr-only">添加工具</DialogTitle>
 
           <PickerBody {...props} searchRef={searchRef} />
         </DialogContent>
@@ -179,7 +179,7 @@ function PickerBody({
   ).length
   const totalCount = count - blockedCount + skillCount
   const overLimit = maxTools != null && totalCount > maxTools
-  const toolLabel = count === 1 ? "tool" : "tools"
+  const toolLabel = "个工具"
   const selectedIds = useMemo(
     () =>
       new Set(
@@ -468,12 +468,12 @@ function PickerBody({
       {
         kind: "source",
         id: "all",
-        title: "All tools",
+        title: "所有工具",
         total: index.entries.filter(
           (entry) => mcpEnabled || entry.section !== "mcp"
         ).length,
       },
-      { kind: "source", id: "selected", title: "Selected", total: 0 },
+      { kind: "source", id: "selected", title: "已选择", total: 0 },
     ]
     for (const section of ["mcp", "tracecat", "custom"] as const) {
       if (!mcpEnabled && section === "mcp") continue
@@ -483,9 +483,9 @@ function PickerBody({
         kind: "label",
         id: section,
         title: {
-          mcp: "MCP servers",
-          tracecat: "Tracecat registry",
-          custom: "Custom registry",
+          mcp: "MCP 服务器",
+          tracecat: "Tracecat 注册表",
+          custom: "自定义注册表",
         }[section],
       })
       for (const group of groups)
@@ -527,7 +527,7 @@ function PickerBody({
         <Search className="size-4 text-muted-foreground" />
         <input
           ref={searchRef}
-          aria-label="Search tools"
+          aria-label={"搜索工具"}
           aria-controls={listId}
           aria-activedescendant={activeDescendant}
           role="combobox"
@@ -540,7 +540,7 @@ function PickerBody({
             listRef.current?.scrollTo({ top: 0 })
           }}
           onKeyDown={handleKeyDown}
-          placeholder={`Search ${index.entries.length.toLocaleString()} tools`}
+          placeholder={`搜索 ${index.entries.length.toLocaleString("zh-CN")} 个工具`}
           className="h-9 min-w-0 flex-1 border-0 bg-transparent text-sm outline-none focus-visible:ring-0"
         />
         <Kbd>esc</Kbd>
@@ -548,7 +548,7 @@ function PickerBody({
       <div className="flex min-h-0 flex-1">
         <nav
           ref={railRef}
-          aria-label="Tool sources"
+          aria-label={"工具来源"}
           className="w-48 shrink-0 overflow-y-auto border-r py-2 md:w-[280px]"
         >
           <div
@@ -586,7 +586,7 @@ function PickerBody({
         <div className="flex min-w-0 flex-1 flex-col">
           {deferredQuery.trim() ? (
             <div className="flex h-11 shrink-0 items-center border-b px-4 text-sm">
-              {matches.length} {matches.length === 1 ? "result" : "results"}
+              {matches.length} {matches.length === 1 ? "个结果" : "个结果"}
             </div>
           ) : null}
           {!deferredQuery.trim() && selectedGroup && !integrationGroup && (
@@ -601,7 +601,7 @@ function PickerBody({
             ref={listRef}
             id={listId}
             role="listbox"
-            aria-label="Tools"
+            aria-label={"工具"}
             aria-multiselectable="true"
             aria-activedescendant={activeDescendant}
             tabIndex={0}
@@ -660,13 +660,14 @@ function PickerBody({
               })}
             </div>
             {rows.length === 0 && (
-              <p className="p-4 text-sm text-muted-foreground">
-                No tools found.
-              </p>
+              <p className="p-4 text-sm text-muted-foreground">未找到工具。</p>
             )}
           </div>
           {integrationGroup && (
-            <ul aria-label="MCP tools" className="min-h-0 flex-1 overflow-auto">
+            <ul
+              aria-label={"MCP 工具"}
+              className="min-h-0 flex-1 overflow-auto"
+            >
               {integrationGroup.entries[0].integration?.tools?.map((tool) => (
                 <li
                   key={tool.name}
@@ -686,15 +687,15 @@ function PickerBody({
       <div className="flex h-14 shrink-0 items-center gap-2 border-t px-4 text-xs">
         <span className={cn(overLimit && "text-rose-500")}>
           {maxTools != null
-            ? `${totalCount} of ${maxTools} tools`
-            : `${count} ${toolLabel} selected`}
-          {maxTools != null && skillCount > 0 && ` (${skillCount} from skills)`}
-          {overLimit && ` · remove ${totalCount - maxTools} to continue`}
+            ? `${totalCount}/${maxTools} 个工具`
+            : `已选择 ${count} ${toolLabel}`}
+          {maxTools != null && skillCount > 0 && `（${skillCount} 个来自技能）`}
+          {overLimit && ` · 请移除 ${totalCount - maxTools} 个后继续`}
           {selection.mcpIntegrations.size > 0 &&
-            ` · ${selection.mcpIntegrations.size} MCP ${selection.mcpIntegrations.size === 1 ? "integration" : "integrations"}`}
+            ` · ${selection.mcpIntegrations.size} 个 MCP 集成`}
         </span>
         <div className="ml-auto hidden items-center gap-2 text-muted-foreground sm:flex">
-          <Kbd>↑↓</Kbd> Navigate <Kbd>Enter</Kbd> Select
+          <Kbd>↑↓</Kbd> 导航 <Kbd>回车</Kbd> 选择
         </div>
         <Button
           type="button"
@@ -702,7 +703,7 @@ function PickerBody({
           variant="outline"
           onClick={() => onOpenChange(false)}
         >
-          Cancel
+          取消
         </Button>
         <Button
           type="button"
@@ -710,7 +711,7 @@ function PickerBody({
           disabled={disabled || overLimit}
           onClick={done}
         >
-          Done
+          完成
         </Button>
       </div>
     </>
@@ -736,11 +737,11 @@ const SourceRow = memo(function SourceRow({
         {row.title}
       </p>
     )
-  let count = row.total.toLocaleString()
-  if (row.id === "selected") count = selected.toLocaleString()
-  else if (granted) count = "All tools"
+  let count = row.total.toLocaleString("zh-CN")
+  if (row.id === "selected") count = selected.toLocaleString("zh-CN")
+  else if (granted) count = "所有工具"
   else if (row.entry && selected)
-    count = `${selected.toLocaleString()}/${row.total.toLocaleString()}`
+    count = `${selected.toLocaleString("zh-CN")}/${row.total.toLocaleString("zh-CN")}`
   // A group offering only its whole-group grant has no tools to count.
   else if (row.entry && row.total === 0) count = ""
   return (
@@ -804,8 +805,8 @@ function getGroupCheck(group: ToolGroup, selected: Set<string>) {
   if (granted || (count === selectable.length && selectable.length > 0))
     checked = true
   else if (count > 0) checked = "indeterminate"
-  let summary = `${count} of ${selectable.length} selected`
-  if (granted) summary = "All tools"
+  let summary = `已选择 ${count}/${selectable.length} 项`
+  if (granted) summary = "所有工具"
   else if (grant && selectable.length === 0) summary = ""
   return {
     checked,
@@ -829,7 +830,7 @@ function GroupCheckbox({
 }) {
   return (
     <Checkbox
-      aria-label={`Select all in ${group.title}`}
+      aria-label={`全选 ${group.title} 中的项目`}
       checked={checked}
       onCheckedChange={onToggle}
       disabled={disabled}
@@ -922,7 +923,7 @@ const ToolOption = memo(function ToolOption({
         <span className="truncate">{entry.title}</span>
         {entry.locked && (
           <LockKeyhole
-            aria-label="Locked"
+            aria-label={"已锁定"}
             className="size-3.5 shrink-0 text-muted-foreground"
           />
         )}

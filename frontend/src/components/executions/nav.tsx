@@ -60,7 +60,7 @@ export function WorkflowExecutionNav({
   const baseUrl = pathname ? pathname.split("/executions")[0] : ""
   const workspaceId = useWorkspaceId()
   if (!workflowExecutions) {
-    return <NoContent message="No workflow executions found." />
+    return <NoContent message={"未找到工作流执行记录。"} />
   }
 
   const handleTerminateExecuton = async (executionId: string) => {
@@ -74,8 +74,8 @@ export function WorkflowExecutionNav({
         },
       })
       toast({
-        title: "Successfully requested termination",
-        description: `Execution ${executionId} has been terminated.`,
+        title: "已成功请求终止",
+        description: `已终止执行 ${executionId}。`,
       })
       // Invalidate executions query to refetch data
       queryClient.invalidateQueries({
@@ -84,9 +84,8 @@ export function WorkflowExecutionNav({
     } catch (error) {
       console.error(error)
       toast({
-        title: "Failed to terminate execution",
-        description: `Execution ${executionId} could not be terminated. Please try again
-              later.`,
+        title: "终止执行失败",
+        description: `无法终止执行 ${executionId}，请稍后重试。`,
       })
     }
   }
@@ -117,11 +116,11 @@ export function WorkflowExecutionNav({
                       variant="outline"
                       className="ml-2 h-4 px-1 py-0 text-[10px] font-normal text-muted-foreground"
                     >
-                      Draft
+                      草稿
                     </Badge>
                   )}
                   <span className="ml-2">
-                    {new Date(execution.start_time).toLocaleString()}
+                    {new Date(execution.start_time).toLocaleString("zh-CN")}
                   </span>
                 </div>
                 <div className="ml-auto">
@@ -142,7 +141,7 @@ export function WorkflowExecutionNav({
                             side="left"
                             className="flex items-center gap-4  shadow-lg"
                           >
-                            <span>Terminate run</span>
+                            <span>终止运行</span>
                           </TooltipContent>
                         </Tooltip>
                       ) : (
@@ -162,31 +161,31 @@ export function WorkflowExecutionNav({
                 <div className="flex flex-col items-start justify-between space-y-2 text-start text-xs">
                   <div className="flex flex-col">
                     <Label className="text-xs text-muted-foreground">
-                      Execution id
+                      执行 ID
                     </Label>
                     <span>{executionId}</span>
                   </div>
                   <div className="flex flex-col">
                     <Label className="text-xs text-muted-foreground">
-                      Run id
+                      运行 ID
                     </Label>
                     <span>{execution.run_id}</span>
                   </div>
                   <div className="flex flex-col">
                     <Label className="text-xs text-muted-foreground">
-                      Start time
+                      开始时间
                     </Label>
                     <span>
-                      {new Date(execution.start_time).toLocaleString()}
+                      {new Date(execution.start_time).toLocaleString("zh-CN")}
                     </span>
                   </div>
                   <div className="flex flex-col">
                     <Label className="text-xs text-muted-foreground">
-                      End time
+                      结束时间
                     </Label>
                     <span>
                       {execution.close_time
-                        ? new Date(execution.close_time).toLocaleString()
+                        ? new Date(execution.close_time).toLocaleString("zh-CN")
                         : "-"}
                     </span>
                   </div>

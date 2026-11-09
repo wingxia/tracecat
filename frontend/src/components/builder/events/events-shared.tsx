@@ -102,7 +102,7 @@ export function useResolvedLastExecution(
   if (!currentExecutionId && lastExecutionIsLoading) {
     return {
       status: "pending",
-      node: <EventsLoading message="Fetching last execution..." />,
+      node: <EventsLoading message={"正在获取最近的执行记录…"} />,
     }
   }
 
@@ -112,7 +112,7 @@ export function useResolvedLastExecution(
       node: (
         <AlertNotification
           level="error"
-          message={`Error loading last execution: ${lastExecutionError.message}`}
+          message={`加载上次执行记录出错：${lastExecutionError.message}`}
         />
       ),
     }
@@ -134,10 +134,8 @@ function NoWorkflowRuns() {
           <EmptyMedia variant="icon">
             <WorkflowIcon />
           </EmptyMedia>
-          <EmptyTitle>No workflow runs</EmptyTitle>
-          <EmptyDescription>
-            Get started by running your workflow
-          </EmptyDescription>
+          <EmptyTitle>暂无工作流运行记录</EmptyTitle>
+          <EmptyDescription>运行工作流以开始使用</EmptyDescription>
         </EmptyHeader>
       </Empty>
     </div>
@@ -158,7 +156,7 @@ export function buildEventsTabItems({
   const tabItems: EventsTabItem[] = [
     {
       value: "workflow-events",
-      label: "Events",
+      label: "执行事件",
       icon: CalendarSearchIcon,
       content: (
         <>
@@ -169,13 +167,13 @@ export function buildEventsTabItems({
     },
     {
       value: "action-input",
-      label: "Input",
+      label: "输入",
       icon: FileInputIcon,
       content: <ActionEventPane execution={execution} type="input" />,
     },
     {
       value: "action-result",
-      label: "Result",
+      label: "结果",
       icon: ShapesIcon,
       content: <ActionEventPane execution={execution} type="result" />,
     },

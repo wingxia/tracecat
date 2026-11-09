@@ -19,18 +19,17 @@ export default function SecretStoresSettingsPage() {
   return (
     <ScopeGuard
       scope="org:secret:read"
-      fallback={<p>You do not have permission to view secret stores.</p>}
+      fallback={<p>你没有查看密钥存储的权限。</p>}
     >
       <div className="size-full overflow-auto">
         <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
           <div className="flex w-full">
             <div className="items-start space-y-3 text-left">
               <h2 className="text-2xl font-semibold tracking-tight">
-                Secret stores
+                密钥存储
               </h2>
               <p className="text-base text-muted-foreground">
-                Let workspaces reference secrets from an external secret
-                manager.
+                允许工作空间引用外部密钥管理器中的密钥。
               </p>
             </div>
           </div>
@@ -39,8 +38,8 @@ export default function SecretStoresSettingsPage() {
           ) : (
             <div className="flex flex-1 items-center justify-center pb-8">
               <EntitlementRequiredEmptyState
-                title="Upgrade required"
-                description="External secret stores are unavailable on your current plan."
+                title={"需要升级"}
+                description={"当前套餐不支持外部密钥存储。"}
               >
                 <Button
                   variant="link"
@@ -53,7 +52,7 @@ export default function SecretStoresSettingsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Learn more <ArrowUpRight className="size-4" />
+                    了解更多 <ArrowUpRight className="size-4" />
                   </a>
                 </Button>
               </EntitlementRequiredEmptyState>

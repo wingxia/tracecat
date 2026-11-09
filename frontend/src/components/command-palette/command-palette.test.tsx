@@ -59,13 +59,13 @@ describe("CommandPalette", () => {
     openPalette()
 
     expect(screen.getByRole("dialog")).toBeInTheDocument()
-    expect(screen.getByRole("option", { name: "Cases" })).toBeInTheDocument()
-    expect(screen.getByRole("option", { name: "Runs" })).toBeInTheDocument()
+    expect(screen.getByRole("option", { name: "事件" })).toBeInTheDocument()
+    expect(screen.getByRole("option", { name: "运行记录" })).toBeInTheDocument()
     expect(
-      screen.queryByRole("option", { name: "Tables" })
+      screen.queryByRole("option", { name: "数据表" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("option", { name: "Audit logs" })
+      screen.queryByRole("option", { name: "审计日志" })
     ).not.toBeInTheDocument()
   })
 
@@ -119,11 +119,9 @@ describe("CommandPalette", () => {
     render(<CommandPalette />)
     openPalette()
 
+    expect(screen.getByRole("option", { name: "审计日志" })).toBeInTheDocument()
     expect(
-      screen.getByRole("option", { name: "Audit logs" })
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole("option", { name: "Runs" })
+      screen.queryByRole("option", { name: "运行记录" })
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole("option", { name: /Triage phishing/ })

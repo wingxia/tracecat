@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Domains | Organization",
+  title: "域名 | 组织",
 }
 
 export default function DomainsLayout({

@@ -16,13 +16,13 @@ import { isExpression } from "@/lib/expressions"
 export const SERVER_TYPES = [
   {
     value: "http",
-    label: "URL (HTTP/SSE)",
-    description: "Connect to an MCP server via HTTP or SSE endpoint",
+    label: "URL（HTTP/SSE）",
+    description: "通过 HTTP 或 SSE 端点连接 MCP 服务器",
   },
   {
     value: "stdio",
     label: "Stdio",
-    description: "Run a command that spawns an MCP server (e.g., npx)",
+    description: "运行命令以启动 MCP 服务器（如 npx）",
   },
 ] as const
 
@@ -30,17 +30,17 @@ export const AUTH_TYPES = [
   {
     value: "OAUTH2",
     label: "OAuth 2.0",
-    description: "Use MCP OAuth discovery or a Tracecat OAuth integration",
+    description: "使用 MCP OAuth 发现或 Tracecat OAuth 集成",
   },
   {
     value: "CUSTOM",
-    label: "API key / token",
-    description: "API key, bearer token, or custom headers (JSON)",
+    label: "API 密钥 / 令牌",
+    description: "API 密钥、Bearer 令牌或自定义请求头（JSON）",
   },
   {
     value: "NONE",
-    label: "No Authentication",
-    description: "No authentication required (for self-hosted)",
+    label: "无需身份验证",
+    description: "无需身份验证（适用于自托管）",
   },
 ] as const
 
@@ -251,12 +251,12 @@ const mcpIntegrationFormObjectSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .max(255, { message: "Name must be 255 characters or fewer" }),
+    .min(3, { message: "名称至少需要 3 个字符" })
+    .max(255, { message: "名称不能超过 255 个字符" }),
   description: z
     .string()
     .trim()
-    .max(512, { message: "Description must be 512 characters or fewer" })
+    .max(512, { message: "描述不能超过 512 个字符" })
     .optional()
     .or(z.literal("")),
   // Server type
@@ -318,7 +318,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message: "Valid server URL is required for HTTP-type servers",
+          message: "HTTP 类型服务器需要有效的服务器 URL",
           path: ["server_uri"],
         }
       )
@@ -336,7 +336,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message: "OAuth integration is required for OAuth 2.0 authentication",
+          message: "OAuth 2.0 身份验证需要 OAuth 集成",
           path: ["oauth_integration_id"],
         }
       )
@@ -354,8 +354,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message:
-            "Custom credentials must be a valid JSON object with string values",
+          message: "自定义凭据必须是值为字符串的有效 JSON 对象",
           path: ["custom_credentials"],
         }
       )
@@ -377,7 +376,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message: "OAuth client credentials must be a valid JSON object",
+          message: "OAuth 客户端凭据必须是有效的 JSON 对象",
           path: ["oauth_client_credentials"],
         }
       )
@@ -398,8 +397,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message:
-            "Additional headers must be a valid JSON object with string values",
+          message: "附加请求头必须是值为字符串的有效 JSON 对象",
           path: ["custom_credentials"],
         }
       )
@@ -415,7 +413,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message: `Command must be one of: ${ALLOWED_COMMANDS.join(", ")}`,
+          message: `命令必须是以下选项之一：${ALLOWED_COMMANDS.join(", ")}`,
           path: ["stdio_command"],
         }
       )
@@ -431,8 +429,7 @@ export function buildMcpIntegrationFormSchema(
           return true
         },
         {
-          message:
-            "Environment variables must be a valid JSON object with string values",
+          message: "环境变量必须是值为字符串的有效 JSON 对象",
           path: ["stdio_env"],
         }
       )
@@ -444,7 +441,7 @@ export function buildMcpIntegrationFormSchema(
           !data.stdio_env ||
           invalidUrlEnvKeys(data.stdio_env, urlEnvKeys).length === 0,
         (data) => ({
-          message: `Must start with http:// or https://: ${invalidUrlEnvKeys(
+          message: `必须以 http:// 或 https:// 开头：${invalidUrlEnvKeys(
             data.stdio_env ?? "",
             urlEnvKeys
           ).join(", ")}`,

@@ -67,9 +67,7 @@ export function parseFormConfigYaml(text: string): {
       },
     })
     const message =
-      error instanceof Error
-        ? error.message.split("\n")[0]
-        : "The config could not be read."
+      error instanceof Error ? error.message.split("\n")[0] : "无法读取配置。"
     return {
       config: null,
       problems: [{ severity: "error", message, from: range[0], to: range[1] }],
@@ -79,8 +77,7 @@ export function parseFormConfigYaml(text: string): {
     return { config: {}, problems: [] }
   }
   if (typeof value !== "object" || Array.isArray(value)) {
-    const message =
-      "The config must be a mapping with keys such as title and layout."
+    const message = "配置必须是包含 title、layout 等键的映射。"
     return {
       config: null,
       problems: [{ severity: "error", message, from: 0, to: lineEnd(text, 0) }],

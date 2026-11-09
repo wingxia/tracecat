@@ -202,7 +202,7 @@ describe("showFallbackErrorToast", () => {
     showFallbackErrorToast(undefined)
 
     expect(mockToast).toHaveBeenCalledWith({
-      description: "Please try again.",
+      description: "请重试。",
       variant: "destructive",
     })
   })

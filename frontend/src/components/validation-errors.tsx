@@ -23,19 +23,19 @@ export const ERROR_TYPE_TO_MESSAGE: Record<
   "pydantic.missing": ({ detail }) => (
     <div className="flex items-center">
       <CornerDownRightIcon className="mr-2 size-3" />
-      <span>Missing required field:</span>
+      <span>缺少必填字段：</span>
       <strong className="ml-2 text-xs">{detail.loc?.join(".")}</strong>
     </div>
   ),
   "pydantic.invalid_type": ({ detail }) => (
     <div>
-      Invalid type: {detail.msg} ({detail.loc})
+      类型无效： {detail.msg} ({detail.loc})
     </div>
   ),
   "pydantic.extra_forbidden": ({ detail }) => (
     <div className="flex items-center">
       <CornerDownRightIcon className="mr-2 size-3" />
-      <span>Unrecognized field:</span>
+      <span>无法识别的字段：</span>
       <strong className="ml-2 text-xs">{detail.loc?.join(".")}</strong>
     </div>
   ),
@@ -47,7 +47,7 @@ export const ERROR_TYPE_TO_MESSAGE: Record<
       <div className="flex flex-col">
         {detail.loc && (
           <div className="flex items-center">
-            <span>In {detail.loc?.join(" → ")}</span>
+            <span>位于 {detail.loc?.join(" → ")}</span>
           </div>
         )}
         <span>
@@ -99,10 +99,10 @@ export function ValidationErrorMessage({
           <React.Fragment>
             {error.ref && (
               <span>
-                In action → <strong>{error.ref}</strong>
+                动作中 → <strong>{error.ref}</strong>
               </span>
             )}
-            {error.expression && <span>Expression → {error.expression}</span>}
+            {error.expression && <span>表达式 → {error.expression}</span>}
             <span>{formattedMessage}</span>
             <ValidationDetails error={error} />
           </React.Fragment>
@@ -111,7 +111,7 @@ export function ValidationErrorMessage({
           <React.Fragment>
             {error.ref && (
               <span>
-                In action → <strong>{error.ref}</strong>
+                动作中 → <strong>{error.ref}</strong>
               </span>
             )}
             <span>{formattedMessage}</span>
@@ -123,10 +123,10 @@ export function ValidationErrorMessage({
           <React.Fragment>
             {error.ref ? (
               <span>
-                In action → <strong>{error.ref}</strong>
+                动作中 → <strong>{error.ref}</strong>
               </span>
             ) : (
-              <span>In the workflow definition</span>
+              <span>在工作流定义中</span>
             )}
             <span>{formattedMessage}</span>
             <ValidationDetails error={error} />
@@ -136,7 +136,7 @@ export function ValidationErrorMessage({
           <React.Fragment>
             {error.ref && (
               <span>
-                In action → <strong>{error.ref}</strong>
+                动作中 → <strong>{error.ref}</strong>
               </span>
             )}
             <span>{formattedMessage}</span>
@@ -175,7 +175,7 @@ export function ValidationErrorView({
           <div className="rounded-md border border-rose-300 bg-rose-100 font-mono tracking-tighter text-rose-500">
             <div className="m-2">
               <span className="text-xs font-bold">
-                Found {validationErrors.length} validation errors
+                发现 {validationErrors.length} 个校验错误
               </span>
             </div>
             {validationErrors

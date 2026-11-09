@@ -16,11 +16,7 @@ export default function AdminOrganizationsPage() {
   }
 
   if (error) {
-    return (
-      <div className="text-center text-muted-foreground">
-        Failed to load organizations
-      </div>
-    )
+    return <div className="text-center text-muted-foreground">加载组织失败</div>
   }
 
   return (
@@ -28,11 +24,9 @@ export default function AdminOrganizationsPage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Organizations
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">组织</h2>
             <p className="text-base text-muted-foreground">
-              Manage organizations on the platform.
+              管理平台上的组织。
             </p>
           </div>
           <div className="ml-auto flex items-center space-x-2">

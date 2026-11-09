@@ -77,17 +77,17 @@ export function useRestoreWorkflowDefinition(
       })
       queryClient.invalidateQueries({ queryKey: ["workflows"] })
       toast({
-        title: "Version restored",
-        description: `${workflow.title} now points to v${variables.version}.`,
+        title: "已恢复版本",
+        description: `${workflow.title} 现已指向 v${variables.version}。`,
       })
     },
     onError: (error) => {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to restore workflow version."
+          : "恢复工作流版本失败。"
       toast({
-        title: "Restore failed",
+        title: "恢复失败",
         description: detail,
         variant: "destructive",
       })

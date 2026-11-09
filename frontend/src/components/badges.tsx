@@ -22,7 +22,7 @@ export function ComingSoonBadge({ className }: { className?: string }) {
       variant="outline"
       className={cn("bg-background py-3 text-xs", className)}
     >
-      Coming Soon
+      即将推出
     </Badge>
   )
 }

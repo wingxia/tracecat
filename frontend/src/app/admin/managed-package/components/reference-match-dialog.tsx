@@ -91,10 +91,10 @@ function ReferenceMatchContent({
 
   const header = (
     <DialogHeader>
-      <DialogTitle>References</DialogTitle>
+      <DialogTitle>引用</DialogTitle>
       <DialogDescription>
-        Enter the ID of the matching resource in {target.workspace_name}. Saved
-        matches are reused by later version bumps.
+        输入匹配资源的 ID，所在位置： {target.workspace_name}
+        。后续版本升级会复用已保存的匹配关系。
       </DialogDescription>
     </DialogHeader>
   )
@@ -103,14 +103,13 @@ function ReferenceMatchContent({
   // empty form after a failed read would clear saved matches on save.
   let status: string | null = null
   if (previewLoading || matchesLoading) {
-    status = "Loading..."
+    status = "加载中…"
   } else if (previewError || matchesError) {
     status =
       getApiErrorDetail(previewError ?? matchesError) ??
-      "Could not load references. Close and reopen to try again."
+      "无法加载引用，请关闭后重新打开以重试。"
   } else if (previewRunning) {
-    status =
-      "The latest preview is still running. References show when it finishes."
+    status = "最新预览仍在运行，完成后将显示引用。"
   }
   if (status !== null) {
     return (
@@ -212,7 +211,7 @@ function ReferenceMatchForm({
         continue
       }
       if (!UUID_PATTERN.test(value)) {
-        nextErrors[row.key] = "Enter a valid UUID."
+        nextErrors[row.key] = "请输入有效的 UUID。"
         continue
       }
       payload.push({
@@ -229,11 +228,11 @@ function ReferenceMatchForm({
       await saveMatches.mutateAsync({ targetId, matches: payload })
       setSaved(true)
       toast({
-        title: "References saved",
-        description: "Preview again to check the target with these matches.",
+        title: "已保存引用",
+        description: "再次预览，使用这些匹配关系检查目标。",
       })
     } catch (err) {
-      toastApiError("Failed to save references", err)
+      toastApiError("保存引用失败", err)
     }
   }
 
@@ -242,8 +241,7 @@ function ReferenceMatchForm({
       <DialogBody>
         {rows.length === 0 ? (
           <div className="text-sm text-muted-foreground">
-            The latest preview has no unresolved references and no matches are
-            saved.
+            最新预览没有未解析的引用，也没有已保存的匹配关系。
           </div>
         ) : (
           <ul className="space-y-4">
@@ -256,7 +254,7 @@ function ReferenceMatchForm({
                   <span className="font-medium">{row.label}</span>
                   {!row.unresolved && (
                     <span className="text-xs text-muted-foreground">
-                      (saved)
+                      （已保存）
                     </span>
                   )}
                 </div>
@@ -273,8 +271,8 @@ function ReferenceMatchForm({
                   }}
                   placeholder={
                     row.kind === "secret_store"
-                      ? "Secret store ID, or empty to leave unlinked"
-                      : "Resource ID in the target workspace"
+                      ? "密钥存储 ID，留空则不关联"
+                      : "目标工作空间中的资源 ID"
                   }
                   className="font-mono text-xs"
                 />
@@ -289,7 +287,7 @@ function ReferenceMatchForm({
       <DialogFooter>
         {saved && (
           <Button size="sm" variant="outline" onClick={onPreviewAgain}>
-            Preview again
+            再次预览
           </Button>
         )}
         <Button
@@ -297,7 +295,7 @@ function ReferenceMatchForm({
           onClick={handleSave}
           disabled={rows.length === 0 || saveMatches.isPending}
         >
-          {saveMatches.isPending ? "Saving..." : "Save"}
+          {saveMatches.isPending ? "保存中…" : "保存"}
         </Button>
       </DialogFooter>
     </>

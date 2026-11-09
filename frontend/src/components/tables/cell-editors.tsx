@@ -161,20 +161,20 @@ function ValidatedTextEditor({
 // --- Parsers for ValidatedTextEditor ---
 
 function parseInteger(raw: string): number {
-  if (!/^-?\d+$/.test(raw)) throw new Error("Invalid integer")
+  if (!/^-?\d+$/.test(raw)) throw new Error("整数无效")
   return Number.parseInt(raw, 10)
 }
 
 function parseNumeric(raw: string): string {
   const n = Number(raw)
-  if (!Number.isFinite(n)) throw new Error("Invalid number")
+  if (!Number.isFinite(n)) throw new Error("数值无效")
   // Return as string to preserve precision (backend handles conversion)
   return raw.trim()
 }
 
 function parseDate(raw: string): string {
   const d = new Date(raw)
-  if (Number.isNaN(d.getTime())) throw new Error("Invalid date")
+  if (Number.isNaN(d.getTime())) throw new Error("日期无效")
   const yyyy = d.getUTCFullYear()
   const mm = String(d.getUTCMonth() + 1).padStart(2, "0")
   const dd = String(d.getUTCDate()).padStart(2, "0")
@@ -183,7 +183,7 @@ function parseDate(raw: string): string {
 
 function parseTimestamp(raw: string): string {
   const d = new Date(raw)
-  if (Number.isNaN(d.getTime())) throw new Error("Invalid timestamp")
+  if (Number.isNaN(d.getTime())) throw new Error("时间戳无效")
   return d.toISOString()
 }
 
@@ -233,8 +233,8 @@ function BooleanCellEditor({
           onCancel()
         }}
       >
-        <SelectItem value="true">True</SelectItem>
-        <SelectItem value="false">False</SelectItem>
+        <SelectItem value="true">真</SelectItem>
+        <SelectItem value="false">假</SelectItem>
       </SelectContent>
     </Select>
   )
@@ -263,7 +263,7 @@ function SelectCellEditor({
           className="h-8 text-xs border-0 rounded-none shadow-none ring-0 focus:ring-0 focus:outline-none bg-transparent"
           autoFocus
         >
-          <SelectValue placeholder="Choose a value" />
+          <SelectValue placeholder={"选择值"} />
         </SelectTrigger>
         <SelectContent
           position="popper"
@@ -351,10 +351,10 @@ function MultiSelectCellEditor({
         >
           <span className="truncate text-left">
             {currentValue.length === 0
-              ? "Select values..."
+              ? "选择值…"
               : currentValue.length === 1
                 ? currentValue[0]
-                : `${currentValue.length} selected`}
+                : `已选择 ${currentValue.length} 项`}
           </span>
           <ChevronsUpDown className="ml-2 size-3 opacity-50" aria-hidden />
         </button>
@@ -377,9 +377,9 @@ function MultiSelectCellEditor({
         }}
       >
         <Command>
-          <CommandInput placeholder="Search options..." className="text-xs" />
+          <CommandInput placeholder={"搜索选项…"} className="text-xs" />
           <CommandList>
-            <CommandEmpty>No options found.</CommandEmpty>
+            <CommandEmpty>未找到选项。</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = valueSet.has(option)
@@ -412,7 +412,7 @@ function MultiSelectCellEditor({
               className="h-7 w-full text-xs"
               onClick={() => onChange([])}
             >
-              Clear selection
+              清除选择
             </Button>
           </div>
         )}

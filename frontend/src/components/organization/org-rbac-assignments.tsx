@@ -137,7 +137,7 @@ export function OrgRbacAssignments() {
   if (error) {
     return (
       <div className="flex items-center justify-center py-12 text-sm text-destructive">
-        Failed to load assignments
+        加载授权失败
       </div>
     )
   }
@@ -166,7 +166,7 @@ export function OrgRbacAssignments() {
               <div className="relative">
                 <SearchIcon className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search assignments..."
+                  placeholder={"搜索授权…"}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-9 w-[250px] pl-8"
@@ -177,7 +177,7 @@ export function OrgRbacAssignments() {
               <DialogTrigger asChild>
                 <Button size="sm" onClick={() => setIsCreateOpen(true)}>
                   <PlusIcon className="mr-2 size-4" />
-                  Create assignment
+                  创建授权
                 </Button>
               </DialogTrigger>
             }
@@ -202,11 +202,7 @@ export function OrgRbacAssignments() {
           ) : filteredAssignments.length === 0 ? (
             <RbacListContainer>
               <RbacListEmpty
-                message={
-                  searchQuery
-                    ? "No assignments match your search"
-                    : "No assignments found"
-                }
+                message={searchQuery ? "没有匹配的授权" : "未找到授权"}
               />
             </RbacListContainer>
           ) : (
@@ -230,7 +226,7 @@ export function OrgRbacAssignments() {
                       ) : (
                         <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
                           <GlobeIcon className="size-3" />
-                          Organization-wide
+                          整个组织
                         </span>
                       )}
                     </span>
@@ -246,7 +242,7 @@ export function OrgRbacAssignments() {
                           variant="ghost"
                           className="size-8 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
                         >
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">打开菜单</span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -256,7 +252,7 @@ export function OrgRbacAssignments() {
                             navigator.clipboard.writeText(assignment.id)
                           }
                         >
-                          Copy assignment ID
+                          复制授权 ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DialogTrigger asChild>
@@ -266,7 +262,7 @@ export function OrgRbacAssignments() {
                               setIsEditOpen(true)
                             }}
                           >
-                            Change role
+                            更改角色
                           </DropdownMenuItem>
                         </DialogTrigger>
                         <AlertDialogTrigger asChild>
@@ -274,7 +270,7 @@ export function OrgRbacAssignments() {
                             className="text-rose-500 focus:text-rose-600"
                             onClick={() => setSelectedAssignment(assignment)}
                           >
-                            Delete
+                            删除
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                       </DropdownMenuContent>
@@ -282,16 +278,16 @@ export function OrgRbacAssignments() {
                   }
                 >
                   <div className="space-y-3">
-                    <RbacDetailRow label="Group">
+                    <RbacDetailRow label={"用户组"}>
                       <span className="flex items-center gap-1.5">
                         <UsersIcon className="size-3 text-muted-foreground" />
                         {assignment.group_name}
                       </span>
                     </RbacDetailRow>
-                    <RbacDetailRow label="Role">
+                    <RbacDetailRow label={"角色"}>
                       <Badge variant="secondary">{assignment.role_name}</Badge>
                     </RbacDetailRow>
-                    <RbacDetailRow label="Scope">
+                    <RbacDetailRow label={"范围"}>
                       {assignment.workspace_name ? (
                         <span className="flex items-center gap-1.5">
                           <FolderIcon className="size-3 text-muted-foreground" />
@@ -300,12 +296,12 @@ export function OrgRbacAssignments() {
                       ) : (
                         <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
                           <GlobeIcon className="size-3" />
-                          Organization-wide
+                          整个组织
                         </span>
                       )}
                     </RbacDetailRow>
                     {getRoleScopes(assignment.role_id).length > 0 && (
-                      <RbacDetailRow label="Permissions">
+                      <RbacDetailRow label={"权限"}>
                         <div className="flex flex-wrap gap-1">
                           {getRoleScopes(assignment.role_id)
                             .slice(0, 5)
@@ -320,7 +316,7 @@ export function OrgRbacAssignments() {
                           {getRoleScopes(assignment.role_id).length > 5 && (
                             <span className="text-[10px] text-muted-foreground">
                               +{getRoleScopes(assignment.role_id).length - 5}{" "}
-                              more
+                              更多
                             </span>
                           )}
                         </div>
@@ -335,31 +331,31 @@ export function OrgRbacAssignments() {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete assignment</AlertDialogTitle>
+            <AlertDialogTitle>删除授权</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to remove the{" "}
+              确定要移除{" "}
               <span className="font-semibold">
                 {selectedAssignment?.role_name}
               </span>{" "}
-              role from the{" "}
+              角色，所属用户组为{" "}
               <span className="font-semibold">
                 {selectedAssignment?.group_name}
               </span>{" "}
-              group
+              用户组
               {selectedAssignment?.workspace_name
-                ? ` in the ${selectedAssignment.workspace_name} workspace`
-                : " at the organization level"}
-              ? This action cannot be undone.
+                ? `，范围为 ${selectedAssignment.workspace_name} 工作空间`
+                : "，范围为整个组织"}
+              吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDeleteAssignment}
               disabled={deleteAssignmentIsPending}
             >
-              {deleteAssignmentIsPending ? "Deleting..." : "Delete"}
+              {deleteAssignmentIsPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -367,8 +363,8 @@ export function OrgRbacAssignments() {
 
       {isCreateOpen && (
         <AssignmentFormDialog
-          title="Create assignment"
-          description="Assign a role to a group. Organization-wide assignments apply to all workspaces."
+          title={"创建授权"}
+          description={"向用户组分配角色。组织级授权适用于所有工作空间。"}
           onSubmit={handleCreateAssignment}
           isPending={createAssignmentIsPending}
           onOpenChange={(open) => {
@@ -441,10 +437,10 @@ function AssignmentFormDialog({
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="assignment-group">Group</Label>
+              <Label htmlFor="assignment-group">用户组</Label>
               <Select value={groupId} onValueChange={setGroupId}>
                 <SelectTrigger id="assignment-group">
-                  <SelectValue placeholder="Select a group" />
+                  <SelectValue placeholder={"选择用户组"} />
                 </SelectTrigger>
                 <SelectContent>
                   {groups.map((group) => (
@@ -457,10 +453,10 @@ function AssignmentFormDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="assignment-role">Role</Label>
+              <Label htmlFor="assignment-role">角色</Label>
               <Select value={roleId} onValueChange={setRoleId}>
                 <SelectTrigger id="assignment-role">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={"选择角色"} />
                 </SelectTrigger>
                 <SelectContent>
                   {rolesForScope(
@@ -476,7 +472,7 @@ function AssignmentFormDialog({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="assignment-workspace">Scope</Label>
+              <Label htmlFor="assignment-workspace">范围</Label>
               <Select
                 value={workspaceId}
                 onValueChange={(value) => {
@@ -485,13 +481,13 @@ function AssignmentFormDialog({
                 }}
               >
                 <SelectTrigger id="assignment-workspace">
-                  <SelectValue placeholder="Select scope" />
+                  <SelectValue placeholder={"选择范围"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="org-wide">
                     <div className="flex items-center gap-2">
                       <GlobeIcon className="size-4 text-blue-500" />
-                      Organization-wide
+                      整个组织
                     </div>
                   </SelectItem>
                   {workspaces?.map((workspace) => (
@@ -505,8 +501,7 @@ function AssignmentFormDialog({
                 </SelectContent>
               </Select>
               <p className="text-xs text-muted-foreground">
-                Organization-wide assignments apply to all workspaces. Workspace
-                assignments only apply within that workspace.
+                组织级授权适用于所有工作空间，工作空间级授权仅在指定工作空间内生效。
               </p>
             </div>
           </div>
@@ -517,7 +512,7 @@ function AssignmentFormDialog({
             type="submit"
             disabled={!groupId || !roleId || isPending}
           >
-            {isPending ? "Creating..." : "Create assignment"}
+            {isPending ? "创建中…" : "创建授权"}
           </Button>
         </DialogFooter>
       </form>
@@ -554,28 +549,28 @@ function AssignmentEditDialog({
     <DialogContent size="sm">
       <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
         <DialogHeader>
-          <DialogTitle>Change role assignment</DialogTitle>
+          <DialogTitle>更改角色分配</DialogTitle>
           <DialogDescription>
-            Update the role for{" "}
+            更新角色，授权对象为{" "}
             <span className="font-semibold">{assignment.group_name}</span>
             {assignment.workspace_name
-              ? ` in ${assignment.workspace_name}`
-              : " (organization-wide)"}
+              ? `，位于 ${assignment.workspace_name}`
+              : "（整个组织）"}
             .
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-role">Role</Label>
+              <Label htmlFor="edit-role">角色</Label>
               <Select value={roleId} onValueChange={setRoleId}>
                 <SelectTrigger id="edit-role">
-                  <SelectValue placeholder="Select a role" />
+                  <SelectValue placeholder={"选择角色"} />
                 </SelectTrigger>
                 <SelectContent>
                   {legacy && (
                     <SelectItem value={legacy.id} disabled>
-                      {legacy.name} (not assignable here)
+                      {legacy.name} （无法在此分配）
                     </SelectItem>
                   )}
                   {options.map((role) => (
@@ -594,7 +589,7 @@ function AssignmentEditDialog({
             type="submit"
             disabled={!roleId || roleId === assignment.role_id || isPending}
           >
-            {isPending ? "Saving..." : "Save changes"}
+            {isPending ? "保存中…" : "保存更改"}
           </Button>
         </DialogFooter>
       </form>

@@ -35,7 +35,7 @@ describe("ApprovalRequestPart in the prompt box", () => {
         onSubmit={onSubmit}
       />
     )
-    const box = screen.getByRole("region", { name: "Approval required" })
+    const box = screen.getByRole("region", { name: "需要审批" })
 
     fireEvent.keyDown(box, { key: "Enter" })
 
@@ -54,10 +54,9 @@ describe("ApprovalRequestPart in the prompt box", () => {
         onSubmit={onSubmit}
       />
     )
-    fireEvent.keyDown(
-      screen.getByRole("region", { name: "Approval required" }),
-      { key: "Escape" }
-    )
+    fireEvent.keyDown(screen.getByRole("region", { name: "需要审批" }), {
+      key: "Escape",
+    })
 
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith([
@@ -75,14 +74,14 @@ describe("ApprovalRequestPart in the prompt box", () => {
         onSubmit={onSubmit}
       />
     )
-    const box = screen.getByRole("region", { name: "Approvals required" })
+    const box = screen.getByRole("region", { name: "需要审批" })
     expect(screen.queryByText("Approve rest")).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "提交" })).toBeDisabled()
 
     fireEvent.keyDown(box, { key: "Enter" })
     expect(onSubmit).not.toHaveBeenCalled()
 
-    fireEvent.click(screen.getAllByRole("button", { name: "Approve" })[0])
+    fireEvent.click(screen.getAllByRole("button", { name: "批准" })[0])
     fireEvent.keyDown(box, { key: "Enter" })
 
     await waitFor(() =>
@@ -102,10 +101,9 @@ describe("ApprovalRequestPart in the prompt box", () => {
       />
     )
 
-    fireEvent.keyDown(
-      screen.getByRole("region", { name: "Approvals required" }),
-      { key: "Escape" }
-    )
+    fireEvent.keyDown(screen.getByRole("region", { name: "需要审批" }), {
+      key: "Escape",
+    })
 
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith([

@@ -35,8 +35,8 @@ export function TableSearchLockedModal({
     <LockedFeatureModal
       open={open}
       onOpenChange={onOpenChange}
-      title="Enterprise only"
-      description="Semantic search is only available on enterprise plans."
+      title={"仅限企业版"}
+      description={"语义搜索仅适用于企业版套餐。"}
       bullets={[]}
     />
   )
@@ -59,7 +59,7 @@ export function TableSearchColumnMenuItem({
         onSelect={() => onSelectAction(true)}
       >
         <TextSearchIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-        Enable vector search
+        启用向量搜索
         <LockIcon className="ml-3 size-3 text-muted-foreground" />
       </DropdownMenuItem>
     )
@@ -85,7 +85,7 @@ export function TableSearchColumnMenuItem({
       onSelect={() => onSelectAction(!selected)}
     >
       <Icon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-      {selected ? "Disable vector search" : "Enable vector search"}
+      {selected ? "禁用向量搜索" : "启用向量搜索"}
     </DropdownMenuItem>
   )
 }
@@ -114,7 +114,7 @@ export function TableSearchColumnDialog({
   if (!search.entitled) return null
   const { provider, selection } = search
   const destination = provider.data?.configuration
-  const title = enabled ? "Enable vector search" : "Disable vector search"
+  const title = enabled ? "启用向量搜索" : "禁用向量搜索"
   const Icon = enabled ? TextSearchIcon : SearchXIcon
 
   const handleConfirm = async (event: MouseEvent) => {
@@ -123,10 +123,10 @@ export function TableSearchColumnDialog({
     try {
       await selection.mutateAsync({ columnId: column.id, enabled })
       toast({
-        title: enabled ? "Enabled vector search" : "Disabled vector search",
+        title: enabled ? "已启用向量搜索" : "已禁用向量搜索",
         description: enabled
-          ? "Indexing has started for this column."
-          : "Column is no longer in vector search.",
+          ? "已开始为此列建立索引。"
+          : "此列已不参与向量搜索。",
       })
       onOpenChange()
     } catch {
@@ -148,16 +148,16 @@ export function TableSearchColumnDialog({
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>
             {enabled
-              ? `Text in column ${column.name} will be indexed for vector search.`
-              : `Column ${column.name} is removed from vector search and the index is rebuilt for the remaining columns.`}
+              ? `将为列 ${column.name} 中的文本建立向量搜索索引。`
+              : `将从向量搜索中移除列 ${column.name}，并为其余列重建索引。`}
             {enabled &&
               destination &&
-              ` Text is sent to ${destination.provider} / ${destination.model}.`}
+              ` 文本将发送至 ${destination.provider} / ${destination.model}。`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={selection.isPending}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
@@ -167,7 +167,7 @@ export function TableSearchColumnDialog({
             {selection.isPending ? (
               <>
                 <Spinner />
-                {enabled ? "Enabling..." : "Disabling..."}
+                {enabled ? "启用中…" : "禁用中…"}
               </>
             ) : (
               <>

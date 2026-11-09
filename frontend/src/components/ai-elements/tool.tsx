@@ -62,9 +62,9 @@ export type ToolState =
 export type ToolVerbs = { running: string; done: string; failed: string }
 
 const DEFAULT_TOOL_VERBS: ToolVerbs = {
-  running: "Running",
+  running: "运行中",
   done: "Ran",
-  failed: "Failed to run",
+  failed: "运行失败",
 }
 
 export type ToolHeaderProps = {
@@ -88,7 +88,7 @@ function getToolLineStatus(
     case "input-available":
       return { status: "running", verb: verbs.running }
     case "approval-requested":
-      return { status: "pending", verb: "Waiting for approval to run" }
+      return { status: "pending", verb: "等待审批后运行" }
     case "output-error":
       return { status: "error", verb: verbs.failed }
     case "output-denied":
@@ -248,7 +248,7 @@ function serializeToolPayload(payload: unknown): SerializedPayload {
         extension: "json",
       }
     } catch {
-      return { text: "[Unserializable payload]", extension: "txt" }
+      return { text: "[无法序列化的数据]", extension: "txt" }
     }
   }
 
@@ -323,9 +323,7 @@ const ToolPayload = memo(
       return (
         <div className="space-y-2">
           <div className="flex items-center justify-between gap-2 rounded-md border border-dashed bg-background/70 px-2.5 py-2 text-xs text-muted-foreground">
-            <span>
-              Large payload ({formatBytes(byteCount)}). Preview hidden.
-            </span>
+            <span>数据量较大（{formatBytes(byteCount)}），已隐藏预览。</span>
             {downloadHref && (
               <Button
                 asChild
@@ -338,7 +336,7 @@ const ToolPayload = memo(
                   download={`${downloadName}.${serialized.extension}`}
                 >
                   <DownloadIcon className="mr-1.5 size-3" />
-                  Download file
+                  下载文件
                 </a>
               </Button>
             )}
@@ -392,7 +390,7 @@ function PlainOutput({
       </pre>
       <CodeBlockCopyButton
         code={text}
-        aria-label="Copy output"
+        aria-label={"复制输出"}
         className="absolute right-1.5 top-1.5 z-10 size-5 [&_svg]:size-3"
       />
     </div>
@@ -449,9 +447,7 @@ export const ToolInput = memo(
     }
     return (
       <div className={cn("space-y-2 overflow-hidden", className)} {...props}>
-        <h4 className="font-medium text-[11px] text-muted-foreground">
-          Parameters
-        </h4>
+        <h4 className="font-medium text-[11px] text-muted-foreground">参数</h4>
         <ToolPayload payload={input} downloadName="tool-parameters" />
       </div>
     )
@@ -474,7 +470,7 @@ export const ToolOutput = memo(
     return (
       <div className={cn("space-y-2", className)} {...props}>
         <h4 className="font-medium text-[11px] text-muted-foreground">
-          {errorText ? "Error" : "Result"}
+          {errorText ? "错误" : "结果"}
         </h4>
         {errorText && (
           <div className="rounded-md bg-destructive/10 px-2.5 py-1.5 text-[11px] text-destructive dark:bg-red-500/10 dark:text-red-400">
@@ -509,7 +505,7 @@ export const ToolTerminalOutput = memo(
     const text =
       errorText ?? serializeToolPayload(extractMcpTextContent(output)).text
     if (!text.trim()) {
-      return <p className="text-[11px] text-muted-foreground">No output</p>
+      return <p className="text-[11px] text-muted-foreground">暂无输出</p>
     }
     return <PlainOutput text={text} isError={errorText !== undefined} />
   }

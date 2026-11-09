@@ -16,11 +16,11 @@ test.use({ storageState: { cookies: [], origins: [] } })
 test.describe("authentication", () => {
   test("anonymous visitor can start basic auth", async ({ page }) => {
     await page.goto("/")
-    await page.getByRole("link", { name: /Sign in/i }).click()
+    await page.getByRole("link", { name: /登录/i }).click()
 
     await expect(page.getByLabel("Email")).toBeVisible()
     await page.getByLabel("Email").fill(TENANT_USER_EMAIL)
-    await page.getByRole("button", { name: "Continue" }).click()
+    await page.getByRole("button", { name: "继续" }).click()
 
     await expect(page.getByLabel("Password")).toBeVisible()
   })
@@ -34,13 +34,11 @@ test.describe("authentication", () => {
     const returnUrl = `/invitations/accept?token=${token}`
 
     await page.goto(`/sign-up?returnUrl=${encodeURIComponent(returnUrl)}`)
-    await expect(
-      page.getByRole("heading", { name: "Create an account" })
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "创建账号" })).toBeVisible()
 
     await page.getByLabel("Email").fill(email)
     await page.getByLabel("Password").fill(DEFAULT_SMOKE_PASSWORD)
-    await page.getByRole("button", { name: "Create account" }).click()
+    await page.getByRole("button", { name: "创建账号" }).click()
 
     await expectWorkspaceLanding(page)
   })
@@ -49,9 +47,7 @@ test.describe("authentication", () => {
     await signInWithBasicAuth(page, SUPERUSER_EMAIL, SUPERUSER_PASSWORD)
 
     await page.goto("/admin/users")
-    await expect(page.getByRole("heading", { name: "Users" })).toBeVisible()
-    await expect(
-      page.getByText("Manage users and superuser access across the platform.")
-    ).toBeVisible()
+    await expect(page.getByRole("heading", { name: "用户" })).toBeVisible()
+    await expect(page.getByText("管理平台用户和超级用户权限。")).toBeVisible()
   })
 })

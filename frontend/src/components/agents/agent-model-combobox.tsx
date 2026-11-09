@@ -92,7 +92,7 @@ export function buildEnabledModelOptions(
     .map((model) => {
       const isCustomSource = model.custom_provider_id != null
       const sourceName = isCustomSource
-        ? (model.custom_provider_name ?? "Custom")
+        ? (model.custom_provider_name ?? "自定义")
         : getProviderDisplayLabel(model.model_provider)
       return {
         catalogId: model.id,
@@ -125,7 +125,7 @@ function getProviderDisplayLabel(provider: string): string {
     mistral: "Mistral AI",
     openai: "OpenAI",
     vertex_ai: "Google Vertex AI",
-    "custom-model-provider": "Custom",
+    "custom-model-provider": "自定义",
   }
   return (
     labels[provider] ??
@@ -252,7 +252,7 @@ export const AgentModelCombobox = forwardRef<
     unverifiedLabel,
     matchAnySource = false,
     disabled = false,
-    placeholder = "Select a model",
+    placeholder = "选择模型",
     unavailableLabel = "Legacy",
     triggerClassName,
     contentClassName,
@@ -338,9 +338,9 @@ export const AgentModelCombobox = forwardRef<
               : 0
           }}
         >
-          <CommandInput placeholder="Search models..." />
+          <CommandInput placeholder={"搜索模型…"} />
           <CommandList>
-            <CommandEmpty>No models match the search.</CommandEmpty>
+            <CommandEmpty>没有匹配的模型。</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem

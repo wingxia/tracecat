@@ -37,7 +37,7 @@ export function AgGridColumnHeader(params: AgGridColumnHeaderParams) {
       {tableColumn.is_index && (
         <span className="inline-flex items-center rounded-full bg-green-100 px-1.5 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-100">
           <DatabaseZapIcon className="mr-1 size-3" />
-          Index
+          索引
         </span>
       )}
       {search?.configuration.data?.selected_column_ids?.includes(
@@ -45,7 +45,7 @@ export function AgGridColumnHeader(params: AgGridColumnHeaderParams) {
       ) && (
         <span className="inline-flex items-center rounded-full bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary">
           <TextSearchIcon className="mr-1 size-3" />
-          Semantic
+          语义
         </span>
       )}
       <TableViewColumnMenu column={tableColumn} />

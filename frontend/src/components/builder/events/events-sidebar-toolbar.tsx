@@ -12,6 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useLocalStorage } from "@/hooks/use-local-storage"
 
+const TRIGGER_LABELS: Record<TriggerType, string> = {
+  manual: "手动",
+  scheduled: "定时",
+  webhook: "Webhook",
+  case: "事件",
+  form: "表单",
+}
+
 const AVAILABLE_TRIGGER_TYPES: readonly TriggerType[] = $TriggerType.enum
 export function EventsSidebarToolbar() {
   const [selectedTriggerTypes, setSelectedTriggerTypes] = useLocalStorage<
@@ -51,13 +59,13 @@ export function EventsSidebarToolbar() {
             >
               <FilterIcon className="size-4 text-foreground/70" />
               <span className="whitespace-nowrap text-xs text-foreground/70">
-                Filter
+                筛选
               </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Trigger Types
+              触发类型
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             {AVAILABLE_TRIGGER_TYPES.map((triggerType) => (
@@ -68,9 +76,7 @@ export function EventsSidebarToolbar() {
               >
                 <div className="flex items-center gap-2">
                   {getTriggerTypeIcon(triggerType)}
-                  <span>
-                    {triggerType.charAt(0).toUpperCase() + triggerType.slice(1)}
-                  </span>
+                  <span>{TRIGGER_LABELS[triggerType]}</span>
                 </div>
               </DropdownMenuCheckboxItem>
             ))}

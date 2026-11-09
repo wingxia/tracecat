@@ -24,11 +24,11 @@ export function AgentPresetDeleteDialog({
     <ConfirmDestructiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete agent"
+      title={"删除智能体"}
       description={<AgentDeleteDescription name={presetName} />}
-      identifier={{ label: "Agent slug", value: presetSlug }}
+      identifier={{ label: "智能体标识", value: presetSlug }}
       confirmPhrase={presetSlug}
-      confirmLabel="Delete"
+      confirmLabel={"删除"}
       isPending={isDeleting}
       onConfirm={onConfirm}
     />
@@ -38,11 +38,8 @@ export function AgentPresetDeleteDialog({
 export function AgentDeleteDescription({ name }: { name: string }) {
   return (
     <>
-      Permanently delete{" "}
-      <span className="font-medium text-foreground">{name}</span>? It will also
-      be removed as a subagent from every agent that uses it, including saved
-      versions. Restoring an older agent version will not bring this subagent
-      back. This cannot be undone.
+      永久删除 <span className="font-medium text-foreground">{name}</span>
+      吗？此操作还会从所有使用它的智能体（包括已保存版本）中移除该子智能体。恢复旧版本也不会找回此子智能体。此操作无法撤销。
     </>
   )
 }

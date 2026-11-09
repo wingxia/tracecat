@@ -89,9 +89,9 @@ describe("case feed comment events", () => {
       </div>
     )
 
-    expect(screen.getByText("created a comment")).toBeInTheDocument()
-    expect(screen.getByText("edited a reply")).toBeInTheDocument()
-    expect(screen.getByText("deleted a reply")).toBeInTheDocument()
+    expect(screen.getByText("创建了评论")).toBeInTheDocument()
+    expect(screen.getByText("编辑了回复")).toBeInTheDocument()
+    expect(screen.getByText("删除了回复")).toBeInTheDocument()
   })
 
   it("offers comment events in both trigger suggestions and duration options", () => {

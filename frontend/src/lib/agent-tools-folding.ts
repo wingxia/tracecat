@@ -94,7 +94,7 @@ export function getActionFieldLabel(
   fieldName: string,
   folding: AgentToolsFolding
 ): string {
-  if (fieldName === folding.actionsField) return "Tools"
+  if (fieldName === folding.actionsField) return "工具"
   return fieldName.replaceAll("_", " ").replace(/^\w/, (c) => c.toUpperCase())
 }
 

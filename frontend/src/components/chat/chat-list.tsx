@@ -61,7 +61,7 @@ export function ChatList({
     setIsCreating(true)
     try {
       const result = await createChat({
-        title: `New Chat - ${new Date().toLocaleString()}`,
+        title: `新对话 - ${new Date().toLocaleString("zh-CN")}`,
         entity_type: entityType,
         entity_id: entityId,
       })
@@ -79,7 +79,7 @@ export function ChatList({
     return (
       <Card className={className}>
         <CardContent className="p-4">
-          <p className="text-sm text-red-600">Failed to load chats</p>
+          <p className="text-sm text-red-600">加载对话失败</p>
         </CardContent>
       </Card>
     )
@@ -91,7 +91,7 @@ export function ChatList({
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
             <MessageCircle className="h-4 w-4" />
-            Chats ({chats?.length || 0})
+            对话（{chats?.length || 0})
           </CardTitle>
           {entityType && entityId && (
             <Button
@@ -102,7 +102,7 @@ export function ChatList({
               className="h-7 px-2"
             >
               <Plus className="h-3 w-3 mr-1" />
-              New chat
+              新建对话
             </Button>
           )}
         </div>
@@ -138,12 +138,12 @@ export function ChatList({
                           variant="outline"
                           className="px-1.5 py-0 text-[10px] font-normal text-muted-foreground"
                         >
-                          Read only
+                          只读
                         </Badge>
                       ) : null}
                     </div>
                     <p className="text-xs text-muted-foreground">
-                      {new Date(chat.created_at).toLocaleString()}
+                      {new Date(chat.created_at).toLocaleString("zh-CN")}
                     </p>
                   </div>
                   <MessageCircle className="h-3 w-3 text-muted-foreground mt-0.5 flex-shrink-0" />
@@ -156,13 +156,11 @@ export function ChatList({
             <MessageCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
             {entityType && entityId ? (
               <div>
-                <p>No chats yet</p>
-                <p className="text-xs mt-1">
-                  Create your first chat to get started
-                </p>
+                <p>暂无对话</p>
+                <p className="text-xs mt-1">创建第一个对话以开始使用</p>
               </div>
             ) : (
-              <p>Select an entity to view chats</p>
+              <p>选择对象以查看对话</p>
             )}
           </div>
         )}

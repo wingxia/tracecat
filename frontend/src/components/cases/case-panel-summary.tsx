@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
 const summaryFormSchema = z.object({
-  summary: z.string().min(1, { message: "Summary is required" }),
+  summary: z.string().min(1, { message: "摘要不能为空" }),
 })
 type SummaryFormSchema = z.infer<typeof summaryFormSchema>
 

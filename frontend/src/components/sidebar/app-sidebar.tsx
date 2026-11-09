@@ -177,7 +177,7 @@ function SidebarNavGroup({
                   {item.locked ? (
                     <SidebarMenuBadge>
                       <LockIcon aria-hidden="true" className="size-3.5" />
-                      <span className="sr-only">Requires upgrade</span>
+                      <span className="sr-only">需要升级</span>
                     </SidebarMenuBadge>
                   ) : null}
                 </SidebarMenuItem>
@@ -256,7 +256,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navWorkspace: NavItem[] = useMemo(
     () => [
       {
-        title: "Chat",
+        title: "对话",
         url: `${basePath}/chat`,
         icon: SendIcon,
         isActive: pathname?.startsWith(`${basePath}/chat`),
@@ -269,35 +269,35 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             : undefined,
       },
       {
-        title: "Workflows",
+        title: "工作流",
         url: `${basePath}/workflows`,
         icon: WorkflowIcon,
         isActive: pathname?.startsWith(`${basePath}/workflows`),
         visible: canViewWorkflows === true,
       },
       {
-        title: "Cases",
+        title: "事件",
         url: `${basePath}/cases`,
         icon: LayersIcon,
         isActive: pathname?.startsWith(`${basePath}/cases`),
         visible: canViewCases === true,
       },
       {
-        title: "Agents",
+        title: "智能体",
         url: `${basePath}/agents`,
         icon: MousePointerClickIcon,
         isActive: pathname?.startsWith(`${basePath}/agents`),
         visible: canViewAgents === true,
       },
       {
-        title: "Skills",
+        title: "技能",
         url: `${basePath}/skills`,
         icon: Pyramid,
         isActive: pathname?.startsWith(`${basePath}/skills`),
         visible: canViewAgents === true,
       },
       {
-        title: "Forms",
+        title: "表单",
         url: `${basePath}/forms`,
         icon: ClipboardListIcon,
         isActive: pathname?.startsWith(`${basePath}/forms`),
@@ -323,42 +323,42 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navConfigure: NavItem[] = useMemo(
     () => [
       {
-        title: "Tables",
+        title: "数据表",
         url: `${basePath}/tables`,
         icon: Table2Icon,
         isActive: pathname?.startsWith(`${basePath}/tables`),
         visible: canViewTables === true,
       },
       {
-        title: "Variables",
+        title: "变量",
         url: `${basePath}/variables`,
         icon: VariableIcon,
         isActive: pathname?.startsWith(`${basePath}/variables`),
         visible: canViewVariables === true,
       },
       {
-        title: "Credentials",
+        title: "凭据",
         url: `${basePath}/credentials`,
         icon: KeyRound,
         isActive: pathname?.startsWith(`${basePath}/credentials`),
         visible: canViewSecrets === true,
       },
       {
-        title: "Integrations",
+        title: "集成",
         url: `${basePath}/integrations`,
         icon: BlocksIcon,
         isActive: pathname?.startsWith(`${basePath}/integrations`),
         visible: canViewIntegrations === true,
       },
       {
-        title: "MCP servers",
+        title: "MCP 服务器",
         url: `${basePath}/mcp-servers`,
         icon: Sparkles,
         isActive: pathname?.startsWith(`${basePath}/mcp-servers`),
         visible: canViewIntegrations === true,
       },
       {
-        title: "Actions",
+        title: "动作",
         url: `${basePath}/actions`,
         icon: BoxIcon,
         isActive: pathname?.startsWith(`${basePath}/actions`),
@@ -378,20 +378,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const navMonitor: NavItem[] = [
     {
-      title: "Runs",
+      title: "运行记录",
       url: `${basePath}/runs`,
       icon: ListVideoIcon,
       isActive: pathname?.startsWith(`${basePath}/runs`),
       visible: canViewWorkflows === true,
     },
     {
-      title: "Inbox",
+      title: "收件箱",
       url: `${basePath}/inbox`,
       icon: ListChecksIcon,
       isActive: pathname?.startsWith(`${basePath}/inbox`),
       visible: canViewInbox === true,
       badgeCount: pendingApprovalsCount,
-      badgeLabel: `${pendingApprovalsCount} pending approval${pendingApprovalsCount === 1 ? "" : "s"}`,
+      badgeLabel: `${pendingApprovalsCount} 项待审批${pendingApprovalsCount === 1 ? "" : ""}`,
     },
   ]
 
@@ -405,14 +405,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           open={lockedFeatureDialogOpen}
           onOpenChange={setLockedFeatureDialogOpen}
         />
-        <SidebarNavGroup label="Workspace" items={navWorkspace} />
-        <SidebarNavGroup label="Configure" items={navConfigure} />
+        <SidebarNavGroup label={"工作空间"} items={navWorkspace} />
+        <SidebarNavGroup label={"配置"} items={navConfigure} />
         {navMonitor.some((item) => item.visible === true) && (
           <Collapsible defaultOpen className="group/collapsible">
             <SidebarGroup>
               <SidebarGroupLabel asChild>
                 <CollapsibleTrigger className="w-full">
-                  Monitor
+                  监控
                   <ChevronDown className="ml-auto size-4 transition-transform group-data-[state=open]/collapsible:rotate-180" />
                 </CollapsibleTrigger>
               </SidebarGroupLabel>
@@ -456,7 +456,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           manageItems={[
             canViewMembers === true
               ? {
-                  title: "Members",
+                  title: "成员",
                   href: `${basePath}/members`,
                   icon: UsersIcon,
                   isActive: pathname?.startsWith(`${basePath}/members`),
@@ -464,7 +464,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               : null,
             canViewServiceAccounts === true && serviceAccountsEnabled
               ? {
-                  title: "Service accounts",
+                  title: "服务账号",
                   href: `${basePath}/service-accounts`,
                   icon: BotIcon,
                   isActive: pathname?.startsWith(
@@ -474,7 +474,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               : null,
             canOpenGitSync === true
               ? {
-                  title: "Git sync",
+                  title: "Git 同步",
                   href: `${basePath}/git-sync`,
                   icon: GitBranchIcon,
                   isActive: pathname?.startsWith(`${basePath}/git-sync`),
@@ -484,7 +484,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               : null,
             canViewTunnels === true
               ? {
-                  title: "Tunnels",
+                  title: "隧道",
                   href: `${basePath}/tunnels`,
                   icon: NetworkIcon,
                   isActive: pathname?.startsWith(`${basePath}/tunnels`),
@@ -492,7 +492,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               : null,
             canViewMcpAccess === true
               ? {
-                  title: "MCP access",
+                  title: "MCP 访问",
                   href: `${basePath}/mcp`,
                   icon: TerminalIcon,
                   isActive:

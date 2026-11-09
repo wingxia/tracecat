@@ -60,7 +60,7 @@ export function useConnectProvider(workspaceId: string) {
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Failed to start OAuth",
+        title: "启动 OAuth 失败",
         description: String(error.body?.detail ?? error.message),
         variant: "destructive",
       })
@@ -84,13 +84,13 @@ export function useDisconnectProvider(workspaceId: string) {
     onSuccess: (_, variables) => {
       invalidate(variables)
       toast({
-        title: "Disconnected",
-        description: "Successfully disconnected from provider",
+        title: "已断开",
+        description: "已成功断开提供商连接",
       })
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Failed to disconnect",
+        title: "断开连接失败",
         description: `${error.body?.detail ?? error.message}`,
         variant: "destructive",
       })
@@ -114,13 +114,13 @@ export function useDeleteProvider(workspaceId: string) {
     onSuccess: (_, variables) => {
       invalidate(variables)
       toast({
-        title: "Provider deleted",
-        description: "The custom provider and its credentials were removed.",
+        title: "已删除提供商",
+        description: "已移除自定义提供商及其凭据。",
       })
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Failed to delete provider",
+        title: "删除提供商失败",
         description: `${error.body?.detail ?? error.message}`,
         variant: "destructive",
       })
@@ -142,12 +142,12 @@ export function useTestProvider(workspaceId: string) {
       invalidate(variables)
       if (result.success) {
         toast({
-          title: "Connection successful",
+          title: "连接成功",
           description: result.message,
         })
       } else {
         toast({
-          title: "Connection failed",
+          title: "连接失败",
           description: result.error || result.message,
           variant: "destructive",
         })
@@ -155,7 +155,7 @@ export function useTestProvider(workspaceId: string) {
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Test failed",
+        title: "测试失败",
         description: `${error.body?.detail ?? error.message}`,
         variant: "destructive",
       })

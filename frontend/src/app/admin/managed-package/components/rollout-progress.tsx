@@ -37,11 +37,11 @@ function summarize(rollout: ManagedRolloutRead): string {
   }
   const references = preview.references?.length ?? 0
   if (references > 0) {
-    parts.push(`${references} unresolved references`)
+    parts.push(`${references} 个未解决的引用`)
   }
   const deleteWarnings = preview.delete_warnings?.length ?? 0
   if (deleteWarnings > 0) {
-    parts.push(`${deleteWarnings} delete warnings`)
+    parts.push(`${deleteWarnings} 条删除警告`)
   }
   return parts.join(", ")
 }
@@ -65,11 +65,11 @@ export function RolloutProgress({
     <div className="space-y-3">
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-1">
-          <h4 className="text-sm font-medium">Rollouts</h4>
+          <h4 className="text-sm font-medium">部署记录</h4>
           <p className="text-xs text-muted-foreground">
             {isActive
-              ? "Previews and applies run in the background. This list refreshes on its own."
-              : "Open a rollout to see its changes before applying."}
+              ? "预览和应用操作在后台运行，此列表会自动刷新。"
+              : "打开部署记录，查看变更后再应用。"}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -81,16 +81,14 @@ export function RolloutProgress({
             onClick={onDismiss}
             disabled={isActive}
           >
-            Dismiss
+            关闭
           </Button>
           <Button
             size="sm"
             onClick={() => onApply(applicable.map((rollout) => rollout.id))}
             disabled={applicable.length === 0 || applyPending}
           >
-            {applyPending
-              ? "Applying..."
-              : `Apply ready targets (${applicable.length})`}
+            {applyPending ? "应用中…" : `应用就绪目标（${applicable.length}）`}
           </Button>
         </div>
       </div>
@@ -98,10 +96,10 @@ export function RolloutProgress({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-xs">Workspace</TableHead>
-              <TableHead className="text-xs">Tag</TableHead>
-              <TableHead className="text-xs">Status</TableHead>
-              <TableHead className="text-xs">Summary</TableHead>
+              <TableHead className="text-xs">工作空间</TableHead>
+              <TableHead className="text-xs">标签</TableHead>
+              <TableHead className="text-xs">状态</TableHead>
+              <TableHead className="text-xs">摘要</TableHead>
               <TableHead className="text-xs" />
             </TableRow>
           </TableHeader>
@@ -145,7 +143,7 @@ export function RolloutProgress({
                           variant="outline"
                           onClick={() => onMatchReferences(target)}
                         >
-                          References
+                          引用
                         </Button>
                       )}
                       <Button
@@ -153,7 +151,7 @@ export function RolloutProgress({
                         variant="ghost"
                         onClick={() => onShowDetails(rollout.id)}
                       >
-                        Details
+                        详情
                       </Button>
                     </div>
                   </TableCell>

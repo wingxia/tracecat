@@ -20,7 +20,7 @@ export default function TablePage() {
   if (tableError || !table)
     return (
       <AlertNotification
-        message={tableError?.message ?? "Error loading table"}
+        message={tableError?.message ?? "加载数据表出错"}
         variant="error"
       />
     )

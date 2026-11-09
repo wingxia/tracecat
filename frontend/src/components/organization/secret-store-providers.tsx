@@ -151,7 +151,7 @@ function RoleArnField({
 }) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>Role ARN</Label>
+      <Label htmlFor={id}>角色 ARN</Label>
       <Input
         id={id}
         value={value}
@@ -183,7 +183,7 @@ function RegionField({
 }) {
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>Region</Label>
+      <Label htmlFor={id}>区域</Label>
       <Input
         id={id}
         value={value}
@@ -241,8 +241,8 @@ function AwsSecretsManagerSetupFields({
       )}
       {canEdit === false && (
         <p className="text-xs text-muted-foreground">
-          You need permission to update secret stores to enter the role ARN.
-          Share these policies with an organization admin to finish setup.
+          填写角色 ARN
+          需要更新密钥存储的权限。请将这些策略分享给组织管理员以完成设置。
         </p>
       )}
       <StorePolicies store={store} />
@@ -329,17 +329,15 @@ function StorePolicies({ store }: { store: SecretStoreRead }) {
   const policies = [
     {
       id: "trust",
-      title: "Trust policy",
-      description:
-        "Attach to the role. The highlighted line is this store's external ID.",
+      title: "信任策略",
+      description: "附加到角色，高亮行是此存储的外部 ID。",
       policy: buildStoreTrustPolicy(store),
       highlight: (line: string) => line.includes("sts:ExternalId"),
     },
     {
       id: "permissions",
-      title: "Permissions policy",
-      description:
-        "Read-only. Narrow the highlighted Resource to the secrets you share.",
+      title: "权限策略",
+      description: "只读。请将高亮的 Resource 范围缩小到需要共享的密钥。",
       policy: buildStorePermissionPolicy(store),
       highlight: (line: string) => line.includes('"Resource": "arn:'),
     },
@@ -372,12 +370,12 @@ function StorePolicies({ store }: { store: SecretStoreRead }) {
           variant="ghost"
           size="sm"
           className="h-7 gap-1.5 px-2 text-xs text-muted-foreground"
-          aria-label={`Copy ${active.title.toLowerCase()}`}
+          aria-label={`复制 ${active.title.toLowerCase()}`}
           onClick={async () => {
             const policyId = active.id
             const landed = await copyToClipboard({
               value: active.policy,
-              message: `Copied ${active.title.toLowerCase()}`,
+              message: `已复制 ${active.title.toLowerCase()}`,
             })
             if (landed) setCopiedId(policyId)
           }}
@@ -387,7 +385,7 @@ function StorePolicies({ store }: { store: SecretStoreRead }) {
           ) : (
             <CopyIcon className="size-3.5" />
           )}
-          {copied ? "Copied" : "Copy"}
+          {copied ? "已复制" : "复制"}
         </Button>
       </div>
       {policies.map((item) => (
@@ -413,13 +411,13 @@ function DetailItem({
       <dt className="text-xs font-medium">{label}</dt>
       <dd className="flex items-center gap-1.5">
         <code className="break-all font-mono text-xs text-muted-foreground">
-          {value ?? "Not set"}
+          {value ?? "未设置"}
         </code>
         {value && (
           <CopyButton
             value={value}
-            toastMessage={`Copied ${copyLabel}`}
-            tooltipMessage={`Copy ${copyLabel}`}
+            toastMessage={`已复制${copyLabel}`}
+            tooltipMessage={`复制${copyLabel}`}
           />
         )}
       </dd>
@@ -439,17 +437,17 @@ function AwsSecretsManagerDetails({
       <StorePolicies store={store} />
       <dl className="grid gap-x-8 gap-y-4 border-t pt-4 sm:grid-cols-3">
         <DetailItem
-          label="Role ARN"
+          label={"角色 ARN"}
           value={store.config.role_arn}
           copyLabel="role ARN"
         />
         <DetailItem
-          label="External ID"
+          label={"外部 ID"}
           value={store.config.external_id}
           copyLabel="external ID"
         />
         <div className="min-w-0 space-y-1">
-          <dt className="text-xs font-medium">Used by</dt>
+          <dt className="text-xs font-medium">使用者</dt>
           <dd>{usage}</dd>
         </div>
       </dl>
@@ -464,13 +462,13 @@ export const SECRET_STORE_PROVIDERS: Record<
 > = {
   aws_secrets_manager: {
     label: "AWS Secrets Manager",
-    method: "IAM role with an external ID",
-    locationLabel: "Region",
+    method: "带外部 ID 的 IAM 角色",
+    locationLabel: "区域",
     Icon: ({ className }) => <AwsIcon className={className} />,
     summary: (store) => store.config.region,
-    createTitle: "Add AWS Secrets Manager store",
+    createTitle: "添加 AWS Secrets Manager 存储",
     createDescription:
-      "Enter a name and the region that holds your secrets. Saving generates the external ID and trust policy.",
+      "输入名称和存储密钥的区域，保存后将生成外部 ID 和信任策略。",
     CreateFields: AwsSecretsManagerCreateFields,
     validateCreate: (config) =>
       compactErrors({ region: validateAwsRegion(config.region ?? "") }),
@@ -478,9 +476,8 @@ export const SECRET_STORE_PROVIDERS: Record<
       provider: "aws_secrets_manager",
       region: (config.region ?? "").trim(),
     }),
-    setupTitle: "Connect the AWS role",
-    setupDescription:
-      "Create an IAM role in AWS with these policies, then enter its ARN.",
+    setupTitle: "连接 AWS 角色",
+    setupDescription: "在 AWS 中使用这些策略创建 IAM 角色，然后输入其 ARN。",
     isSetupComplete: (store) => Boolean(store.config.role_arn),
     SetupFields: AwsSecretsManagerSetupFields,
     validateSetup: (config) =>

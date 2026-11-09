@@ -57,13 +57,13 @@ export function SyncRepositoryDialog({
 
     try {
       toast({
-        title: "Syncing repository",
+        title: "正在同步仓库",
         description: (
           <span className="flex flex-col space-y-2">
             <span className="flex items-center space-x-2">
               <Spinner className="size-3" />
               <span>
-                Syncing repository{" "}
+                正在同步仓库{" "}
                 <b className="inline-block">{selectedRepo.origin}</b>
               </span>
             </span>
@@ -77,14 +77,14 @@ export function SyncRepositoryDialog({
           : undefined,
       })
       toast({
-        title: "Successfully synced repository",
+        title: "仓库同步成功",
         description: (
           <span className="flex flex-col space-y-2">
             <span>
-              Successfully reloaded actions from{" "}
+              已成功重新加载动作，来源为{" "}
               <b className="inline-block">{selectedRepo.origin}</b>
             </span>
-            {shortSha && <span className="text-xs">at commit {shortSha}</span>}
+            {shortSha && <span className="text-xs">，提交为 {shortSha}</span>}
           </span>
         ),
       })
@@ -98,14 +98,14 @@ export function SyncRepositoryDialog({
       <AlertDialogContent className="max-w-2xl">
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {shortSha ? `Sync commit ${shortSha}` : "Sync repository"}
+            {shortSha ? `同步提交 ${shortSha}` : "同步仓库"}
           </AlertDialogTitle>
           <AlertDialogDescription>
             <span className="flex flex-col space-y-3">
               <span>
                 {targetCommit
-                  ? "You are about to sync the repository at this commit."
-                  : "You are about to pull the latest version of the repository."}
+                  ? "即将同步此提交对应的仓库内容。"
+                  : "即将拉取仓库的最新版本。"}
               </span>
               <span className="max-w-full rounded-md border px-3 py-2 font-mono text-sm font-semibold tracking-tight text-foreground break-all whitespace-normal">
                 {selectedRepo?.origin}
@@ -123,7 +123,7 @@ export function SyncRepositoryDialog({
               )}
               {currentCommitSha && (
                 <span className="flex flex-wrap items-start gap-2 text-sm text-muted-foreground">
-                  <span>Current SHA:</span>
+                  <span>当前 SHA：</span>
                   <span className="rounded bg-secondary px-2 py-1 font-mono text-xs text-secondary-foreground break-all whitespace-normal">
                     {currentCommitSha}
                   </span>
@@ -131,28 +131,30 @@ export function SyncRepositoryDialog({
               )}
               {selectedRepo?.last_synced_at && (
                 <span className="text-sm text-muted-foreground">
-                  <span>Last synced: </span>
+                  <span>上次同步： </span>
                   <span>
-                    {new Date(selectedRepo.last_synced_at).toLocaleString()}
+                    {new Date(selectedRepo.last_synced_at).toLocaleString(
+                      "zh-CN"
+                    )}
                   </span>
                 </span>
               )}
               <span>
                 {targetCommit
-                  ? "Are you sure you want to proceed? This will reload all existing actions with the versions from this commit."
-                  : "Are you sure you want to proceed? This will reload all existing actions with the latest versions from the remote repository."}
+                  ? "确定要继续吗？此操作会使用该提交中的版本重新加载所有现有动作。"
+                  : "确定要继续吗？此操作会使用远程仓库的最新版本重新加载所有现有动作。"}
               </span>
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction onClick={handleSync} disabled={syncRepoIsPending}>
             <div className="flex items-center space-x-2">
               <RefreshCcw
                 className={`size-4 ${syncRepoIsPending ? "animate-spin" : ""}`}
               />
-              <span>{syncRepoIsPending ? "Syncing..." : "Sync"}</span>
+              <span>{syncRepoIsPending ? "同步中…" : "同步"}</span>
             </div>
           </AlertDialogAction>
         </AlertDialogFooter>

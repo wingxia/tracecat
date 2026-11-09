@@ -59,25 +59,25 @@ export const CASE_TASK_STATUSES: Record<
 > = {
   todo: {
     value: "todo",
-    label: "To do",
+    label: "待办",
     icon: Circle,
     iconClassName: "text-muted-foreground",
   },
   in_progress: {
     value: "in_progress",
-    label: "In progress",
+    label: "处理中",
     icon: CircleDot,
     iconClassName: "text-primary",
   },
   completed: {
     value: "completed",
-    label: "Completed",
+    label: "已完成",
     icon: CircleCheck,
     iconClassName: "text-success",
   },
   blocked: {
     value: "blocked",
-    label: "Blocked",
+    label: "受阻",
     icon: CircleDashed,
     // An explicit red pair, not text-destructive: --destructive is a
     // *background* token that inverts darker in dark mode (60.2% -> 30.6%),
@@ -239,7 +239,7 @@ export function CaseTaskStatusSelect({
   return (
     <Select value={status} onValueChange={onValueChange}>
       <SelectTrigger
-        aria-label="Status"
+        aria-label={"状态"}
         className={cn(
           linearStyles.trigger.base,
           linearStyles.trigger.hover,

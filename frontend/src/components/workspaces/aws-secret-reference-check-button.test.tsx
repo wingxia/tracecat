@@ -47,10 +47,10 @@ describe("AwsSecretReferenceCheckButton", () => {
     })
     renderCheck()
 
-    fireEvent.click(screen.getByRole("button", { name: "Check access" }))
+    fireEvent.click(screen.getByRole("button", { name: "检查访问权限" }))
 
     expect(
-      await screen.findByRole("button", { name: "Access denied" })
+      await screen.findByRole("button", { name: "访问被拒绝" })
     ).toBeInTheDocument()
     expect(screen.queryByText("access_denied")).not.toBeInTheDocument()
     const hint = screen.getByText(/secretsmanager:GetSecretValue/)
@@ -66,8 +66,8 @@ describe("AwsSecretReferenceCheckButton", () => {
       .mockResolvedValueOnce({ ok: true, resolved_keys: ["API_TOKEN"] })
     renderCheck()
 
-    fireEvent.click(screen.getByRole("button", { name: "Check access" }))
-    fireEvent.click(await screen.findByRole("button", { name: "Rate limited" }))
+    fireEvent.click(screen.getByRole("button", { name: "检查访问权限" }))
+    fireEvent.click(await screen.findByRole("button", { name: "请求限流" }))
 
     expect(
       await screen.findByRole("button", { name: "Reachable" })

@@ -191,7 +191,7 @@ async function pickTable(
   user: ReturnType<typeof userEvent.setup>,
   name: string
 ) {
-  await user.click(screen.getByRole("combobox", { name: "Table" }))
+  await user.click(screen.getByRole("combobox", { name: "数据表" }))
   await user.click(await screen.findByRole("option", { name }))
 }
 
@@ -232,7 +232,7 @@ describe("CaseLinkRowsDialog", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    await user.click(screen.getByRole("combobox", { name: "Table" }))
+    await user.click(screen.getByRole("combobox", { name: "数据表" }))
 
     const options = await screen.findAllByRole("option")
     expect(options.map((option) => option.textContent)).toEqual([
@@ -251,7 +251,7 @@ describe("CaseLinkRowsDialog", () => {
   it("preselects initialTableId", () => {
     renderDialog({ initialTableId: "table-b" })
 
-    expect(screen.getByRole("combobox", { name: "Table" })).toHaveTextContent(
+    expect(screen.getByRole("combobox", { name: "数据表" })).toHaveTextContent(
       "Beta"
     )
     expect(screen.getByTestId("row-b1")).toBeInTheDocument()
@@ -262,16 +262,16 @@ describe("CaseLinkRowsDialog", () => {
     const user = userEvent.setup()
     renderDialog()
 
-    expect(screen.getByText("0 selected")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Link rows" })).toBeDisabled()
+    expect(screen.getByText("已选择 0 项")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "关联行" })).toBeDisabled()
 
     await user.click(screen.getByTestId("row-a1"))
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Link 1 row" })).toBeEnabled()
+    expect(screen.getByText("已选择 1 项")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "关联 1 行" })).toBeEnabled()
 
     await user.click(screen.getByTestId("row-a2"))
-    expect(screen.getByText("2 selected")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Link 2 rows" })).toBeEnabled()
+    expect(screen.getByText("已选择 2 项")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "关联 2 行" })).toBeEnabled()
   })
 
   it("keeps picks per table across a switch and links each table", async () => {
@@ -282,13 +282,15 @@ describe("CaseLinkRowsDialog", () => {
     await pickTable(user, "Beta")
     expect(screen.getByTestId("row-b1")).not.toBeChecked()
     await user.click(screen.getByTestId("row-b1"))
-    expect(screen.getByText("2 selected across 2 tables")).toBeInTheDocument()
+    expect(
+      screen.getByText("已选择 2 项（来自 2 个数据表）")
+    ).toBeInTheDocument()
 
     await pickTable(user, "Alpha")
     expect(screen.getByTestId("row-a1")).toBeChecked()
     expect(screen.getByTestId("row-a2")).not.toBeChecked()
 
-    await user.click(screen.getByRole("button", { name: "Link 2 rows" }))
+    await user.click(screen.getByRole("button", { name: "关联 2 行" }))
 
     await waitFor(() => {
       expect(mockLinkCaseRows).toHaveBeenCalledTimes(2)
@@ -311,13 +313,13 @@ describe("CaseLinkRowsDialog", () => {
     await user.click(screen.getByTestId("row-a1"))
     await pickTable(user, "Beta")
     await user.click(screen.getByTestId("row-b1"))
-    expect(screen.getByRole("button", { name: "Clear" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "清除" })).toBeEnabled()
 
-    await user.click(screen.getByRole("button", { name: "Clear" }))
+    await user.click(screen.getByRole("button", { name: "清除" }))
 
-    expect(screen.getByText("0 selected")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Link rows" })).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Clear" })).toBeDisabled()
+    expect(screen.getByText("已选择 0 项")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "关联行" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "清除" })).toBeDisabled()
     expect(screen.getByTestId("row-b1")).not.toBeChecked()
     await pickTable(user, "Alpha")
     expect(screen.getByTestId("row-a1")).not.toBeChecked()
@@ -333,14 +335,14 @@ describe("CaseLinkRowsDialog", () => {
 
     await user.click(screen.getByTestId("row-a1"))
     await user.click(screen.getByTestId("row-a2"))
-    await user.click(screen.getByRole("button", { name: "Link 2 rows" }))
+    await user.click(screen.getByRole("button", { name: "关联 2 行" }))
 
     await waitFor(() => {
       expect(onOpenChange).toHaveBeenCalledWith(false)
     })
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Rows linked",
-      description: "Linked 1 row to this case. 1 was already linked.",
+      title: "已关联行",
+      description: "已将 1 行关联到此事件。 1 行此前已关联。",
     })
   })
 
@@ -354,18 +356,18 @@ describe("CaseLinkRowsDialog", () => {
     const { onOpenChange } = renderDialog()
 
     await user.click(screen.getByTestId("row-a1"))
-    await user.click(screen.getByRole("button", { name: "Link 1 row" }))
+    await user.click(screen.getByRole("button", { name: "关联 1 行" }))
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
-        title: "Could not link rows",
+        title: "无法关联行",
         description: "A case can have at most 5000 linked rows",
         variant: "destructive",
       })
     })
     expect(onOpenChange).not.toHaveBeenCalled()
     expect(screen.getByTestId("row-a1")).toBeChecked()
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 1 项")).toBeInTheDocument()
   })
 
   it("reports partial success and unstages what committed", async () => {
@@ -388,19 +390,19 @@ describe("CaseLinkRowsDialog", () => {
     await user.click(screen.getByTestId("row-a2"))
     await pickTable(user, "Beta")
     await user.click(screen.getByTestId("row-b1"))
-    await user.click(screen.getByRole("button", { name: "Link 3 rows" }))
+    await user.click(screen.getByRole("button", { name: "关联 3 行" }))
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
-        title: "Some rows were not linked",
+        title: "部分行未能关联",
         description:
-          "Linked 2 rows before a request failed. A case can have at most 5000 linked rows",
+          "请求失败前已关联 2 行。 A case can have at most 5000 linked rows",
         variant: "destructive",
       })
     })
     expect(onOpenChange).not.toHaveBeenCalled()
     // table-a committed, so only table-b's pick is left for a retry.
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 1 项")).toBeInTheDocument()
     expect(screen.getByTestId("row-b1")).toBeChecked()
     await pickTable(user, "Alpha")
     expect(screen.getByTestId("row-a1")).not.toBeChecked()
@@ -437,6 +439,6 @@ describe("CaseLinkRowsDialog", () => {
       )
     })
     expect(screen.getByTestId("row-a1")).toBeChecked()
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
+    expect(screen.getByText("已选择 1 项")).toBeInTheDocument()
   })
 })

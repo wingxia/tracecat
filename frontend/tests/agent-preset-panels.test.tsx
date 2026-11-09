@@ -226,15 +226,15 @@ beforeEach(() => {
 it("defaults structured output to str and toggles list output", async () => {
   const user = userEvent.setup()
   render(<TestForm panel="output" />)
-  await user.click(screen.getByRole("button", { name: "Structured" }))
+  await user.click(screen.getByRole("button", { name: "结构化" }))
   expect(values().outputTypeDataType).toBe("str")
   expect(screen.getByText("str")).toBeInTheDocument()
-  await user.click(screen.getByRole("switch", { name: "List of values" }))
+  await user.click(screen.getByRole("switch", { name: "值列表" }))
   expect(values().outputTypeDataType).toBe("list[str]")
   expect(screen.getByText("list[str]")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Integer" }))
+  await user.click(screen.getByRole("button", { name: "整数" }))
   expect(values().outputTypeDataType).toBe("list[int]")
-  await user.click(screen.getByRole("switch", { name: "List of values" }))
+  await user.click(screen.getByRole("switch", { name: "值列表" }))
   expect(values().outputTypeDataType).toBe("int")
 })
 
@@ -249,13 +249,13 @@ it("preserves a saved type across format changes", async () => {
       }}
     />
   )
-  expect(screen.getByRole("button", { name: "Boolean" })).toHaveAttribute(
+  expect(screen.getByRole("button", { name: "布尔值" })).toHaveAttribute(
     "aria-pressed",
     "true"
   )
-  expect(screen.getByRole("switch", { name: "List of values" })).toBeChecked()
-  await user.click(screen.getByRole("button", { name: "Text" }))
-  await user.click(screen.getByRole("button", { name: "Structured" }))
+  expect(screen.getByRole("switch", { name: "值列表" })).toBeChecked()
+  await user.click(screen.getByRole("button", { name: "文本" }))
+  await user.click(screen.getByRole("button", { name: "结构化" }))
   expect(values().outputTypeDataType).toBe("list[bool]")
 })
 
@@ -269,9 +269,9 @@ it("shows output validation and disables edits during save", () => {
     />
   )
   expect(screen.getByText("Select an output type")).toBeInTheDocument()
-  expect(screen.getByRole("button", { name: "Integer" })).toBeDisabled()
-  expect(screen.getByRole("button", { name: "Text" })).toBeDisabled()
-  expect(screen.getByRole("switch", { name: "List of values" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "整数" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "文本" })).toBeDisabled()
+  expect(screen.getByRole("switch", { name: "值列表" })).toBeDisabled()
 })
 
 it("shows a saved skill without a version badge and removes the binding", async () => {
@@ -285,7 +285,7 @@ it("shows a saved skill without a version badge and removes the binding", async 
   expect(
     await screen.findByText(skill.description ?? "", {}, { timeout: 2000 })
   ).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: `Remove ${skill.name}` }))
+  await user.click(screen.getByRole("button", { name: `移除 ${skill.name}` }))
   expect(values().skills).toEqual([])
 })
 
@@ -299,7 +299,7 @@ it("keeps a managed preset's package skill from being removed", async () => {
     />
   )
   const locked = screen.getByRole("button", {
-    name: `${skill.name} comes from the package and cannot be removed`,
+    name: `${skill.name} 来自软件包，无法移除`,
   })
   expect(locked).toBeDisabled()
   await user.click(locked)
@@ -315,7 +315,7 @@ it("adds an unsaved skill without a version badge", async () => {
     skillsError: null,
   })
   render(<TestForm panel="skills" />)
-  await user.click(screen.getByRole("button", { name: "Add skill" }))
+  await user.click(screen.getByRole("button", { name: "添加技能" }))
   await user.click(screen.getByRole("option", { name: /New skill/ }))
   expect(values().skills).toEqual([{ skillId: newSkill.id }])
   expect(screen.queryByText(/^v\d+$/)).not.toBeInTheDocument()
@@ -326,27 +326,23 @@ it("explains the disabled skill picker in a tooltip", async () => {
   render(
     <TestForm panel="skills" defaults={{ skills: [{ skillId: skill.id }] }} />
   )
-  expect(screen.getByRole("button", { name: "Add skill" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "添加技能" })).toBeDisabled()
   expect(
-    screen.queryByText(
-      "All workspace skills are already attached to this preset."
-    )
+    screen.queryByText("此工作空间的全部技能都已关联到该预设。")
   ).not.toBeInTheDocument()
   await user.tab()
   expect(
     await screen.findByRole("tooltip", {}, { timeout: 2000 })
-  ).toHaveTextContent(
-    "All workspace skills are already attached to this preset."
-  )
+  ).toHaveTextContent("此工作空间的全部技能都已关联到该预设。")
 })
 
 it("adds a subagent from the dialog with immutable IDs and opens it", async () => {
   const user = userEvent.setup()
   render(<TestForm panel="subagents" />)
-  await user.click(screen.getByRole("button", { name: "Add subagent" }))
+  await user.click(screen.getByRole("button", { name: "添加子智能体" }))
   await user.click(screen.getByRole("option", { name: /Example agent/ }))
   expect(values().subagents).toEqual([subagent])
-  expect(screen.getByRole("textbox", { name: "Alias" })).toHaveAttribute(
+  expect(screen.getByRole("textbox", { name: "别名" })).toHaveAttribute(
     "placeholder",
     preset.slug
   )
@@ -354,12 +350,12 @@ it("adds a subagent from the dialog with immutable IDs and opens it", async () =
     screen.getByRole("button", { name: "Example agent example-agent" })
   ).toBeInTheDocument()
   expect(screen.getAllByText("example-model").length).toBeGreaterThan(0)
-  expect(screen.getByText("Internet access limited")).toBeInTheDocument()
+  expect(screen.getByText("互联网访问受限")).toBeInTheDocument()
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Remove subagent" }))
+  await user.click(screen.getByRole("button", { name: "移除子智能体" }))
   expect(values().subagents).toEqual([])
   expect(
-    screen.queryByRole("textbox", { name: "Alias" })
+    screen.queryByRole("textbox", { name: "别名" })
   ).not.toBeInTheDocument()
 })
 
@@ -375,7 +371,7 @@ it("flags a row with validation errors and shows them in its detail", async () =
   const row = screen.getByRole("button", {
     name: "Example agent example-agent",
   })
-  expect(within(row).getByLabelText("Needs attention")).toBeInTheDocument()
+  expect(within(row).getByLabelText("需要处理")).toBeInTheDocument()
   await user.click(row)
   expect(screen.getByText("Alias must be unique")).toBeInTheDocument()
 })
@@ -402,11 +398,9 @@ it("keeps ineligible presets inspectable and opens them with their alert", async
       ]}
     />
   )
-  await user.click(screen.getByRole("button", { name: "Add subagent" }))
+  await user.click(screen.getByRole("button", { name: "添加子智能体" }))
   const option = screen.getByRole("option", { name: /Example agent/ })
-  expect(
-    within(option).getByLabelText("Cannot attach this preset")
-  ).toBeInTheDocument()
+  expect(within(option).getByLabelText("无法添加此预设")).toBeInTheDocument()
   const reason = "This preset has attached subagents."
   expect(option).toHaveAttribute("aria-description", reason)
   expect(screen.queryByText(reason)).not.toBeInTheDocument()
@@ -420,11 +414,11 @@ it("keeps ineligible presets inspectable and opens them with their alert", async
   ).toBeInTheDocument()
   expect(within(option).queryByText(reason)).not.toBeInTheDocument()
   await user.click(option)
-  expect(screen.getByText("Cannot attach this preset")).toBeInTheDocument()
+  expect(screen.getByText("无法添加此预设")).toBeInTheDocument()
   expect(
     screen.getByText("This preset has attached subagents.")
   ).toBeInTheDocument()
-  expect(screen.getByRole("textbox", { name: "Alias" })).toBeInTheDocument()
+  expect(screen.getByRole("textbox", { name: "别名" })).toBeInTheDocument()
 })
 
 it("shows saved subagents even if the preset catalog is empty", async () => {
@@ -436,11 +430,11 @@ it("shows saved subagents even if the preset catalog is empty", async () => {
       defaults={{ subagents: [subagent] }}
     />
   )
-  expect(screen.getByRole("button", { name: "Add subagent" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "添加子智能体" })).toBeDisabled()
   await user.click(
     screen.getByRole("button", { name: /^example-agent unavailable/ })
   )
-  expect(screen.getByRole("textbox", { name: "Alias" })).toBeInTheDocument()
+  expect(screen.getByRole("textbox", { name: "别名" })).toBeInTheDocument()
 })
 
 it("keeps the remaining subagent's values when another is removed", async () => {
@@ -458,35 +452,35 @@ it("keeps the remaining subagent's values when another is removed", async () => 
     />
   )
   expect(
-    screen.queryByRole("textbox", { name: "Alias" })
+    screen.queryByRole("textbox", { name: "别名" })
   ).not.toBeInTheDocument()
   await user.click(screen.getByRole("button", { name: /Example agent first/ }))
-  await user.click(screen.getByRole("button", { name: "Remove subagent" }))
+  await user.click(screen.getByRole("button", { name: "移除子智能体" }))
   expect(values().subagents).toEqual([second])
   await user.click(screen.getByRole("button", { name: /Example agent second/ }))
-  await user.type(screen.getByRole("textbox", { name: "Alias" }), "-edited")
+  await user.type(screen.getByRole("textbox", { name: "别名" }), "-edited")
   expect(values().subagents).toEqual([{ ...second, name: "second-edited" }])
-  expect(screen.getByRole("textbox", { name: "Delegate when" })).toHaveValue(
+  expect(screen.getByRole("textbox", { name: "委派条件" })).toHaveValue(
     second.description
   )
-  expect(screen.getByRole("spinbutton", { name: "Max turns" })).toHaveValue(5)
+  expect(screen.getByRole("spinbutton", { name: "最大轮次" })).toHaveValue(5)
 })
 
 it.each([
   {
     rows: [subagent, subagent],
     open: 1,
-    message: "Subagent aliases must be unique",
+    message: "子智能体别名必须唯一",
   },
   {
     rows: [{ ...subagent, preset: "root", presetId: "" }],
     open: 0,
-    message: "This alias is reserved",
+    message: "此别名为保留名称",
   },
   {
     rows: [{ ...subagent, name: "root" }],
     open: 0,
-    message: "This alias is reserved",
+    message: "此别名为保留名称",
   },
 ])(
   "renders schema error $message under Alias",
@@ -500,7 +494,7 @@ it.each([
       />
     )
     await user.click(screen.getByRole("button", { name: "Validate" }))
-    const alias = await screen.findByRole("textbox", { name: "Alias" })
+    const alias = await screen.findByRole("textbox", { name: "别名" })
     expect(
       within(alias.parentElement as HTMLElement).getByText(message)
     ).toBeInTheDocument()
@@ -518,15 +512,15 @@ it("renders a missing preset error in the subagent detail", async () => {
     />
   )
   await user.click(screen.getByRole("button", { name: "Validate" }))
-  expect(await screen.findByText("Select a preset")).toBeInTheDocument()
+  expect(await screen.findByText("选择预设")).toBeInTheDocument()
 })
 
 it("leaves the form clean after switching Structured then Text", async () => {
   const user = userEvent.setup()
   render(<TestForm panel="output" />)
-  await user.click(screen.getByRole("button", { name: "Structured" }))
+  await user.click(screen.getByRole("button", { name: "结构化" }))
   expect(screen.getByTestId("dirty")).toHaveTextContent("true")
-  await user.click(screen.getByRole("button", { name: "Text" }))
+  await user.click(screen.getByRole("button", { name: "文本" }))
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
   expect(values().outputTypeDataType).toBe("")
 })
@@ -534,13 +528,13 @@ it("leaves the form clean after switching Structured then Text", async () => {
 it("preserves typed JSON through format switches and renders schema validation", async () => {
   const user = userEvent.setup()
   render(<TestForm panel="output" />)
-  await user.click(screen.getByRole("button", { name: "JSON schema" }))
+  await user.click(screen.getByRole("button", { name: "JSON Schema" }))
   const schema = '{"type":"object"}'
   await user.click(screen.getByRole("textbox", { name: "JSON schema editor" }))
   await user.paste(schema)
-  await user.click(screen.getByRole("button", { name: "Structured" }))
-  await user.click(screen.getByRole("button", { name: "Text" }))
-  await user.click(screen.getByRole("button", { name: "JSON schema" }))
+  await user.click(screen.getByRole("button", { name: "结构化" }))
+  await user.click(screen.getByRole("button", { name: "文本" }))
+  await user.click(screen.getByRole("button", { name: "JSON Schema" }))
   expect(
     screen.getByRole("textbox", { name: "JSON schema editor" })
   ).toHaveValue(schema)
@@ -550,9 +544,7 @@ it("preserves typed JSON through format switches and renders schema validation",
     "invalid"
   )
   await user.click(screen.getByRole("button", { name: "Validate" }))
-  expect(await screen.findByText("Invalid JSON")).toHaveClass(
-    "text-destructive"
-  )
+  expect(await screen.findByText("JSON 无效")).toHaveClass("text-destructive")
 })
 
 it.each(["", "unknown"])("shows no pressed type for stored type %p", (type) => {
@@ -563,7 +555,7 @@ it.each(["", "unknown"])("shows no pressed type for stored type %p", (type) => {
     />
   )
   expect(
-    within(screen.getByRole("group", { name: "Type" })).queryByRole("button", {
+    within(screen.getByRole("group", { name: "输入" })).queryByRole("button", {
       pressed: true,
     })
   ).not.toBeInTheDocument()
@@ -576,8 +568,8 @@ it("shows loading skills with a disabled button and no tooltip trigger", () => {
     skillsError: null,
   })
   render(<TestForm panel="skills" />)
-  expect(screen.getByText("Loading skills...")).toBeInTheDocument()
-  const button = screen.getByRole("button", { name: "Add skill" })
+  expect(screen.getByText("正在加载技能…")).toBeInTheDocument()
+  const button = screen.getByRole("button", { name: "添加技能" })
   expect(button).toBeDisabled()
   expect(button.parentElement).not.toHaveAttribute("tabindex")
   expect(screen.queryByRole("tooltip")).not.toBeInTheDocument()
@@ -591,33 +583,31 @@ it("shows a skills loading error", () => {
       body: { detail: "Unavailable" },
       url: "/skills",
       status: 503,
-      statusText: "Service unavailable",
+      statusText: "服务不可用",
       request: { method: "GET" as const, url: "/skills" },
     }),
   })
   render(<TestForm panel="skills" />)
-  expect(
-    screen.getByText("Unable to load workspace skills")
-  ).toBeInTheDocument()
-  expect(screen.getByRole("button", { name: "Add skill" })).toBeDisabled()
+  expect(screen.getByText("无法加载工作空间技能")).toBeInTheDocument()
+  expect(screen.getByRole("button", { name: "添加技能" })).toBeDisabled()
 })
 
 it.each([
-  { skills: [], bindings: [], reason: "No skills in this workspace yet" },
+  { skills: [], bindings: [], reason: "此工作空间暂无技能" },
   {
     skills: [{ ...skill, current_version_id: null }],
     bindings: [],
-    reason: "Only skills with published versions can be attached.",
+    reason: "仅可关联已有发布版本的技能。",
   },
   {
     skills: [skill, { ...skill, id: "draft", current_version_id: null }],
     bindings: [{ skillId: skill.id }],
-    reason: "Only skills with published versions can be attached.",
+    reason: "仅可关联已有发布版本的技能。",
   },
   {
     skills: [skill],
     bindings: [{ skillId: skill.id }],
-    reason: "All workspace skills are already attached to this preset.",
+    reason: "此工作空间的全部技能都已关联到该预设。",
   },
 ])(
   "explains the disabled skills picker: $reason",
@@ -627,8 +617,8 @@ it.each([
       .mocked(useSkills)
       .mockReturnValue({ skills, skillsLoading: false, skillsError: null })
     render(<TestForm panel="skills" defaults={{ skills: bindings }} />)
-    expect(screen.getByRole("button", { name: "Add skill" })).toBeDisabled()
-    if (!bindings.length) expect(screen.getByText("None")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加技能" })).toBeDisabled()
+    if (!bindings.length) expect(screen.getByText("无")).toBeInTheDocument()
     await user.tab()
     expect(
       await screen.findByRole("tooltip", {}, { timeout: 2000 })
@@ -643,13 +633,13 @@ it.each([
 it("remembers Integer after Structured, Text, and Structured", async () => {
   const user = userEvent.setup()
   render(<TestForm panel="output" />)
-  await user.click(screen.getByRole("button", { name: "Structured" }))
-  await user.click(screen.getByRole("button", { name: "Integer" }))
-  await user.click(screen.getByRole("button", { name: "Text" }))
+  await user.click(screen.getByRole("button", { name: "结构化" }))
+  await user.click(screen.getByRole("button", { name: "整数" }))
+  await user.click(screen.getByRole("button", { name: "文本" }))
   expect(values().outputTypeDataType).toBe("")
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
-  await user.click(screen.getByRole("button", { name: "Structured" }))
-  expect(screen.getByRole("button", { name: "Integer" })).toHaveAttribute(
+  await user.click(screen.getByRole("button", { name: "结构化" }))
+  expect(screen.getByRole("button", { name: "整数" })).toHaveAttribute(
     "aria-pressed",
     "true"
   )
@@ -765,7 +755,7 @@ it("uses saved skill policy when ids and namespace filters are unchanged, ignori
     namespaces: ["tools.other", "tools.test"],
   })
   expect(agentPresetsPreviewToolPolicy).not.toHaveBeenCalled()
-  const group = screen.getByText("From skills").parentElement as HTMLElement
+  const group = screen.getByText("来自技能").parentElement as HTMLElement
   expect(within(group).getByText("tools.test.saved")).toBeInTheDocument()
   expect(
     within(group).queryByText("tools.test.authored")
@@ -787,20 +777,20 @@ it("counts approval-gated tools on a selected MCP server", () => {
       }),
     ],
   })
-  expect(screen.getByText("1 needs approval")).toBeInTheDocument()
-  expect(screen.getByTitle("1 needs approval")).toBeInTheDocument()
+  expect(screen.getByText("1 项需要审批")).toBeInTheDocument()
+  expect(screen.getByTitle("1 项需要审批")).toBeInTheDocument()
 })
 
 it("toggles approval for a tool that only a skill provides", async () => {
   const user = userEvent.setup()
   renderConfiguration({ savedSkillIds: ["first-skill"] })
   const toggle = screen.getByRole("button", {
-    name: "Require approval for tools.test.saved",
+    name: "要求 tools.test.saved 进行审批",
   })
   expect(toggle).toHaveAttribute("aria-pressed", "false")
   await user.click(toggle)
   expect(toggle).toHaveAttribute("aria-pressed", "true")
-  expect(toggle).toHaveTextContent("Needs approval")
+  expect(toggle).toHaveTextContent("需要审批")
 })
 
 it("lists ask rules for unlisted tools and clears them", async () => {
@@ -812,16 +802,15 @@ it("lists ask rules for unlisted tools and clears them", async () => {
       { tool: "tools.other.open", allow: false },
     ],
   })
-  const group = screen.getByText("Other approval rules")
-    .parentElement as HTMLElement
+  const group = screen.getByText("其他审批规则").parentElement as HTMLElement
   expect(within(group).getByText("tools.other.orphan")).toBeInTheDocument()
   expect(within(group).queryByText("tools.other.open")).not.toBeInTheDocument()
   await user.click(
     within(group).getByRole("button", {
-      name: "Require approval for tools.other.orphan",
+      name: "要求 tools.other.orphan 进行审批",
     })
   )
-  expect(screen.queryByText("Other approval rules")).not.toBeInTheDocument()
+  expect(screen.queryByText("其他审批规则")).not.toBeInTheDocument()
 })
 
 it("previews changed skills and removes the group without a request when all skills are removed", async () => {
@@ -849,16 +838,14 @@ it("previews changed skills and removes the group without a request when all ski
     })
   )
   expect(await screen.findByText("tools.test.preview")).toBeInTheDocument()
-  const group = screen.getByText("From skills").parentElement as HTMLElement
+  const group = screen.getByText("来自技能").parentElement as HTMLElement
   expect(within(group).getByText("tools.test.preview")).toBeInTheDocument()
   expect(screen.queryByText("tools.test.saved")).not.toBeInTheDocument()
   await user.click(screen.getByRole("button", { name: "Remove skills" }))
-  expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+  expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
   expect(preview).toHaveBeenCalledTimes(1)
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
-  expect(
-    screen.getByText("1 of 128 tools · 1 MCP integration")
-  ).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
+  expect(screen.getByText("1/128 个工具 · 1 个 MCP 集成")).toBeInTheDocument()
 })
 
 it("hides saved skill tools during the first preview and hides previous tools after an error", async () => {
@@ -877,7 +864,7 @@ it("hides saved skill tools during the first preview and hides previous tools af
   renderConfiguration({ savedSkillIds: ["saved-skill"] })
   await user.click(screen.getByRole("button", { name: "Change skills" }))
   expect(preview).toHaveBeenCalledTimes(1)
-  expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+  expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
   await act(async () => {
     resolvePreview({
       actions: ["tools.test.preview"],
@@ -888,7 +875,7 @@ it("hides saved skill tools during the first preview and hides previous tools af
   expect(await screen.findByText("tools.test.preview")).toBeInTheDocument()
   await user.click(screen.getByRole("button", { name: "Invalid skills" }))
   await waitFor(() =>
-    expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+    expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
   )
   expect(preview).toHaveBeenCalledTimes(2)
 })
@@ -904,7 +891,7 @@ it("previews cleared namespace filters even when skills are unchanged", async ()
     })
   renderConfiguration({ savedSkillIds: ["saved-skill"] })
   expect(preview).not.toHaveBeenCalled()
-  await user.click(screen.getByRole("button", { name: "Clear" }))
+  await user.click(screen.getByRole("button", { name: "清除" }))
   expect(await screen.findByText("tools.test.preview")).toBeInTheDocument()
   expect(preview).toHaveBeenCalledTimes(1)
   expect(preview).toHaveBeenCalledWith({
@@ -918,9 +905,9 @@ it("previews cleared namespace filters even when skills are unchanged", async ()
     },
   })
   expect(screen.queryByText("tools.test.saved")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   expect(
-    screen.getByText("2 of 128 tools (1 from skills) · 1 MCP integration")
+    screen.getByText("2/128 个工具（1 个来自技能） · 1 个 MCP 集成")
   ).toBeInTheDocument()
 })
 
@@ -944,7 +931,7 @@ it("hides previous preview tools while changed skills are pending", async () => 
   expect(await screen.findByText("tools.test.preview")).toBeInTheDocument()
   await user.click(screen.getByRole("button", { name: "Change skills" }))
   expect(preview).toHaveBeenCalledTimes(2)
-  expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+  expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
   expect(screen.queryByText("tools.test.preview")).not.toBeInTheDocument()
   await act(async () => {
     resolvePreview({
@@ -964,9 +951,9 @@ it("previews a new preset without skills once and uses its tool limit", async ()
     .mockClear()
     .mockResolvedValue({ actions: [], skill_actions: [], max_tools: 7 })
   renderConfiguration({})
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   expect(
-    await screen.findByText("1 of 7 tools · 1 MCP integration")
+    await screen.findByText("1/7 个工具 · 1 个 MCP 集成")
   ).toBeInTheDocument()
   expect(preview).toHaveBeenCalledTimes(1)
   expect(preview).toHaveBeenCalledWith(
@@ -989,9 +976,9 @@ it("previews skills on a new preset and uses the preview tool limit", async () =
   renderConfiguration({ skillIds: ["new-skill"] })
   expect(await screen.findByText("tools.test.preview")).toBeInTheDocument()
   expect(preview).toHaveBeenCalledTimes(1)
-  await user.click(screen.getByRole("button", { name: "Add tools" }))
+  await user.click(screen.getByRole("button", { name: "添加工具" }))
   expect(
-    screen.getByText("2 of 7 tools (1 from skills) · 1 MCP integration")
+    screen.getByText("2/7 个工具（1 个来自技能） · 1 个 MCP 集成")
   ).toBeInTheDocument()
 })
 
@@ -1006,10 +993,10 @@ it("opens a subagent from its row and links to the attached preset", async () =>
     "/workspaces/workspace-example/agents/preset-example"
   )
   await user.type(
-    screen.getByRole("textbox", { name: "Delegate when" }),
+    screen.getByRole("textbox", { name: "委派条件" }),
     "Example task"
   )
   expect(values().subagents[0].description).toBe("Example task")
-  await user.click(screen.getByRole("button", { name: "Remove subagent" }))
+  await user.click(screen.getByRole("button", { name: "移除子智能体" }))
   expect(values().subagents).toEqual([])
 })

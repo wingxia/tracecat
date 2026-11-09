@@ -29,7 +29,7 @@ describe("RESOURCE_CATEGORIES", () => {
     const integrations = RESOURCE_CATEGORIES.integrations
 
     expect(integrations).toMatchObject({
-      label: "Integrations",
+      label: "集成",
       resources: ["integration"],
     })
     expect(
@@ -130,11 +130,11 @@ describe("abbreviateName", () => {
 
 describe("organizationTier", () => {
   it("maps owner and admin slugs and defaults to member", () => {
-    expect(organizationTier("organization-owner")).toBe("Owner")
-    expect(organizationTier("organization-admin")).toBe("Admin")
-    expect(organizationTier("organization-member")).toBe("Member")
-    expect(organizationTier("workspace-admin")).toBe("Member")
-    expect(organizationTier(null)).toBe("Member")
-    expect(organizationTier(undefined)).toBe("Member")
+    expect(organizationTier("organization-owner")).toBe("所有者")
+    expect(organizationTier("organization-admin")).toBe("管理员")
+    expect(organizationTier("organization-member")).toBe("成员")
+    expect(organizationTier("workspace-admin")).toBe("成员")
+    expect(organizationTier(null)).toBe("成员")
+    expect(organizationTier(undefined)).toBe("成员")
   })
 })

@@ -81,7 +81,7 @@ function renderMenu(overrides: Partial<VersionHistoryMenuProps> = {}) {
 }
 
 async function openDropdown(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: "Versions" }))
+  await user.click(screen.getByRole("button", { name: "版本" }))
 }
 
 describe("VersionHistoryMenu", () => {
@@ -91,7 +91,7 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
 
-    expect(screen.getByText("Loading versions…")).toBeInTheDocument()
+    expect(screen.getByText("正在加载版本…")).toBeInTheDocument()
   })
 
   it("shows an empty state when there are no versions", async () => {
@@ -100,10 +100,8 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
 
-    expect(screen.getByText("No versions yet.")).toBeInTheDocument()
-    expect(
-      screen.queryByText("Couldn't load version history.")
-    ).not.toBeInTheDocument()
+    expect(screen.getByText("暂无版本。")).toBeInTheDocument()
+    expect(screen.queryByText("无法加载版本历史。")).not.toBeInTheDocument()
   })
 
   it("shows an error state instead of the empty state when loading failed", async () => {
@@ -112,10 +110,8 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
 
-    expect(
-      screen.getByText("Couldn't load version history.")
-    ).toBeInTheDocument()
-    expect(screen.queryByText("No versions yet.")).not.toBeInTheDocument()
+    expect(screen.getByText("无法加载版本历史。")).toBeInTheDocument()
+    expect(screen.queryByText("暂无版本。")).not.toBeInTheDocument()
   })
 
   it("lists versions, marks the current one, and disables its restore", async () => {
@@ -130,14 +126,12 @@ describe("VersionHistoryMenu", () => {
     expect(screen.getByText("v2")).toBeInTheDocument()
     expect(screen.getByText("v1")).toBeInTheDocument()
     expect(screen.getByText("2 files")).toBeInTheDocument()
-    expect(screen.getByText("Current")).toBeInTheDocument()
+    expect(screen.getByText("当前")).toBeInTheDocument()
 
     await user.click(screen.getByText("v2"))
 
     expect(isRestoreDisabled).toHaveBeenCalledWith(VERSIONS[0])
-    expect(
-      screen.getByRole("button", { name: "Restore version" })
-    ).toBeDisabled()
+    expect(screen.getByRole("button", { name: "恢复版本" })).toBeDisabled()
   })
 
   it("invokes renderVersionDiff with the selected version id", async () => {
@@ -184,7 +178,7 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
     await user.click(screen.getByText("v1"))
-    await user.click(screen.getByRole("button", { name: "Restore version" }))
+    await user.click(screen.getByRole("button", { name: "恢复版本" }))
 
     expect(props.onRestore).toHaveBeenCalledWith("ver-1")
     await waitFor(() => {
@@ -200,7 +194,7 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
     await user.click(screen.getByText("v1"))
-    await user.click(screen.getByRole("button", { name: "Restore version" }))
+    await user.click(screen.getByRole("button", { name: "恢复版本" }))
 
     await waitFor(() => {
       expect(props.onRestore).toHaveBeenCalledWith("ver-1")
@@ -221,9 +215,9 @@ describe("VersionHistoryMenu", () => {
 
     await openDropdown(user)
     await user.click(screen.getByText("v1"))
-    await user.click(screen.getByRole("button", { name: "Restore version" }))
+    await user.click(screen.getByRole("button", { name: "恢复版本" }))
 
-    expect(screen.getByRole("button", { name: "Cancel" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "取消" })).toBeDisabled()
 
     await user.keyboard("{Escape}")
     expect(screen.getByRole("alertdialog")).toBeInTheDocument()
@@ -252,7 +246,7 @@ describe("VersionHistoryMenu", () => {
             oldValue: "draft text",
             newValue: "version text",
           }}
-          draftLabel="Current draft"
+          draftLabel="当前草稿"
           versionLabel={versionId === "ver-1" ? "v1" : versionId}
         />
       ),
@@ -263,14 +257,14 @@ describe("VersionHistoryMenu", () => {
 
     expect(
       screen.getByText(
-        "Compare v1 with the current draft of Triage agent. Restoring replaces unsaved changes."
+        "比较 v1 与 Triage agent 的当前草稿。 恢复会替换未保存的更改。"
       )
     ).toBeInTheDocument()
-    expect(screen.getByText("Current draft → v1")).toBeInTheDocument()
+    expect(screen.getByText("当前草稿 → v1")).toBeInTheDocument()
     expect(screen.getByTestId("inline-diff-view")).toHaveTextContent(
       "instructions.md"
     )
-    expect(screen.getByText("Modified")).toBeInTheDocument()
-    expect(screen.getByText("Removed")).toBeInTheDocument()
+    expect(screen.getByText("已修改")).toBeInTheDocument()
+    expect(screen.getByText("已移除")).toBeInTheDocument()
   })
 })

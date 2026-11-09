@@ -43,7 +43,7 @@ export function CaseFilterMultiSelect<T extends string>({
   options,
   onChange,
   className,
-  emptyMessage = "No results found.",
+  emptyMessage = "未找到结果。",
 }: CaseFilterMultiSelectProps<T>) {
   const [open, setOpen] = useState(false)
 
@@ -87,7 +87,7 @@ export function CaseFilterMultiSelect<T extends string>({
       >
         <Command>
           <CommandInput
-            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            placeholder={`搜索 ${placeholder.toLowerCase()}…`}
             className="text-xs"
           />
           <CommandList>
@@ -139,7 +139,7 @@ export function CaseFilterMultiSelect<T extends string>({
               className="h-7 w-full text-xs"
               onClick={() => onChange([])}
             >
-              Clear selection
+              清除选择
             </Button>
           </div>
         )}

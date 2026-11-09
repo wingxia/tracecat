@@ -28,9 +28,10 @@ describe("Tool payload downloads", () => {
     render(<ToolInput input={`{"items":[${'"value",'.repeat(3000)}"done"]}`} />)
 
     await waitFor(() => {
-      expect(
-        screen.getByRole("link", { name: /download file/i })
-      ).toHaveAttribute("download", "tool-parameters.json")
+      expect(screen.getByRole("link", { name: /下载文件/i })).toHaveAttribute(
+        "download",
+        "tool-parameters.json"
+      )
     })
   })
 })

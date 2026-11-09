@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { TagsView } from "@/components/cases/tags-view"
 
 export const metadata: Metadata = {
-  title: "Tags",
+  title: "标签",
 }
 
 export default function CasesTagsPage() {

@@ -140,7 +140,7 @@ describe("PackageResourcesDialog", () => {
 
     expect(screen.queryByRole("checkbox", { name: /^triage/ })).toBeNull()
     expect(screen.queryByRole("checkbox", { name: /^settings/ })).toBeNull()
-    fireEvent.click(screen.getByRole("button", { name: /Workflows/ }))
+    fireEvent.click(screen.getByRole("button", { name: /工作流/ }))
     expect(screen.getByRole("checkbox", { name: /^triage/ })).toBeVisible()
     expect(screen.getByText("workflows/triage/workflow.yml")).toBeVisible()
   })
@@ -152,8 +152,8 @@ describe("PackageResourcesDialog", () => {
     const dependency = screen.getByRole("checkbox", { name: /settings/ })
     expect(dependency).toBeChecked()
     expect(dependency).toBeDisabled()
-    expect(screen.getByText(/Included because triage uses it/)).toBeVisible()
-    expect(screen.getByText(/2 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/因 triage 依赖此资源而包含/)).toBeVisible()
+    expect(screen.getByText(/2 \/ 2 位于软件包中/)).toBeInTheDocument()
   })
 
   it("drops an implied resource once its last user is unchecked", () => {
@@ -165,7 +165,7 @@ describe("PackageResourcesDialog", () => {
     const dependency = screen.getByRole("checkbox", { name: /settings/ })
     expect(dependency).not.toBeChecked()
     expect(dependency).toBeEnabled()
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
   })
 
   it("applies a draft only when asked", () => {
@@ -175,7 +175,7 @@ describe("PackageResourcesDialog", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: /^triage/ }))
     expect(onApply).not.toHaveBeenCalled()
 
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
     expect(onApply).toHaveBeenCalledWith(new Set())
   })
 
@@ -183,12 +183,12 @@ describe("PackageResourcesDialog", () => {
     const onApply = renderDialog(USES_SETTINGS)
     expandGroups()
     fireEvent.click(screen.getByRole("checkbox", { name: /^triage/ }))
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Close" }))
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }))
     openDialog()
 
-    expect(screen.getByText(/2 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/2 \/ 2 位于软件包中/)).toBeInTheDocument()
     expect(onApply).not.toHaveBeenCalled()
   })
 
@@ -208,22 +208,20 @@ describe("PackageResourcesDialog", () => {
     openDialog()
     expandGroups()
     fireEvent.click(screen.getByRole("checkbox", { name: /^triage/ }))
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
 
     rerender(dialog({ ...PACKAGE }))
 
-    expect(screen.getByText(/2 of 2 in the package/)).toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    expect(screen.getByText(/2 \/ 2 位于软件包中/)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
     expect(onApply).toHaveBeenCalledWith(USES_SETTINGS)
   })
 
   it("checks a whole group at once", () => {
     const onApply = renderDialog(new Set())
 
-    fireEvent.click(
-      screen.getByRole("checkbox", { name: /Select all Workflows/i })
-    )
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("checkbox", { name: /全选 工作流/i }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
 
     expect(onApply).toHaveBeenCalledWith(new Set(["workflow:triage"]))
   })
@@ -238,10 +236,8 @@ describe("PackageResourcesDialog", () => {
       })),
     })
 
-    fireEvent.click(
-      screen.getByRole("checkbox", { name: /Select all Workflows/i })
-    )
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("checkbox", { name: /全选 工作流/i }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
 
     expect(onApply).toHaveBeenCalledWith(new Set(["workflow:child"]))
   })
@@ -249,16 +245,13 @@ describe("PackageResourcesDialog", () => {
   it("filters resources by name across groups", () => {
     renderDialog(USES_SETTINGS)
 
-    fireEvent.change(
-      screen.getByRole("textbox", { name: "Search resources" }),
-      {
-        target: { value: "sett" },
-      }
-    )
+    fireEvent.change(screen.getByRole("textbox", { name: "搜索资源" }), {
+      target: { value: "sett" },
+    })
 
     expect(screen.getByRole("checkbox", { name: /settings/ })).toBeVisible()
     expect(screen.queryByRole("checkbox", { name: /^triage/ })).toBeNull()
-    expect(screen.getByRole("button", { name: /Variables/ })).toBeDisabled()
+    expect(screen.getByRole("button", { name: /变量/ })).toBeDisabled()
   })
 
   it("keeps a dependency implied when its group is toggled off and on", () => {
@@ -267,15 +260,15 @@ describe("PackageResourcesDialog", () => {
       SAME_GROUP_PACKAGE
     )
     const group = screen.getByRole("checkbox", {
-      name: /Select all Workflows/i,
+      name: /全选 工作流/i,
     })
 
     fireEvent.click(group)
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
     fireEvent.click(group)
-    expect(screen.getByText(/2 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/2 \/ 2 位于软件包中/)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
     expect(onApply).toHaveBeenCalledWith(new Set(["workflow:parent"]))
   })
 
@@ -285,12 +278,10 @@ describe("PackageResourcesDialog", () => {
       SAME_GROUP_PACKAGE
     )
 
-    fireEvent.click(
-      screen.getByRole("checkbox", { name: /Select all Workflows/i })
-    )
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("checkbox", { name: /全选 工作流/i }))
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
     expect(onApply).toHaveBeenCalledWith(new Set())
   })
 
@@ -301,12 +292,12 @@ describe("PackageResourcesDialog", () => {
     fireEvent.click(screen.getByRole("checkbox", { name: /^triage/ }))
     fireEvent.click(screen.getByRole("checkbox", { name: /^settings/ }))
     const group = screen.getByRole("checkbox", {
-      name: /Select all Variables/i,
+      name: /全选 变量/i,
     })
     expect(group).toBeEnabled()
 
     fireEvent.click(group)
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
     expect(onApply).toHaveBeenCalledWith(new Set())
   })
 
@@ -322,7 +313,7 @@ describe("PackageResourcesDialog", () => {
     expect(preset).toBeEnabled()
 
     fireEvent.click(preset)
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
   })
 
   it("marks a partly selected group", () => {
@@ -335,13 +326,13 @@ describe("PackageResourcesDialog", () => {
       })),
     })
     expandGroups()
-    expect(screen.getByText(/0 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/0 \/ 2 位于软件包中/)).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("checkbox", { name: /^child/ }))
 
-    expect(screen.getByText(/1 of 2 in the package/)).toBeInTheDocument()
+    expect(screen.getByText(/1 \/ 2 位于软件包中/)).toBeInTheDocument()
     expect(
-      screen.getByRole("checkbox", { name: /Select all Workflows/i })
+      screen.getByRole("checkbox", { name: /全选 工作流/i })
     ).toHaveAttribute("aria-checked", "mixed")
   })
 })
@@ -360,11 +351,11 @@ describe("PackageSummary", () => {
         onApply={jest.fn()}
       />
     )
-    const opener = screen.getByRole("button", { name: "Edit resources" })
+    const opener = screen.getByRole("button", { name: "编辑资源" })
 
     opener.focus()
     fireEvent.click(opener)
-    fireEvent.click(screen.getByRole("button", { name: "Apply selection" }))
+    fireEvent.click(screen.getByRole("button", { name: "应用选择" }))
 
     await waitFor(() => expect(opener).toHaveFocus())
   })
@@ -380,9 +371,7 @@ describe("PackageSummary", () => {
       />
     )
 
-    expect(
-      screen.getByRole("button", { name: "Edit resources" })
-    ).toBeDisabled()
+    expect(screen.getByRole("button", { name: "编辑资源" })).toBeDisabled()
   })
 
   it("names the admin page without linking it for other users", () => {
@@ -396,7 +385,7 @@ describe("PackageSummary", () => {
       />
     )
 
-    expect(screen.getByText(/Admin, Managed Workspaces/)).toBeInTheDocument()
+    expect(screen.getByText(/管理后台 › 托管工作空间/)).toBeInTheDocument()
     expect(screen.queryByRole("link")).toBeNull()
   })
 
@@ -410,17 +399,15 @@ describe("PackageSummary", () => {
       />
     )
 
-    expect(screen.getByText(/2 of 2 resources/)).toBeInTheDocument()
+    expect(screen.getByText(/2 \/ 2 个资源/)).toBeInTheDocument()
+    expect(screen.getByText(/发布不会更改客户工作空间/)).toBeInTheDocument()
     expect(
-      screen.getByText(/Publishing changes no customer workspace/)
-    ).toBeInTheDocument()
-    expect(
-      screen.getByRole("link", { name: "Admin, Managed Workspaces" })
+      screen.getByRole("link", { name: "管理后台 › 托管工作空间" })
     ).toHaveAttribute("href", "/admin/managed-package")
 
-    fireEvent.click(screen.getByRole("button", { name: "Edit resources" }))
+    fireEvent.click(screen.getByRole("button", { name: "编辑资源" }))
     expect(
-      screen.getByRole("dialog", { name: "Choose package resources" })
+      screen.getByRole("dialog", { name: "选择软件包资源" })
     ).toBeInTheDocument()
   })
 })

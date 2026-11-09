@@ -173,22 +173,21 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Set up model provider" })
+      screen.getByRole("heading", { name: "设置模型提供商" })
     ).toBeInTheDocument()
     expect(
-      screen.getByText(
-        "Choose a default model in organization settings before creating an agent."
-      )
+      screen.getByText("请先在组织设置中选择默认模型，再创建智能体。")
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Create agent" })
+      screen.queryByRole("button", { name: "创建智能体" })
     ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("link", { name: "Configure models" })
-    ).toHaveAttribute("href", "/organization/settings/agent")
+    expect(screen.getByRole("link", { name: "配置模型" })).toHaveAttribute(
+      "href",
+      "/organization/settings/agent"
+    )
 
-    await user.click(screen.getByRole("link", { name: "Configure models" }))
+    await user.click(screen.getByRole("link", { name: "配置模型" }))
     expect(mockOnOpenChange).toHaveBeenCalledWith(false)
   })
 
@@ -197,14 +196,12 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByText(
-        "Ask an organization administrator to configure a default model before creating an agent."
-      )
+      screen.getByText("请先联系组织管理员配置默认模型，再创建智能体。")
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
   })
 
   it("hides the configuration link while organization scopes are loading", () => {
@@ -217,7 +214,7 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -226,8 +223,8 @@ describe("CreateAgentDialog", () => {
     setupMocks({ defaultCatalogId: "catalog-default" })
     renderCreateAgentDialog()
 
-    await user.type(screen.getByLabelText("Name"), "Default model agent")
-    await user.click(screen.getByRole("button", { name: "Create agent" }))
+    await user.type(screen.getByLabelText("名称"), "Default model agent")
+    await user.click(screen.getByRole("button", { name: "创建智能体" }))
 
     await waitFor(() => {
       expect(mockCreateAgentPreset).toHaveBeenCalledWith({
@@ -254,14 +251,12 @@ describe("CreateAgentDialog", () => {
       />
     )
 
-    const name = screen.getByLabelText("Name")
+    const name = screen.getByLabelText("名称")
     expect(name).toHaveValue("Alert Triage 2")
-    expect(
-      screen.getByText(/starts with alert-triage attached/)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/初始已关联 alert-triage/)).toBeInTheDocument()
     await user.clear(name)
     await user.type(name, "Triage Bot")
-    await user.click(screen.getByRole("button", { name: "Create agent" }))
+    await user.click(screen.getByRole("button", { name: "创建智能体" }))
 
     await waitFor(() => {
       expect(mockCreateAgentPreset).toHaveBeenCalledWith(
@@ -278,8 +273,8 @@ describe("CreateAgentDialog", () => {
     setupMocks({ defaultCatalogId: "catalog-fallback" })
     renderCreateAgentDialog("/legacy/")
 
-    await user.type(screen.getByLabelText("Name"), "OSS agent")
-    await user.click(screen.getByRole("button", { name: "Create agent" }))
+    await user.type(screen.getByLabelText("名称"), "OSS agent")
+    await user.click(screen.getByRole("button", { name: "创建智能体" }))
 
     await waitFor(() => {
       expect(mockCreateAgentPreset).toHaveBeenCalled()
@@ -296,8 +291,8 @@ describe("CreateAgentDialog", () => {
     setupMocks({ defaultCatalogId: "catalog-fallback" })
     renderCreateAgentDialog("/legacy/")
 
-    await user.type(screen.getByLabelText("Name"), "Enterprise agent")
-    await user.click(screen.getByRole("button", { name: "Create agent" }))
+    await user.type(screen.getByLabelText("名称"), "Enterprise agent")
+    await user.click(screen.getByRole("button", { name: "创建智能体" }))
 
     await waitFor(() => {
       expect(mockMoveAgentPreset).toHaveBeenCalledWith({
@@ -312,15 +307,13 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Set up model provider" })
+      screen.getByRole("heading", { name: "设置模型提供商" })
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Create agent" })
+      screen.queryByRole("button", { name: "创建智能体" })
     ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("link", { name: "Configure models" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "配置模型" })).toBeInTheDocument()
     expect(mockCreateAgentPreset).not.toHaveBeenCalled()
   })
 
@@ -329,9 +322,9 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Enable the default model" })
+      screen.getByRole("heading", { name: "启用默认模型" })
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
   })
 
   it("opens workspace model settings for a workspace admin when the default is excluded", async () => {
@@ -345,16 +338,14 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Enable the default model" })
+      screen.getByRole("heading", { name: "启用默认模型" })
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
 
-    await user.click(
-      screen.getByRole("button", { name: "Configure workspace models" })
-    )
+    await user.click(screen.getByRole("button", { name: "配置工作空间模型" }))
 
     expect(mockOnOpenChange).toHaveBeenCalledWith(false)
     expect(mockSetActiveSection).toHaveBeenCalledWith("workspace-models")
@@ -373,14 +364,14 @@ describe("CreateAgentDialog", () => {
 
     expect(
       screen.getByText(
-        "The organization default model is not enabled for this workspace. Ask a workspace administrator to enable it before creating an agent."
+        "此工作空间未启用组织默认模型。请联系工作空间管理员启用后再创建智能体。"
       )
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Configure workspace models" })
+      screen.queryByRole("button", { name: "配置工作空间模型" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -389,12 +380,10 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByText(
-        "Ask an organization administrator to configure a default model before creating an agent."
-      )
+      screen.getByText("请先联系组织管理员配置默认模型，再创建智能体。")
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Configure workspace models" })
+      screen.queryByRole("button", { name: "配置工作空间模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -408,10 +397,10 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.queryByRole("button", { name: "Configure workspace models" })
+      screen.queryByRole("button", { name: "配置工作空间模型" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -420,11 +409,11 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Loading models" })
+      screen.getByRole("heading", { name: "正在加载模型" })
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -433,14 +422,14 @@ describe("CreateAgentDialog", () => {
     renderCreateAgentDialog()
 
     expect(
-      screen.getByRole("heading", { name: "Unable to load models" })
+      screen.getByRole("heading", { name: "无法加载模型" })
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("heading", { name: "Set up model provider" })
+      screen.queryByRole("heading", { name: "设置模型提供商" })
     ).not.toBeInTheDocument()
-    expect(screen.queryByLabelText("Name")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("名称")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "Configure models" })
+      screen.queryByRole("link", { name: "配置模型" })
     ).not.toBeInTheDocument()
   })
 
@@ -457,8 +446,8 @@ describe("CreateAgentDialog", () => {
     setupMocks({ defaultCatalogId: "catalog-fallback" })
     renderCreateAgentDialog()
 
-    await user.type(screen.getByLabelText("Name"), "Custom agent")
-    await user.click(screen.getByRole("button", { name: "Create agent" }))
+    await user.type(screen.getByLabelText("名称"), "Custom agent")
+    await user.click(screen.getByRole("button", { name: "创建智能体" }))
 
     await waitFor(() => {
       expect(mockCreateAgentPreset).toHaveBeenCalledWith({

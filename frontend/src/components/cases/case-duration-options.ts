@@ -30,87 +30,87 @@ export interface CaseEventOption {
 export const CASE_EVENT_OPTIONS: CaseEventOption[] = [
   {
     value: "case_created",
-    label: "Case created",
+    label: "已创建事件",
     icon: FilePlus2,
   },
   {
     value: "case_updated",
-    label: "Case updated",
+    label: "已更新事件",
     icon: PenSquare,
   },
   {
     value: "case_closed",
-    label: "Case closed",
+    label: "已关闭事件",
     icon: CircleCheck,
   },
   {
     value: "case_reopened",
-    label: "Case reopened",
+    label: "已重新打开事件",
     icon: RotateCcw,
   },
   {
     value: "case_viewed",
-    label: "Case viewed",
+    label: "已查看事件",
     icon: Eye,
   },
   {
     value: "priority_changed",
-    label: "Priority changed",
+    label: "优先级已更改",
     icon: Flag,
   },
   {
     value: "severity_changed",
-    label: "Severity changed",
+    label: "严重程度已更改",
     icon: Flame,
   },
   {
     value: "status_changed",
-    label: "Status changed",
+    label: "状态已更改",
     icon: GitCompare,
   },
   {
     value: "assignee_changed",
-    label: "Assignee changed",
+    label: "负责人已更改",
     icon: UserRound,
   },
   {
     value: "tag_added",
-    label: "Tag added",
+    label: "已添加标签",
     icon: Tag,
   },
   {
     value: "tag_removed",
-    label: "Tag removed",
+    label: "已移除标签",
     icon: Tag,
   },
   {
     value: "fields_changed",
-    label: "Custom field changed",
+    label: "自定义字段已更改",
     icon: FormInput,
   },
   {
     value: "dropdown_value_changed",
-    label: "Dropdown value changed",
+    label: "下拉选项值已更改",
     icon: List,
   },
   {
     value: "comment_created",
-    label: "Comment added",
+    label: "已添加评论",
     icon: MessageSquarePlus,
   },
   {
     value: "comment_deleted",
-    label: "Comment deleted",
+    label: "已删除评论",
     icon: MessageSquareX,
   },
   {
     value: "comment_reply_created",
-    label: "Comment reply added",
+    label: "已添加评论回复",
     icon: MessageSquarePlus,
   },
   {
     value: "comment_reply_deleted",
-    label: "Comment reply deleted",
+    label: "已删除评论回复",
     icon: MessageSquareX,
   },
 ]
@@ -123,8 +123,8 @@ export const CASE_DURATION_SELECTION_OPTIONS: Array<{
   value: CaseDurationAnchorSelection
   label: string
 }> = [
-  { value: "first", label: "First seen" },
-  { value: "last", label: "Last seen" },
+  { value: "first", label: "首次出现" },
+  { value: "last", label: "最近出现" },
 ]
 
 type CaseEventFilterType = Extract<
@@ -139,21 +139,21 @@ export interface CaseEventFilterOption {
 
 export const CASE_EVENT_FILTER_OPTIONS = {
   priority_changed: {
-    label: "Priority",
+    label: "优先级",
     options: Object.values(PRIORITIES).map(({ value, label }) => ({
       value,
       label,
     })),
   },
   severity_changed: {
-    label: "Severity",
+    label: "严重程度",
     options: Object.values(SEVERITIES).map(({ value, label }) => ({
       value,
       label,
     })),
   },
   status_changed: {
-    label: "Status",
+    label: "状态",
     options: Object.values(STATUSES).map(({ value, label }) => ({
       value,
       label,

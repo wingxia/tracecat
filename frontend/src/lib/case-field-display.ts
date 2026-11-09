@@ -100,7 +100,7 @@ export function formatCaseFieldDisplayLabel(
   fieldType?: CaseFieldReadType
 ): string {
   if (typeof value === "boolean") {
-    return value ? "Yes" : "No"
+    return value ? "是" : "否"
   }
 
   if (fieldType === "NUMERIC") {

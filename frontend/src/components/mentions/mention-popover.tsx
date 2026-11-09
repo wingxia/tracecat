@@ -14,16 +14,16 @@ const POPOVER_COPY: Record<
   { loading: string; empty: string; locked: string; error: string }
 > = {
   agent: {
-    loading: "Loading agents...",
-    empty: "No agents found",
-    locked: "Agent mentions are an Enterprise feature",
-    error: "Could not load agents. Try again.",
+    loading: "正在加载智能体…",
+    empty: "未找到智能体",
+    locked: "提及智能体属于企业版功能",
+    error: "无法加载智能体，请重试。",
   },
   workflow: {
-    loading: "Loading workflows...",
-    empty: "No workflows found",
-    locked: "Workflow commands are an Enterprise feature",
-    error: "Could not load workflows. Try again.",
+    loading: "正在加载工作流…",
+    empty: "未找到工作流",
+    locked: "工作流命令属于企业版功能",
+    error: "无法加载工作流，请重试。",
   },
 }
 

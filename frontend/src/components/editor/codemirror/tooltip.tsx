@@ -71,7 +71,7 @@ function FunctionTooltip({ func }: FunctionTooltipProps) {
       )}
       {func.parameters && func.parameters.length > 0 && (
         <>
-          <div className="function-params-title">Parameters:</div>
+          <div className="function-params-title">参数：</div>
           {func.parameters.map((param, index) => (
             <div key={index} className="function-param">
               <strong>{param.name}</strong>
@@ -99,10 +99,10 @@ function ActionTooltip({ action }: ActionTooltipProps) {
       {action.description && (
         <div className="action-description">{action.description}</div>
       )}
-      <div className="action-props-title">Available properties:</div>
+      <div className="action-props-title">可用属性：</div>
       {commonProps.map((prop, index) => (
         <div key={index} className="action-prop">
-          <strong>{prop}</strong>: Access {prop} from this action
+          <strong>{prop}</strong>：访问 {prop} ，来自此动作
         </div>
       ))}
     </div>
@@ -124,9 +124,7 @@ function TemplateTooltip({
 }: TemplateTooltipProps) {
   return (
     <div className="cm-template-expression-tooltip">
-      <div className="cm-tooltip-header">
-        Template Expression: {innerContent}
-      </div>
+      <div className="cm-tooltip-header">模板表达式： {innerContent}</div>
 
       {func && <FunctionTooltip func={func} />}
       {action && <ActionTooltip action={action} />}
@@ -134,12 +132,12 @@ function TemplateTooltip({
       <div
         className={`cm-tooltip-status ${validation.isValid ? "valid" : "invalid"}`}
       >
-        {validation.isValid ? "✓ Valid" : "✗ Invalid"}
+        {validation.isValid ? "✓ 有效" : "✗ 无效"}
       </div>
 
       {validation.errors && validation.errors.length > 0 && (
         <div className="cm-tooltip-errors">
-          <div className="cm-tooltip-section-title">Errors:</div>
+          <div className="cm-tooltip-section-title">错误：</div>
           {validation.errors.map((error, index) => (
             <div key={index} className="cm-tooltip-error-item">
               • {error.msg}
@@ -150,13 +148,13 @@ function TemplateTooltip({
 
       {validation.tokens && validation.tokens.length > 0 && (
         <div className="cm-tooltip-tokens">
-          <div className="cm-tooltip-section-title">Tokens:</div>
+          <div className="cm-tooltip-section-title">词元：</div>
           <div className="cm-tooltip-tokens-list">
             {validation.tokens.map((token, index) => (
               <span
                 key={index}
                 className={`cm-tooltip-token cm-token-${token.type.toLowerCase()}`}
-                title={`Type: ${token.type}`}
+                title={`类型：${token.type}`}
               >
                 {token.value}
               </span>

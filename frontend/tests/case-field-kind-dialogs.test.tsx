@@ -209,7 +209,7 @@ describe.each(drawerCases)("$name", ({ editorLabel, renderDrawer }) => {
     const onOpenChange = jest.fn()
     renderDrawer(onOpenChange)
 
-    fireEvent.click(screen.getByRole("button", { name: /close/i }))
+    fireEvent.click(screen.getByRole("button", { name: /关闭/i }))
 
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })
@@ -225,7 +225,7 @@ describe("saving", () => {
     const editor = screen.getByRole("textbox", { name: "Rich text editor" })
     await user.clear(editor)
     await user.type(editor, "updated")
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "保存" }))
 
     expect(onSave).toHaveBeenCalledWith("updated")
     expect(onOpenChange).toHaveBeenCalledWith(false)
@@ -238,10 +238,10 @@ describe("saving", () => {
 
     const editor = screen.getByRole("textbox", { name: "JSON editor" })
     fireEvent.change(editor, { target: { value: "{" } })
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "保存" })).toBeDisabled()
 
     fireEvent.change(editor, { target: { value: '{"beta": 2}' } })
-    fireEvent.click(screen.getByRole("button", { name: "Save" }))
+    fireEvent.click(screen.getByRole("button", { name: "保存" }))
 
     expect(onSave).toHaveBeenCalledWith({ beta: 2 })
     expect(onOpenChange).toHaveBeenCalledWith(false)
@@ -341,7 +341,7 @@ describe("under a CaseValueDrawerProvider", () => {
 
     await user.click(screen.getByRole("button", { name: "Open notes" }))
     await screen.findByRole("textbox", { name: "Rich text editor" })
-    await user.click(screen.getByRole("button", { name: /close/i }))
+    await user.click(screen.getByRole("button", { name: /关闭/i }))
 
     expect(
       screen.queryByRole("textbox", { name: "Rich text editor" })

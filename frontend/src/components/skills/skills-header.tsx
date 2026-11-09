@@ -39,9 +39,9 @@ export const DEFAULT_SKILL_SORT: SkillsSortValue = {
 }
 
 const SORT_FIELD_OPTIONS: Array<ListSortFieldOption<SkillsSortField>> = [
-  { value: "updated_at", label: "Updated", icon: Clock3 },
-  { value: "created_at", label: "Created", icon: CalendarIcon },
-  { value: "name", label: "Name", icon: TypeIcon },
+  { value: "updated_at", label: "更新时间", icon: Clock3 },
+  { value: "created_at", label: "创建时间", icon: CalendarIcon },
+  { value: "name", label: "名称", icon: TypeIcon },
 ]
 
 const LIMIT_OPTIONS = [10, 20, 50]
@@ -111,7 +111,7 @@ export function SkillsHeader({
     <div className="shrink-0 border-b">
       <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
         <ListHeaderSearch
-          placeholder="Search skills..."
+          placeholder={"搜索技能…"}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
@@ -130,10 +130,10 @@ export function SkillsHeader({
             )}
             onClick={onPreviousPage}
             disabled={!hasPreviousPage || isPaginationLoading}
-            aria-label="Previous page"
+            aria-label={"上一页"}
           >
             <ChevronLeft className="size-3.5" />
-            <span>Prev</span>
+            <span>上一页</span>
           </button>
           <button
             type="button"
@@ -145,9 +145,9 @@ export function SkillsHeader({
             )}
             onClick={onNextPage}
             disabled={!hasNextPage || isPaginationLoading}
-            aria-label="Next page"
+            aria-label={"下一页"}
           >
-            <span>Next</span>
+            <span>下一页</span>
             <ChevronRight className="size-3.5" />
           </button>
         </div>
@@ -170,8 +170,8 @@ export function SkillsHeader({
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="start">
-              <SelectItem value="list">List</SelectItem>
-              <SelectItem value="folders">Folders</SelectItem>
+              <SelectItem value="list">列表</SelectItem>
+              <SelectItem value="folders">文件夹</SelectItem>
             </SelectContent>
           </Select>
         ) : null}
@@ -181,7 +181,7 @@ export function SkillsHeader({
           options={SORT_FIELD_OPTIONS}
         />
         <FilterMultiSelect
-          placeholder="Agents"
+          placeholder={"智能体"}
           icon={MousePointerClickIcon}
           value={agentFilter.agentIds}
           options={agentFilter.options}
@@ -198,7 +198,7 @@ export function SkillsHeader({
             onClick={handleReset}
             className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            Reset
+            重置
             <Cross2Icon className="size-3" />
           </button>
         )}
@@ -210,7 +210,7 @@ export function SkillsHeader({
             disabled={isPaginationLoading}
           >
             <SelectTrigger className="h-6 w-auto gap-1.5 rounded-md px-2 text-xs font-medium">
-              <span className="text-muted-foreground">Limit</span>
+              <span className="text-muted-foreground">限制</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="end">

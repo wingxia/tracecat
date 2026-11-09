@@ -38,15 +38,15 @@ export function CustomFieldsView() {
       onSuccess: async () => {
         await invalidateCaseFieldQueries(queryClient, workspaceId)
         toast({
-          title: "Field deleted",
-          description: "The case field was deleted successfully.",
+          title: "已删除字段",
+          description: "已成功删除事件字段。",
         })
       },
       onError: (error) => {
         console.error("Failed to delete case field", error)
         toast({
-          title: "Error deleting field",
-          description: "Failed to delete the case field. Please try again.",
+          title: "删除字段出错",
+          description: "删除事件字段失败，请重试。",
           variant: "destructive",
         })
       },
@@ -75,22 +75,19 @@ export function CustomFieldsView() {
 
   if (workspaceError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Error loading workspace info."
-      />
+      <AlertNotification level="error" message={"加载工作空间信息出错。"} />
     )
   }
 
   if (!workspace) {
-    return <AlertNotification level="error" message="Workspace not found." />
+    return <AlertNotification level="error" message={"未找到工作空间。"} />
   }
 
   if (caseFieldsError || !caseFields) {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading case fields: ${caseFieldsError?.message || "Unknown error"}`}
+        message={`加载事件字段出错：${caseFieldsError?.message || "未知错误"}`}
       />
     )
   }
@@ -104,9 +101,9 @@ export function CustomFieldsView() {
               <EmptyMedia variant="icon">
                 <DatabaseIcon className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No custom fields defined yet</EmptyTitle>
+              <EmptyTitle>尚未定义自定义字段</EmptyTitle>
               <EmptyDescription>
-                Add your first custom field using the button in the header
+                使用顶部按钮添加第一个自定义字段
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

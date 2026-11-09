@@ -42,10 +42,7 @@ const emptyToUndefined = z.preprocess(
 )
 
 const formSchema = z.object({
-  display_name: z
-    .string()
-    .min(1, "Name is required")
-    .max(50, "Name is too long"),
+  display_name: z.string().min(1, "名称不能为空").max(50, "名称过长"),
   max_concurrent_workflows: emptyToUndefined,
   max_action_executions_per_workflow: emptyToUndefined,
   max_concurrent_actions: emptyToUndefined,
@@ -87,16 +84,16 @@ export function CreateTierDialog() {
         sort_order: values.sort_order,
       })
       toast({
-        title: "Tier created",
-        description: `${values.display_name} has been created successfully.`,
+        title: "已创建套餐",
+        description: `已成功创建 ${values.display_name}。`,
       })
       form.reset()
       setOpen(false)
     } catch (error) {
       console.error("Failed to create tier", error)
       toast({
-        title: "Failed to create tier",
-        description: "Please try again.",
+        title: "创建套餐失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -107,14 +104,14 @@ export function CreateTierDialog() {
       <DialogTrigger asChild>
         <Button size="sm">
           <PlusIcon className="mr-2 size-4" />
-          Create tier
+          创建套餐
         </Button>
       </DialogTrigger>
       <DialogContent size="lg" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create tier</DialogTitle>
+          <DialogTitle>创建套餐</DialogTitle>
           <DialogDescription>
-            Create a new tier with resource limits and entitlements.
+            创建包含资源限制和功能权益的新套餐。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -129,9 +126,9 @@ export function CreateTierDialog() {
                   name="display_name"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>名称</FormLabel>
                       <FormControl>
-                        <Input placeholder="Pro" {...field} />
+                        <Input placeholder={"专业版"} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -142,7 +139,7 @@ export function CreateTierDialog() {
                   name="sort_order"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Sort order</FormLabel>
+                      <FormLabel>排序</FormLabel>
                       <FormControl>
                         <Input type="number" min={0} {...field} />
                       </FormControl>
@@ -161,27 +158,25 @@ export function CreateTierDialog() {
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel className="font-normal">
-                        Default tier
-                      </FormLabel>
+                      <FormLabel className="font-normal">默认套餐</FormLabel>
                     </FormItem>
                   )}
                 />
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="text-sm font-medium mb-3">Resource limits</h4>
+                <h4 className="text-sm font-medium mb-3">资源限制</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="max_concurrent_workflows"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Max concurrent workflows</FormLabel>
+                        <FormLabel>最大并发工作流数</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="Unlimited"
+                            placeholder={"不限制"}
                             {...field}
                             value={field.value ?? ""}
                           />
@@ -195,11 +190,11 @@ export function CreateTierDialog() {
                     name="max_action_executions_per_workflow"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Max actions per workflow</FormLabel>
+                        <FormLabel>每个工作流的最大动作数</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="Unlimited"
+                            placeholder={"不限制"}
                             {...field}
                             value={field.value ?? ""}
                           />
@@ -213,11 +208,11 @@ export function CreateTierDialog() {
                     name="max_concurrent_actions"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Max concurrent actions</FormLabel>
+                        <FormLabel>最大并发动作数</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="Unlimited"
+                            placeholder={"不限制"}
                             {...field}
                             value={field.value ?? ""}
                           />
@@ -231,16 +226,16 @@ export function CreateTierDialog() {
                     name="api_rate_limit"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>API rate limit</FormLabel>
+                        <FormLabel>API 速率限制</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="Unlimited"
+                            placeholder={"不限制"}
                             {...field}
                             value={field.value ?? ""}
                           />
                         </FormControl>
-                        <FormDescription>Requests per second</FormDescription>
+                        <FormDescription>每秒请求数</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -248,7 +243,7 @@ export function CreateTierDialog() {
                 </div>
               </div>
               <div className="border-t pt-4">
-                <h4 className="mb-3 text-sm font-medium">Entitlements</h4>
+                <h4 className="mb-3 text-sm font-medium">功能权益</h4>
                 <div className="space-y-3">
                   {TIER_ENTITLEMENTS.map((entitlement) => (
                     <FormField
@@ -284,7 +279,7 @@ export function CreateTierDialog() {
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={createPending}>
-                {createPending ? "Creating..." : "Create tier"}
+                {createPending ? "创建中…" : "创建套餐"}
               </Button>
             </DialogFooter>
           </form>

@@ -47,21 +47,21 @@ function WorkflowExecutionEventDetailTabs({
     actionRef !== WF_TRIGGER_EVENT_REF && relatedEvents.length > 0
   const tabItems: {
     value: ActionEventPayloadType
-    label: "Input" | "Result"
+    label: "输入" | "结果"
     icon: typeof FileInputIcon | typeof ShapesIcon
   }[] = []
 
   if (hasInput) {
     tabItems.push({
       value: "input",
-      label: "Input",
+      label: "输入",
       icon: FileInputIcon,
     })
   }
   if (hasResult) {
     tabItems.push({
       value: "result",
-      label: "Result",
+      label: "结果",
       icon: ShapesIcon,
     })
   }
@@ -78,7 +78,7 @@ function WorkflowExecutionEventDetailTabs({
   if (tabItems.length === 0 || !activeTab) {
     return (
       <div className="px-4 py-6 text-sm text-muted-foreground">
-        No input or result is available for this event.
+        此执行事件没有可用的输入或结果。
       </div>
     )
   }

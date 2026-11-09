@@ -146,7 +146,7 @@ function CaseFeedEvent({
           <div className="flex items-center space-x-2 text-xs">
             <EventIcon icon={PlusIcon} />
             <span>
-              <EventActor user={actor} /> created the case
+              <EventActor user={actor} /> 创建了事件
             </span>
           </div>
         )}
@@ -242,8 +242,8 @@ function CaseFeedEvent({
           <div className="flex items-center space-x-2 text-xs">
             <EventIcon icon={Link2} />
             <span>
-              <EventActor user={actor} /> linked a row from{" "}
-              {(event as { table_name?: string }).table_name || "a table"}
+              <EventActor user={actor} /> 关联了一行，来源为{" "}
+              {(event as { table_name?: string }).table_name || "数据表"}
             </span>
           </div>
         )}
@@ -252,8 +252,8 @@ function CaseFeedEvent({
           <div className="flex items-center space-x-2 text-xs">
             <EventIcon icon={Unlink2} />
             <span>
-              <EventActor user={actor} /> unlinked a row from{" "}
-              {(event as { table_name?: string }).table_name || "a table"}
+              <EventActor user={actor} /> 取消了一行的关联，来源为{" "}
+              {(event as { table_name?: string }).table_name || "数据表"}
             </span>
           </div>
         )}
@@ -318,16 +318,16 @@ function WorkflowExecutionInfo({ wfExecId }: { wfExecId: string }) {
                 className="hover:text-foreground hover:underline"
                 target="_blank"
               >
-                via workflow
+                通过工作流
               </Link>
             </TooltipTrigger>
             <TooltipContent className="flex items-center gap-2">
-              Open workflow execution <ExternalLinkIcon className="size-3" />
+              打开工作流执行记录 <ExternalLinkIcon className="size-3" />
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       ) : (
-        <span>via workflow</span>
+        <span>通过工作流</span>
       )}
     </div>
   )
@@ -412,7 +412,7 @@ export function CaseFeed({
           <div className="flex items-center justify-center p-8">
             <div className="flex items-center gap-2 text-red-600">
               <AlertCircle className="h-4 w-4" />
-              <span className="text-sm">Failed to load events</span>
+              <span className="text-sm">加载活动失败</span>
             </div>
           </div>
         </div>
@@ -429,9 +429,9 @@ export function CaseFeed({
               <EmptyMedia variant="icon">
                 <Clock className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No events yet</EmptyTitle>
+              <EmptyTitle>暂无活动</EmptyTitle>
               <EmptyDescription>
-                Events will appear here when changes are made to the case.
+                事件发生变更后，活动会显示在此处。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -450,7 +450,7 @@ export function CaseFeed({
             <div className="sticky top-0 z-10 -mt-2 bg-background py-2">
               <div className="flex items-center">
                 <div className="text-sm font-medium">
-                  {date.toLocaleDateString(undefined, {
+                  {date.toLocaleDateString("zh-CN", {
                     weekday: "long",
                     month: "long",
                     day: "numeric",

@@ -200,14 +200,12 @@ describe("CasePanelView entitlement-locked tabs", () => {
     mockEntitlements([])
     renderView()
 
-    const tasksTab = screen.getByRole("tab", { name: "Tasks" })
+    const tasksTab = screen.getByRole("tab", { name: "任务" })
     fireEvent.click(tasksTab)
 
     expect(screen.getByRole("dialog")).toBeInTheDocument()
-    expect(screen.getByText("Enterprise only")).toBeInTheDocument()
-    expect(
-      screen.getByText("Case tasks are only available on enterprise plans.")
-    ).toBeInTheDocument()
+    expect(screen.getByText("仅限企业版")).toBeInTheDocument()
+    expect(screen.getByText("事件任务仅适用于企业版套餐。")).toBeInTheDocument()
     // Blocked press: no navigation, panel stays on the default.
     expect(mockReplace).not.toHaveBeenCalled()
     expect(screen.getByTestId("panel-content")).toHaveTextContent("description")
@@ -236,7 +234,7 @@ describe("CasePanelView entitlement-locked tabs", () => {
     mockEntitlements([], true)
     renderView()
 
-    fireEvent.click(screen.getByRole("tab", { name: "Tasks" }))
+    fireEvent.click(screen.getByRole("tab", { name: "任务" }))
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     expect(mockReplace).not.toHaveBeenCalled()
@@ -246,10 +244,10 @@ describe("CasePanelView entitlement-locked tabs", () => {
     mockEntitlements([])
     renderView()
 
-    fireEvent.click(screen.getByRole("tab", { name: "Sub-cases" }))
+    fireEvent.click(screen.getByRole("tab", { name: "子事件" }))
 
     expect(
-      screen.getByText("Sub-cases are only available on enterprise plans.")
+      screen.getByText("子事件功能仅适用于企业版套餐。")
     ).toBeInTheDocument()
     expect(mockReplace).not.toHaveBeenCalled()
     expect(screen.getByTestId("panel-content")).toHaveTextContent("description")
@@ -268,7 +266,7 @@ describe("CasePanelView entitlement-locked tabs", () => {
     mockEntitlements(["case_addons"])
     renderView()
 
-    fireEvent.click(screen.getByRole("tab", { name: "Sub-cases" }))
+    fireEvent.click(screen.getByRole("tab", { name: "子事件" }))
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     expect(mockReplace).toHaveBeenCalledWith(
@@ -281,7 +279,7 @@ describe("CasePanelView entitlement-locked tabs", () => {
     mockEntitlements(["case_addons"])
     renderView()
 
-    fireEvent.click(screen.getByRole("tab", { name: "Tasks" }))
+    fireEvent.click(screen.getByRole("tab", { name: "任务" }))
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     expect(mockReplace).toHaveBeenCalledWith(

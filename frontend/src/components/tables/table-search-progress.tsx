@@ -10,18 +10,18 @@ import { useQuery } from "@/lib/query"
 function errorMessage(code: string) {
   switch (code) {
     case "CREDENTIAL_INVALID":
-      return "Check the AI provider credentials, then retry."
+      return "请检查 AI 提供商凭据后重试。"
     case "RATE_LIMITED":
-      return "The provider is busy. Retry in a moment."
+      return "提供商繁忙，请稍后重试。"
     case "TIMEOUT":
     case "UNAVAILABLE":
     case "PROVIDER_UNAVAILABLE":
-      return "The provider could not complete indexing. Retry in a moment."
+      return "提供商无法完成索引，请稍后重试。"
     case "CONFIGURATION_INVALID":
     case "NOT_CONFIGURED":
-      return "Check the AI provider configuration before retrying."
+      return "请检查 AI 提供商配置后重试。"
     default:
-      return "Indexing could not complete. Retry, or check the AI provider settings if it continues."
+      return "无法完成索引。请重试；若问题持续，请检查 AI 提供商设置。"
   }
 }
 
@@ -65,34 +65,30 @@ export function TableSearchProgress() {
       .map((item) => item.document_id) ?? []
   return (
     <div className="max-h-64 space-y-2 overflow-auto">
-      <p className="font-medium text-foreground">
-        Row progress · up to 20 rows per page
-      </p>
-      {progress.isPending && <p>Loading progress…</p>}
+      <p className="font-medium text-foreground">行处理进度 · 每页最多 20 行</p>
+      {progress.isPending && <p>正在加载进度…</p>}
       {progress.error && (
-        <p role="alert">
-          Progress could not be loaded. Reload the page to try again.
-        </p>
+        <p role="alert">无法加载进度，请重新加载页面后重试。</p>
       )}
       {progress.data?.items.map((item) => (
         <div key={item.document_id} className="border-t pt-2">
           <p className="truncate">
-            Row {item.row_id}: {item.state}
+            行 {item.row_id}: {item.state}
           </p>
           <p>
-            {item.sampled_embedded} embedded in a sample of{" "}
-            {item.sampled_chunks} chunks
-            {item.chunks_capped ? " (more chunks exist)" : ""}.{" "}
+            {item.sampled_embedded} 已生成嵌入，抽样范围为 {item.sampled_chunks}{" "}
+            个分块
+            {item.chunks_capped ? "（还有更多分块）" : ""}.{" "}
             {item.expected_chunks === null
-              ? "The total is still being discovered."
-              : `${item.expected_chunks} chunks total.`}
+              ? "仍在统计总数。"
+              : `共 ${item.expected_chunks} 个分块。`}
           </p>
           {item.error_code && (
             <p role="alert">{errorMessage(item.error_code)}</p>
           )}
         </div>
       ))}
-      {progress.data?.items.length === 0 && <p>No row progress to show yet.</p>}
+      {progress.data?.items.length === 0 && <p>暂无可显示的行处理进度。</p>}
       <div className="flex flex-wrap gap-2">
         {search.canUpdate && failedIds.length > 0 && (
           <Button
@@ -108,7 +104,7 @@ export function TableSearchProgress() {
             }
             onClick={() => search.retry.mutate(failedIds)}
           >
-            Retry failed rows on this page
+            重试此页失败的行
           </Button>
         )}
         {cursor && (
@@ -118,7 +114,7 @@ export function TableSearchProgress() {
             disabled={progress.isFetching}
             onClick={() => setPage({ generation })}
           >
-            First page
+            第一页
           </Button>
         )}
         {progress.data?.has_more && progress.data.next_cursor && (
@@ -133,7 +129,7 @@ export function TableSearchProgress() {
               })
             }
           >
-            Next progress page
+            下一页进度
           </Button>
         )}
       </div>

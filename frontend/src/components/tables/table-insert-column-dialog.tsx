@@ -61,9 +61,9 @@ const sanitizeColumnOptions = (options?: string[]) => {
 // Update schema for column creation
 const createInsertTableColumnSchema = z
   .object({
-    name: z.string().min(1, "Column name is required"),
+    name: z.string().min(1, "列名称不能为空"),
     type: z.enum(SqlTypeCreatableEnum),
-    options: z.array(z.string().min(1, "Option cannot be empty")).optional(),
+    options: z.array(z.string().min(1, "选项不能为空")).optional(),
   })
   .superRefine((column, ctx) => {
     if (isSelectableColumnType(column.type)) {
@@ -71,7 +71,7 @@ const createInsertTableColumnSchema = z
       if (!hasValidOptions) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please add at least one option",
+          message: "请至少添加一个选项",
           path: ["options"],
         })
       }
@@ -135,7 +135,7 @@ export function TableInsertColumnDialog({
           })
         } else if (apiError.status === 409) {
           form.setError("name", {
-            message: "A column with this name already exists",
+            message: "已存在同名列",
           })
         } else {
           form.setError("root", { message: error.message })
@@ -152,9 +152,9 @@ export function TableInsertColumnDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Create column</DialogTitle>
+          <DialogTitle>创建列</DialogTitle>
           <DialogDescription>
-            Add a new column to the {table.name} table.
+            添加新列到 {table.name} 数据表。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -168,7 +168,7 @@ export function TableInsertColumnDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Column name</FormLabel>
+                    <FormLabel>列名称</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -182,9 +182,9 @@ export function TableInsertColumnDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
-                      <span>Data type</span>
+                      <span>数据类型</span>
                       <span className="text-xs text-muted-foreground">
-                        (required)
+                        （必填）
                       </span>
                     </FormLabel>
                     <FormControl>
@@ -193,7 +193,7 @@ export function TableInsertColumnDialog({
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a type..." />
+                          <SelectValue placeholder={"选择类型…"} />
                         </SelectTrigger>
                         <SelectContent>
                           {SqlTypeCreatableEnum.map((type) => (
@@ -217,12 +217,12 @@ export function TableInsertColumnDialog({
                   name="options"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Options</FormLabel>
+                      <FormLabel>选项</FormLabel>
                       <FormControl>
                         <MultiTagCommandInput
                           value={field.value || []}
                           onChange={field.onChange}
-                          placeholder="Add allowed values..."
+                          placeholder={"添加允许的值…"}
                           allowCustomTags
                           disableSuggestions
                           className="w-full"
@@ -230,8 +230,7 @@ export function TableInsertColumnDialog({
                         />
                       </FormControl>
                       <FormDescription className="text-xs">
-                        Define the values users can choose from when inserting
-                        rows.
+                        定义用户插入行时可选择的值。
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -241,7 +240,7 @@ export function TableInsertColumnDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={insertColumnIsPending}>
-                Create column
+                创建列
               </Button>
             </DialogFooter>
           </form>

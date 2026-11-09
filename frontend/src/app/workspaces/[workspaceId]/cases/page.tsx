@@ -146,7 +146,7 @@ export default function CasesPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      document.title = "Cases"
+      document.title = "事件"
     }
   }, [])
 

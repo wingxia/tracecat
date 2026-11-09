@@ -281,7 +281,7 @@ export function useMentionSuggestions({
       if (items.length === 0) {
         return []
       }
-      return [{ section: "workflows", label: "Workflows", items }]
+      return [{ section: "workflows", label: "工作流", items }]
     }
     const items = (presets ?? [])
       .filter(
@@ -302,7 +302,7 @@ export function useMentionSuggestions({
     if (items.length === 0) {
       return []
     }
-    return [{ section: "agents", label: "Agents", items }]
+    return [{ section: "agents", label: "智能体", items }]
   }, [activeMention, activeState, presets, workflowItems])
 
   let isLoading = false

@@ -69,29 +69,29 @@ const createOAuthSchema = (clientSecretMaxLength: number) =>
     client_id: z
       .string()
       .trim()
-      .max(512, { message: "Client ID must be 512 characters or less" })
+      .max(512, { message: "客户端 ID 不能超过 512 个字符" })
       .optional(),
     client_secret: z
       .string()
       .trim()
       .max(clientSecretMaxLength, {
-        message: `Client secret must be ${clientSecretMaxLength} characters or less`,
+        message: `客户端密钥不能超过 ${clientSecretMaxLength} 个字符`,
       })
       .optional(),
     scopes: z.array(z.string().trim().min(1)).optional(),
     authorization_endpoint: z
       .string()
       .trim()
-      .url({ message: "Enter a valid HTTPS URL" })
+      .url({ message: "请输入有效的 HTTPS URL" })
       .refine((value) => value.toLowerCase().startsWith("https://"), {
-        message: "Authorization endpoint must use HTTPS",
+        message: "授权端点必须使用 HTTPS",
       }),
     token_endpoint: z
       .string()
       .trim()
-      .url({ message: "Enter a valid HTTPS URL" })
+      .url({ message: "请输入有效的 HTTPS URL" })
       .refine((value) => value.toLowerCase().startsWith("https://"), {
-        message: "Token endpoint must use HTTPS",
+        message: "令牌端点必须使用 HTTPS",
       }),
   })
 
@@ -286,33 +286,31 @@ export function ProviderConfigForm({
 
   const clientIdLabel =
     clientIdInput?.label ??
-    (isServiceAccountProvider
-      ? "Service account email (optional)"
-      : "Client ID")
+    (isServiceAccountProvider ? "服务账号邮箱（可选）" : "客户端 ID")
   const clientIdPlaceholder =
     clientIdInput?.placeholder ??
     (isServiceAccountProvider
       ? "service-account@project.iam.gserviceaccount.com"
-      : "Enter client ID")
+      : "输入客户端 ID")
   const clientIdDescription =
     clientIdInput?.description ??
     (isServiceAccountProvider
-      ? "Leave blank to use the service account email from the uploaded key."
-      : "The OAuth application's client identifier. Leave blank to remove stored credentials.")
+      ? "留空则使用上传密钥中的服务账号邮箱。"
+      : "OAuth 应用的客户端标识符，留空将移除已存储的凭据。")
 
   const clientSecretLabel =
     clientSecretInput?.label ??
-    (isServiceAccountProvider ? "Service account JSON key" : "Client secret")
+    (isServiceAccountProvider ? "服务账号 JSON 密钥" : "客户端密钥")
   const clientSecretPlaceholder =
     clientSecretInput?.placeholder ??
     (isServiceAccountProvider
-      ? "Drag & drop the JSON key (.json) or choose a file"
-      : "Enter client secret")
+      ? "拖放 JSON 密钥（.json）或选择文件"
+      : "输入客户端密钥")
   const clientSecretDescription =
     clientSecretInput?.description ??
     (isServiceAccountProvider
-      ? "Provide the JSON key downloaded from Google Cloud. Leave blank to keep the existing key."
-      : "Add or rotate the OAuth client secret. Submit an empty value to keep the existing secret unchanged.")
+      ? "提供从 Google Cloud 下载的 JSON 密钥，留空则保留现有密钥。"
+      : "添加或轮换 OAuth 客户端密钥，提交空值将保留现有密钥。")
   const hasExistingSecret =
     integration?.status !== undefined
       ? integration.status !== "not_configured"
@@ -332,7 +330,7 @@ export function ProviderConfigForm({
           className="flex flex-col gap-6"
         >
           <div className="space-y-4">
-            <h3 className="font-medium">Client credentials</h3>
+            <h3 className="font-medium">客户端凭据</h3>
             <div className="flex flex-col gap-4">
               <FormField
                 control={form.control}
@@ -426,7 +424,7 @@ export function ProviderConfigForm({
 
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-medium">Endpoints</h3>
+              <h3 className="font-medium">端点</h3>
               {(defaultAuthEndpoint.length > 0 ||
                 defaultTokenEndpoint.length > 0 ||
                 authEndpointValue.length > 0 ||
@@ -439,7 +437,7 @@ export function ProviderConfigForm({
                   onClick={handleResetEndpoints}
                   disabled={isAtDefaultEndpoints}
                 >
-                  Reset endpoints
+                  重置端点
                 </Button>
               )}
             </div>
@@ -450,16 +448,14 @@ export function ProviderConfigForm({
                   <AlertDescription className="text-xs">
                     {hasAuthHelp && (
                       <div>
-                        <div className="font-medium mb-1">
-                          Authorization endpoint:
-                        </div>
+                        <div className="font-medium mb-1">授权端点：</div>
                         {renderHelpContent(providerAuthHelp)}
                       </div>
                     )}
                     {hasAuthHelp && hasTokenHelp && <div className="mt-3" />}
                     {hasTokenHelp && (
                       <div>
-                        <div className="font-medium mb-1">Token endpoint:</div>
+                        <div className="font-medium mb-1">令牌端点：</div>
                         {renderHelpContent(providerTokenHelp)}
                       </div>
                     )}
@@ -471,7 +467,7 @@ export function ProviderConfigForm({
                 name="authorization_endpoint"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Authorization endpoint</FormLabel>
+                    <FormLabel>授权端点</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -481,8 +477,8 @@ export function ProviderConfigForm({
                     </FormControl>
                     <FormMessage />
                     <FormDescription className="text-xs">
-                      Initiates the OAuth consent flow with the provider. Keep
-                      the default unless a custom authorization URL is required.
+                      发起提供商的 OAuth 授权流程。除非需要自定义授权
+                      URL，否则保留默认值。
                     </FormDescription>
                   </FormItem>
                 )}
@@ -493,7 +489,7 @@ export function ProviderConfigForm({
                 name="token_endpoint"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Token endpoint</FormLabel>
+                    <FormLabel>令牌端点</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -503,8 +499,8 @@ export function ProviderConfigForm({
                     </FormControl>
                     <FormMessage />
                     <FormDescription className="text-xs">
-                      Exchanges authorization codes for tokens at the provider.
-                      Keep the default unless a different token URL is required.
+                      在提供商处将授权码交换为令牌。除非需要其他令牌
+                      URL，否则保留默认值。
                     </FormDescription>
                   </FormItem>
                 )}
@@ -513,12 +509,12 @@ export function ProviderConfigForm({
           </div>
 
           <div className="space-y-4">
-            <h3 className="font-medium">Scopes</h3>
+            <h3 className="font-medium">权限范围</h3>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-muted-foreground">
-                    Default scopes
+                    默认权限范围
                   </span>
                 </div>
                 {defaultScopesList.length ? (
@@ -535,7 +531,7 @@ export function ProviderConfigForm({
                   </div>
                 ) : (
                   <span className="text-xs text-muted-foreground">
-                    No default scopes provided.
+                    未提供默认权限范围。
                   </span>
                 )}
               </div>
@@ -546,7 +542,7 @@ export function ProviderConfigForm({
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-center justify-between gap-2">
-                      <FormLabel>OAuth scopes</FormLabel>
+                      <FormLabel>OAuth 权限范围</FormLabel>
                       {(defaultScopesList.length > 0 ||
                         scopesValue.length > 0) && (
                         <Button
@@ -557,7 +553,7 @@ export function ProviderConfigForm({
                           onClick={handleResetScopes}
                           disabled={isAtDefaultScopes}
                         >
-                          Reset scopes
+                          重置权限范围
                         </Button>
                       )}
                     </div>
@@ -568,12 +564,12 @@ export function ProviderConfigForm({
                         suggestions={defaultScopeSuggestions}
                         searchKeys={["label", "value"]}
                         allowCustomTags
-                        placeholder="Add scopes"
+                        placeholder={"添加权限范围"}
                       />
                     </FormControl>
                     <FormMessage />
                     <FormDescription className="text-xs">
-                      Configure the OAuth scopes for this integration.
+                      配置此集成的 OAuth 权限范围。
                     </FormDescription>
                   </FormItem>
                 )}
@@ -591,7 +587,7 @@ export function ProviderConfigForm({
                 disabled={updateIntegrationIsPending}
               >
                 {submitIcon ?? <Save className="h-4 w-4" />}
-                {submitLabel ?? "Save configuration"}
+                {submitLabel ?? "保存配置"}
               </Button>
               {additionalButtons}
             </div>

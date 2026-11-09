@@ -92,7 +92,7 @@ describe("AgentPresetEventLink", () => {
     render(<AgentPresetEventLink presetRef={PRESET_REF} />)
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument()
-    expect(screen.getByText("Deleted agent")).toBeInTheDocument()
+    expect(screen.getByText("已删除的智能体")).toBeInTheDocument()
     expect(screen.getByText("triage-agent")).toBeInTheDocument()
   })
 
@@ -100,7 +100,7 @@ describe("AgentPresetEventLink", () => {
     mockUseAgentPresets.mockReturnValue({ presets: undefined })
     render(<AgentPresetEventLink presetRef={PRESET_REF} />)
 
-    expect(screen.queryByText("Deleted agent")).not.toBeInTheDocument()
+    expect(screen.queryByText("已删除的智能体")).not.toBeInTheDocument()
     expect(screen.getByText("triage-agent")).toBeInTheDocument()
   })
 
@@ -115,7 +115,7 @@ describe("AgentPresetEventLink", () => {
       expect.objectContaining({ enabled: false })
     )
     expect(screen.queryByRole("link")).not.toBeInTheDocument()
-    expect(screen.queryByText("Deleted agent")).not.toBeInTheDocument()
+    expect(screen.queryByText("已删除的智能体")).not.toBeInTheDocument()
     expect(screen.getByText("triage-agent")).toBeInTheDocument()
   })
 
@@ -129,7 +129,7 @@ describe("AgentPresetEventLink", () => {
       expect.objectContaining({ enabled: false })
     )
     expect(screen.queryByRole("link")).not.toBeInTheDocument()
-    expect(screen.queryByText("Deleted agent")).not.toBeInTheDocument()
+    expect(screen.queryByText("已删除的智能体")).not.toBeInTheDocument()
     expect(screen.getByText("triage-agent")).toBeInTheDocument()
   })
 })

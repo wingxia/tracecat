@@ -10,27 +10,25 @@ export default function SecuritySettingsPage() {
         <div className="space-y-4">
           <div className="items-start space-y-3 text-left">
             <h2 className="text-2xl font-semibold tracking-tight">
-              Multi-factor authentication
+              多因素认证
             </h2>
             <p className="text-base text-muted-foreground">
-              Require members to verify with a hardware security key or passkey
-              at every sign-in.
+              要求成员每次登录都使用硬件安全密钥或通行密钥验证。
             </p>
           </div>
           <MfaPolicyCard
             scope="organization"
-            description="Applies to password, Google/OIDC, and SAML sign-in. Members without a key must register one at their next sign-in. You need a key registered in Settings > Security first."
+            description={
+              "适用于密码、Google/OIDC 和 SAML 登录。尚未注册密钥的成员须在下次登录时注册。你需要先在“设置 > 安全”中注册密钥。"
+            }
           />
         </div>
 
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              IP allowlist
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">IP 白名单</h2>
             <p className="text-base text-muted-foreground">
-              Restrict access to this organization to trusted IP addresses, such
-              as your VPN egress ranges.
+              仅允许可信 IP 地址访问此组织，例如 VPN 出口网段。
             </p>
           </div>
         </div>

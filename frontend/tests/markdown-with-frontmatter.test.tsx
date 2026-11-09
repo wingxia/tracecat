@@ -146,7 +146,7 @@ Runbook body.`}
     expect(screen.getByText("cases")).toBeInTheDocument()
     expect(screen.getByText(/"mode": "strict"/)).toBeInTheDocument()
     expect(screen.getByTestId("streamdown")).toHaveTextContent("Runbook body.")
-    expect(screen.getByText("Raw frontmatter")).toBeInTheDocument()
+    expect(screen.getByText("原始元数据")).toBeInTheDocument()
     expect(screen.queryByText("# Incident triage")).not.toBeInTheDocument()
   })
 
@@ -179,7 +179,7 @@ Body without a closing delimiter`}</MarkdownWithFrontmatter>
     expect(screen.getByTestId("streamdown").textContent).toBe(
       "---\nowner: Platform\n\nBody without a closing delimiter"
     )
-    expect(screen.queryByText("Raw frontmatter")).not.toBeInTheDocument()
+    expect(screen.queryByText("原始元数据")).not.toBeInTheDocument()
   })
 
   it("renders YAML-leading content as plain markdown when frontmatter parsing is disabled", () => {
@@ -194,7 +194,7 @@ Body`}</MarkdownWithFrontmatter>
     expect(screen.getByTestId("streamdown").textContent).toBe(
       "---\ntitle: Incident triage\n---\n\nBody"
     )
-    expect(screen.queryByText("Raw frontmatter")).not.toBeInTheDocument()
+    expect(screen.queryByText("原始元数据")).not.toBeInTheDocument()
   })
 
   it("rerenders when non-children props change", () => {

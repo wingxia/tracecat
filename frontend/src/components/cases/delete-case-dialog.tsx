@@ -27,21 +27,21 @@ export function DeleteCaseAlertDialog({
           setSelectedCase(null)
         }
       }}
-      title="Delete case"
+      title={"删除事件"}
       description={
         <>
-          Permanently delete{" "}
+          永久删除{" "}
           {selectedCase?.summary ? (
             <span className="font-medium text-foreground">
               {selectedCase.summary}
             </span>
           ) : (
-            "this case"
+            "此事件"
           )}
-          ? This cannot be undone.
+          吗？此操作无法撤销。
         </>
       }
-      identifier={{ label: "Case ID", value: shortId }}
+      identifier={{ label: "事件 ID", value: shortId }}
       confirmPhrase={shortId}
       isPending={deleteCaseIsPending}
       onConfirm={async () => {

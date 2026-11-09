@@ -46,7 +46,7 @@ export function validateGitSshUrl(
   if (!url.startsWith("git+ssh://")) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "URL must start with 'git+ssh://' protocol",
+      message: "URL 必须以“git+ssh://”协议开头",
     })
     return
   }
@@ -56,7 +56,7 @@ export function validateGitSshUrl(
   if (!protocolWithoutScheme.includes("@")) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "URL must include an SSH user (e.g., git@ or someuser@)",
+      message: "URL 必须包含 SSH 用户（如 git@ 或 someuser@）",
     })
     return
   }
@@ -67,7 +67,7 @@ export function validateGitSshUrl(
   if (firstSlashIndex === -1) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "URL must include a repository path",
+      message: "URL 必须包含仓库路径",
     })
     return
   }
@@ -78,7 +78,7 @@ export function validateGitSshUrl(
   if (!hostname) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Missing hostname",
+      message: "缺少主机名",
     })
     return
   }
@@ -90,7 +90,7 @@ export function validateGitSshUrl(
     if (!portPart) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Missing port number after ':'",
+        message: "“:”后缺少端口号",
       })
       return
     }
@@ -98,7 +98,7 @@ export function validateGitSshUrl(
     if (!/^\d+$/.test(portPart)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Port must be numeric",
+        message: "端口必须是数字",
       })
       return
     }
@@ -111,7 +111,7 @@ export function validateGitSshUrl(
   if (pathSegments.length < 2) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Repository path must have at least 2 segments (e.g., org/repo)",
+      message: "仓库路径至少需要两段（如 org/repo）",
     })
     return
   }
@@ -119,7 +119,7 @@ export function validateGitSshUrl(
   ctx.addIssue({
     code: z.ZodIssueCode.custom,
     message:
-      "Must be a valid Git SSH URL (e.g., git+ssh://<user>@github.com/org/repo.git)",
+      "必须是有效的 Git SSH URL（如 git+ssh://<user>@github.com/org/repo.git）",
   })
 }
 
@@ -132,26 +132,26 @@ export function getGitBranchNameError(name: string): string | null {
     return null
   }
   if (/[\s~^:?*[\\\x00-\x1f\x7f]/.test(name)) {
-    return "Branch names can't contain spaces or ~ ^ : ? * [ \\"
+    return "分支名称不能包含空格或 ~ ^ : ? * [ 以及反斜杠"
   }
   if (name.startsWith("refs/")) {
-    return "Leave out refs/ and type just the branch name."
+    return "省略 refs/，仅输入分支名称。"
   }
   if (name.includes("..") || name.includes("@{") || name === "@") {
-    return "Branch names can't contain .. or @{ or be @ alone."
+    return "分支名称不能包含 .. 或 @{，也不能仅为 @。"
   }
   if (name.startsWith("-")) {
-    return "Branch names can't start with -."
+    return "分支名称不能以 - 开头。"
   }
   if (name.startsWith("/") || name.endsWith("/") || name.includes("//")) {
-    return "Branch names can't start or end with / or contain //."
+    return "分支名称不能以 / 开头或结尾，也不能包含 //。"
   }
   const parts = name.split("/")
   if (
     name.endsWith(".") ||
     parts.some((part) => part.startsWith(".") || part.endsWith(".lock"))
   ) {
-    return "No part of a branch name can start with . or end with .lock or a final ."
+    return "分支名称的各段不能以 . 开头，也不能以 .lock 或 . 结尾。"
   }
   return null
 }

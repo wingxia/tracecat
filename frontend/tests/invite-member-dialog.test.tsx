@@ -252,7 +252,7 @@ function mockEntitlements(rbacAddons: boolean) {
 async function fillRequiredFields(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByPlaceholderText("user@example.com"), "a@b.com")
   await user.selectOptions(
-    screen.getByLabelText("Grant 1 role"),
+    screen.getByLabelText("授予第 1 项角色"),
     ORG_ADMIN_ROLE_ID
   )
 }
@@ -273,16 +273,19 @@ describe("InviteMemberDialog", () => {
 
     // Grant 1 defaults to org-wide: a workspace role there applies in every
     // workspace.
-    expect(optionsFor("Grant 1 role")).toContain(ORG_ADMIN_ROLE_ID)
-    expect(optionsFor("Grant 1 role")).toContain(WORKSPACE_EDITOR_ROLE_ID)
-    expect(optionsFor("Grant 1 role")).toContain(CUSTOM_ROLE_ID)
+    expect(optionsFor("授予第 1 项角色")).toContain(ORG_ADMIN_ROLE_ID)
+    expect(optionsFor("授予第 1 项角色")).toContain(WORKSPACE_EDITOR_ROLE_ID)
+    expect(optionsFor("授予第 1 项角色")).toContain(CUSTOM_ROLE_ID)
 
-    await user.click(screen.getByRole("button", { name: /Add grant/ }))
-    await user.selectOptions(screen.getByLabelText("Grant 2 scope"), "ws-a")
+    await user.click(screen.getByRole("button", { name: /添加授权/ }))
+    await user.selectOptions(
+      screen.getByLabelText("授予第 2 项权限范围"),
+      "ws-a"
+    )
 
-    expect(optionsFor("Grant 2 role")).toContain(WORKSPACE_EDITOR_ROLE_ID)
-    expect(optionsFor("Grant 2 role")).not.toContain(ORG_ADMIN_ROLE_ID)
-    expect(optionsFor("Grant 2 role")).toContain(CUSTOM_ROLE_ID)
+    expect(optionsFor("授予第 2 项角色")).toContain(WORKSPACE_EDITOR_ROLE_ID)
+    expect(optionsFor("授予第 2 项角色")).not.toContain(ORG_ADMIN_ROLE_ID)
+    expect(optionsFor("授予第 2 项角色")).toContain(CUSTOM_ROLE_ID)
   })
 
   it("submits an org-wide grant and a workspace grant in the request shape", async () => {
@@ -291,18 +294,21 @@ describe("InviteMemberDialog", () => {
 
     await user.type(screen.getByPlaceholderText("user@example.com"), "a@b.com")
     await user.selectOptions(
-      screen.getByLabelText("Grant 1 role"),
+      screen.getByLabelText("授予第 1 项角色"),
       ORG_ADMIN_ROLE_ID
     )
 
-    await user.click(screen.getByRole("button", { name: /Add grant/ }))
-    await user.selectOptions(screen.getByLabelText("Grant 2 scope"), "ws-a")
+    await user.click(screen.getByRole("button", { name: /添加授权/ }))
     await user.selectOptions(
-      screen.getByLabelText("Grant 2 role"),
+      screen.getByLabelText("授予第 2 项权限范围"),
+      "ws-a"
+    )
+    await user.selectOptions(
+      screen.getByLabelText("授予第 2 项角色"),
       WORKSPACE_EDITOR_ROLE_ID
     )
 
-    await user.click(screen.getByRole("button", { name: "Send invitation" }))
+    await user.click(screen.getByRole("button", { name: "发送邀请" }))
 
     await waitFor(() => {
       expect(createInvitation).toHaveBeenCalledWith({
@@ -320,10 +326,10 @@ describe("InviteMemberDialog", () => {
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
     await user.type(screen.getByPlaceholderText("user@example.com"), "a@b.com")
-    await user.click(screen.getByRole("button", { name: "Send invitation" }))
+    await user.click(screen.getByRole("button", { name: "发送邀请" }))
 
     await waitFor(() => {
-      expect(screen.getByText("Select a role")).toBeInTheDocument()
+      expect(screen.getByText("选择角色")).toBeInTheDocument()
     })
     expect(createInvitation).not.toHaveBeenCalled()
   })
@@ -334,21 +340,22 @@ describe("InviteMemberDialog", () => {
 
     await user.type(screen.getByPlaceholderText("user@example.com"), "a@b.com")
     await user.selectOptions(
-      screen.getByLabelText("Grant 1 role"),
+      screen.getByLabelText("授予第 1 项角色"),
       ORG_ADMIN_ROLE_ID
     )
-    await user.click(screen.getByRole("button", { name: /Add grant/ }))
-    await user.selectOptions(screen.getByLabelText("Grant 2 scope"), "org-wide")
+    await user.click(screen.getByRole("button", { name: /添加授权/ }))
     await user.selectOptions(
-      screen.getByLabelText("Grant 2 role"),
+      screen.getByLabelText("授予第 2 项权限范围"),
+      "org-wide"
+    )
+    await user.selectOptions(
+      screen.getByLabelText("授予第 2 项角色"),
       ORG_ADMIN_ROLE_ID
     )
-    await user.click(screen.getByRole("button", { name: "Send invitation" }))
+    await user.click(screen.getByRole("button", { name: "发送邀请" }))
 
     await waitFor(() => {
-      expect(
-        screen.getByText("This scope already has a grant")
-      ).toBeInTheDocument()
+      expect(screen.getByText("此范围已有授权")).toBeInTheDocument()
     })
     expect(createInvitation).not.toHaveBeenCalled()
   })
@@ -367,7 +374,7 @@ describe("InviteMemberDialog", () => {
     mockEntitlements(false)
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
-    expect(screen.queryByText("Groups")).not.toBeInTheDocument()
+    expect(screen.queryByText("用户组")).not.toBeInTheDocument()
     expect(mockUseRbacGroups).not.toHaveBeenCalled()
   })
 
@@ -379,7 +386,7 @@ describe("InviteMemberDialog", () => {
     })
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
-    expect(screen.queryByText("Groups")).not.toBeInTheDocument()
+    expect(screen.queryByText("用户组")).not.toBeInTheDocument()
     expect(mockUseRbacGroups).not.toHaveBeenCalled()
   })
 
@@ -387,7 +394,7 @@ describe("InviteMemberDialog", () => {
     mockUseScopeCheck.mockImplementation((scope) => scope !== "org:rbac:update")
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
-    expect(screen.queryByText("Groups")).not.toBeInTheDocument()
+    expect(screen.queryByText("用户组")).not.toBeInTheDocument()
     expect(mockUseRbacGroups).not.toHaveBeenCalled()
   })
 
@@ -395,8 +402,8 @@ describe("InviteMemberDialog", () => {
     const user = userEvent.setup()
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
-    const trigger = screen.getByRole("combobox", { name: "Groups" })
-    expect(trigger).toHaveTextContent("Select groups")
+    const trigger = screen.getByRole("combobox", { name: "用户组" })
+    expect(trigger).toHaveTextContent("选择用户组")
     await user.click(trigger)
 
     expect(
@@ -411,13 +418,13 @@ describe("InviteMemberDialog", () => {
     render(<InviteMemberDialog open={true} onOpenChange={() => {}} />)
 
     await fillRequiredFields(user)
-    const trigger = screen.getByRole("combobox", { name: "Groups" })
+    const trigger = screen.getByRole("combobox", { name: "用户组" })
     await user.click(trigger)
     await user.click(screen.getByRole("option", { name: "Engineering" }))
     await user.click(screen.getByRole("option", { name: "Security" }))
     expect(trigger).toHaveTextContent("EngineeringSecurity")
 
-    await user.click(screen.getByRole("button", { name: "Send invitation" }))
+    await user.click(screen.getByRole("button", { name: "发送邀请" }))
 
     await waitFor(() => {
       expect(createInvitation).toHaveBeenCalledWith({

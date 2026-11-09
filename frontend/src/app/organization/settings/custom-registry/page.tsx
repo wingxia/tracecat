@@ -18,12 +18,9 @@ export default function CustomRegistrySettingsPage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Repository
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">仓库</h2>
             <p className="text-base text-muted-foreground">
-              Connect the Git repository that hosts your organization's custom
-              actions.
+              连接托管组织自定义动作的 Git 仓库。
             </p>
           </div>
         </div>
@@ -33,8 +30,8 @@ export default function CustomRegistrySettingsPage() {
         ) : (
           <div className="flex flex-1 items-center justify-center pb-8">
             <EntitlementRequiredEmptyState
-              title="Upgrade required"
-              description="Custom registry Git settings are unavailable on your current plan."
+              title={"需要升级"}
+              description={"当前套餐不支持自定义注册表 Git 设置。"}
             >
               <Button
                 variant="link"
@@ -47,7 +44,7 @@ export default function CustomRegistrySettingsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Learn more <ArrowUpRight className="size-4" />
+                  了解更多 <ArrowUpRight className="size-4" />
                 </a>
               </Button>
             </EntitlementRequiredEmptyState>

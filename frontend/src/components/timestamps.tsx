@@ -45,7 +45,7 @@ function RowTimestamp({
           </span>
         </TooltipTrigger>
         <TooltipContent>
-          {label}: {date.toLocaleString()}
+          {label}: {date.toLocaleString("zh-CN")}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -53,18 +53,20 @@ function RowTimestamp({
 }
 
 export function CreatedAtTimestamp({ createdAt }: { createdAt: string }) {
-  return <RowTimestamp icon={ClockPlusIcon} label="Created" value={createdAt} />
+  return (
+    <RowTimestamp icon={ClockPlusIcon} label={"创建时间"} value={createdAt} />
+  )
 }
 
 export function UpdatedAtTimestamp({ updatedAt }: { updatedAt: string }) {
   return (
-    <RowTimestamp icon={PencilLineIcon} label="Updated" value={updatedAt} />
+    <RowTimestamp icon={PencilLineIcon} label={"更新时间"} value={updatedAt} />
   )
 }
 
 export function PublishedAtTimestamp({ publishedAt }: { publishedAt: string }) {
   return (
-    <RowTimestamp icon={LayersPlusIcon} label="Published" value={publishedAt} />
+    <RowTimestamp icon={LayersPlusIcon} label={"已发布"} value={publishedAt} />
   )
 }
 

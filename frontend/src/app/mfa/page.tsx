@@ -30,7 +30,7 @@ import {
 function errorMessage(error: unknown): string {
   return (
     getApiErrorDetail(error) ??
-    (error instanceof Error ? error.message : "Please try again.")
+    (error instanceof Error ? error.message : "请重试。")
   )
 }
 
@@ -49,7 +49,7 @@ function MfaContent() {
     queryFn: getMfaStatus,
     retry: false,
   })
-  const [keyName, setKeyName] = useState("Security key")
+  const [keyName, setKeyName] = useState("安全密钥")
   const [recoveryCode, setRecoveryCode] = useState("")
   const [useRecoveryCode, setUseRecoveryCode] = useState(false)
   const [recoveryCodes, setRecoveryCodes] = useState<string[] | null>(null)
@@ -96,10 +96,8 @@ function MfaContent() {
       <div className="flex size-full items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Couldn&apos;t load your sign-in status</CardTitle>
-            <CardDescription>
-              Check your connection and try again.
-            </CardDescription>
+            <CardTitle>无法加载登录状态</CardTitle>
+            <CardDescription>请检查网络连接后重试。</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-between text-sm">
             <Button
@@ -107,10 +105,10 @@ function MfaContent() {
               className="h-auto p-0"
               onClick={() => void refetch()}
             >
-              Try again
+              重试
             </Button>
             <Button variant="link" className="h-auto p-0" onClick={signOut}>
-              Sign out
+              退出登录
             </Button>
           </CardContent>
         </Card>
@@ -129,14 +127,12 @@ function MfaContent() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <KeyRound className="size-5" />
-            {enrolling
-              ? "Set up a security key"
-              : "Verify with your security key"}
+            {enrolling ? "设置安全密钥" : "使用安全密钥验证"}
           </CardTitle>
           <CardDescription>
             {enrolling
-              ? "Your organization requires a security key or passkey to sign in. Register a hardware key (such as a YubiKey) or a passkey from your browser or password manager."
-              : "Use the security key or passkey registered to your account to continue."}
+              ? "你的组织要求使用安全密钥或通行密钥登录。请注册硬件密钥（如 YubiKey），或使用浏览器、密码管理器中的通行密钥。"
+              : "使用已注册到账号的安全密钥或通行密钥继续。"}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -149,13 +145,13 @@ function MfaContent() {
             <>
               <RecoveryCodes codes={recoveryCodes} />
               <Button className="w-full" onClick={finish}>
-                Continue
+                继续
               </Button>
             </>
           ) : enrolling ? (
             <>
               <Input
-                aria-label="Security key name"
+                aria-label={"安全密钥名称"}
                 value={keyName}
                 maxLength={100}
                 onChange={(e) => setKeyName(e.target.value)}
@@ -174,7 +170,7 @@ function MfaContent() {
                   })
                 }
               >
-                {busy ? "Waiting for security key..." : "Register security key"}
+                {busy ? "正在等待安全密钥…" : "注册安全密钥"}
               </Button>
             </>
           ) : useRecoveryCode ? (
@@ -191,7 +187,7 @@ function MfaContent() {
               }}
             >
               <Input
-                aria-label="Recovery code"
+                aria-label={"恢复码"}
                 placeholder="xxxxx-xxxxx-xxxxx-xxxxx-xxxxx"
                 autoComplete="one-time-code"
                 value={recoveryCode}
@@ -202,7 +198,7 @@ function MfaContent() {
                 className="w-full"
                 disabled={busy || !recoveryCode.trim()}
               >
-                Verify recovery code
+                验证恢复码
               </Button>
             </form>
           ) : (
@@ -216,7 +212,7 @@ function MfaContent() {
                 })
               }
             >
-              {busy ? "Waiting for security key..." : "Use security key"}
+              {busy ? "正在等待安全密钥…" : "使用安全密钥"}
             </Button>
           )}
           {error && <p className="text-sm text-destructive">{error}</p>}
@@ -230,14 +226,14 @@ function MfaContent() {
                   setUseRecoveryCode(!useRecoveryCode)
                 }}
               >
-                {useRecoveryCode ? "Use security key" : "Use a recovery code"}
+                {useRecoveryCode ? "使用安全密钥" : "使用恢复码"}
               </Button>
             ) : (
               <span />
             )}
             {!recoveryCodes && (
               <Button variant="link" className="h-auto p-0" onClick={signOut}>
-                Sign out
+                退出登录
               </Button>
             )}
           </div>

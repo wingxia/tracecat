@@ -86,7 +86,7 @@ export function ActionMultiselect<T extends FieldValues>({
   const rows = useMemo(() => {
     const groups = new Map<string, Suggestion[]>()
     for (const suggestion of filteredSuggestions) {
-      const group = suggestion.group || "Other"
+      const group = suggestion.group || "其他"
       const existing = groups.get(group)
       if (existing) existing.push(suggestion)
       else groups.set(group, [suggestion])
@@ -185,13 +185,13 @@ export function ActionMultiselect<T extends FieldValues>({
       <div className="lg:col-span-2 space-y-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Available tools</h3>
-            <Badge variant="secondary">{selectedActions.length} selected</Badge>
+            <h3 className="text-lg font-semibold">可用工具</h3>
+            <Badge variant="secondary">{selectedActions.length} 已选择</Badge>
           </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Search actions..."
+              placeholder={"搜索动作…"}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10"
@@ -230,30 +230,30 @@ export function ActionMultiselect<T extends FieldValues>({
           {filteredSuggestions.length === 0 && searchQuery && (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
-                No actions found for "{searchQuery}"
+                未找到匹配此搜索的动作：“{searchQuery}"
               </p>
               <button
                 onClick={() => setSearchQuery("")}
                 className="text-blue-600 hover:text-blue-700 text-sm mt-2"
               >
-                Clear search
+                清除搜索
               </button>
             </div>
           )}
           {!suggestions?.length && (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No actions available</p>
+              <p className="text-muted-foreground">暂无可用动作</p>
             </div>
           )}
         </div>
       </div>
 
       <div className="lg:col-span-1 space-y-4">
-        <div className="text-sm font-medium">Selected Tools</div>
+        <div className="text-sm font-medium">已选工具</div>
         <div className="space-y-4">
           {selectedActions.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-8">
-              No actions selected yet
+              尚未选择动作
             </p>
           ) : (
             <div className="space-y-3">
@@ -290,8 +290,8 @@ export function ActionMultiselect<T extends FieldValues>({
               })}
               <div className="pt-3 border-t">
                 <p className="text-xs text-muted-foreground">
-                  {selectedActions.length} action
-                  {selectedActions.length !== 1 ? "s" : ""} selected
+                  {selectedActions.length} 个动作
+                  {selectedActions.length !== 1 ? "" : ""} 已选择
                 </p>
               </div>
             </div>

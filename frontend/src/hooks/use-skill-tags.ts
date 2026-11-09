@@ -61,14 +61,14 @@ export function useSkillTagCatalog(
       onSuccess: () => {
         invalidateSkillTagQueries(queryClient, workspaceId)
         toast({
-          title: "Created skill tag",
-          description: "Skill tag created successfully.",
+          title: "已创建技能标签",
+          description: "技能标签创建成功。",
         })
       },
       onError: (error) => {
         toast({
-          title: "Failed to create skill tag",
-          description: getApiErrorDetail(error) ?? "Please try again.",
+          title: "创建技能标签失败",
+          description: getApiErrorDetail(error) ?? "请重试。",
           variant: "destructive",
         })
       },
@@ -85,14 +85,14 @@ export function useSkillTagCatalog(
     onSuccess: () => {
       invalidateSkillTagQueries(queryClient, workspaceId)
       toast({
-        title: "Updated skill tag",
-        description: "Skill tag updated successfully.",
+        title: "已更新技能标签",
+        description: "技能标签更新成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to update skill tag",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "更新技能标签失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },
@@ -105,14 +105,14 @@ export function useSkillTagCatalog(
       onSuccess: () => {
         invalidateSkillTagQueries(queryClient, workspaceId)
         toast({
-          title: "Deleted skill tag",
-          description: "Skill tag deleted successfully.",
+          title: "已删除技能标签",
+          description: "技能标签删除成功。",
         })
       },
       onError: (error) => {
         toast({
-          title: "Failed to delete skill tag",
-          description: getApiErrorDetail(error) ?? "Please try again.",
+          title: "删除技能标签失败",
+          description: getApiErrorDetail(error) ?? "请重试。",
           variant: "destructive",
         })
       },
@@ -197,12 +197,12 @@ export function useSkillTagMutations(workspaceId: string) {
         workspaceId,
         variables.skillId
       )
-      toast({ title: "Tag added", description: "Skill tag added." })
+      toast({ title: "已添加标签", description: "已添加技能标签。" })
     },
     onError: (error) => {
       toast({
-        title: "Failed to add tag",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "添加标签失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },
@@ -221,12 +221,12 @@ export function useSkillTagMutations(workspaceId: string) {
         workspaceId,
         variables.skillId
       )
-      toast({ title: "Tag removed", description: "Skill tag removed." })
+      toast({ title: "已移除标签", description: "已移除技能标签。" })
     },
     onError: (error) => {
       toast({
-        title: "Failed to remove tag",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "移除标签失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },

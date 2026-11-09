@@ -51,7 +51,7 @@ export function SkillTagsView() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading tags: ${skillTagsError.message}`}
+        message={`加载标签出错：${skillTagsError.message}`}
       />
     )
   }
@@ -65,10 +65,8 @@ export function SkillTagsView() {
               <EmptyMedia variant="icon">
                 <TagIcon className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No tags defined yet</EmptyTitle>
-              <EmptyDescription>
-                Add your first tag using the button in the header
-              </EmptyDescription>
+              <EmptyTitle>尚未定义标签</EmptyTitle>
+              <EmptyDescription>使用顶部按钮添加第一个标签</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (

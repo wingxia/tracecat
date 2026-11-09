@@ -8,8 +8,7 @@ export function RecoveryCodes({ codes }: { codes: string[] }) {
   return (
     <div className="space-y-3 rounded-md border p-4">
       <p className="text-sm text-muted-foreground">
-        Save these recovery codes somewhere safe. Each one signs you in once if
-        you lose your security key. They won&apos;t be shown again.
+        请妥善保管这些恢复码。丢失安全密钥时，每个恢复码可用于登录一次。恢复码不会再次显示。
       </p>
       <div className="grid grid-cols-2 gap-2 font-mono text-xs">
         {codes.map((code) => (
@@ -21,11 +20,11 @@ export function RecoveryCodes({ codes }: { codes: string[] }) {
         size="sm"
         onClick={async () => {
           await navigator.clipboard.writeText(codes.join("\n"))
-          toast({ title: "Copied recovery codes" })
+          toast({ title: "已复制恢复码" })
         }}
       >
         <Copy className="mr-2 size-4" />
-        Copy codes
+        复制恢复码
       </Button>
     </div>
   )

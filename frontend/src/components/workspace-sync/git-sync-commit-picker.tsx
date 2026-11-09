@@ -54,7 +54,7 @@ export function GitSyncCommitPicker({
   if (hasError) {
     return (
       <p className="flex h-8 items-center text-xs text-destructive">
-        Could not load commits.
+        无法加载提交。
       </p>
     )
   }
@@ -62,7 +62,7 @@ export function GitSyncCommitPicker({
   if (!commits?.length && !commitSha) {
     return (
       <p className="flex h-8 items-center text-xs text-muted-foreground">
-        No commits yet.
+        暂无提交。
       </p>
     )
   }
@@ -78,17 +78,17 @@ export function GitSyncCommitPicker({
         {missingSha}
       </span>
       <span className="min-w-0 truncate text-muted-foreground">
-        Not in recent commits
+        不在最近提交中
       </span>
     </>
   ) : (
-    <span className="text-muted-foreground">Pick a commit</span>
+    <span className="text-muted-foreground">选择提交</span>
   )
-  let ariaLabel = "Commit"
+  let ariaLabel = "提交"
   if (selected) {
-    ariaLabel = `Commit ${selected.sha.substring(0, 7)}: ${getCommitTitle(selected)}`
+    ariaLabel = `提交 ${selected.sha.substring(0, 7)}: ${getCommitTitle(selected)}`
   } else if (missingSha) {
-    ariaLabel = `Commit ${missingSha}`
+    ariaLabel = `提交 ${missingSha}`
   }
 
   return (
@@ -132,10 +132,10 @@ export function GitSyncCommitPicker({
         className="w-[var(--radix-popover-trigger-width)] min-w-[min(20rem,calc(100vw-2rem))] max-w-[calc(100vw-2rem)] p-0"
       >
         <Command>
-          <CommandInput placeholder="Search by message, author, or SHA" />
+          <CommandInput placeholder={"按说明、作者或 SHA 搜索"} />
           <CommandList className="max-h-72">
             <CommandEmpty className="py-4 text-center text-xs text-muted-foreground">
-              No matching commits
+              没有匹配的提交
             </CommandEmpty>
             {list.map((commit, index) => (
               <CommandItem
@@ -188,11 +188,11 @@ function CommitRow({
       <span className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-muted-foreground">
         <span className="font-mono">{commit.sha.substring(0, 7)}</span>
         <span>·</span>
-        <span className="truncate">{commit.author || "Unknown author"}</span>
+        <span className="truncate">{commit.author || "未知作者"}</span>
         {commit.date && (
           <>
             <span>·</span>
-            <span title={new Date(commit.date).toLocaleString()}>
+            <span title={new Date(commit.date).toLocaleString("zh-CN")}>
               {getRelativeTime(new Date(commit.date))}
             </span>
           </>
@@ -229,7 +229,7 @@ function LatestTag() {
       variant="secondary"
       className="h-4 shrink-0 rounded px-1.5 text-[11px] font-medium"
     >
-      latest
+      最新
     </Badge>
   )
 }

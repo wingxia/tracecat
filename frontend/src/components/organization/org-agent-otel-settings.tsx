@@ -39,18 +39,18 @@ import { cn } from "@/lib/utils"
 const UNSET_OPTION = "default"
 
 const SIGNAL_LABELS: { key: keyof AgentOtelSignals; label: string }[] = [
-  { key: "traces", label: "Traces" },
-  { key: "metrics", label: "Metrics" },
-  { key: "logs", label: "Logs" },
+  { key: "traces", label: "追踪" },
+  { key: "metrics", label: "指标" },
+  { key: "logs", label: "日志" },
 ]
 
 const PRIVACY_FLAG_LABELS: { key: AgentOtelPrivacyFlagKey; label: string }[] = [
-  { key: "metricsIncludeSessionId", label: "Include session ID in metrics" },
-  { key: "metricsIncludeVersion", label: "Include version in metrics" },
-  { key: "metricsIncludeAccountUuid", label: "Include account ID in metrics" },
-  { key: "logUserPrompts", label: "Log user prompts" },
-  { key: "logToolDetails", label: "Log tool details" },
-  { key: "logToolContent", label: "Log tool content" },
+  { key: "metricsIncludeSessionId", label: "在指标中包含会话 ID" },
+  { key: "metricsIncludeVersion", label: "在指标中包含版本" },
+  { key: "metricsIncludeAccountUuid", label: "在指标中包含账号 ID" },
+  { key: "logUserPrompts", label: "记录用户提示词" },
+  { key: "logToolDetails", label: "记录工具详情" },
+  { key: "logToolContent", label: "记录工具内容" },
 ]
 
 /** A structured, write-only collector header row. */
@@ -235,11 +235,11 @@ export function OrgAgentOtelSettings() {
 
   async function handleSave() {
     if (formIssues.length > 0) {
-      toast({ title: "Invalid environment", description: formIssues[0] })
+      toast({ title: "环境无效", description: formIssues[0] })
       return
     }
     if (headerIssues.length > 0) {
-      toast({ title: "Invalid headers", description: headerIssues[0] })
+      toast({ title: "请求头无效", description: headerIssues[0] })
       return
     }
 
@@ -274,26 +274,26 @@ export function OrgAgentOtelSettings() {
       {settingsLoadFailed && (
         <AlertNotification
           level="error"
-          message="Agent telemetry settings could not be loaded. Editing is disabled to protect the saved configuration."
+          message={"无法加载智能体遥测设置。为保护已保存的配置，已禁用编辑。"}
           className="m-0"
         />
       )}
       {canUpdateSettings === false && !settingsLoadFailed && (
         <AlertNotification
-          message="You can view these settings, but you do not have permission to update them."
+          message={"你可以查看这些设置，但没有更新权限。"}
           className="m-0"
         />
       )}
 
       <div className="flex flex-row items-center justify-between rounded-lg border p-4">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium">Enable agent telemetry</p>
+          <p className="text-sm font-medium">启用智能体遥测</p>
           <p className="text-xs text-muted-foreground">
-            When off, no OTel env vars are passed to agent runs.
+            关闭时，不向智能体运行传入 OTel 环境变量。
           </p>
         </div>
         <Switch
-          aria-label="Enable agent telemetry"
+          aria-label={"启用智能体遥测"}
           checked={enabled}
           onCheckedChange={handleEnabledChange}
           disabled={editingDisabled}
@@ -308,15 +308,15 @@ export function OrgAgentOtelSettings() {
         )}
       >
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold tracking-tight">Connection</h3>
+          <h3 className="text-lg font-semibold tracking-tight">连接</h3>
           <p className="text-sm text-muted-foreground">
-            Every agent run in this organization exports to this collector.
+            此组织中的每次智能体运行都会向此收集器导出数据。
           </p>
         </div>
         <div className="space-y-4 rounded-lg border p-4">
           <div className="space-y-1.5">
             <Label htmlFor="otel-endpoint" className="text-xs">
-              Collector endpoint
+              收集器端点
             </Label>
             <Input
               id="otel-endpoint"
@@ -331,7 +331,7 @@ export function OrgAgentOtelSettings() {
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="otel-metric-interval" className="text-xs">
-                Metric export interval (ms)
+                指标导出间隔（毫秒）
               </Label>
               <Input
                 id="otel-metric-interval"
@@ -350,7 +350,7 @@ export function OrgAgentOtelSettings() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="otel-logs-interval" className="text-xs">
-                Logs export interval (ms)
+                日志导出间隔（毫秒）
               </Label>
               <Input
                 id="otel-logs-interval"
@@ -369,7 +369,7 @@ export function OrgAgentOtelSettings() {
 
           <div className="space-y-1.5">
             <Label htmlFor="otel-temporality" className="text-xs">
-              Metrics temporality
+              指标时间聚合方式
             </Label>
             <Select
               value={form.temporality || UNSET_OPTION}
@@ -380,15 +380,15 @@ export function OrgAgentOtelSettings() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={UNSET_OPTION}>Default</SelectItem>
-                <SelectItem value="delta">Delta</SelectItem>
-                <SelectItem value="cumulative">Cumulative</SelectItem>
+                <SelectItem value={UNSET_OPTION}>默认</SelectItem>
+                <SelectItem value="delta">增量</SelectItem>
+                <SelectItem value="cumulative">累计</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs">Signals</Label>
+            <Label className="text-xs">信号</Label>
             <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-6">
               {SIGNAL_LABELS.map(({ key, label }) => (
                 <div key={key} className="flex items-center gap-2">
@@ -415,11 +415,9 @@ export function OrgAgentOtelSettings() {
           )}
           <div className="space-y-3 border-t pt-4">
             <div className="space-y-1">
-              <p className="text-sm font-medium">Headers</p>
+              <p className="text-sm font-medium">请求头</p>
               <p className="text-xs text-muted-foreground">
-                Encrypted, write-only collector headers. Saved values are not
-                shown again, and saving new headers replaces all previously
-                saved headers.
+                收集器请求头以加密、只写方式保存。保存后不再显示，保存新请求头会替换所有旧请求头。
               </p>
             </div>
             {headerRows.length > 0 && (
@@ -432,7 +430,7 @@ export function OrgAgentOtelSettings() {
                         handleHeaderRowChange(row.id, { name: e.target.value })
                       }
                       disabled={fieldsDisabled}
-                      placeholder="Header name"
+                      placeholder={"请求头名称"}
                       className="text-xs"
                     />
                     <Input
@@ -442,7 +440,7 @@ export function OrgAgentOtelSettings() {
                         handleHeaderRowChange(row.id, { value: e.target.value })
                       }
                       disabled={fieldsDisabled}
-                      placeholder="Header value"
+                      placeholder={"请求头值"}
                       className="text-xs"
                     />
                     <Button
@@ -451,7 +449,7 @@ export function OrgAgentOtelSettings() {
                       size="icon"
                       onClick={() => handleRemoveHeaderRow(row.id)}
                       disabled={fieldsDisabled}
-                      aria-label="Remove header"
+                      aria-label={"移除请求头"}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -472,7 +470,7 @@ export function OrgAgentOtelSettings() {
                 onClick={handleAddHeaderRow}
                 disabled={fieldsDisabled}
               >
-                Add header
+                添加请求头
               </Button>
               <Button
                 type="button"
@@ -482,12 +480,12 @@ export function OrgAgentOtelSettings() {
                 disabled={fieldsDisabled || clearSavedHeaders}
                 className="text-destructive hover:text-destructive"
               >
-                Clear saved headers
+                清除已保存的请求头
               </Button>
             </div>
             {clearSavedHeaders && (
               <p className="text-xs text-muted-foreground">
-                Saved headers will be cleared when you save.
+                保存时将清除已有请求头。
               </p>
             )}
           </div>
@@ -502,17 +500,14 @@ export function OrgAgentOtelSettings() {
         )}
       >
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold tracking-tight">
-            Exported data
-          </h3>
+          <h3 className="text-lg font-semibold tracking-tight">导出数据</h3>
           <p className="text-sm text-muted-foreground">
-            Prompt and tool content stay out of exported telemetry unless
-            enabled here.
+            除非在此启用，否则导出的遥测数据不会包含提示词和工具内容。
           </p>
         </div>
         <div className="space-y-4 rounded-lg border p-4">
           <div className="space-y-3">
-            <p className="text-sm font-medium">Privacy and cardinality</p>
+            <p className="text-sm font-medium">隐私与基数</p>
             <div className="grid gap-4 sm:grid-cols-2">
               {PRIVACY_FLAG_LABELS.map(({ key, label }) => (
                 <div key={key} className="flex items-center gap-2">
@@ -536,9 +531,9 @@ export function OrgAgentOtelSettings() {
           </div>
           <div className="space-y-3 border-t pt-4">
             <div className="space-y-1">
-              <p className="text-sm font-medium">Resource attributes</p>
+              <p className="text-sm font-medium">资源属性</p>
               <p className="text-xs text-muted-foreground">
-                Attached to every exported signal, for example service.name.
+                附加到每个导出信号上的属性，例如 service.name。
               </p>
             </div>
             {form.resourceAttributes.length > 0 && (
@@ -551,7 +546,7 @@ export function OrgAgentOtelSettings() {
                         handleAttributeChange(row.id, { name: e.target.value })
                       }
                       disabled={fieldsDisabled}
-                      placeholder="Attribute name"
+                      placeholder={"属性名称"}
                       className="text-xs"
                     />
                     <Input
@@ -560,7 +555,7 @@ export function OrgAgentOtelSettings() {
                         handleAttributeChange(row.id, { value: e.target.value })
                       }
                       disabled={fieldsDisabled}
-                      placeholder="Attribute value"
+                      placeholder={"属性值"}
                       className="text-xs"
                     />
                     <Button
@@ -569,7 +564,7 @@ export function OrgAgentOtelSettings() {
                       size="icon"
                       onClick={() => handleRemoveAttribute(row.id)}
                       disabled={fieldsDisabled}
-                      aria-label="Remove attribute"
+                      aria-label={"移除属性"}
                     >
                       <Trash2 className="size-4" />
                     </Button>
@@ -584,7 +579,7 @@ export function OrgAgentOtelSettings() {
               onClick={handleAddAttribute}
               disabled={fieldsDisabled}
             >
-              Add attribute
+              添加属性
             </Button>
           </div>
         </div>
@@ -597,10 +592,10 @@ export function OrgAgentOtelSettings() {
           onClick={handleReset}
           disabled={editingDisabled || !dirty}
         >
-          Reset
+          重置
         </Button>
         <Button type="button" onClick={handleSave} disabled={saveDisabled}>
-          {updateAgentOtelSettingsIsPending ? "Saving..." : "Save config"}
+          {updateAgentOtelSettingsIsPending ? "保存中…" : "保存配置"}
         </Button>
       </div>
     </section>

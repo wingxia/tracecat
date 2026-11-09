@@ -2,6 +2,7 @@
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { format, formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   Check,
   CircleCheck,
@@ -69,7 +70,10 @@ function getRelativeDateLabel(dateValue: string): string {
   if (Number.isNaN(timestamp)) {
     return "-"
   }
-  return formatDistanceToNow(new Date(dateValue), { addSuffix: true })
+  return formatDistanceToNow(new Date(dateValue), {
+    locale: zhCN,
+    addSuffix: true,
+  })
 }
 
 export function WorkflowRunItem({
@@ -130,7 +134,7 @@ export function WorkflowRunItem({
         }}
         role="checkbox"
         aria-checked={checked}
-        aria-label={`Select run ${run.id}`}
+        aria-label={`选择运行 ${run.id}`}
       >
         <span
           className={cn(
@@ -153,7 +157,7 @@ export function WorkflowRunItem({
               <TooltipTrigger asChild>
                 <div className="flex min-w-0 items-center gap-2">
                   <span className="truncate text-xs font-medium">
-                    {run.workflow_title ?? "Unknown workflow"}
+                    {run.workflow_title ?? "未知工作流"}
                   </span>
                   {run.workflow_alias ? (
                     <span className="truncate text-[10px] text-muted-foreground">
@@ -163,13 +167,13 @@ export function WorkflowRunItem({
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <span>Workflow ID: {workflowId}</span>
+                <span>工作流 ID： {workflowId}</span>
               </TooltipContent>
             </Tooltip>
           ) : (
             <div className="flex min-w-0 items-center gap-2">
               <span className="truncate text-xs font-medium">
-                {run.workflow_title ?? "Unknown workflow"}
+                {run.workflow_title ?? "未知工作流"}
               </span>
               {run.workflow_alias ? (
                 <span className="truncate text-[10px] text-muted-foreground">
@@ -192,7 +196,8 @@ export function WorkflowRunItem({
               </Badge>
             </TooltipTrigger>
             <TooltipContent>
-              Started {format(new Date(run.start_time), "PPpp")}
+              开始时间{" "}
+              {format(new Date(run.start_time), "PPpp", { locale: zhCN })}
             </TooltipContent>
           </Tooltip>
           {run.close_time ? (
@@ -207,7 +212,8 @@ export function WorkflowRunItem({
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
-                Ended {format(new Date(run.close_time), "PPpp")}
+                结束时间{" "}
+                {format(new Date(run.close_time), "PPpp", { locale: zhCN })}
               </TooltipContent>
             </Tooltip>
           ) : (
@@ -216,7 +222,7 @@ export function WorkflowRunItem({
               className="h-5 px-2 text-[10px] font-normal"
             >
               <CircleDot className="mr-1 size-3" />
-              Open
+              打开
             </Badge>
           )}
         </div>
@@ -229,7 +235,7 @@ export function WorkflowRunItem({
             className="size-7 p-0 text-muted-foreground opacity-0 transition-opacity group-hover/item:opacity-100 data-[state=open]:opacity-100"
             onClick={(event) => event.stopPropagation()}
           >
-            <span className="sr-only">Open run actions</span>
+            <span className="sr-only">打开运行操作</span>
             <DotsHorizontalIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -242,7 +248,7 @@ export function WorkflowRunItem({
                   event.stopPropagation()
                 }}
               >
-                View workflow
+                查看工作流
               </Link>
             </DropdownMenuItem>
           ) : null}
@@ -254,7 +260,7 @@ export function WorkflowRunItem({
                 onCancel(run.id)
               }}
             >
-              Cancel
+              取消
             </DropdownMenuItem>
           ) : null}
           {isRunning ? (
@@ -265,7 +271,7 @@ export function WorkflowRunItem({
                 setTerminateConfirmOpen(true)
               }}
             >
-              Terminate
+              终止
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuSeparator />
@@ -276,7 +282,7 @@ export function WorkflowRunItem({
               onReset(run.id)
             }}
           >
-            Reset
+            重置
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -287,10 +293,9 @@ export function WorkflowRunItem({
       >
         <AlertDialogContent onClick={(event) => event.stopPropagation()}>
           <AlertDialogHeader>
-            <AlertDialogTitle>Terminate workflow run</AlertDialogTitle>
+            <AlertDialogTitle>终止工作流运行</AlertDialogTitle>
             <AlertDialogDescription>
-              This will immediately terminate the run. This action cannot be
-              undone.
+              此操作会立即终止运行，且无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -300,7 +305,7 @@ export function WorkflowRunItem({
                 setTerminateConfirmOpen(false)
               }}
             >
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -310,7 +315,7 @@ export function WorkflowRunItem({
                 onTerminate(run.id)
               }}
             >
-              Terminate
+              终止
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

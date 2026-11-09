@@ -63,10 +63,10 @@ const createSSHKeySchema = z.object({
     .transform((val) => val || "default"), // "default" if null or empty
   private_key: z
     .string()
-    .min(1, "SSH private key is required")
+    .min(1, "SSH 私钥不能为空")
     .refine(
       (key) => sshKeyRegex.test(key),
-      "Invalid SSH private key format. Must be in PEM format with proper header and footer."
+      "SSH 私钥格式无效，必须使用包含正确头尾标记的 PEM 格式。"
     ),
 })
 type CreateSSHKeyForm = z.infer<typeof createSSHKeySchema>
@@ -76,9 +76,9 @@ export function CreateSSHKeyDialog({
   className,
   handler,
   fieldConfig,
-  title = "Create SSH key",
-  description = "Create a new SSH key that can be used to authenticate into your private actions registry.",
-  submitLabel = "Create SSH key",
+  title = "创建 SSH 密钥",
+  description = "创建用于访问私有动作注册表的新 SSH 密钥。",
+  submitLabel = "创建 SSH 密钥",
   open,
   onOpenChange,
 }: CreateSSHKeyDialogProps) {
@@ -123,8 +123,8 @@ export function CreateSSHKeyDialog({
   const onValidationFailed = () => {
     console.error("Form validation failed")
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while adding the new secret.",
+      title: "表单校验失败",
+      description: "添加新密钥时发生校验错误。",
     })
   }
   return (
@@ -149,11 +149,11 @@ export function CreateSSHKeyDialog({
                 name="name"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder="Name (snake case)"
+                        placeholder={"名称（蛇形命名）"}
                         disabled={fieldConfig?.name?.disabled}
                         {...register("name")}
                       />
@@ -168,14 +168,14 @@ export function CreateSSHKeyDialog({
                 name="description"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormDescription className="text-sm">
-                      A description for this secret.
+                      此密钥的描述。
                     </FormDescription>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder="Description"
+                        placeholder={"描述"}
                         disabled={fieldConfig?.description?.disabled}
                         {...register("description")}
                       />
@@ -190,14 +190,14 @@ export function CreateSSHKeyDialog({
                 name="environment"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Environment</FormLabel>
+                    <FormLabel className="text-sm">环境</FormLabel>
                     <FormDescription className="text-sm">
-                      The workflow&apos;s target execution environment.
+                      工作流的目标执行环境。
                     </FormDescription>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder='Default environment: "default"'
+                        placeholder={"默认环境：“default”"}
                         disabled={fieldConfig?.environment?.disabled}
                         {...register("environment")}
                       />

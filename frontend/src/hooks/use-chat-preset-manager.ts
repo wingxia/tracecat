@@ -173,7 +173,7 @@ export function useChatPresetManager({
       })
       console.error("Failed to update chat preset:", error)
       toast({
-        title: "Failed to update preset",
+        title: "更新预设失败",
         description: parseChatError(error),
         variant: "destructive",
       })
@@ -211,24 +211,24 @@ export function useChatPresetManager({
       })
       console.error("Failed to update chat preset version:", error)
       toast({
-        title: "Failed to update version",
+        title: "更新版本失败",
         description: parseChatError(error),
         variant: "destructive",
       })
     }
   }
 
-  const presetMenuLabel = selectedPreset?.name ?? "No preset"
+  const presetMenuLabel = selectedPreset?.name ?? "无预设"
   const presetMenuDisabled = !enabled || chatLoading || isUpdatingChat
   const showPresetSpinner =
     presetsIsLoading || isUpdatingChat || chatLoading || selectedPresetLoading
   const presetVersionMenuLabel = selectedPresetVersionMeta
     ? selectedPresetVersionMeta.id === currentPresetVersion?.id
-      ? `Current (v${selectedPresetVersionMeta.version})`
-      : `Pinned v${selectedPresetVersionMeta.version}`
+      ? `当前（v${selectedPresetVersionMeta.version}）`
+      : `固定版本 v${selectedPresetVersionMeta.version}`
     : currentPresetVersion
-      ? `Current (v${currentPresetVersion.version})`
-      : "Current"
+      ? `当前（v${currentPresetVersion.version}）`
+      : "当前"
   const versionMenuDisabled =
     !enabled ||
     !effectivePresetId ||
@@ -246,7 +246,7 @@ export function useChatPresetManager({
   const selectedPresetConfigError = effectivePresetVersionId
     ? (selectedPresetVersionError ??
       (!selectedPresetVersionIsLoading && !selectedPresetVersion
-        ? new Error("Failed to load pinned preset version.")
+        ? new Error("加载固定预设版本失败。")
         : null))
     : null
 

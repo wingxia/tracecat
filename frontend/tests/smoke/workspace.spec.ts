@@ -27,14 +27,14 @@ test.describe("workspace first run", () => {
     await page.getByRole("link", { name: "Workflows" }).click()
     await page.waitForURL(/\/workspaces\/[^/]+\/workflows(\/|$|\?)/)
 
-    await page.getByRole("button", { name: "Create", exact: true }).click()
+    await page.getByRole("button", { name: "创建", exact: true }).click()
     await page
       .getByRole("menuitem")
       .filter({ hasText: "Start from scratch" })
       .click()
 
     await page.waitForURL(/\/workspaces\/[^/]+\/workflows\/[^/]+$/)
-    await expect(page.getByText("Workflow trigger")).toBeVisible()
-    await expect(page.getByRole("button", { name: "Publish" })).toBeVisible()
+    await expect(page.getByText("工作流触发器")).toBeVisible()
+    await expect(page.getByRole("button", { name: "发布" })).toBeVisible()
   })
 })

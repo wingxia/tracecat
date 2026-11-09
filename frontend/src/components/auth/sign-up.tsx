@@ -115,14 +115,12 @@ export function SignUp({
         <div className="flex w-full flex-1 flex-col justify-center gap-2 px-8 sm:max-w-md">
           <CardHeader className="items-center space-y-2 text-center">
             <Image src={TracecatIcon} alt="Tracecat" className="mb-8 size-16" />
-            <CardTitle className="text-2xl">Sign up unavailable</CardTitle>
-            <CardDescription>
-              Password sign-up is disabled. Continue with sign in.
-            </CardDescription>
+            <CardTitle className="text-2xl">暂不支持注册</CardTitle>
+            <CardDescription>已禁用密码注册，请使用登录入口。</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
-              <Link href={signInPath}>Back to sign in</Link>
+              <Link href={signInPath}>返回登录</Link>
             </Button>
           </CardContent>
         </div>
@@ -140,19 +138,17 @@ export function SignUp({
       <div className="flex w-full flex-1 flex-col justify-center gap-2 px-8 sm:max-w-md">
         <CardHeader className="items-center space-y-2 text-center">
           <Image src={TracecatIcon} alt="Tracecat" className="mb-8 size-16" />
-          <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>
-            Enter your email below to create an account
-          </CardDescription>
+          <CardTitle className="text-2xl">创建账号</CardTitle>
+          <CardDescription>输入邮箱以创建账号</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
             <BasicRegistrationForm returnUrl={returnUrl} />
           </div>
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            已有账号？{" "}
             <Link href={signInPath} className="underline">
-              Sign in
+              登录
             </Link>
           </div>
         </CardContent>
@@ -162,10 +158,8 @@ export function SignUp({
 }
 
 const basicRegistrationSchema = z.object({
-  email: z.string().email().min(3, { message: "Required" }),
-  password: z
-    .string()
-    .min(12, "Password needs to be at least 12 characters long"),
+  email: z.string().email().min(3, { message: "必填" }),
+  password: z.string().min(12, "密码至少需要 12 个字符"),
 })
 type BasicLoginForm = z.infer<typeof basicRegistrationSchema>
 
@@ -240,7 +234,7 @@ export function BasicRegistrationForm({
           switch (apiError.body.detail) {
             case "REGISTER_USER_ALREADY_EXISTS":
               form.setError("email", {
-                message: "User already exists",
+                message: "用户已存在",
               })
               break
             default:
@@ -272,7 +266,7 @@ export function BasicRegistrationForm({
           } else {
             // Handle RequestValidationError case
             form.setError("email", {
-              message: detail[0].msg || "Unknown error",
+              message: detail[0].msg || "未知错误",
             })
           }
         }
@@ -295,7 +289,7 @@ export function BasicRegistrationForm({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-xs">Email</FormLabel>
+                    <FormLabel className="text-xs">邮箱</FormLabel>
                     <FormControl>
                       <Input placeholder="user@company.com" {...field} />
                     </FormControl>
@@ -311,7 +305,7 @@ export function BasicRegistrationForm({
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs">Password</FormLabel>
+                      <FormLabel className="text-xs">密码</FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -330,7 +324,7 @@ export function BasicRegistrationForm({
             {isLoading && (
               <Icons.spinner className="mr-2 size-4 animate-spin" />
             )}
-            Create account
+            创建账号
           </Button>
         </div>
       </form>

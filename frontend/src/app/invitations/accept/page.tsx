@@ -41,7 +41,7 @@ function AcceptInvitationContent() {
     queryKey: ["invitation", token],
     queryFn: async () => {
       if (!token) {
-        throw new Error("No invitation token provided")
+        throw new Error("未提供邀请令牌")
       }
       return await invitationsGetInvitationByToken({ token })
     },
@@ -53,7 +53,7 @@ function AcceptInvitationContent() {
   const acceptMutation = useMutation({
     mutationFn: async () => {
       if (!token) {
-        throw new Error("No invitation token")
+        throw new Error("缺少邀请令牌")
       }
       return await invitationsAcceptInvitation({
         requestBody: { token },
@@ -62,14 +62,14 @@ function AcceptInvitationContent() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["auth"] })
       toast({
-        title: "Invitation accepted",
-        description: `You've joined ${invitation?.organization_name}`,
+        title: "已接受邀请",
+        description: `你已加入 ${invitation?.organization_name}`,
       })
       router.push("/workspaces")
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to accept invitation",
+        title: "接受邀请失败",
         description: error.message,
         variant: "destructive",
       })
@@ -82,15 +82,12 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <AlertCircle className="mb-4 size-12 text-destructive" />
-          <CardTitle>Invalid invitation</CardTitle>
-          <CardDescription>
-            No invitation token was provided. Please check the link and try
-            again.
-          </CardDescription>
+          <CardTitle>邀请无效</CardTitle>
+          <CardDescription>未提供邀请令牌，请检查链接后重试。</CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
           <Button asChild variant="outline">
-            <Link href="/">Go to home</Link>
+            <Link href="/">前往首页</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -108,15 +105,14 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <AlertCircle className="mb-4 size-12 text-destructive" />
-          <CardTitle>Invitation not found</CardTitle>
+          <CardTitle>未找到邀请</CardTitle>
           <CardDescription>
-            This invitation may have expired or been revoked. Please contact the
-            organization administrator for a new invitation.
+            此邀请可能已过期或被撤销，请联系组织管理员获取新邀请。
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
           <Button asChild variant="outline">
-            <Link href="/">Go to home</Link>
+            <Link href="/">前往首页</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -129,14 +125,12 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <CheckCircle2 className="mb-4 size-12 text-green-500" />
-          <CardTitle>Invitation already accepted</CardTitle>
-          <CardDescription>
-            This invitation has already been accepted.
-          </CardDescription>
+          <CardTitle>邀请已接受</CardTitle>
+          <CardDescription>此邀请已被接受。</CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
           <Button asChild>
-            <Link href="/workspaces">Go to workspaces</Link>
+            <Link href="/workspaces">前往工作空间</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -149,15 +143,14 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <AlertCircle className="mb-4 size-12 text-destructive" />
-          <CardTitle>Invitation revoked</CardTitle>
+          <CardTitle>邀请已撤销</CardTitle>
           <CardDescription>
-            This invitation has been revoked. Please contact the organization
-            administrator for a new invitation.
+            此邀请已被撤销，请联系组织管理员获取新邀请。
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
           <Button asChild variant="outline">
-            <Link href="/">Go to home</Link>
+            <Link href="/">前往首页</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -173,15 +166,15 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <Clock className="mb-4 size-12 text-muted-foreground" />
-          <CardTitle>Invitation expired</CardTitle>
+          <CardTitle>邀请已过期</CardTitle>
           <CardDescription>
-            This invitation expired on {expiresAt.toLocaleDateString()}. Please
-            contact the organization administrator for a new invitation.
+            此邀请的过期时间为 {expiresAt.toLocaleDateString("zh-CN")}
+            。请联系组织管理员获取新邀请。
           </CardDescription>
         </CardHeader>
         <CardFooter className="justify-center">
           <Button asChild variant="outline">
-            <Link href="/">Go to home</Link>
+            <Link href="/">前往首页</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -196,17 +189,16 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
-          <CardTitle>You&apos;ve been invited!</CardTitle>
+          <CardTitle>你收到了邀请！</CardTitle>
           <CardDescription>
             {invitation.inviter_name ? (
               <>
-                <strong>{invitation.inviter_name}</strong> has invited you to
-                join <strong>{invitation.organization_name}</strong>.
+                <strong>{invitation.inviter_name}</strong> 邀请你加入{" "}
+                <strong>{invitation.organization_name}</strong>.
               </>
             ) : (
               <>
-                You&apos;ve been invited to join{" "}
-                <strong>{invitation.organization_name}</strong>.
+                你受邀加入 <strong>{invitation.organization_name}</strong>.
               </>
             )}
           </CardDescription>
@@ -215,23 +207,23 @@ function AcceptInvitationContent() {
           <div className="rounded-lg border bg-muted/50 p-4">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Organization</span>
+                <span className="text-muted-foreground">组织</span>
                 <span className="font-medium">
                   {invitation.organization_name}
                 </span>
               </div>
               {invitation.inviter_email && (
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Invited by</span>
+                  <span className="text-muted-foreground">邀请人</span>
                   <span className="font-medium">
                     {invitation.inviter_email}
                   </span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Expires</span>
+                <span className="text-muted-foreground">到期时间</span>
                 <span className="font-medium">
-                  {expiresAt.toLocaleDateString()}
+                  {expiresAt.toLocaleDateString("zh-CN")}
                 </span>
               </div>
             </div>
@@ -239,7 +231,7 @@ function AcceptInvitationContent() {
         </CardContent>
         <CardFooter className="flex-col gap-3">
           <Button asChild className="w-full">
-            <Link href={signInPath}>Sign in to accept</Link>
+            <Link href={signInPath}>登录并接受</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -252,23 +244,22 @@ function AcceptInvitationContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <UserX className="mb-4 size-12 text-destructive" />
-          <CardTitle>Wrong account</CardTitle>
+          <CardTitle>账号不匹配</CardTitle>
           <CardDescription>
-            This invitation was sent to a different email address. Please sign
-            out and sign in with the correct account.
+            此邀请发送到了另一个邮箱，请退出并使用正确的账号登录。
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border bg-muted/50 p-4">
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Organization</span>
+                <span className="text-muted-foreground">组织</span>
                 <span className="font-medium">
                   {invitation.organization_name}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Signed in as</span>
+                <span className="text-muted-foreground">当前登录账号</span>
                 <span className="font-medium">{user.email}</span>
               </div>
             </div>
@@ -284,10 +275,10 @@ function AcceptInvitationContent() {
               )
             }}
           >
-            Sign in with a different account
+            使用其他账号登录
           </Button>
           <Button asChild variant="ghost" className="w-full">
-            <Link href="/workspaces">Go to workspaces</Link>
+            <Link href="/workspaces">前往工作空间</Link>
           </Button>
         </CardFooter>
       </Card>
@@ -299,15 +290,14 @@ function AcceptInvitationContent() {
     <Card className="w-full max-w-md">
       <CardHeader className="items-center text-center">
         <UserPlus className="mb-4 size-12 text-primary" />
-        <CardTitle>Join {invitation.organization_name}</CardTitle>
+        <CardTitle>加入 {invitation.organization_name}</CardTitle>
         <CardDescription>
           {invitation.inviter_name ? (
             <>
-              <strong>{invitation.inviter_name}</strong> has invited you to join
-              this organization.
+              <strong>{invitation.inviter_name}</strong> 邀请你加入此组织。
             </>
           ) : (
-            <>You&apos;ve been invited to join this organization.</>
+            <>你受邀加入此组织。</>
           )}
         </CardDescription>
       </CardHeader>
@@ -315,21 +305,21 @@ function AcceptInvitationContent() {
         <div className="rounded-lg border bg-muted/50 p-4">
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Organization</span>
+              <span className="text-muted-foreground">组织</span>
               <span className="font-medium">
                 {invitation.organization_name}
               </span>
             </div>
             {invitation.inviter_email && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Invited by</span>
+                <span className="text-muted-foreground">邀请人</span>
                 <span className="font-medium">{invitation.inviter_email}</span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Expires</span>
+              <span className="text-muted-foreground">到期时间</span>
               <span className="font-medium">
-                {expiresAt.toLocaleDateString()}
+                {expiresAt.toLocaleDateString("zh-CN")}
               </span>
             </div>
           </div>
@@ -341,10 +331,10 @@ function AcceptInvitationContent() {
           onClick={() => acceptMutation.mutate()}
           disabled={acceptMutation.isPending}
         >
-          {acceptMutation.isPending ? "Accepting..." : "Accept invitation"}
+          {acceptMutation.isPending ? "接受中…" : "接受邀请"}
         </Button>
         <Button asChild variant="ghost" className="w-full">
-          <Link href="/workspaces">Decline</Link>
+          <Link href="/workspaces">拒绝</Link>
         </Button>
       </CardFooter>
     </Card>

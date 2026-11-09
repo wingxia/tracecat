@@ -33,8 +33,8 @@ const renameWorkflowSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(3, "Name must be at least 3 characters")
-    .max(100, "Name cannot exceed 100 characters"),
+    .min(3, "名称至少需要 3 个字符")
+    .max(100, "名称不能超过 100 个字符"),
 })
 
 type RenameWorkflowSchema = z.infer<typeof renameWorkflowSchema>
@@ -95,8 +95,8 @@ export function WorkflowRenameDialog({
         },
       })
       toast({
-        title: "Workflow renamed",
-        description: `Renamed to "${data.title}".`,
+        title: "已重命名工作流",
+        description: `已重命名为“${data.title}”。`,
       })
       setSelectedWorkflow(null)
       onOpenChange(false)
@@ -117,10 +117,8 @@ export function WorkflowRenameDialog({
     >
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Rename workflow</DialogTitle>
-          <DialogDescription>
-            Enter a new name for the workflow.
-          </DialogDescription>
+          <DialogTitle>重命名工作流</DialogTitle>
+          <DialogDescription>输入工作流的新名称。</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -134,7 +132,7 @@ export function WorkflowRenameDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-xs">
-                      Name
+                      名称
                     </FormLabel>
                     <FormControl>
                       <Input autoFocus {...field} />
@@ -151,7 +149,7 @@ export function WorkflowRenameDialog({
                 disabled={updateWorkflowIsPending}
               >
                 {updateWorkflowIsPending && <Spinner className="mr-2 size-4" />}
-                Rename workflow
+                重命名工作流
               </Button>
             </DialogFooter>
           </form>

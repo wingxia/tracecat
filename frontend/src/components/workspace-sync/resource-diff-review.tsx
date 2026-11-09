@@ -75,7 +75,7 @@ export function PushResourcePreview({
       <div className="flex flex-col gap-2 rounded-lg border bg-muted/30 p-3">
         {header}
         <div className="text-xs text-muted-foreground">
-          Select a target branch to preview changes.
+          选择目标分支以预览变更。
         </div>
       </div>
     )
@@ -98,7 +98,7 @@ export function PushResourcePreview({
         <div className="flex flex-col gap-2">
           {header}
           <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
-            Unable to preview changes: {errorMessage}
+            无法预览变更： {errorMessage}
           </div>
         </div>
       )
@@ -140,11 +140,9 @@ function PushPreviewHeader({
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="min-w-0">
-        <span className="block text-xs font-semibold">Preview</span>
+        <span className="block text-xs font-semibold">预览</span>
         <span className="block truncate font-mono text-xs text-muted-foreground">
-          {compareRef
-            ? `changes against ${compareRef}`
-            : "Select a target branch first"}
+          {compareRef ? `相对于 ${compareRef} 的变更` : "请先选择目标分支"}
         </span>
       </div>
       <Button
@@ -174,12 +172,12 @@ function getPreviewButtonLabel({
   isLoading: boolean
 }): string {
   if (isLoading) {
-    return "Previewing..."
+    return "预览中…"
   }
   if (hasRequestedPreview) {
-    return "Refresh preview"
+    return "刷新预览"
   }
-  return "Preview changes"
+  return "预览变更"
 }
 
 /**
@@ -194,14 +192,14 @@ function ResourceDiffSection({
 }) {
   return (
     <div className="flex min-w-0 max-w-full flex-col gap-2">
-      <span className="text-xs font-semibold">File changes</span>
+      <span className="text-xs font-semibold">文件变更</span>
       {diffs.length > 0 ? (
         <ResourceDiffReviewList diffs={diffs} />
       ) : (
         <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
           {emptyRef
-            ? `No file changes against ${emptyRef}.`
-            : "No file changes detected."}
+            ? `相对于 ${emptyRef} 没有文件变更。`
+            : "未检测到文件变更。"}
         </div>
       )}
     </div>
@@ -218,17 +216,17 @@ const CHANGE_TYPE_META: Record<
 > = {
   added: {
     icon: CirclePlusIcon,
-    label: "Added",
+    label: "已添加",
     className: "text-green-600",
   },
   modified: {
     icon: PencilIcon,
-    label: "Modified",
+    label: "已修改",
     className: "text-amber-600",
   },
   deleted: {
     icon: CircleMinusIcon,
-    label: "Deleted",
+    label: "已删除",
     className: "text-destructive",
   },
 }
@@ -274,8 +272,8 @@ function ResourceDiffReviewList({ diffs }: ResourceDiffReviewListProps) {
       <div className="min-w-0 max-w-full overflow-hidden rounded-md border">
         <div className="flex flex-wrap items-center gap-3 border-b bg-muted/50 px-3 py-2">
           <span className="text-xs font-medium tabular-nums">
-            {viewedCount} of {diffs.length}{" "}
-            <span className="font-normal text-muted-foreground">viewed</span>
+            {viewedCount} / {diffs.length}{" "}
+            <span className="font-normal text-muted-foreground">已查看</span>
           </span>
           <div className="h-1.5 min-w-[80px] flex-1 overflow-hidden rounded-full bg-border">
             <div
@@ -291,7 +289,7 @@ function ResourceDiffReviewList({ diffs }: ResourceDiffReviewListProps) {
             disabled={allViewed}
             onClick={markAllViewed}
           >
-            Viewed all
+            已全部查看
           </Button>
         </div>
 
@@ -355,7 +353,7 @@ function ResourceDiffItem({
           <Checkbox
             checked={viewed}
             onCheckedChange={(value) => onViewedChange(value === true)}
-            aria-label="Mark as viewed"
+            aria-label={"标记为已查看"}
             className="border-input shadow-none data-[state=checked]:border-muted-foreground data-[state=checked]:bg-secondary data-[state=checked]:text-secondary-foreground"
           />
           <button
@@ -363,7 +361,7 @@ function ResourceDiffItem({
             onClick={() => onViewedChange(!viewed)}
             className="text-xs text-muted-foreground transition-colors hover:text-foreground"
           >
-            Viewed
+            已查看
           </button>
         </div>
       </div>
@@ -377,7 +375,7 @@ function ResourceDiffItem({
           </div>
           {diff.truncated && (
             <p className="text-[11px] text-muted-foreground">
-              Diff truncated for preview.
+              差异预览已截断。
             </p>
           )}
         </div>

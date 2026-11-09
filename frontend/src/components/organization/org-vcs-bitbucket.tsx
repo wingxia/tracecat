@@ -43,8 +43,8 @@ import {
 } from "@/hooks/use-bitbucket-credentials"
 
 const bitbucketTokenFormSchema = z.object({
-  email: z.string().trim().email("Enter your Atlassian account email"),
-  token: z.string().trim().min(1, "Token is required"),
+  email: z.string().trim().email("输入 Atlassian 账号邮箱"),
+  token: z.string().trim().min(1, "令牌不能为空"),
 })
 
 type BitbucketTokenFormData = z.infer<typeof bitbucketTokenFormSchema>
@@ -65,12 +65,11 @@ export function BitbucketTokenSetup() {
   const isConfigured = credentialsStatus?.exists ?? false
   const isCorrupted = credentialsStatus?.is_corrupted ?? false
 
-  let statusLabel = "Not connected"
+  let statusLabel = "未连接"
   if (isCorrupted) {
-    statusLabel =
-      "Stored credentials are unreadable. Re-enter the API token to reconnect."
+    statusLabel = "无法读取已存储的凭据，请重新输入 API 令牌以恢复连接。"
   } else if (isConfigured) {
-    statusLabel = `Account email: ${credentialsStatus?.email ?? "unknown"}`
+    statusLabel = `账号邮箱：${credentialsStatus?.email ?? "未知"}`
   }
 
   async function handleDelete() {
@@ -78,16 +77,13 @@ export function BitbucketTokenSetup() {
       await deleteCredentials.mutateAsync()
       setDeleteDialogOpen(false)
       toast({
-        title: "Bitbucket credentials deleted",
-        description: "Bitbucket workspace sync has been disconnected.",
+        title: "已删除 Bitbucket 凭据",
+        description: "Bitbucket 工作空间同步已断开。",
       })
     } catch (error) {
       toast({
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to delete credentials",
+        title: "错误",
+        description: error instanceof Error ? error.message : "删除凭据失败",
         variant: "destructive",
       })
     }
@@ -100,9 +96,9 @@ export function BitbucketTokenSetup() {
   if (credentialsStatusError) {
     return (
       <p className="text-sm text-destructive">
-        Unable to load Bitbucket credentials.{" "}
+        无法加载 Bitbucket 凭据。{" "}
         <Button variant="link" onClick={() => refetchCredentialsStatus()}>
-          Retry
+          重试
         </Button>
       </p>
     )
@@ -126,12 +122,12 @@ export function BitbucketTokenSetup() {
                 size="sm"
                 onClick={() => setDialogOpen(true)}
               >
-                {isCorrupted ? "Reconnect" : "Update"}
+                {isCorrupted ? "重新连接" : "更新"}
               </Button>
               <Button
                 variant="destructive"
                 size="sm"
-                aria-label="Delete Bitbucket credentials"
+                aria-label={"删除 Bitbucket 凭据"}
                 onClick={() => setDeleteDialogOpen(true)}
               >
                 <Trash2Icon className="size-3.5" />
@@ -139,7 +135,7 @@ export function BitbucketTokenSetup() {
             </>
           ) : (
             <Button size="sm" onClick={() => setDialogOpen(true)}>
-              Connect
+              连接
             </Button>
           )}
         </div>
@@ -153,8 +149,8 @@ export function BitbucketTokenSetup() {
           setDialogOpen(false)
           refetchCredentialsStatus()
           toast({
-            title: "Bitbucket credentials saved",
-            description: "Bitbucket workspace sync credentials are ready.",
+            title: "已保存 Bitbucket 凭据",
+            description: "Bitbucket 工作空间同步凭据已就绪。",
           })
         }}
       />
@@ -162,23 +158,22 @@ export function BitbucketTokenSetup() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Bitbucket credentials</AlertDialogTitle>
+            <AlertDialogTitle>删除 Bitbucket 凭据</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the Bitbucket token credentials?
-              Bitbucket workspace sync will stop working until credentials are
-              reconnected.
+              确定要删除 Bitbucket
+              令牌凭据吗？重新连接凭据前，工作空间同步将停止工作。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteCredentials.isPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteCredentials.isPending}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {deleteCredentials.isPending ? "Deleting..." : "Delete"}
+              {deleteCredentials.isPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -221,11 +216,9 @@ function BitbucketConnectionDialog({
       onFormSuccess()
     } catch (error) {
       toast({
-        title: "Error",
+        title: "错误",
         description:
-          error instanceof Error
-            ? error.message
-            : "Failed to save Bitbucket credentials",
+          error instanceof Error ? error.message : "保存 Bitbucket 凭据失败",
         variant: "destructive",
       })
     }
@@ -235,7 +228,7 @@ function BitbucketConnectionDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Bitbucket workspace sync credential</DialogTitle>
+          <DialogTitle>Bitbucket 工作空间同步凭据</DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Form {...form}>
@@ -245,13 +238,12 @@ function BitbucketConnectionDialog({
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Account email</FormLabel>
+                    <FormLabel>账号邮箱</FormLabel>
                     <FormControl>
                       <Input placeholder="you@example.com" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Use the Atlassian account email associated with your API
-                      token.
+                      使用与 API 令牌关联的 Atlassian 账号邮箱。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -262,25 +254,25 @@ function BitbucketConnectionDialog({
                 name="token"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Credential token</FormLabel>
+                    <FormLabel>凭据令牌</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         autoComplete="off"
-                        placeholder="API token"
+                        placeholder={"API 令牌"}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Create a scoped Bitbucket Cloud API token with repository
-                      read/write and pull request read/write permissions.{" "}
+                      创建具有仓库读写和拉取请求读写权限的 Bitbucket Cloud API
+                      令牌。{" "}
                       <a
                         className="underline"
                         href="https://support.atlassian.com/bitbucket-cloud/docs/api-token-permissions/"
                         target="_blank"
                         rel="noreferrer"
                       >
-                        Token permissions
+                        令牌权限
                       </a>
                     </FormDescription>
                     <FormMessage />
@@ -293,10 +285,10 @@ function BitbucketConnectionDialog({
                   variant="outline"
                   onClick={() => onOpenChange(false)}
                 >
-                  Cancel
+                  取消
                 </Button>
                 <Button type="submit" disabled={saveCredentials.isPending}>
-                  {saveCredentials.isPending ? "Saving..." : "Save"}
+                  {saveCredentials.isPending ? "保存中…" : "保存"}
                 </Button>
               </div>
             </form>

@@ -3,6 +3,7 @@
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { format, sub } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   CalendarClockIcon,
   CalendarIcon,
@@ -92,56 +93,56 @@ const STATUS_GROUPS: Array<{
 }> = [
   {
     key: "RUNNING",
-    label: "Running",
+    label: "运行中",
     iconClassName: "text-blue-600",
     panelClassName:
       "data-[state=open]:border-l-blue-600 data-[state=open]:bg-blue-600/[0.03] dark:data-[state=open]:bg-blue-600/[0.08]",
   },
   {
     key: "FAILED",
-    label: "Failed",
+    label: "失败",
     iconClassName: "text-rose-600",
     panelClassName:
       "data-[state=open]:border-l-rose-600 data-[state=open]:bg-rose-600/[0.03] dark:data-[state=open]:bg-rose-600/[0.08]",
   },
   {
     key: "CANCELED",
-    label: "Canceled",
+    label: "已取消",
     iconClassName: "text-orange-600",
     panelClassName:
       "data-[state=open]:border-l-orange-600 data-[state=open]:bg-orange-600/[0.03] dark:data-[state=open]:bg-orange-600/[0.08]",
   },
   {
     key: "TERMINATED",
-    label: "Terminated",
+    label: "已终止",
     iconClassName: "text-rose-600",
     panelClassName:
       "data-[state=open]:border-l-rose-600 data-[state=open]:bg-rose-600/[0.03] dark:data-[state=open]:bg-rose-600/[0.08]",
   },
   {
     key: "TIMED_OUT",
-    label: "Timed out",
+    label: "已超时",
     iconClassName: "text-amber-600",
     panelClassName:
       "data-[state=open]:border-l-amber-600 data-[state=open]:bg-amber-600/[0.03] dark:data-[state=open]:bg-amber-600/[0.08]",
   },
   {
     key: "COMPLETED",
-    label: "Completed",
+    label: "已完成",
     iconClassName: "text-emerald-600",
     panelClassName:
       "data-[state=open]:border-l-emerald-600 data-[state=open]:bg-emerald-600/[0.03] dark:data-[state=open]:bg-emerald-600/[0.08]",
   },
   {
     key: "CONTINUED_AS_NEW",
-    label: "Continued as new",
+    label: "已续接为新运行",
     iconClassName: "text-violet-600",
     panelClassName:
       "data-[state=open]:border-l-violet-600 data-[state=open]:bg-violet-600/[0.03] dark:data-[state=open]:bg-violet-600/[0.08]",
   },
   {
     key: "UNKNOWN",
-    label: "Unknown",
+    label: "未知",
     iconClassName: "text-muted-foreground",
     panelClassName:
       "data-[state=open]:border-l-muted-foreground data-[state=open]:bg-muted/50",
@@ -152,9 +153,9 @@ const RELATION_OPTIONS: Array<{
   value: WorkflowExecutionRelationFilter
   label: string
 }> = [
-  { value: "all", label: "All" },
-  { value: "root", label: "Root" },
-  { value: "child", label: "Child" },
+  { value: "all", label: "全部" },
+  { value: "root", label: "根级" },
+  { value: "child", label: "子级" },
 ]
 const LIMIT_OPTIONS = [50, 100, 250, 500]
 
@@ -166,43 +167,43 @@ const STATUS_FILTER_OPTIONS: Array<{
 }> = [
   {
     value: "RUNNING",
-    label: "Running",
+    label: "运行中",
     icon: FlagTriangleRightIcon,
     iconClassName: "text-blue-600",
   },
   {
     value: "FAILED",
-    label: "Failed",
+    label: "失败",
     icon: TrafficConeIcon,
     iconClassName: "text-rose-600",
   },
   {
     value: "CANCELED",
-    label: "Canceled",
+    label: "已取消",
     icon: CirclePauseIcon,
     iconClassName: "text-orange-600",
   },
   {
     value: "TERMINATED",
-    label: "Terminated",
+    label: "已终止",
     icon: CirclePauseIcon,
     iconClassName: "text-rose-600",
   },
   {
     value: "TIMED_OUT",
-    label: "Timed out",
+    label: "已超时",
     icon: CirclePauseIcon,
     iconClassName: "text-amber-600",
   },
   {
     value: "COMPLETED",
-    label: "Completed",
+    label: "已完成",
     icon: CheckCircleIcon,
     iconClassName: "text-emerald-600",
   },
   {
     value: "CONTINUED_AS_NEW",
-    label: "Continued as new",
+    label: "已续接为新运行",
     icon: SignalIcon,
     iconClassName: "text-violet-600",
   },
@@ -216,13 +217,13 @@ const TRIGGER_FILTER_OPTIONS: Array<{
 }> = [
   {
     value: "manual",
-    label: "Manual",
+    label: "手动",
     icon: FlagTriangleRightIcon,
     iconClassName: "text-blue-600",
   },
   {
     value: "scheduled",
-    label: "Scheduled",
+    label: "定时触发",
     icon: CalendarClockIcon,
     iconClassName: "text-emerald-600",
   },
@@ -234,13 +235,13 @@ const TRIGGER_FILTER_OPTIONS: Array<{
   },
   {
     value: "case",
-    label: "Case",
+    label: "事件",
     icon: SignalIcon,
     iconClassName: "text-orange-600",
   },
   {
     value: "form",
-    label: "Form",
+    label: "表单",
     icon: ClipboardListIcon,
     iconClassName: "text-sky-600",
   },
@@ -274,9 +275,9 @@ const TIME_FILTER_OPERATOR_OPTIONS: Array<{
   value: TimeFilterOperator
   label: string
 }> = [
-  { value: "before", label: "Before" },
-  { value: "between", label: "Between" },
-  { value: "after", label: "After" },
+  { value: "before", label: "早于" },
+  { value: "between", label: "介于" },
+  { value: "after", label: "晚于" },
 ]
 
 const RELATIVE_TIME_UNIT_OPTIONS: RelativeTimeUnit[] = [
@@ -299,7 +300,7 @@ function formatTimeInputValue(value: Date | null): string {
   if (!value) {
     return ""
   }
-  return format(value, "HH:mm:ss")
+  return format(value, "HH:mm:ss", { locale: zhCN })
 }
 
 function applyTimeInput(value: Date | null, time: string): Date | null {
@@ -370,20 +371,21 @@ function formatRelativeTimeLabel(
   if (!Number.isFinite(amount) || amount <= 0) {
     return null
   }
-  const unit = amount === 1 ? relativeUnit.slice(0, -1) : relativeUnit
-  return `${amount} ${unit} ago`
+  return `${amount} ${formatRelativeUnitLabel(relativeUnit)}`
 }
 
 function formatRelativeUnitLabel(
   relativeUnit: RelativeTimeUnit,
-  relativeValue?: string
+  _relativeValue?: string
 ): string {
-  const amount = Number.parseInt(relativeValue ?? "", 10)
-  const unit =
-    Number.isFinite(amount) && amount === 1
-      ? relativeUnit.slice(0, -1)
-      : relativeUnit
-  return `${unit} ago`
+  const labels = {
+    minutes: "分钟前",
+    hours: "小时前",
+    days: "天前",
+    weeks: "周前",
+    months: "个月前",
+  }
+  return labels[relativeUnit]
 }
 
 function normalizeTimeFilterForQuery(value: TimeFilterState): {
@@ -437,9 +439,10 @@ function formatTimeFilterLabel(value: TimeFilterState): string | null {
       value.from.getTime() <= toDate.getTime()
         ? [value.from, toDate]
         : [toDate, value.from]
-    return `${format(normalizedFrom, "MMM d, HH:mm")} - ${format(
+    return `${format(normalizedFrom, "M月d日 HH:mm", { locale: zhCN })} - ${format(
       normalizedTo,
-      "MMM d, HH:mm"
+      "M月d日 HH:mm",
+      { locale: zhCN }
     )}`
   }
 
@@ -456,16 +459,16 @@ function formatTimeFilterLabel(value: TimeFilterState): string | null {
   if (!value.from) {
     return null
   }
-  return `${prefix}${format(value.from, "MMM d, HH:mm")}`
+  return `${prefix}${format(value.from, "M月d日 HH:mm", { locale: zhCN })}`
 }
 
 function getTimeFilterValidationMessage(value: TimeFilterState): string | null {
   if (value.operator === "between") {
     if (!value.from || !value.to) {
-      return "Select a start and end time."
+      return "选择开始和结束时间。"
     }
     if (value.to.getTime() < value.from.getTime()) {
-      return "End time must be after start time."
+      return "结束时间必须晚于开始时间。"
     }
     return null
   }
@@ -474,13 +477,13 @@ function getTimeFilterValidationMessage(value: TimeFilterState): string | null {
     if (
       relativeDurationToDate(value.relativeValue, value.relativeUnit) === null
     ) {
-      return "Enter a positive relative duration."
+      return "输入正数的相对时长。"
     }
     return null
   }
 
   if (!value.from) {
-    return "Select a time."
+    return "选择时间。"
   }
   return null
 }
@@ -582,7 +585,7 @@ function TimeFilterDateRangeField({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs font-medium">Date range</p>
+      <p className="text-xs font-medium">日期范围</p>
       <div className="overflow-hidden rounded-md">
         <Calendar
           mode="range"
@@ -593,13 +596,13 @@ function TimeFilterDateRangeField({
         />
         <div className="grid grid-cols-2 gap-2 bg-card p-2">
           <TimeInputField
-            label="Start time"
+            label={"开始时间"}
             value={from}
             disabled={!from}
             onChange={onFromTimeChange}
           />
           <TimeInputField
-            label="End time"
+            label={"结束时间"}
             value={to}
             disabled={!to}
             onChange={onToTimeChange}
@@ -693,7 +696,7 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
         <div className="space-y-3">
           <div className="space-y-1">
             <p className="text-[11px] font-medium text-muted-foreground">
-              Condition
+              条件
             </p>
             <div className="inline-flex w-full rounded-md border border-input p-0.5">
               {TIME_FILTER_OPERATOR_OPTIONS.map((option) => (
@@ -749,7 +752,7 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
             <>
               <div className="space-y-1">
                 <p className="text-[11px] font-medium text-muted-foreground">
-                  Mode
+                  模式
                 </p>
                 <div className="inline-flex w-full rounded-md border border-input p-0.5">
                   {(["relative", "absolute"] as TimeFilterMode[]).map(
@@ -779,13 +782,13 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
 
               {draft.mode === "relative" ? (
                 <div className="space-y-2">
-                  <p className="text-xs font-medium">Relative time</p>
+                  <p className="text-xs font-medium">相对时间</p>
                   <div className="flex items-center gap-2">
                     <Input
                       type="number"
                       min={1}
                       value={draft.relativeValue}
-                      placeholder="e.g. 24"
+                      placeholder={"例如 24"}
                       onChange={(event) =>
                         setDraft((previous) => ({
                           ...previous,
@@ -818,7 +821,7 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
                 </div>
               ) : (
                 <TimeFilterDateTimeField
-                  label="Time"
+                  label={"时间"}
                   value={draft.from}
                   onDateChange={(date) =>
                     setDraft((previous) => ({
@@ -850,7 +853,7 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
               className="h-7 gap-1 px-2 text-xs"
               onClick={handleClear}
             >
-              Clear
+              清除
               <Cross2Icon className="size-3" />
             </Button>
             <Button
@@ -858,7 +861,7 @@ function TimeFilterButton({ label, value, onChange }: TimeFilterButtonProps) {
               className="h-7 px-2 text-xs"
               onClick={handleApply}
             >
-              Apply
+              应用
             </Button>
           </div>
         </div>
@@ -928,7 +931,7 @@ function DurationFilterButton({
           )}
         >
           <Clock3Icon className="size-3.5 text-muted-foreground" />
-          <span>Duration</span>
+          <span>时长</span>
           {durationLabel ? (
             <span className="ml-0.5 max-w-[120px] truncate text-[10px] text-muted-foreground">
               {durationLabel}
@@ -939,7 +942,7 @@ function DurationFilterButton({
       <PopoverContent className="w-[280px] p-3" align="start" sideOffset={4}>
         <div className="space-y-3">
           <div className="space-y-1">
-            <p className="text-xs font-medium">Minimum (seconds)</p>
+            <p className="text-xs font-medium">最小值（秒）</p>
             <Input
               type="number"
               min={0}
@@ -960,7 +963,7 @@ function DurationFilterButton({
             />
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium">Maximum (seconds)</p>
+            <p className="text-xs font-medium">最大值（秒）</p>
             <Input
               type="number"
               min={0}
@@ -986,7 +989,7 @@ function DurationFilterButton({
             className="h-7 gap-1 px-2 text-xs"
             onClick={() => onChange({ minSeconds: null, maxSeconds: null })}
           >
-            Clear
+            清除
             <Cross2Icon className="size-3" />
           </Button>
         </div>
@@ -1138,7 +1141,7 @@ export function WorkflowRunsLayout() {
     if (runs.length === 0 || startItem === 0 || endItem === 0) {
       return null
     }
-    return `Showing ${startItem}-${endItem}`
+    return `显示第 ${startItem}-${endItem} 项`
   }, [endItem, runs.length, startItem])
   const showPaginationControls =
     runs.length > 0 || hasNextPage || hasPreviousPage
@@ -1244,8 +1247,8 @@ export function WorkflowRunsLayout() {
     } catch (e) {
       toast({
         variant: "destructive",
-        title: "Failed to cancel run",
-        description: e instanceof Error ? e.message : "Unknown error",
+        title: "取消运行失败",
+        description: e instanceof Error ? e.message : "未知错误",
       })
     }
   }
@@ -1256,8 +1259,8 @@ export function WorkflowRunsLayout() {
     } catch (e) {
       toast({
         variant: "destructive",
-        title: "Failed to terminate run",
-        description: e instanceof Error ? e.message : "Unknown error",
+        title: "终止运行失败",
+        description: e instanceof Error ? e.message : "未知错误",
       })
     }
   }
@@ -1288,8 +1291,8 @@ export function WorkflowRunsLayout() {
     } catch (e) {
       toast({
         variant: "destructive",
-        title: "Failed to reset run",
-        description: e instanceof Error ? e.message : "Unknown error",
+        title: "重置运行失败",
+        description: e instanceof Error ? e.message : "未知错误",
       })
     }
   }
@@ -1305,8 +1308,8 @@ export function WorkflowRunsLayout() {
     } catch (e) {
       toast({
         variant: "destructive",
-        title: "Failed to cancel selected runs",
-        description: e instanceof Error ? e.message : "Unknown error",
+        title: "取消所选运行失败",
+        description: e instanceof Error ? e.message : "未知错误",
       })
     } finally {
       setBulkCancelConfirmOpen(false)
@@ -1324,8 +1327,8 @@ export function WorkflowRunsLayout() {
     } catch (e) {
       toast({
         variant: "destructive",
-        title: "Failed to terminate selected runs",
-        description: e instanceof Error ? e.message : "Unknown error",
+        title: "终止所选运行失败",
+        description: e instanceof Error ? e.message : "未知错误",
       })
     } finally {
       setBulkTerminateConfirmOpen(false)
@@ -1362,7 +1365,7 @@ export function WorkflowRunsLayout() {
       <div className="shrink-0 border-b">
         <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
           <ListHeaderSearch
-            placeholder="Search runs..."
+            placeholder={"搜索运行记录…"}
             value={searchTerm}
             onChange={(event) => setSearchTerm(event.target.value)}
           />
@@ -1370,7 +1373,7 @@ export function WorkflowRunsLayout() {
           {showPaginationControls && (
             <div className="ml-auto flex items-center gap-2">
               <span className="text-xs text-muted-foreground">
-                {showingLabel ?? `${runs.length} runs`}
+                {showingLabel ?? `${runs.length} 次运行`}
               </span>
               <button
                 type="button"
@@ -1382,10 +1385,10 @@ export function WorkflowRunsLayout() {
                 )}
                 disabled={!hasPreviousPage || isLoading}
                 onClick={goToPreviousPage}
-                aria-label="Previous page"
+                aria-label={"上一页"}
               >
                 <ChevronLeftIcon className="mr-1 size-3.5" />
-                <span>Prev</span>
+                <span>上一页</span>
               </button>
               <button
                 type="button"
@@ -1397,9 +1400,9 @@ export function WorkflowRunsLayout() {
                 )}
                 disabled={!hasNextPage || isLoading}
                 onClick={goToNextPage}
-                aria-label="Next page"
+                aria-label={"下一页"}
               >
-                <span>Next</span>
+                <span>下一页</span>
                 <ChevronRightIcon className="ml-1 size-3.5" />
               </button>
             </div>
@@ -1412,8 +1415,8 @@ export function WorkflowRunsLayout() {
               type="button"
               onClick={handleSelectAllVisible}
               className="flex h-7 w-7 shrink-0 items-center justify-center"
-              aria-label={allVisibleSelected ? "Deselect all" : "Select all"}
-              title={allVisibleSelected ? "Deselect all" : "Select all"}
+              aria-label={allVisibleSelected ? "取消全选" : "全选"}
+              title={allVisibleSelected ? "取消全选" : "全选"}
             >
               <span
                 className={cn(
@@ -1429,7 +1432,7 @@ export function WorkflowRunsLayout() {
           )}
 
           <FilterMultiSelect
-            placeholder="Relation"
+            placeholder={"关系"}
             icon={SignalIcon}
             value={[relation]}
             options={RELATION_OPTIONS}
@@ -1443,7 +1446,7 @@ export function WorkflowRunsLayout() {
           />
 
           <FilterMultiSelect
-            placeholder="Status"
+            placeholder={"状态"}
             icon={SignalIcon}
             value={statusFilter}
             options={STATUS_FILTER_OPTIONS}
@@ -1453,7 +1456,7 @@ export function WorkflowRunsLayout() {
           />
 
           <FilterMultiSelect
-            placeholder="Trigger"
+            placeholder={"触发器"}
             icon={WebhookIcon}
             value={triggerFilter}
             options={TRIGGER_FILTER_OPTIONS}
@@ -1464,7 +1467,7 @@ export function WorkflowRunsLayout() {
           />
 
           <FilterMultiSelect
-            placeholder="User"
+            placeholder={"用户"}
             icon={UserIcon}
             value={userFilter}
             options={userFilterOptions}
@@ -1475,17 +1478,17 @@ export function WorkflowRunsLayout() {
             mode="include"
             onModeChange={() => {}}
             allowExclude={false}
-            modeLabel="Triggered by"
+            modeLabel="触发来源"
           />
 
           <TimeFilterButton
-            label="Start time"
+            label={"开始时间"}
             value={startTimeFilter}
             onChange={setStartTimeFilter}
           />
 
           <TimeFilterButton
-            label="End time"
+            label={"结束时间"}
             value={closeTimeFilter}
             onChange={setCloseTimeFilter}
           />
@@ -1511,7 +1514,7 @@ export function WorkflowRunsLayout() {
                 disabled={selectedRunningCount === 0 || isMutating}
                 onClick={() => setBulkCancelConfirmOpen(true)}
               >
-                Cancel selected ({selectedRunningCount})
+                取消所选（{selectedRunningCount})
               </button>
 
               <button
@@ -1524,7 +1527,7 @@ export function WorkflowRunsLayout() {
                 disabled={selectedRunningCount === 0 || isMutating}
                 onClick={() => setBulkTerminateConfirmOpen(true)}
               >
-                Terminate selected ({selectedRunningCount})
+                终止所选（{selectedRunningCount})
               </button>
 
               <button
@@ -1537,7 +1540,7 @@ export function WorkflowRunsLayout() {
                 disabled={isMutating}
                 onClick={openBulkResetDialog}
               >
-                Reset selected ({selectedCount})
+                重置所选（{selectedCount})
               </button>
             </>
           ) : null}
@@ -1548,7 +1551,7 @@ export function WorkflowRunsLayout() {
               onClick={resetFilters}
               className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              Reset
+              重置
               <Cross2Icon className="size-3" />
             </button>
           )}
@@ -1560,7 +1563,7 @@ export function WorkflowRunsLayout() {
               disabled={isLoading}
             >
               <SelectTrigger className="h-6 w-auto gap-1.5 rounded-md px-2 text-xs font-medium">
-                <span className="text-muted-foreground">Limit</span>
+                <span className="text-muted-foreground">限制</span>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent align="end">
@@ -1582,7 +1585,7 @@ export function WorkflowRunsLayout() {
           </div>
         ) : filteredGroups.length === 0 ? (
           <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-            No runs found.
+            未找到运行记录。
           </div>
         ) : (
           <>
@@ -1647,8 +1650,8 @@ export function WorkflowRunsLayout() {
                             }
                             aria-label={
                               allGroupSelected
-                                ? `Deselect all ${group.label.toLowerCase()} runs`
-                                : `Select all ${group.label.toLowerCase()} runs`
+                                ? `取消全选 ${group.label.toLowerCase()} 次运行`
+                                : `全选 ${group.label.toLowerCase()} 次运行`
                             }
                             className="ml-0.5 flex size-4 shrink-0 items-center justify-center rounded-sm border transition-colors"
                             onPointerDown={(event) => {
@@ -1744,15 +1747,15 @@ export function WorkflowRunsLayout() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel selected runs</AlertDialogTitle>
+            <AlertDialogTitle>取消所选运行</AlertDialogTitle>
             <AlertDialogDescription>
-              This will request cancellation for {selectedRunningCount} running
-              run(s). Non-running runs are ignored.
+              此操作将请求取消 {selectedRunningCount}{" "}
+              次正在进行的运行，忽略非运行中的记录。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isBulkCanceling}>
-              Keep runs
+              保留运行
             </AlertDialogCancel>
             <AlertDialogAction
               disabled={isBulkCanceling || selectedRunningCount === 0}
@@ -1761,7 +1764,7 @@ export function WorkflowRunsLayout() {
                 void handleBulkCancelSelected()
               }}
             >
-              {isBulkCanceling ? "Canceling..." : "Cancel runs"}
+              {isBulkCanceling ? "取消中…" : "取消运行"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1773,15 +1776,15 @@ export function WorkflowRunsLayout() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Terminate selected runs</AlertDialogTitle>
+            <AlertDialogTitle>终止所选运行</AlertDialogTitle>
             <AlertDialogDescription>
-              This will immediately terminate {selectedRunningCount} running
-              run(s). This action cannot be undone.
+              此操作会立即终止 {selectedRunningCount}{" "}
+              次正在进行的运行，且无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isBulkTerminating}>
-              Keep runs
+              保留运行
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
@@ -1791,7 +1794,7 @@ export function WorkflowRunsLayout() {
                 void handleBulkTerminateSelected()
               }}
             >
-              {isBulkTerminating ? "Terminating..." : "Terminate runs"}
+              {isBulkTerminating ? "终止中…" : "终止运行"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -46,17 +46,17 @@ export interface ListOption {
 
 export const listOptions: ListOption[] = [
   {
-    label: "Bullet List",
+    label: "无序列表",
     type: "bulletList",
     icon: ListIcon,
   },
   {
-    label: "Ordered List",
+    label: "有序列表",
     type: "orderedList",
     icon: ListOrderedIcon,
   },
   {
-    label: "Task List",
+    label: "任务列表",
     type: "taskList",
     icon: ListTodoIcon,
   },
@@ -209,7 +209,7 @@ export function useListDropdownMenu(config?: UseListDropdownMenuConfig) {
     canToggle: canToggleAny,
     types,
     filteredLists,
-    label: "List",
+    label: "列表",
     Icon: activeList ? listIcons[activeList.type] : ListIcon,
   }
 }

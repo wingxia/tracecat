@@ -30,7 +30,7 @@ export const PACKAGE_INCLUDE_FILENAME = ".tracecatinclude"
 
 /** Platform admin page where releases are cut and deployed. */
 const MANAGED_PACKAGE_ADMIN_PATH = "/admin/managed-package"
-const MANAGED_PACKAGE_ADMIN_LABEL = "Admin, Managed Workspaces"
+const MANAGED_PACKAGE_ADMIN_LABEL = "管理后台 › 托管工作空间"
 
 /** Stable identity of one package resource, e.g. `workflow:wf-triage`. */
 function getPackageResourceKey(resource: WorkspacePackageResource): string {
@@ -246,12 +246,12 @@ function getPackageMembership(
     if (isImplied(resource)) {
       const users = resource.implied_by ?? []
       if (users.length === 0) {
-        return "Included because another resource uses it"
+        return "因其他资源依赖而包含"
       }
-      return `Included because ${users.join(", ")} ${users.length === 1 ? "uses" : "use"} it`
+      return `因 ${users.join("、")} 依赖此资源而包含`
     }
     if (isSelectedByOtherPattern(resource, patterns)) {
-      return `Selected by a hand-written pattern in ${PACKAGE_INCLUDE_FILENAME}`
+      return `由 ${PACKAGE_INCLUDE_FILENAME} 中手写的匹配模式选中`
     }
     return undefined
   }
@@ -281,24 +281,24 @@ export function PackageSummary({
   const { user } = useAuth()
   const resources = workspacePackage.resources ?? []
   const { isInPackage } = getPackageMembership(workspacePackage, selected)
-  const ref = workspacePackage.ref ?? "the default branch"
+  const ref = workspacePackage.ref ?? "默认分支"
 
   return (
     <section
-      aria-label="Package"
+      aria-label={"软件包"}
       className="flex items-center gap-3 rounded-md border px-4 py-3"
     >
       <PackageIcon className="size-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0 flex-1 space-y-0.5">
         <p className="text-sm font-medium">
-          {resources.filter(isInPackage).length} of {resources.length} resources
-          in the package
+          {resources.filter(isInPackage).length} / {resources.length}{" "}
+          个资源位于软件包中
         </p>
         <p className="text-xs text-muted-foreground">
           {isChanged
-            ? `Edited from ${PACKAGE_INCLUDE_FILENAME} on ${ref}. `
-            : `From ${PACKAGE_INCLUDE_FILENAME} on ${ref}. `}
-          Publishing changes no customer workspace. Deploy a release from{" "}
+            ? `基于 ${PACKAGE_INCLUDE_FILENAME} 编辑，时间为 ${ref}。`
+            : `来源为 ${PACKAGE_INCLUDE_FILENAME}，时间为 ${ref}。`}
+          发布不会更改客户工作空间。请在以下位置部署发布版本：{" "}
           {user?.isSuperuser ? (
             <Link
               href={MANAGED_PACKAGE_ADMIN_PATH}
@@ -321,7 +321,7 @@ export function PackageSummary({
             className="shrink-0"
             disabled={disabled}
           >
-            Edit resources
+            编辑资源
           </Button>
         }
         workspacePackage={workspacePackage}
@@ -354,10 +354,9 @@ export function PackageResourcesDialog({
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent size="xl" className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Choose package resources</DialogTitle>
+          <DialogTitle>选择软件包资源</DialogTitle>
           <DialogDescription>
-            Checked resources and everything they use are published. Other
-            resource files are removed from the branch.
+            发布所选资源及其依赖。其他资源文件将从分支中移除。
           </DialogDescription>
         </DialogHeader>
         <PackageResourcesForm
@@ -425,8 +424,8 @@ function PackageResourcesForm({
 
   const emptyMessage =
     resources.length === 0
-      ? "This workspace has no resources to package."
-      : "No resources match your search."
+      ? "此工作空间没有可打包的资源。"
+      : "没有符合搜索条件的资源。"
 
   return (
     <>
@@ -434,8 +433,8 @@ function PackageResourcesForm({
         <div className="relative">
           <SearchIcon className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" />
           <Input
-            aria-label="Search resources"
-            placeholder="Search resources"
+            aria-label={"搜索资源"}
+            placeholder={"搜索资源"}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             className="h-8 pl-8"
@@ -465,13 +464,12 @@ function PackageResourcesForm({
       </DialogBody>
       <DialogFooter className="sm:justify-between">
         <span className="text-xs text-muted-foreground">
-          {resources.filter(isInPackage).length} of {resources.length} in the
-          package. Dependencies reflect{" "}
-          {workspacePackage.ref ?? "the default branch"}. Preview to see the
-          effect of your edits.
+          {resources.filter(isInPackage).length} / {resources.length}{" "}
+          位于软件包中。依赖关系反映 {workspacePackage.ref ?? "默认分支"}
+          。预览以查看编辑的效果。
         </span>
         <Button type="button" size="sm" onClick={() => onApply(draft)}>
-          Apply selection
+          应用选择
         </Button>
       </DialogFooter>
     </>
@@ -516,7 +514,7 @@ function PackageResourceGroup({
     <li>
       <div className="flex h-8 items-center gap-2.5">
         <Checkbox
-          aria-label={`Select all ${label}`}
+          aria-label={`全选 ${label}`}
           checked={groupChecked}
           disabled={addable.length === 0 && !hasRemovable}
           onCheckedChange={() => {
@@ -542,7 +540,7 @@ function PackageResourceGroup({
             )}
           />
           <span className="ml-auto shrink-0 text-xs text-muted-foreground">
-            {count} of {group.resources.length}
+            {count} / {group.resources.length}
           </span>
         </button>
       </div>

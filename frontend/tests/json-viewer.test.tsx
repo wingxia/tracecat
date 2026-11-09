@@ -84,8 +84,8 @@ describe("JsonViewWithControls", () => {
       defaultExpanded: true,
     })
 
-    expect(screen.getAllByLabelText("Copy JSONPath")).not.toHaveLength(0)
-    expect(screen.queryByLabelText("Copy JSON payload")).not.toBeInTheDocument()
+    expect(screen.getAllByLabelText("复制 JSONPath")).not.toHaveLength(0)
+    expect(screen.queryByLabelText("复制 JSON 数据")).not.toBeInTheDocument()
   })
 
   it("renders both copy actions in dual mode", () => {
@@ -95,8 +95,8 @@ describe("JsonViewWithControls", () => {
       copyMode: "jsonpath-and-payload",
     })
 
-    expect(screen.getAllByLabelText("Copy JSONPath")).not.toHaveLength(0)
-    expect(screen.getAllByLabelText("Copy JSON payload")).not.toHaveLength(0)
+    expect(screen.getAllByLabelText("复制 JSONPath")).not.toHaveLength(0)
+    expect(screen.getAllByLabelText("复制 JSON 数据")).not.toHaveLength(0)
   })
 
   it("serializes object payloads as valid JSON", () => {

@@ -69,8 +69,8 @@ export function slugify(value: string): string {
 const createDropdownSchema = z.object({
   name: z
     .string()
-    .min(1, "Name cannot be empty")
-    .max(50, "Name cannot be longer than 50 characters")
+    .min(1, "名称不能为空")
+    .max(50, "名称不能超过 50 个字符")
     .trim(),
   icon_name: z.string().max(100).optional(),
   is_ordered: z.boolean(),
@@ -147,13 +147,13 @@ export function SortableOptionRow({
       )}
       <Input
         className="text-sm"
-        placeholder="Label"
+        placeholder={"标签"}
         value={opt.label}
         onChange={(e) => onOptionChange(index, "label", e.target.value)}
       />
       <IconPicker
         className="size-9 shrink-0"
-        placeholder="Icon"
+        placeholder={"图标"}
         value={opt.icon_name || undefined}
         onValueChange={(val) => onOptionChange(index, "icon_name", val)}
       />
@@ -263,7 +263,7 @@ export function AddCaseDropdownDialog({
       if (nameExists) {
         methods.setError("name", {
           type: "manual",
-          message: "A dropdown with this name already exists",
+          message: "已存在同名下拉选项",
         })
         return
       }
@@ -272,8 +272,7 @@ export function AddCaseDropdownDialog({
       if (!dropdownRef) {
         methods.setError("name", {
           type: "manual",
-          message:
-            "Name must produce a valid reference (use alphanumeric characters)",
+          message: "名称必须能生成有效引用（请使用字母或数字）",
         })
         return
       }
@@ -292,8 +291,7 @@ export function AddCaseDropdownDialog({
       if (validOptions.length === 0) {
         methods.setError("name", {
           type: "manual",
-          message:
-            "At least one option must have a label that produces a valid reference (use alphanumeric characters)",
+          message: "至少一个选项的标签必须能生成有效引用（请使用字母或数字）",
         })
         return
       }
@@ -316,11 +314,9 @@ export function AddCaseDropdownDialog({
     } catch (error) {
       console.error("Error creating dropdown", error)
       toast({
-        title: "Error creating dropdown",
+        title: "创建下拉选项出错",
         description:
-          error instanceof Error
-            ? error.message
-            : "Failed to create the dropdown. Please try again.",
+          error instanceof Error ? error.message : "创建下拉选项失败，请重试。",
         variant: "destructive",
       })
     }
@@ -330,9 +326,9 @@ export function AddCaseDropdownDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Create dropdown</DialogTitle>
+          <DialogTitle>创建下拉选项</DialogTitle>
           <DialogDescription>
-            Define a custom dropdown with options for your cases.
+            为事件定义包含选项的自定义下拉字段。
           </DialogDescription>
         </DialogHeader>
         <Form {...methods}>
@@ -346,12 +342,12 @@ export function AddCaseDropdownDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
                     <div className="flex items-center gap-3">
                       <FormControl>
                         <Input
                           className="text-sm"
-                          placeholder="e.g. Determination"
+                          placeholder={"例如：研判结果"}
                           {...field}
                         />
                       </FormControl>
@@ -363,7 +359,7 @@ export function AddCaseDropdownDialog({
                             <FormControl>
                               <IconPicker
                                 className="size-9 shrink-0"
-                                placeholder="Icon"
+                                placeholder={"图标"}
                                 value={iconField.value || undefined}
                                 onValueChange={iconField.onChange}
                               />
@@ -372,9 +368,7 @@ export function AddCaseDropdownDialog({
                         )}
                       />
                     </div>
-                    <FormDescription>
-                      Display name for the dropdown
-                    </FormDescription>
+                    <FormDescription>下拉选项的显示名称</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -385,10 +379,9 @@ export function AddCaseDropdownDialog({
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-sm">Ordered</FormLabel>
+                      <FormLabel className="text-sm">有序</FormLabel>
                       <FormDescription>
-                        Options will be ranked by their position from top to
-                        bottom.
+                        选项将按从上到下的位置排序。
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -401,9 +394,9 @@ export function AddCaseDropdownDialog({
                 )}
               />
               <div className="space-y-2">
-                <FormLabel className="text-sm">Options</FormLabel>
+                <FormLabel className="text-sm">选项</FormLabel>
                 <FormDescription>
-                  Add options for this dropdown. Each needs a label.
+                  为此下拉字段添加选项，每个选项都需要标签。
                 </FormDescription>
                 <DndContext
                   sensors={sensors}
@@ -435,13 +428,13 @@ export function AddCaseDropdownDialog({
                   onClick={handleAddOption}
                 >
                   <PlusIcon className="mr-1 size-3.5" />
-                  Add option
+                  添加选项
                 </Button>
               </div>
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit">
-                Create dropdown
+                创建下拉选项
               </Button>
             </DialogFooter>
           </form>

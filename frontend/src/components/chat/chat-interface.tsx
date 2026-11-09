@@ -196,7 +196,7 @@ export function ChatInterface({
     chat && "backend_id" in chat ? chat.backend_id : "oss"
   const currentBackendName =
     backends.find((backend) => backend.id === currentBackendId)?.name ??
-    (currentBackendId === "oss" ? "Open source" : "Unavailable")
+    (currentBackendId === "oss" ? "开源" : "不可用")
   const { updateChat, isUpdating } = useUpdateChat(workspaceId)
 
   useEffect(() => {
@@ -298,7 +298,7 @@ export function ChatInterface({
       // Auto-create a chat session immediately
       setAutoCreateAttempted(true)
       createChat({
-        title: "Chat 1",
+        title: "对话 1",
         entity_type: entityType,
         entity_id: entityId,
         backend_id: backendOverride,
@@ -343,7 +343,7 @@ export function ChatInterface({
 
     try {
       const newChat = await createChat({
-        title: `Chat ${(chats?.length || 0) + 1}`,
+        title: `对话 ${(chats?.length || 0) + 1}`,
         entity_type: entityType,
         entity_id: entityId,
         backend_id: backendOverride,
@@ -375,7 +375,7 @@ export function ChatInterface({
 
     try {
       const newChat = await createChat({
-        title: `Chat ${(chats?.length || 0) + 1}`,
+        title: `对话 ${(chats?.length || 0) + 1}`,
         entity_type: entityType,
         entity_id: entityId,
         backend_id: backendOverride,
@@ -404,7 +404,7 @@ export function ChatInterface({
     } catch (error) {
       console.error("Failed to create chat on first message:", error)
       toast({
-        title: "Failed to create chat",
+        title: "创建对话失败",
         description: parseChatError(error),
         variant: "destructive",
       })
@@ -495,7 +495,7 @@ export function ChatInterface({
                 variant="outline"
                 className="px-1.5 py-0 text-[10px] font-normal text-muted-foreground"
               >
-                Read only
+                只读
               </Badge>
             ) : null}
           </div>
@@ -523,7 +523,7 @@ export function ChatInterface({
                   <AlertDialogTrigger asChild>
                     <TooltipTrigger asChild>
                       <Button
-                        aria-label="New chat"
+                        aria-label={"新建对话"}
                         size="sm"
                         variant="ghost"
                         className="size-6 p-0"
@@ -537,16 +537,16 @@ export function ChatInterface({
                       </Button>
                     </TooltipTrigger>
                   </AlertDialogTrigger>
-                  <TooltipContent side="bottom">New chat</TooltipContent>
+                  <TooltipContent side="bottom">新建对话</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Start a new chat?</AlertDialogTitle>
+                  <AlertDialogTitle>开始新对话？</AlertDialogTitle>
                   <AlertDialogDescription>
                     {deferSessionCreation
-                      ? "This starts a fresh chat. A new conversation is created after you send your first message."
-                      : "This will create a new conversation. Your current chat will remain accessible from the conversations menu."}
+                      ? "将开始全新对话，发送第一条消息后创建会话。"
+                      : "将创建新的会话，当前对话仍可从会话菜单中访问。"}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 {hasBackendChoice && (
@@ -557,7 +557,7 @@ export function ChatInterface({
                   />
                 )}
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
                   <AlertDialogAction
                     disabled={
                       createChatPending ||
@@ -566,7 +566,7 @@ export function ChatInterface({
                     }
                     onClick={() => void handleCreateChat()}
                   >
-                    Start new chat
+                    开始新对话
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -578,10 +578,9 @@ export function ChatInterface({
       {backendSelectionEnabled && backendsError && (
         <div className="px-4 pb-2">
           <Alert>
-            <AlertTitle>Unable to load chat backends</AlertTitle>
+            <AlertTitle>无法加载对话后端</AlertTitle>
             <AlertDescription>
-              Retry before starting a new chat. Existing chats are still
-              accessible.
+              请重试后再开始新对话。现有对话仍可访问。
             </AlertDescription>
             <Button
               className="mt-2"
@@ -589,7 +588,7 @@ export function ChatInterface({
               variant="outline"
               onClick={() => void refetchBackends()}
             >
-              Retry
+              重试
             </Button>
           </Alert>
         </div>
@@ -602,7 +601,7 @@ export function ChatInterface({
           workspaceId={workspaceId}
           entityType={entityType}
           entityId={entityId}
-          placeholder={placeholder ?? `Ask about this ${entityType}...`}
+          placeholder={placeholder ?? `询问此${entityType}…`}
           chat={chat}
           chatLoading={chatLoading}
           chatError={chatError}
@@ -651,12 +650,12 @@ function BackendSelect({
         }
       }}
     >
-      <SelectTrigger aria-label="Backend (dev)" className="w-36">
+      <SelectTrigger aria-label={"后端（开发）"} className="w-36">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value={SERVER_DEFAULT_BACKEND}>Server default</SelectItem>
+          <SelectItem value={SERVER_DEFAULT_BACKEND}>服务器默认</SelectItem>
           {backends.map((backend) => (
             <SelectItem key={backend.id} value={backend.id}>
               {backend.name}
@@ -757,7 +756,7 @@ function ChatBody({
     return (
       <div className="px-4 pb-2">
         <Alert variant="destructive">
-          <AlertTitle>Failed to load chat</AlertTitle>
+          <AlertTitle>加载对话失败</AlertTitle>
           <AlertDescription>{parseChatError(chatError)}</AlertDescription>
           <Button
             className="mt-2"
@@ -765,7 +764,7 @@ function ChatBody({
             variant="outline"
             onClick={onRetryChatLoad}
           >
-            Retry
+            重试
           </Button>
         </Alert>
       </div>
@@ -783,13 +782,13 @@ function ChatBody({
   if (selectedPresetConfigError) {
     const presetErrorMessage =
       getApiErrorDetail(selectedPresetConfigError) ??
-      "Failed to load the pinned preset version for this chat."
+      "加载此对话的固定预设版本失败。"
 
     return (
       <>
         <NoMessages />
         <Alert variant="destructive">
-          <AlertTitle>Pinned preset unavailable</AlertTitle>
+          <AlertTitle>固定的预设不可用</AlertTitle>
           <AlertDescription>{presetErrorMessage}</AlertDescription>
         </Alert>
       </>
@@ -836,7 +835,7 @@ function ChatBody({
           <div className="flex items-center gap-3">
             <div className="flex-1">
               <h4 className="mb-1 text-sm font-medium text-foreground">
-                No default model
+                没有默认模型
               </h4>
               <p className="text-xs text-muted-foreground">
                 {NO_DEFAULT_MODEL_MESSAGE}
@@ -883,7 +882,7 @@ function ChatBody({
         onBeforeSend={onCreateSessionBeforeSend}
         optimisticBeforeSend
         inputDisabled={draftInputDisabled}
-        inputDisabledPlaceholder="Creating chat..."
+        inputDisabledPlaceholder="正在创建对话…"
         surface={surface}
         onMessagesChange={onMessagesChange}
         onData={onData}
@@ -946,8 +945,8 @@ function NoDefaultModelComposer({
           <PromptInputTextarea
             placeholder={
               workspaceReason
-                ? "Enable a workspace model to start chatting..."
-                : "Select a default model to start chatting..."
+                ? "启用工作空间模型以开始对话…"
+                : "选择默认模型以开始对话…"
             }
             readOnly
             tabIndex={-1}
@@ -970,12 +969,12 @@ function NoDefaultModelComposer({
         </p>
       ) : (
         <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-          <span>No default model configured.</span>
+          <span>尚未配置默认模型。</span>
           <Link
             href="/organization/settings/agent"
             className="inline-flex items-center gap-0.5 font-medium text-foreground underline-offset-4 hover:underline"
           >
-            Select one in agent settings
+            在智能体设置中选择模型
             <ArrowRight className="size-3" />
           </Link>
         </div>

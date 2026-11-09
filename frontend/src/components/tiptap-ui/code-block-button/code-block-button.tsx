@@ -98,7 +98,7 @@ export const CodeBlockButton = React.forwardRef<
         data-disabled={!canToggle}
         aria-label={label}
         aria-pressed={isActive}
-        tooltip="Code Block"
+        tooltip={"代码块"}
         onClick={handleClick}
         {...buttonProps}
         ref={ref}

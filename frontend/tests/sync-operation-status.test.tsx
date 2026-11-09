@@ -86,9 +86,7 @@ it("says a push is applying in the background", async () => {
   })
   const view = mountStatus()
   expect(
-    await screen.findByText(
-      "Pushing to sync/test in the background. You can leave this page."
-    )
+    await screen.findByText("正在后台推送到 sync/test，可以离开此页面。")
   ).toBeInTheDocument()
   view.unmount()
 })
@@ -119,11 +117,11 @@ it("shows the failure reason and retries a failed pull", async () => {
   })
   const view = mountStatus()
   const notice = await screen.findByRole("alert")
-  expect(notice).toHaveTextContent("Last pull did not finish.")
+  expect(notice).toHaveTextContent("上次 pull 未完成。")
   expect(notice).toHaveTextContent(
     "Workspace changes were already imported and will not be imported again."
   )
-  fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+  fireEvent.click(screen.getByRole("button", { name: "重试" }))
   await waitFor(() =>
     expect(workflowsRetrySyncOperation).toHaveBeenCalledWith(
       expect.objectContaining({

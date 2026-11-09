@@ -40,7 +40,7 @@ import { useRbacRoles } from "@/lib/hooks"
 const DEFAULT_WORKSPACE_ROLE_SLUG = "workspace-editor"
 
 const addMemberSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("邮箱地址无效"),
 })
 type AddMemberValues = z.infer<typeof addMemberSchema>
 
@@ -71,9 +71,9 @@ export function AddWorkspaceMember({
     }
     if (!canAddMembers) {
       toast({
-        title: "Insufficient permissions",
+        title: "权限不足",
         description:
-          "You don't have permission to add members to this workspace. Ask a workspace or organization admin for access.",
+          "你没有向此工作空间添加成员的权限，请联系工作空间或组织管理员。",
       })
       return
     }
@@ -89,7 +89,7 @@ export function AddWorkspaceMember({
         onClick={handleClick}
       >
         <Plus className="mr-1 h-3.5 w-3.5" />
-        Add member
+        添加成员
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent size="sm" className="w-[calc(100%-2rem)] max-w-lg">
@@ -131,8 +131,7 @@ function AddWorkspaceMemberForm({
     )
     if (!workspaceRole) {
       form.setError("email", {
-        message:
-          "Couldn't load the workspace editor role needed to invite this user.",
+        message: "无法加载邀请此用户所需的工作空间编辑者角色。",
       })
       return
     }
@@ -141,8 +140,8 @@ function AddWorkspaceMemberForm({
       grants: [{ workspace_id: workspace.id, role_id: workspaceRole.id }],
     })
     toast({
-      title: "Invitation sent",
-      description: `${email} was invited to the organization with access to ${workspace.name}.`,
+      title: "邀请已发送",
+      description: `已邀请 ${email} 加入组织，并授予 ${workspace.name} 的访问权限。`,
     })
     onOpenChange(false)
   }
@@ -165,8 +164,8 @@ function AddWorkspaceMemberForm({
             requestBody: { user_id: user.id },
           })
           toast({
-            title: "Member added",
-            description: `${email} was added to ${workspace.name}.`,
+            title: "已添加成员",
+            description: `已将 ${email} 添加到 ${workspace.name}。`,
           })
           onOpenChange(false)
           return
@@ -180,8 +179,7 @@ function AddWorkspaceMemberForm({
 
       if (!canInviteOrgMembers) {
         form.setError("email", {
-          message:
-            "This user isn't in your organization. Ask an organization admin to invite them.",
+          message: "此用户不在组织中，请联系组织管理员邀请。",
         })
         return
       }
@@ -189,8 +187,7 @@ function AddWorkspaceMemberForm({
     } catch (error) {
       console.error("Failed to add workspace member", error)
       form.setError("email", {
-        message:
-          getApiErrorDetail(error) ?? "The request could not be completed.",
+        message: getApiErrorDetail(error) ?? "无法完成请求。",
       })
     }
   }
@@ -201,11 +198,11 @@ function AddWorkspaceMemberForm({
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Add workspace member</DialogTitle>
+        <DialogTitle>添加工作空间成员</DialogTitle>
         <DialogDescription>
           {canInviteOrgMembers
-            ? `Add a user to ${workspace.name}. Anyone not yet in the organization is invited to it with the editor role on this workspace.`
-            : `Add an existing organization member to ${workspace.name}.`}
+            ? `向 ${workspace.name} 添加用户。尚未加入组织的用户会收到组织邀请，并获得此工作空间的编辑者角色。`
+            : `将现有组织成员添加到 ${workspace.name}。`}
         </DialogDescription>
       </DialogHeader>
       <Form {...form}>
@@ -219,7 +216,7 @@ function AddWorkspaceMemberForm({
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>邮箱</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="user@example.com"
@@ -234,7 +231,7 @@ function AddWorkspaceMemberForm({
           </DialogBody>
           <DialogFooter>
             <Button size="sm" type="submit" disabled={submitDisabled}>
-              {isSubmitting ? "Adding..." : "Add member"}
+              {isSubmitting ? "添加中…" : "添加成员"}
             </Button>
           </DialogFooter>
         </form>

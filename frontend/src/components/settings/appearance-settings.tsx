@@ -17,15 +17,15 @@ import {
 import { cn } from "@/lib/utils"
 
 const THEME_OPTIONS = [
-  { value: "light", label: "Light", icon: Sun },
-  { value: "dark", label: "Dark", icon: Moon },
-  { value: "system", label: "System", icon: Monitor },
+  { value: "light", label: "浅色", icon: Sun },
+  { value: "dark", label: "深色", icon: Moon },
+  { value: "system", label: "跟随系统", icon: Monitor },
 ] as const
 
 const VERBOSITY_OPTIONS: { value: ChatVerbosity; label: string }[] = [
-  { value: "default", label: "Default" },
-  { value: "verbose", label: "Verbose" },
-  { value: "minimal", label: "Minimal" },
+  { value: "default", label: "默认" },
+  { value: "verbose", label: "详细" },
+  { value: "minimal", label: "精简" },
 ]
 
 /**
@@ -51,13 +51,13 @@ export function AppearanceSettings() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold tracking-tight">Appearance</h2>
+        <h2 className="text-lg font-semibold tracking-tight">外观</h2>
         <p className="text-sm text-muted-foreground">
-          Customize how Tracecat looks on this device.
+          自定义 Tracecat 在此设备上的外观。
         </p>
       </div>
       <div className="space-y-3">
-        <span className="text-sm font-medium">Theme</span>
+        <span className="text-sm font-medium">主题</span>
         <div className="grid max-w-md grid-cols-3 gap-3">
           {THEME_OPTIONS.map((option) => {
             const isActive = activeTheme === option.value
@@ -82,7 +82,7 @@ export function AppearanceSettings() {
       </div>
       <div className="space-y-2">
         <label htmlFor="agent-verbosity" className="text-sm font-medium">
-          Agent verbosity
+          智能体回复详略
         </label>
         <Select
           value={verbosity}

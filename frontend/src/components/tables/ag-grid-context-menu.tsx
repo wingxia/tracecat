@@ -114,15 +114,15 @@ export function AgGridContextMenu({
         <ContextMenuContent className="w-52">
           <ContextMenuItem className="text-xs" onClick={handleCopyCellValue}>
             <CopyIcon className="mr-2 size-3" />
-            Copy cell value
+            复制单元格值
           </ContextMenuItem>
           <ContextMenuItem className="text-xs" onClick={handleCopyRowAsTsv}>
             <CopyIcon className="mr-2 size-3" />
-            Copy row as TSV
+            复制行为 TSV
           </ContextMenuItem>
           <ContextMenuItem className="text-xs" onClick={handleCopyRowId}>
             <CopyIcon className="mr-2 size-3" />
-            Copy row ID
+            复制行 ID
           </ContextMenuItem>
           {canModifyTable && (
             <>
@@ -132,7 +132,7 @@ export function AgGridContextMenu({
                 onClick={() => setInsertDialogOpen(true)}
               >
                 <PlusIcon className="mr-2 size-3" />
-                Insert row
+                插入行
               </ContextMenuItem>
               <ContextMenuItem
                 className="text-xs text-destructive"
@@ -142,7 +142,7 @@ export function AgGridContextMenu({
                 }}
               >
                 <Trash2Icon className="mr-2 size-3" />
-                Delete row
+                删除行
               </ContextMenuItem>
             </>
           )}
@@ -155,21 +155,20 @@ export function AgGridContextMenu({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete row</AlertDialogTitle>
+            <AlertDialogTitle>删除行</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this row from the table? This
-              action cannot be undone.
+              确定要从数据表中删除此行吗？此操作无法撤销。
             </AlertDialogDescription>
             {deleteDialogRow && (
               <AlertDialogDescription>
-                Row ID: {deleteDialogRow.id}
+                行 ID： {deleteDialogRow.id}
               </AlertDialogDescription>
             )}
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={handleDeleteRow}>
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

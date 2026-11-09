@@ -382,7 +382,9 @@ test("the empty overlay names the applied filter, not the one being typed", () =
       <FilteredRowsEmptyOverlay />
     </TableRowQueryContext.Provider>
   )
-  expect(screen.getByText(/No rows match “abc” in title/)).toBeInTheDocument()
+  expect(
+    screen.getByText(/没有匹配以下内容的行：“abc”，所在列为 title/)
+  ).toBeInTheDocument()
 
   // Typed but not yet searched: the empty grid is not the filter's doing.
   rerender(
@@ -392,5 +394,5 @@ test("the empty overlay names the applied filter, not the one being typed", () =
       <FilteredRowsEmptyOverlay />
     </TableRowQueryContext.Provider>
   )
-  expect(screen.getByText("No rows")).toBeInTheDocument()
+  expect(screen.getByText("暂无行")).toBeInTheDocument()
 })

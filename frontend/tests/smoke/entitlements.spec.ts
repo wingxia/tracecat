@@ -51,13 +51,13 @@ test.describe("entitlement gates", () => {
     await expectWorkspaceLanding(page)
 
     await expect(async () => {
-      await page.getByRole("button", { name: "Chat" }).click({
+      await page.getByRole("button", { name: "对话" }).click({
         timeout: 2_000,
       })
     }).toPass()
 
     await expect(
-      page.getByRole("dialog", { name: "Upgrade to unlock this feature" })
+      page.getByRole("dialog", { name: "升级以解锁此功能" })
     ).toBeVisible()
     await expect(page).not.toHaveURL(/\/chat(\/|$|\?)/)
   })
@@ -74,7 +74,7 @@ test.describe("entitlement gates", () => {
       waitUntil: "domcontentloaded",
     })
 
-    await expect(page.getByText("Enterprise only")).toBeVisible()
+    await expect(page.getByText("仅限企业版")).toBeVisible()
     await expect(
       page.getByText(
         "Advanced AI agents (human-in-the-loop and subagents) are only available on enterprise plans."
@@ -90,9 +90,7 @@ test.describe("entitlement gates", () => {
     await page.goto("/organization/vcs")
 
     await expect(page.getByRole("heading", { name: "Git sync" })).toBeVisible()
-    await expect(page.getByText("Upgrade required")).toBeVisible()
-    await expect(
-      page.getByText("Git sync is unavailable on your current plan.")
-    ).toBeVisible()
+    await expect(page.getByText("需要升级")).toBeVisible()
+    await expect(page.getByText("当前套餐不支持 Git 同步。")).toBeVisible()
   })
 })

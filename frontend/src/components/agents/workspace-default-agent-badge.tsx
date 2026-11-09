@@ -40,7 +40,7 @@ export function WorkspaceDefaultAgentBadge({
       <HoverCardTrigger asChild>
         <Link
           href={`/workspaces/${workspaceId}/agents/${preset.id}`}
-          aria-label={`Default agent: ${preset.name}`}
+          aria-label={`默认智能体：${preset.name}`}
           className="ml-auto rounded-md focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
         >
           <Badge
@@ -48,14 +48,14 @@ export function WorkspaceDefaultAgentBadge({
             className="h-6 max-w-64 gap-1.5 px-2 text-xs font-normal hover:bg-muted/50"
           >
             <StarIcon className="size-3 shrink-0" />
-            <span className="truncate">Default: {preset.name}</span>
+            <span className="truncate">默认： {preset.name}</span>
           </Badge>
         </Link>
       </HoverCardTrigger>
       <HoverCardContent align="end" className="w-80 space-y-2 shadow-none">
         <p className="break-words text-sm font-medium">{preset.name}</p>
         <p className="whitespace-pre-wrap break-words text-xs text-muted-foreground">
-          {preset.description || "No description"}
+          {preset.description || "暂无描述"}
         </p>
         {folder && folder.path !== "/" ? (
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

@@ -42,8 +42,8 @@ const createAgentSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, "Name is required")
-    .max(120, "Name cannot be longer than 120 characters"),
+    .min(1, "名称不能为空")
+    .max(120, "名称不能超过 120 个字符"),
   description: z.string().max(1000).optional(),
 })
 
@@ -181,10 +181,9 @@ function CreateAgentDialogContent({
     return (
       <DialogContent size="sm" className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Unable to load models</DialogTitle>
+          <DialogTitle>无法加载模型</DialogTitle>
           <DialogDescription>
-            We couldn&apos;t load the models available for this workspace.
-            Please try again later.
+            无法加载此工作空间可用的模型，请稍后重试。
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
@@ -195,13 +194,11 @@ function CreateAgentDialogContent({
     return (
       <DialogContent size="sm" className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Loading models</DialogTitle>
-          <DialogDescription>
-            Loading the models available for this workspace.
-          </DialogDescription>
+          <DialogTitle>正在加载模型</DialogTitle>
+          <DialogDescription>正在加载此工作空间可用的模型。</DialogDescription>
         </DialogHeader>
         <DialogBody>
-          <div className="flex justify-center py-4" aria-label="Loading models">
+          <div className="flex justify-center py-4" aria-label={"正在加载模型"}>
             <Spinner className="size-6" />
           </div>
         </DialogBody>
@@ -214,21 +211,19 @@ function CreateAgentDialogContent({
     let description: string
     if (hasOrgDefault) {
       description = canAdministerWorkspace
-        ? "The organization default model is not enabled for this workspace. Enable it in workspace AI model settings before creating an agent."
-        : "The organization default model is not enabled for this workspace. Ask a workspace administrator to enable it before creating an agent."
+        ? "此工作空间未启用组织默认模型。请在工作空间的 AI 模型设置中启用后再创建智能体。"
+        : "此工作空间未启用组织默认模型。请联系工作空间管理员启用后再创建智能体。"
     } else {
       description = canAdministerOrg
-        ? "Choose a default model in organization settings before creating an agent."
-        : "Ask an organization administrator to configure a default model before creating an agent."
+        ? "请先在组织设置中选择默认模型，再创建智能体。"
+        : "请先联系组织管理员配置默认模型，再创建智能体。"
     }
 
     return (
       <DialogContent size="sm" className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {hasOrgDefault
-              ? "Enable the default model"
-              : "Set up model provider"}
+            {hasOrgDefault ? "启用默认模型" : "设置模型提供商"}
           </DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
@@ -242,7 +237,7 @@ function CreateAgentDialogContent({
                 setSettingsOpen(true)
               }}
             >
-              Configure workspace models
+              配置工作空间模型
             </Button>
           </DialogFooter>
         ) : null}
@@ -253,7 +248,7 @@ function CreateAgentDialogContent({
                 href="/organization/settings/agent"
                 onClick={() => onOpenChange(false)}
               >
-                Configure models
+                配置模型
               </Link>
             </Button>
           </DialogFooter>
@@ -265,12 +260,11 @@ function CreateAgentDialogContent({
   return (
     <DialogContent size="lg" className="sm:max-w-lg">
       <DialogHeader>
-        <DialogTitle>Create agent</DialogTitle>
+        <DialogTitle>创建智能体</DialogTitle>
         <DialogDescription>
-          Give the agent a name and optional description. You can change its
-          model after creation.
+          为智能体填写名称和可选描述。创建后可以更改模型。
           {librarySkills?.length
-            ? ` It starts with ${librarySkills.join(", ")} attached.`
+            ? ` 初始已关联 ${librarySkills.join(", ")}。`
             : null}
         </DialogDescription>
       </DialogHeader>
@@ -285,11 +279,11 @@ function CreateAgentDialogContent({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm">Name</FormLabel>
+                  <FormLabel className="text-sm">名称</FormLabel>
                   <FormControl>
                     <Input
                       className="text-sm"
-                      placeholder="My agent"
+                      placeholder={"我的智能体"}
                       {...field}
                     />
                   </FormControl>
@@ -303,13 +297,12 @@ function CreateAgentDialogContent({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm">
-                    Description{" "}
-                    <span className="text-muted-foreground">(optional)</span>
+                    描述 <span className="text-muted-foreground">（可选）</span>
                   </FormLabel>
                   <FormControl>
                     <Textarea
                       className="min-h-[60px] resize-none text-sm"
-                      placeholder="What does this agent do?"
+                      placeholder={"此智能体的用途是什么？"}
                       {...field}
                     />
                   </FormControl>
@@ -328,7 +321,7 @@ function CreateAgentDialogContent({
                 modelsLoading
               }
             >
-              Create agent
+              创建智能体
             </Button>
           </DialogFooter>
         </form>

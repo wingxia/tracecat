@@ -422,15 +422,15 @@ function toastMutationError(activity: string) {
   return (error: ApiError) => {
     if (error.status === 403) {
       toast({
-        title: "Forbidden",
-        description: "You cannot perform this action",
+        title: "禁止访问",
+        description: "你无法执行此操作",
       })
       return
     }
     console.error(`Error ${activity}`, error)
     toast({
-      title: `Error ${activity}`,
-      description: `An error occurred while ${activity}: ${getApiErrorDetail(error)}`,
+      title: `错误 ${activity}`,
+      description: `${activity}时出错：${getApiErrorDetail(error)}`,
     })
   }
 }
@@ -461,7 +461,7 @@ export function useAppInfo(_orgSlug?: string | null) {
         return await resp.json()
       } catch (_error) {
         throw new Error(
-          "Unable to fetch authentication settings. This could be a network issue with the Tracecat API."
+          "无法获取身份验证设置，可能是连接 Tracecat API 时出现网络问题。"
         )
       }
     },
@@ -672,8 +672,8 @@ export function useUpdateWebhook(workspaceId: string, workflowId: string) {
     onError: (error) => {
       console.error("Failed to update webhook:", error)
       toast({
-        title: "Error updating webhook",
-        description: "Could not update webhook. Please try again.",
+        title: "更新 Webhook 出错",
+        description: "无法更新 Webhook，请重试。",
         variant: "destructive",
       })
     },
@@ -723,8 +723,8 @@ export function useUpsertCaseTrigger(workspaceId: string, workflowId: string) {
         queryKey: ["case-trigger", workspaceId, workflowId],
       })
       toast({
-        title: "Error updating case trigger",
-        description: "Could not update case trigger. Please try again.",
+        title: "更新事件触发器出错",
+        description: "无法更新事件触发器，请重试。",
         variant: "destructive",
       })
     },
@@ -749,8 +749,8 @@ export function useGenerateWebhookApiKey(
     onError: (error) => {
       console.error("Failed to generate webhook API key:", error)
       toast({
-        title: "Error generating API key",
-        description: "Could not generate API key. Please try again.",
+        title: "生成 API 密钥出错",
+        description: "无法生成 API 密钥，请重试。",
       })
     },
   })
@@ -771,15 +771,15 @@ export function useRevokeWebhookApiKey(
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workflow", workflowId] })
       toast({
-        title: "API key revoked",
-        description: "Webhook API key revoked successfully.",
+        title: "API 密钥已撤销",
+        description: "已成功撤销 Webhook API 密钥。",
       })
     },
     onError: (error) => {
       console.error("Failed to revoke webhook API key:", error)
       toast({
-        title: "Error revoking API key",
-        description: "Could not revoke API key. Please try again.",
+        title: "撤销 API 密钥出错",
+        description: "无法撤销 API 密钥，请重试。",
         variant: "destructive",
       })
     },
@@ -801,15 +801,15 @@ export function useDeleteWebhookApiKey(
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workflow", workflowId] })
       toast({
-        title: "API key deleted",
-        description: "Webhook API key removed successfully.",
+        title: "已删除 API 密钥",
+        description: "已成功移除 Webhook API 密钥。",
       })
     },
     onError: (error) => {
       console.error("Failed to delete webhook API key:", error)
       toast({
-        title: "Error deleting API key",
-        description: "Could not delete API key. Please try again.",
+        title: "删除 API 密钥出错",
+        description: "无法删除 API 密钥，请重试。",
         variant: "destructive",
       })
     },
@@ -868,29 +868,29 @@ export function useWorkflowManager(
         queryKey: ["agent-preset-workflow-references", workspaceId],
       })
       toast({
-        title: "Created workflow",
-        description: "Your workflow has been created successfully.",
+        title: "已创建工作流",
+        description: "工作流创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot create workflow",
-            description: "The uploaded workflow YAML / JSON is invalid.",
+            title: "无法创建工作流",
+            description: "上传的工作流 YAML / JSON 无效。",
           })
           break
         case 409:
           toast({
-            title: "Workflow already exists",
-            description: "A workflow with the same ID already exists.",
+            title: "工作流已存在",
+            description: "已存在相同 ID 的工作流。",
           })
           break
         default:
           console.error("Failed to create workflow:", error)
           toast({
-            title: "Error creating workflow",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "创建工作流出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
             variant: "destructive",
           })
       }
@@ -912,23 +912,23 @@ export function useWorkflowManager(
           queryKey: ["agent-preset-workflow-references", workspaceId],
         })
         toast({
-          title: "Deleted workflow",
-          description: "Your workflow has been deleted successfully.",
+          title: "已删除工作流",
+          description: "工作流删除成功。",
         })
       },
       onError: (error: TracecatApiError) => {
         switch (error.status) {
           case 400:
             toast({
-              title: "Cannot delete workflow",
-              description: getApiErrorDetail(error) ?? "Please try again.",
+              title: "无法删除工作流",
+              description: getApiErrorDetail(error) ?? "请重试。",
             })
             break
           default:
             console.error("Failed to delete workflow:", error)
             toast({
-              title: "Error deleting workflow",
-              description: getApiErrorDetail(error) ?? "Please try again.",
+              title: "删除工作流出错",
+              description: getApiErrorDetail(error) ?? "请重试。",
               variant: "destructive",
             })
         }
@@ -945,8 +945,8 @@ export function useWorkflowManager(
     onError: (error: TracecatApiError) => {
       console.error("Failed to add tag to workflow:", error)
       toast({
-        title: "Couldn't add tag to workflow",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "无法向工作流添加标签",
+        description: getApiErrorDetail(error) ?? "请重试。",
       })
     },
   })
@@ -961,8 +961,8 @@ export function useWorkflowManager(
     onError: (error: TracecatApiError) => {
       console.error("Failed to remove tag from workflow:", error)
       toast({
-        title: "Couldn't remove tag from workflow",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "无法从工作流移除标签",
+        description: getApiErrorDetail(error) ?? "请重试。",
       })
     },
   })
@@ -978,8 +978,8 @@ export function useWorkflowManager(
     onError: (error: TracecatApiError) => {
       console.error("Failed to move workflow:", error)
       toast({
-        title: "Error moving workflow",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "移动工作流出错",
+        description: getApiErrorDetail(error) ?? "请重试。",
       })
     },
   })
@@ -1008,18 +1008,18 @@ export function useWorkflowManager(
             // The API returns a specific conflict reason (alias collision vs.
             // a duplicate workflow), so surface it rather than assuming one.
             toast({
-              title: "Cannot update workflow",
-              description: detail ?? "The workflow was modified elsewhere.",
+              title: "无法更新工作流",
+              description: detail ?? "工作流已在其他位置被修改。",
               variant: "destructive",
             })
             break
           default:
             console.error("Failed to update workflow:", error)
             toast({
-              title: "Error updating workflow",
+              title: "更新工作流出错",
               description: detail
-                ? `${detail}. Please try again.`
-                : "Could not reach the server. Please try again.",
+                ? `${detail}。请重试。`
+                : "无法连接服务器，请重试。",
               variant: "destructive",
             })
         }
@@ -1072,8 +1072,8 @@ export function useWorkspaceManager() {
       // Still invalidate to ensure consistency with server
       queryClient.invalidateQueries({ queryKey: ["workspaces"] })
       toast({
-        title: "Created workspace",
-        description: "Your workspace has been created successfully.",
+        title: "已创建工作空间",
+        description: "工作空间创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -1087,8 +1087,8 @@ export function useWorkspaceManager() {
         default:
           console.error("Failed to create workspace:", error)
           toast({
-            title: "Error creating workspace",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "创建工作空间出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
       }
     },
@@ -1104,23 +1104,23 @@ export function useWorkspaceManager() {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] })
       router.replace("/workspaces")
       toast({
-        title: "Deleted workspace",
-        description: "Your workspace has been deleted successfully.",
+        title: "已删除工作空间",
+        description: "工作空间删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot delete workspace",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "无法删除工作空间",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         default:
           console.error("Failed to delete workspace:", error)
           toast({
-            title: "Error deleting workspace",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "删除工作空间出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
             variant: "destructive",
           })
       }
@@ -1277,7 +1277,7 @@ export function useCreateManualWorkflowExecution(workflowId: string) {
     },
     onSuccess: async ({ wf_exec_id, message }) => {
       toast({
-        title: `Workflow run started`,
+        title: "工作流已开始运行",
         description: `${wf_exec_id} ${message}`,
       })
 
@@ -1303,14 +1303,14 @@ export function useCreateManualWorkflowExecution(workflowId: string) {
         case 400:
           console.error("Invalid workflow trigger inputs", error)
           return toast({
-            title: "Invalid workflow trigger inputs",
-            description: "Please hover over the run button for details.",
+            title: "工作流触发器输入无效",
+            description: "请悬停在运行按钮上查看详情。",
           })
         default:
           console.error("Unexpected error starting workflow", error)
           return toast({
-            title: "Unexpected error starting workflow",
-            description: "Please check the run logs for more information",
+            title: "启动工作流时发生意外错误",
+            description: "请查看运行日志获取更多信息",
           })
       }
     },
@@ -1340,7 +1340,7 @@ export function useCreateDraftWorkflowExecution(workflowId: string) {
     },
     onSuccess: async ({ wf_exec_id, message }) => {
       toast({
-        title: `Draft workflow run started`,
+        title: "工作流草稿已开始运行",
         description: `${wf_exec_id} ${message}`,
       })
 
@@ -1363,14 +1363,14 @@ export function useCreateDraftWorkflowExecution(workflowId: string) {
         case 400:
           console.error("Workflow validation failed", error)
           return toast({
-            title: "Workflow validation failed with 1 error",
-            description: "Please hover over the run button to view errors.",
+            title: "工作流校验失败，存在 1 个错误",
+            description: "请悬停在运行按钮上查看错误。",
           })
         default:
           console.error("Unexpected error starting draft workflow", error)
           return toast({
-            title: "Unexpected error starting draft workflow",
-            description: "Please check the run logs for more information",
+            title: "启动工作流草稿时发生意外错误",
+            description: "请查看运行日志获取更多信息",
           })
       }
     },
@@ -1454,15 +1454,15 @@ export function useSchedules(workflowId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [workflowId, "schedules"] })
       toast({
-        title: "Created schedule",
-        description: "Your schedule has been created successfully.",
+        title: "已创建定时计划",
+        description: "定时计划创建成功。",
       })
     },
     onError: (error) => {
       console.error("Failed to create schedule:", error)
       toast({
-        title: "Error creating schedule",
-        description: "Could not create schedule. Please try again.",
+        title: "创建定时计划出错",
+        description: "无法创建定时计划，请重试。",
         variant: "destructive",
       })
     },
@@ -1474,15 +1474,15 @@ export function useSchedules(workflowId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [workflowId, "schedules"] })
       toast({
-        title: "Updated schedule",
-        description: "Your schedule has been updated successfully.",
+        title: "已更新定时计划",
+        description: "定时计划更新成功。",
       })
     },
     onError: (error) => {
       console.error("Failed to update webhook:", error)
       toast({
-        title: "Error updating schedule",
-        description: "Could not update schedule. Please try again.",
+        title: "更新定时计划出错",
+        description: "无法更新定时计划，请重试。",
         variant: "destructive",
       })
     },
@@ -1495,15 +1495,15 @@ export function useSchedules(workflowId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [workflowId, "schedules"] })
       toast({
-        title: "Deleted schedule",
-        description: "Your schedule has been deleted successfully.",
+        title: "已删除定时计划",
+        description: "定时计划删除成功。",
       })
     },
     onError: (error) => {
       console.error("Failed to delete schedule:", error)
       toast({
-        title: "Error deleting schedule",
-        description: "Could not delete schedule. Please try again.",
+        title: "删除定时计划出错",
+        description: "无法删除定时计划，请重试。",
         variant: "destructive",
       })
     },
@@ -1550,8 +1550,8 @@ export function useWorkspaceSecrets(
       }),
     onSuccess: () => {
       toast({
-        title: "Added new secret",
-        description: "New secret added successfully.",
+        title: "已添加新密钥",
+        description: "新密钥添加成功。",
       })
       queryClient.invalidateQueries({
         queryKey: ["workspace-secrets", workspaceId],
@@ -1561,21 +1561,19 @@ export function useWorkspaceSecrets(
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot create secrets in this workspace.",
+            title: "禁止访问",
+            description: "你无法在此工作空间中创建密钥。",
           })
         case 409:
           return toast({
-            title: "Secret already exists",
-            description:
-              "Secrets with the same name and environment are not supported.",
+            title: "密钥已存在",
+            description: "不支持名称和环境均相同的密钥。",
           })
         default:
           console.error("Failed to create secret", error)
           return toast({
-            title: "Failed to add new secret",
-            description:
-              "Check that your secret is correctly formatted and try again.",
+            title: "添加新密钥失败",
+            description: "请检查密钥格式后重试。",
           })
       }
     },
@@ -1597,8 +1595,8 @@ export function useWorkspaceSecrets(
       }),
     onSuccess: () => {
       toast({
-        title: "Updated secret",
-        description: "Secret updated successfully.",
+        title: "已更新密钥",
+        description: "密钥更新成功。",
       })
       queryClient.invalidateQueries({
         queryKey: ["workspace-secrets", workspaceId],
@@ -1608,14 +1606,14 @@ export function useWorkspaceSecrets(
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot update secrets in this workspace.",
+            title: "禁止访问",
+            description: "你无法更新此工作空间中的密钥。",
           })
         default:
           console.error("Failed to update secret", error)
           return toast({
-            title: "Failed to update secret",
-            description: "An error occurred while updating the secret.",
+            title: "更新密钥失败",
+            description: "更新密钥时出错。",
           })
       }
     },
@@ -1630,22 +1628,22 @@ export function useWorkspaceSecrets(
         queryKey: ["workspace-secrets", workspaceId],
       })
       toast({
-        title: "Deleted secret",
-        description: "Secret deleted successfully.",
+        title: "已删除密钥",
+        description: "密钥删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot delete secrets in this workspace.",
+            title: "禁止访问",
+            description: "你无法删除此工作空间中的密钥。",
           })
         default:
           console.error("Failed to delete secret", error)
           return toast({
-            title: "Failed to delete secret",
-            description: "An error occurred while deleting the secret.",
+            title: "删除密钥失败",
+            description: "删除密钥时出错。",
           })
       }
     },
@@ -1735,8 +1733,8 @@ export function useWorkspaceVariables(
       }),
     onSuccess: () => {
       toast({
-        title: "Added new variable",
-        description: "New variable added successfully.",
+        title: "已添加新变量",
+        description: "新变量添加成功。",
       })
       queryClient.invalidateQueries({
         queryKey: ["workspace-variables", workspaceId],
@@ -1746,20 +1744,19 @@ export function useWorkspaceVariables(
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot create variables in this workspace.",
+            title: "禁止访问",
+            description: "你无法在此工作空间中创建变量。",
           })
         case 409:
           return toast({
-            title: "Variable already exists",
-            description:
-              "Variables with the same name and environment are not supported.",
+            title: "变量已存在",
+            description: "不支持名称和环境均相同的变量。",
           })
         default:
           console.error("Failed to create variable", error)
           return toast({
-            title: "Failed to add new variable",
-            description: "Please contact support for help.",
+            title: "添加新变量失败",
+            description: "请联系支持团队获取帮助。",
           })
       }
     },
@@ -1781,8 +1778,8 @@ export function useWorkspaceVariables(
       }),
     onSuccess: () => {
       toast({
-        title: "Updated variable",
-        description: "Variable updated successfully.",
+        title: "已更新变量",
+        description: "变量更新成功。",
       })
       queryClient.invalidateQueries({
         queryKey: ["workspace-variables", workspaceId],
@@ -1792,14 +1789,14 @@ export function useWorkspaceVariables(
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot update variables in this workspace.",
+            title: "禁止访问",
+            description: "你无法更新此工作空间中的变量。",
           })
         default:
           console.error("Failed to update variable", error)
           return toast({
-            title: "Failed to update variable",
-            description: "An error occurred while updating the variable.",
+            title: "更新变量失败",
+            description: "更新变量时出错。",
           })
       }
     },
@@ -1817,22 +1814,22 @@ export function useWorkspaceVariables(
         queryKey: ["workspace-variables", workspaceId],
       })
       toast({
-        title: "Deleted variable",
-        description: "Variable deleted successfully.",
+        title: "已删除变量",
+        description: "变量删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot delete variables in this workspace.",
+            title: "禁止访问",
+            description: "你无法删除此工作空间中的变量。",
           })
         default:
           console.error("Failed to delete variable", error)
           return toast({
-            title: "Failed to delete variable",
-            description: "An error occurred while deleting the variable.",
+            title: "删除变量失败",
+            description: "删除变量时出错。",
           })
       }
     },
@@ -1885,15 +1882,15 @@ export function useOrgSecrets() {
         case "ssh_key":
           queryClient.invalidateQueries({ queryKey: ["org-ssh-keys"] })
           toast({
-            title: "Created secret",
-            description: "SSH key created successfully.",
+            title: "已创建密钥",
+            description: "SSH 密钥创建成功。",
           })
           break
         default:
           queryClient.invalidateQueries({ queryKey: ["org-custom-secrets"] })
           toast({
-            title: "Created secret",
-            description: "Secret created successfully.",
+            title: "已创建密钥",
+            description: "密钥创建成功。",
           })
           break
       }
@@ -1917,15 +1914,15 @@ export function useOrgSecrets() {
         case "ssh_key":
           queryClient.invalidateQueries({ queryKey: ["org-ssh-keys"] })
           toast({
-            title: "Updated secret",
-            description: "SSH key updated successfully.",
+            title: "已更新密钥",
+            description: "SSH 密钥更新成功。",
           })
           break
         default:
           queryClient.invalidateQueries({ queryKey: ["org-custom-secrets"] })
           toast({
-            title: "Updated secret",
-            description: "Secret updated successfully.",
+            title: "已更新密钥",
+            description: "密钥更新成功。",
           })
           break
       }
@@ -1940,15 +1937,15 @@ export function useOrgSecrets() {
         case "ssh_key":
           queryClient.invalidateQueries({ queryKey: ["org-ssh-keys"] })
           toast({
-            title: "Deleted secret",
-            description: "SSH key deleted successfully.",
+            title: "已删除密钥",
+            description: "SSH 密钥删除成功。",
           })
           break
         default:
           queryClient.invalidateQueries({ queryKey: ["org-custom-secrets"] })
           toast({
-            title: "Deleted secret",
-            description: "Secret deleted successfully.",
+            title: "已删除密钥",
+            description: "密钥删除成功。",
           })
           break
       }
@@ -1982,8 +1979,8 @@ export function useUserManager() {
       queryClient.invalidateQueries({ queryKey: ["user"] })
       queryClient.invalidateQueries({ queryKey: ["auth"] })
       toast({
-        title: "Updated user",
-        description: "User updated successfully.",
+        title: "已更新用户",
+        description: "用户更新成功。",
       })
     },
     onError: (error: ApiError) => {
@@ -1991,15 +1988,15 @@ export function useUserManager() {
         case 400:
           console.error("User with email already exists", error)
           toast({
-            title: "User with email already exists",
-            description: "User with this email already exists.",
+            title: "此邮箱对应的用户已存在",
+            description: "已存在使用此邮箱的用户。",
           })
           break
         default:
           console.error("Failed to update user", error)
           toast({
-            title: "Failed to update user",
-            description: "An error occurred while updating the user.",
+            title: "更新用户失败",
+            description: "更新用户时出错。",
           })
       }
     },
@@ -2141,23 +2138,23 @@ export function useRegistryRepositories() {
       switch (error.status) {
         case 400:
           return toast({
-            title: "Couldn't sync repository",
+            title: "无法同步仓库",
             description: (
               <div className="flex items-start gap-2">
                 <AlertTriangleIcon className="size-4 fill-rose-600 stroke-white" />
-                <span>{getApiErrorDetail(error) ?? "Please try again."}</span>
+                <span>{getApiErrorDetail(error) ?? "请重试。"}</span>
               </div>
             ),
           })
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You are not authorized to perform this action",
+            title: "禁止访问",
+            description: "你无权执行此操作",
           })
         case 422: {
           const { message } = error.body.detail as RegistryRepositoryErrorDetail
           return toast({
-            title: "Repository validation failed",
+            title: "仓库校验失败",
             description: (
               <div className="flex items-start gap-2">
                 <AlertTriangleIcon className="size-4 fill-rose-600 stroke-white" />
@@ -2168,12 +2165,12 @@ export function useRegistryRepositories() {
         }
         default:
           return toast({
-            title: "Unexpected error syncing repositories",
+            title: "同步仓库时发生意外错误",
             description: (
               <div className="flex items-start gap-2">
                 <AlertTriangleIcon className="size-4 fill-rose-600 stroke-white" />
                 <span>{error.message}</span>
-                <span>{getApiErrorDetail(error) ?? "Please try again."}</span>
+                <span>{getApiErrorDetail(error) ?? "请重试。"}</span>
               </div>
             ),
           })
@@ -2193,8 +2190,8 @@ export function useRegistryRepositories() {
       queryClient.invalidateQueries({ queryKey: ["registry_repositories"] })
       queryClient.invalidateQueries({ queryKey: ["registry_actions"] })
       toast({
-        title: "Deleted registry repository",
-        description: "Registry repository deleted successfully.",
+        title: "已删除注册表仓库",
+        description: "注册表仓库删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -2202,14 +2199,14 @@ export function useRegistryRepositories() {
       switch (apiError.status) {
         case 403:
           toast({
-            title: "You cannot perform this action",
-            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "你无法执行此操作",
+            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
           break
         default:
           toast({
-            title: "Failed to delete registry repository",
-            description: `An unexpected error occurred while deleting the registry repository. ${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "删除注册表仓库失败",
+            description: `删除注册表仓库时发生意外错误。${apiError.message}：${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
       }
     },
@@ -2291,8 +2288,8 @@ export function useOrgMembers() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Updated organization member",
-        description: "Organization member updated successfully.",
+        title: "已更新组织成员",
+        description: "组织成员更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -2300,14 +2297,14 @@ export function useOrgMembers() {
       switch (apiError.status) {
         case 403:
           toast({
-            title: "You cannot perform this action",
-            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "你无法执行此操作",
+            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
           break
         default:
           toast({
-            title: "Failed to update organization member",
-            description: `An unexpected error occurred while updating the organization member. ${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "更新组织成员失败",
+            description: `更新组织成员时发生意外错误。${apiError.message}：${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
       }
     },
@@ -2324,8 +2321,8 @@ export function useOrgMembers() {
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       queryClient.invalidateQueries({ queryKey: ["sessions"] })
       toast({
-        title: "Removed organization member",
-        description: "Organization access removed and sessions revoked.",
+        title: "已移除组织成员",
+        description: "已移除组织访问权限并撤销会话。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -2333,14 +2330,14 @@ export function useOrgMembers() {
       switch (apiError.status) {
         case 403:
           toast({
-            title: "You cannot perform this action",
-            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "你无法执行此操作",
+            description: `${apiError.message}: ${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
           break
         default:
           toast({
-            title: "Failed to delete organization member",
-            description: `An unexpected error occurred while deleting the organization member. ${apiError.message}: ${getApiErrorDetail(apiError) ?? "Please try again."}`,
+            title: "删除组织成员失败",
+            description: `删除组织成员时发生意外错误。${apiError.message}：${getApiErrorDetail(apiError) ?? "请重试。"}`,
           })
       }
     },
@@ -2358,15 +2355,15 @@ export function useOrgMembers() {
         queryKey: ["org-invitations", "pending"],
       })
       toast({
-        title: "Invitation created",
-        description: "Invitation sent successfully.",
+        title: "已创建邀请",
+        description: "邀请发送成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       const apiError = error as TracecatApiError
       const detail = apiError.body?.detail
       toast({
-        title: "Failed to create invitation",
+        title: "创建邀请失败",
         description: typeof detail === "string" ? detail : apiError.message,
         variant: "destructive",
       })
@@ -2382,15 +2379,15 @@ export function useOrgMembers() {
         queryKey: ["org-invitations", "pending"],
       })
       toast({
-        title: "Invitation revoked",
-        description: "Invitation has been revoked.",
+        title: "邀请已撤销",
+        description: "邀请已撤销。",
       })
     },
     onError: (error: TracecatApiError) => {
       const apiError = error as TracecatApiError
       const detail = apiError.body?.detail
       toast({
-        title: "Failed to revoke invitation",
+        title: "撤销邀请失败",
         description: typeof detail === "string" ? detail : apiError.message,
         variant: "destructive",
       })
@@ -2451,8 +2448,8 @@ export function useSessions() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["sessions"] })
       toast({
-        title: "Revoked session",
-        description: "Session revoked successfully.",
+        title: "已撤销会话",
+        description: "会话撤销成功。",
       })
     },
   })
@@ -2497,11 +2494,11 @@ export function useWorkflowTags(
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tags", workspaceId] })
       toast({
-        title: "Created tag",
+        title: "已创建标签",
         description: (
           <div className="flex items-center space-x-2">
             <CircleCheck className="size-4 fill-emerald-500 stroke-white" />
-            <span>Tag created successfully.</span>
+            <span>标签创建成功。</span>
           </div>
         ),
       })
@@ -2512,21 +2509,21 @@ export function useWorkflowTags(
         case 400:
           console.error("Error creating tag", error)
           toast({
-            title: "Error creating tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "创建标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to create tag", error)
           toast({
-            title: "Failed to create tag",
-            description: `An error occurred while creating the tag: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "创建标签失败",
+            description: `创建标签时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -2544,8 +2541,8 @@ export function useWorkflowTags(
       queryClient.invalidateQueries({ queryKey: ["tags", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["workflows"] })
       toast({
-        title: "Updated tag",
-        description: "Tag updated successfully.",
+        title: "已更新标签",
+        description: "标签更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -2553,8 +2550,8 @@ export function useWorkflowTags(
         case 400:
           console.error("Error updating tag", error)
           toast({
-            title: "Error updating tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "更新标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
       }
@@ -2573,16 +2570,16 @@ export function useWorkflowTags(
       queryClient.invalidateQueries({ queryKey: ["tags", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["workflows"] })
       toast({
-        title: "Deleted tag",
-        description: "Tag deleted successfully.",
+        title: "已删除标签",
+        description: "标签删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
       }
@@ -2640,11 +2637,11 @@ export function useCaseTagCatalog(
       })
       queryClient.invalidateQueries({ queryKey: ["case-tags"] })
       toast({
-        title: "Created case tag",
+        title: "已创建事件标签",
         description: (
           <div className="flex items-center space-x-2">
             <CircleCheck className="size-4 fill-emerald-500 stroke-white" />
-            <span>Case tag created successfully.</span>
+            <span>事件标签创建成功。</span>
           </div>
         ),
       })
@@ -2653,21 +2650,21 @@ export function useCaseTagCatalog(
       switch (error.status) {
         case 400:
           toast({
-            title: "Error creating case tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "创建事件标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to create case tag", error)
           toast({
-            title: "Failed to create case tag",
-            description: `An error occurred while creating the case tag: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "创建事件标签失败",
+            description: `创建事件标签时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -2687,22 +2684,22 @@ export function useCaseTagCatalog(
       queryClient.invalidateQueries({ queryKey: ["cases"] })
       queryClient.invalidateQueries({ queryKey: ["case-tags"] })
       toast({
-        title: "Updated case tag",
-        description: "Case tag updated successfully.",
+        title: "已更新事件标签",
+        description: "事件标签更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Error updating case tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "更新事件标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
       }
@@ -2723,16 +2720,16 @@ export function useCaseTagCatalog(
       queryClient.invalidateQueries({ queryKey: ["cases"] })
       queryClient.invalidateQueries({ queryKey: ["case-tags"] })
       toast({
-        title: "Deleted case tag",
-        description: "Case tag deleted successfully.",
+        title: "已删除事件标签",
+        description: "事件标签删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
       }
@@ -2779,23 +2776,23 @@ export function useOrgGitSettings() {
       queryClient.invalidateQueries({ queryKey: ["org-git-settings"] })
       queryClient.invalidateQueries({ queryKey: ["registry_repositories"] })
       toast({
-        title: "Updated Git settings",
-        description: "Git settings updated successfully.",
+        title: "已更新 Git 设置",
+        description: "Git 设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to update Git settings", error)
           toast({
-            title: "Failed to update Git settings",
-            description: `An error occurred while updating the Git settings: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新 Git 设置失败",
+            description: `更新 Git 设置时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3043,23 +3040,23 @@ export function useOrgAgentSettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["org-agent-settings"] })
       toast({
-        title: "Updated agent settings",
-        description: "Agent settings updated successfully.",
+        title: "已更新智能体设置",
+        description: "智能体设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to update agent settings", error)
           toast({
-            title: "Failed to update agent settings",
-            description: `An error occurred while updating the agent settings: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新智能体设置失败",
+            description: `更新智能体设置时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3101,23 +3098,23 @@ export function useOrgSamlSettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["org-saml-settings"] })
       toast({
-        title: "Updated SAML settings",
-        description: "SAML settings updated successfully.",
+        title: "已更新 SAML 设置",
+        description: "SAML 设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to update SAML settings", error)
           toast({
-            title: "Failed to update SAML settings",
-            description: `An error occurred while updating the SAML settings: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新 SAML 设置失败",
+            description: `更新 SAML 设置时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3162,23 +3159,23 @@ export function useOrgAppSettings() {
       queryClient.invalidateQueries({ queryKey: ["org-app-settings"] })
       queryClient.invalidateQueries({ queryKey: ["workspace"] })
       toast({
-        title: "Updated application settings",
-        description: "Application settings updated successfully.",
+        title: "已更新应用设置",
+        description: "应用设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to update application settings", error)
           toast({
-            title: "Failed to update application settings",
-            description: `An error occurred while updating the application settings: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新应用设置失败",
+            description: `更新应用设置时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3220,23 +3217,23 @@ export function useOrgAuditSettings() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["org-audit-settings"] })
       toast({
-        title: "Updated audit settings",
-        description: "Audit settings updated successfully.",
+        title: "已更新审计设置",
+        description: "审计设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to update audit settings", error)
           toast({
-            title: "Failed to update audit settings",
-            description: `An error occurred while updating the audit settings: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新审计设置失败",
+            description: `更新审计设置时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3260,15 +3257,15 @@ export function useOrgAuditSettings() {
         switch (error.status) {
           case 403:
             toast({
-              title: "Forbidden",
-              description: "You cannot perform this action",
+              title: "禁止访问",
+              description: "你无法执行此操作",
             })
             break
           default:
             console.error("Failed to test audit webhook", error)
             toast({
-              title: "Failed to test audit webhook",
-              description: getApiErrorDetail(error) ?? "Unknown error",
+              title: "测试审计 Webhook 失败",
+              description: getApiErrorDetail(error) ?? "未知错误",
             })
         }
       },
@@ -3433,19 +3430,19 @@ export function useDeleteTable() {
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
         case 400:
           return toast({
-            title: "Bad Request",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "请求无效",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
         default:
           console.error("Error deleting table", error)
           return toast({
-            title: "Error deleting table",
-            description: `An error occurred while deleting the table: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "删除数据表出错",
+            description: `删除数据表时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -3484,8 +3481,8 @@ export function useInsertColumn() {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
@@ -3525,27 +3522,24 @@ export function useUpdateColumn() {
       const requestedIsIndex = variables.requestBody?.is_index
       const isIndexOperation = typeof requestedIsIndex === "boolean"
       const indexErrorTitle =
-        requestedIsIndex === false
-          ? "Error dropping unique index"
-          : "Error creating unique index"
+        requestedIsIndex === false ? "删除唯一索引出错" : "创建唯一索引出错"
 
       if (isIndexOperation) {
         // Handle unique index specific errors
         if (error.status === 409) {
           toast({
             title: indexErrorTitle,
-            description:
-              "Column contains duplicate values. All values must be unique.",
+            description: "列中存在重复值，所有值必须唯一。",
           })
         } else if (error.status === 400) {
           toast({
             title: indexErrorTitle,
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
         } else {
           toast({
             title: indexErrorTitle,
-            description: error.message || "An unexpected error occurred",
+            description: error.message || "发生意外错误",
           })
         }
       } else {
@@ -3553,15 +3547,15 @@ export function useUpdateColumn() {
         switch (error.status) {
           case 403:
             toast({
-              title: "Forbidden",
-              description: "You cannot perform this action",
+              title: "禁止访问",
+              description: "你无法执行此操作",
             })
             break
           default:
             console.error("Error updating column", error)
             toast({
-              title: "Error updating column",
-              description: error.message || "An unexpected error occurred",
+              title: "更新列出错",
+              description: error.message || "发生意外错误",
             })
             break
         }
@@ -3630,15 +3624,15 @@ export function useBatchInsertRows() {
         ],
       })
       toast({
-        title: "Imported rows successfully",
-        description: "The data has been imported into the table.",
+        title: "行导入成功",
+        description: "数据已导入数据表。",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Error batch inserting rows:", error)
       toast({
-        title: "Failed to import rows",
-        description: "There was an error importing the data. Please try again.",
+        title: "导入行失败",
+        description: "导入数据时出错，请重试。",
         variant: "destructive",
       })
     },
@@ -3691,15 +3685,14 @@ export function useInsertRow() {
     onError: (error: TracecatApiError) => {
       if (error.status === 409) {
         toast({
-          title: "Duplicate value error",
-          description:
-            "Cannot insert duplicate values in a unique column. Please use unique values.",
+          title: "重复值错误",
+          description: "唯一列中不能插入重复值，请使用唯一值。",
           variant: "destructive",
         })
       } else {
         toast({
-          title: "Error inserting row",
-          description: error.message || "An unexpected error occurred",
+          title: "插入行出错",
+          description: error.message || "发生意外错误",
           variant: "destructive",
         })
       }
@@ -3741,8 +3734,8 @@ export function useUpdateRow() {
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Error updating row",
-        description: error.message || "An unexpected error occurred",
+        title: "更新行出错",
+        description: error.message || "发生意外错误",
         variant: "destructive",
       })
     },
@@ -3890,8 +3883,8 @@ export function useImportCsv() {
         ],
       })
       toast({
-        title: "Imported rows successfully",
-        description: "The data has been imported into the table.",
+        title: "行导入成功",
+        description: "数据已导入数据表。",
       })
     },
   })
@@ -3921,8 +3914,8 @@ export function useImportTableFromCsv() {
         queryKey: ["tables", variables.workspaceId],
       })
       toast({
-        title: "Imported table successfully",
-        description: "A new table has been created from the CSV file.",
+        title: "数据表导入成功",
+        description: "已从 CSV 文件创建新数据表。",
       })
       if (response?.table?.id) {
         router.push(
@@ -4006,14 +3999,14 @@ export function useCreateCase(workspaceId: string) {
         exact: false,
       })
       toast({
-        title: "Case created",
-        description: "New case created successfully",
+        title: "已创建事件",
+        description: "新事件创建成功",
       })
     },
     onError: (error: TracecatApiError) => {
       toast({
-        title: "Error creating case",
-        description: `An error occurred while creating the case: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "创建事件出错",
+        description: `创建事件时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -4061,14 +4054,14 @@ export function useUpdateCase({
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
         default:
           console.error("Error updating case", error)
           return toast({
-            title: "Error updating case",
-            description: `An error occurred while updating the case: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新事件出错",
+            description: `更新事件时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
             variant: "destructive",
           })
       }
@@ -4106,14 +4099,14 @@ export function useDeleteCase({ workspaceId }: { workspaceId: string }) {
       switch (error.status) {
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
         default:
           console.error("Error deleting case", error)
           return toast({
-            title: "Error deleting case",
-            description: `An error occurred while deleting the case: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "删除事件出错",
+            description: `删除事件时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -4350,8 +4343,8 @@ export function useCreateCaseComment({
     onError: (error: TracecatApiError) => {
       console.error("Error creating comment", error)
       toast({
-        title: "Error creating comment",
-        description: `An error occurred while creating the comment: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "创建评论出错",
+        description: `创建评论时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
         variant: "destructive",
       })
     },
@@ -4393,8 +4386,8 @@ export function useUpdateCaseComment({
     onError: (error: TracecatApiError) => {
       console.error("Error updating comment", error)
       toast({
-        title: "Error updating comment",
-        description: `An error occurred while updating the comment: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "更新评论出错",
+        description: `更新评论时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
         variant: "destructive",
       })
     },
@@ -4435,8 +4428,8 @@ export function useDeleteCaseComment({
     onError: (error: TracecatApiError) => {
       console.error("Error deleting comment", error)
       toast({
-        title: "Error deleting comment",
-        description: `An error occurred while deleting the comment: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "删除评论出错",
+        description: `删除评论时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
         variant: "destructive",
       })
     },
@@ -4499,8 +4492,8 @@ export function useCreateCaseTask({ caseId, workspaceId }: CasesListTasksData) {
     onError: (error: TracecatApiError) => {
       console.error("Error creating task", error)
       toast({
-        title: "Error creating task",
-        description: `An error occurred while creating the task: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "创建任务出错",
+        description: `创建任务时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -4544,8 +4537,8 @@ export function useUpdateCaseTask({
     onError: (error: TracecatApiError) => {
       console.error("Error updating task", error)
       toast({
-        title: "Error updating task",
-        description: `An error occurred while updating the task: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "更新任务出错",
+        description: `更新任务时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -4588,8 +4581,8 @@ export function useDeleteCaseTask({
     onError: (error: TracecatApiError) => {
       console.error("Error deleting task", error)
       toast({
-        title: "Error deleting task",
-        description: `An error occurred while deleting the task: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "删除任务出错",
+        description: `删除任务时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -4649,10 +4642,10 @@ export function useFolders(
       queryClient.invalidateQueries({ queryKey: ["folders", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["directory-items"] })
       toast({
-        title: "Created folder",
+        title: "已创建文件夹",
         description: (
           <div className="flex items-center space-x-2">
-            <span>Folder created successfully.</span>
+            <span>文件夹创建成功。</span>
           </div>
         ),
       })
@@ -4662,20 +4655,19 @@ export function useFolders(
         case 409:
           console.error("Error creating folder", error)
           return toast({
-            title: "Error creating folder",
-            description:
-              "A folder with this name already exists at this location.",
+            title: "创建文件夹出错",
+            description: "此位置已存在同名文件夹。",
           })
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
         default:
           console.error("Failed to create folder", error)
           return toast({
-            title: "Failed to create folder",
-            description: `An error occurred while creating the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "创建文件夹失败",
+            description: `创建文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -4703,8 +4695,8 @@ export function useFolders(
       queryClient.invalidateQueries({ queryKey: ["folders", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["directory-items"] })
       toast({
-        title: "Updated folder",
-        description: "Folder updated successfully.",
+        title: "已更新文件夹",
+        description: "文件夹更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -4712,16 +4704,15 @@ export function useFolders(
         case 409:
           console.error("Error updating folder", error)
           toast({
-            title: "Error updating folder",
-            description:
-              "A folder with this name already exists at this location.",
+            title: "更新文件夹出错",
+            description: "此位置已存在同名文件夹。",
           })
           break
         default:
           console.error("Error updating folder", error)
           toast({
-            title: "Error updating folder",
-            description: `An error occurred while updating the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新文件夹出错",
+            description: `更新文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
           break
       }
@@ -4750,15 +4741,15 @@ export function useFolders(
       queryClient.invalidateQueries({ queryKey: ["folders", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["directory-items"] })
       toast({
-        title: "Moved folder",
-        description: "Folder moved successfully.",
+        title: "已移动文件夹",
+        description: "文件夹移动成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Error moving folder", error)
       toast({
-        title: "Error moving folder",
-        description: `An error occurred while moving the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "移动文件夹出错",
+        description: `移动文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -4788,29 +4779,29 @@ export function useFolders(
       queryClient.invalidateQueries({ queryKey: ["directory-items"] })
       queryClient.invalidateQueries({ queryKey: ["workflows"] })
       toast({
-        title: "Deleted folder",
-        description: "Folder deleted successfully.",
+        title: "已删除文件夹",
+        description: "文件夹删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot delete folder",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "无法删除文件夹",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Error deleting folder", error)
           toast({
-            title: "Failed to delete folder",
-            description: `An error occurred while deleting the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "删除文件夹失败",
+            description: `删除文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
           break
       }
@@ -5050,14 +5041,14 @@ export function useCreateCustomProvider(workspaceId: string) {
     onSuccess: (provider) => {
       queryClient.invalidateQueries({ queryKey: ["providers", workspaceId] })
       toast({
-        title: "Provider created",
-        description: `Added ${provider.name}`,
+        title: "已创建提供商",
+        description: `已添加 ${provider.name}`,
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to create custom provider:", error)
       toast({
-        title: "Failed to create provider",
+        title: "创建提供商失败",
         description: `${error.body?.detail || error.message}`,
         variant: "destructive",
       })
@@ -5102,19 +5093,17 @@ export function useConnectMcpIntegration(workspaceId: string) {
           )
         }
         toast({
-          title: verifying
-            ? "MCP integration verification started"
-            : "MCP integration connected",
+          title: verifying ? "已开始验证 MCP 集成" : "MCP 集成已连接",
           description: verifying
-            ? `Added ${result.mcp_integration.name}; tools will appear after verification succeeds.`
-            : `Added ${result.mcp_integration.name}`,
+            ? `已添加 ${result.mcp_integration.name}；验证成功后将显示工具。`
+            : `已添加 ${result.mcp_integration.name}`,
         })
       }
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to connect MCP integration:", error)
       toast({
-        title: "Failed to connect MCP integration",
+        title: "连接 MCP 集成失败",
         description: getMcpOAuthConnectErrorDetail(error),
         variant: "destructive",
       })
@@ -5156,18 +5145,16 @@ export function useCreateMcpIntegration(workspaceId: string) {
         )
       }
       toast({
-        title: verifying
-          ? "MCP integration verification started"
-          : "MCP integration created",
+        title: verifying ? "已开始验证 MCP 集成" : "已创建 MCP 集成",
         description: verifying
-          ? `Added ${integration.name}; tools will appear after verification succeeds.`
-          : `Added ${integration.name}`,
+          ? `已添加 ${integration.name}；验证成功后将显示工具。`
+          : `已添加 ${integration.name}`,
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to create MCP integration:", error)
       toast({
-        title: "Failed to create MCP integration",
+        title: "创建 MCP 集成失败",
         description: `${error.body?.detail || error.message}`,
         variant: "destructive",
       })
@@ -5288,14 +5275,14 @@ export function useUpdateMcpIntegration(workspaceId: string) {
         queryKey: ["mcp-integration", workspaceId, integration.id],
       })
       toast({
-        title: "MCP integration updated",
-        description: `Updated ${integration.name}`,
+        title: "已更新 MCP 集成",
+        description: `已更新 ${integration.name}`,
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to update MCP integration:", error)
       toast({
-        title: "Failed to update MCP integration",
+        title: "更新 MCP 集成失败",
         description: `${error.body?.detail || error.message}`,
         variant: "destructive",
       })
@@ -5359,7 +5346,7 @@ export function useUpdateMcpIntegrationToolPolicies(workspaceId: string) {
     onError: (error: TracecatApiError) => {
       console.error("Failed to update MCP tool policy:", error)
       toast({
-        title: "Failed to update tool policy",
+        title: "更新工具策略失败",
         description: `${error.body?.detail || error.message}`,
         variant: "destructive",
       })
@@ -5417,12 +5404,12 @@ export function useTestMcpConnectionConfig(workspaceId: string) {
       if (result.success) {
         const toolCount = result.tools?.length ?? 0
         toast({
-          title: "Connection verified",
-          description: `${toolCount} ${toolCount === 1 ? "tool" : "tools"} available`,
+          title: "连接已验证",
+          description: `${toolCount} ${toolCount === 1 ? "个工具" : "个工具"}可用`,
         })
       } else {
         toast({
-          title: "Connection failed",
+          title: "连接失败",
           description: sanitizeUrlsInText(result.error || result.message),
           variant: "destructive",
         })
@@ -5436,8 +5423,8 @@ export function useTestMcpConnectionConfig(workspaceId: string) {
       )
       console.error("Failed to test MCP connection:", detail)
       toast({
-        title: "Test failed",
-        description: `Could not test connection: ${detail}`,
+        title: "测试失败",
+        description: `无法测试连接：${detail}`,
         variant: "destructive",
       })
     },
@@ -5484,12 +5471,12 @@ export function useTestMcpIntegrationConnection(workspaceId: string) {
       if (result.success) {
         const toolCount = result.tools?.length ?? 0
         toast({
-          title: "Connection verified",
-          description: `${toolCount} ${toolCount === 1 ? "tool" : "tools"} available`,
+          title: "连接已验证",
+          description: `${toolCount} ${toolCount === 1 ? "个工具" : "个工具"}可用`,
         })
       } else {
         toast({
-          title: "Connection failed",
+          title: "连接失败",
           description: sanitizeUrlsInText(result.error || result.message),
           variant: "destructive",
         })
@@ -5501,8 +5488,8 @@ export function useTestMcpIntegrationConnection(workspaceId: string) {
       )
       console.error("Failed to test MCP connection:", detail)
       toast({
-        title: "Test failed",
-        description: `Could not test connection: ${detail}`,
+        title: "测试失败",
+        description: `无法测试连接：${detail}`,
         variant: "destructive",
       })
     },
@@ -5542,14 +5529,14 @@ export function useDeleteMcpIntegration(workspaceId: string) {
         queryKey: ["integrations", workspaceId],
       })
       toast({
-        title: "MCP integration deleted",
-        description: "The integration has been removed",
+        title: "已删除 MCP 集成",
+        description: "已移除此集成",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to delete MCP integration:", error)
       toast({
-        title: "Failed to delete MCP integration",
+        title: "删除 MCP 集成失败",
         description: `${error.body?.detail || error.message}`,
         variant: "destructive",
       })
@@ -5643,8 +5630,8 @@ export function useIntegrationProvider({
     onError: (error: TracecatApiError) => {
       console.error("Failed to update integration:", error)
       toast({
-        title: "Failed to update",
-        description: `Could not update integration: ${JSON.stringify(error.body?.detail) || error.message}`,
+        title: "更新失败",
+        description: `无法更新集成：${JSON.stringify(error.body?.detail) || error.message}`,
       })
     },
   })
@@ -5664,8 +5651,8 @@ export function useIntegrationProvider({
     onError: (error: TracecatApiError) => {
       console.error("Failed to connect provider:", error)
       toast({
-        title: "Failed to connect",
-        description: `Could not connect to provider: ${error.body?.detail || error.message}`,
+        title: "连接失败",
+        description: `无法连接提供商：${error.body?.detail || error.message}`,
       })
     },
   })
@@ -5689,15 +5676,15 @@ export function useIntegrationProvider({
         queryKey: ["provider-schema", providerId, workspaceId, grantType],
       })
       toast({
-        title: "Disconnected",
-        description: "Successfully disconnected from provider",
+        title: "已断开",
+        description: "已成功断开提供商连接",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to disconnect provider:", error)
       toast({
-        title: "Failed to disconnect",
-        description: `Could not disconnect from provider: ${error.body?.detail || error.message}`,
+        title: "断开连接失败",
+        description: `无法断开提供商连接：${error.body?.detail || error.message}`,
         variant: "destructive",
       })
     },
@@ -5725,15 +5712,15 @@ export function useIntegrationProvider({
         queryKey: ["provider-schema", providerId, workspaceId, grantType],
       })
       toast({
-        title: "Connection deleted",
-        description: "Removed integration configuration",
+        title: "已删除连接",
+        description: "已移除集成配置",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Failed to delete integration:", error)
       toast({
-        title: "Failed to delete",
-        description: `Could not delete integration: ${error.body?.detail || error.message}`,
+        title: "删除失败",
+        description: `无法删除集成：${error.body?.detail || error.message}`,
         variant: "destructive",
       })
     },
@@ -5759,12 +5746,12 @@ export function useIntegrationProvider({
           queryKey: ["provider-schema", providerId, workspaceId, grantType],
         })
         toast({
-          title: "Connection successful",
+          title: "连接成功",
           description: result.message,
         })
       } else {
         toast({
-          title: "Connection failed",
+          title: "连接失败",
           description: result.error || result.message,
           variant: "destructive",
         })
@@ -5773,8 +5760,8 @@ export function useIntegrationProvider({
     onError: (error: TracecatApiError) => {
       console.error("Failed to test connection:", error)
       toast({
-        title: "Test failed",
-        description: `Could not test connection: ${error.body?.detail || error.message}`,
+        title: "测试失败",
+        description: `无法测试连接：${error.body?.detail || error.message}`,
         variant: "destructive",
       })
     },
@@ -6340,15 +6327,15 @@ export function useWorkspaceSettings(
       queryClient.invalidateQueries({ queryKey: ["workspace", workspaceId] })
       queryClient.invalidateQueries({ queryKey: ["workspaces"] })
       toast({
-        title: "Workspace updated",
-        description: "Workspace settings updated successfully.",
+        title: "已更新工作空间",
+        description: "工作空间设置更新成功。",
       })
     },
     onError: (error) => {
       console.error("Failed to update workspace", error)
       toast({
-        title: "Error updating workspace",
-        description: "Failed to update the workspace. Please try again.",
+        title: "更新工作空间出错",
+        description: "更新工作空间失败，请重试。",
         variant: "destructive",
       })
     },
@@ -6364,16 +6351,16 @@ export function useWorkspaceSettings(
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workspaces"] })
       toast({
-        title: "Workspace deleted",
-        description: "The workspace has been deleted successfully.",
+        title: "已删除工作空间",
+        description: "工作空间删除成功。",
       })
       onWorkspaceDeleted?.()
     },
     onError: (error) => {
       console.error("Failed to delete workspace", error)
       toast({
-        title: "Error deleting workspace",
-        description: "Failed to delete the workspace. Please try again.",
+        title: "删除工作空间出错",
+        description: "删除工作空间失败，请重试。",
         variant: "destructive",
       })
     },
@@ -6465,36 +6452,36 @@ export function useRbacScopes(options?: {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rbac-scopes"] })
       toast({
-        title: "Scope created",
-        description: "Custom scope created successfully.",
+        title: "已创建权限范围",
+        description: "自定义权限范围创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Invalid scope",
+            title: "权限范围无效",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to create scopes.",
+            title: "权限不足",
+            description: "你没有创建权限范围的权限。",
             variant: "destructive",
           })
           break
         case 409:
           toast({
-            title: "Scope already exists",
-            description: "A scope with this name already exists.",
+            title: "权限范围已存在",
+            description: "已存在同名权限范围。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to create scope",
+            title: "创建权限范围失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6512,36 +6499,36 @@ export function useRbacScopes(options?: {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rbac-scopes"] })
       toast({
-        title: "Scope deleted",
-        description: "Custom scope deleted successfully.",
+        title: "已删除权限范围",
+        description: "自定义权限范围删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot delete scope",
+            title: "无法删除权限范围",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to delete scopes.",
+            title: "权限不足",
+            description: "你没有删除权限范围的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Scope not found",
-            description: "The scope does not exist.",
+            title: "未找到权限范围",
+            description: "此权限范围不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to delete scope",
+            title: "删除权限范围失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6604,36 +6591,36 @@ export function useRbacRoles(options: { enabled?: boolean } = {}) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rbac-roles", "org"] })
       toast({
-        title: "Role created",
-        description: "Custom role created successfully.",
+        title: "已创建角色",
+        description: "自定义角色创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Invalid role",
+            title: "角色无效",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to create roles.",
+            title: "权限不足",
+            description: "你没有创建角色的权限。",
             variant: "destructive",
           })
           break
         case 409:
           toast({
-            title: "Role already exists",
-            description: "A role with this name already exists.",
+            title: "角色已存在",
+            description: "已存在同名角色。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to create role",
+            title: "创建角色失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6656,36 +6643,36 @@ export function useRbacRoles(options: { enabled?: boolean } = {}) {
       queryClient.invalidateQueries({ queryKey: ["rbac-roles", "org"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Role updated",
-        description: "Role updated successfully.",
+        title: "已更新角色",
+        description: "角色更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot modify role",
+            title: "无法修改角色",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to update roles.",
+            title: "权限不足",
+            description: "你没有更新角色的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Role not found",
-            description: "The role does not exist.",
+            title: "未找到角色",
+            description: "此角色不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to update role",
+            title: "更新角色失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6704,36 +6691,36 @@ export function useRbacRoles(options: { enabled?: boolean } = {}) {
       queryClient.invalidateQueries({ queryKey: ["rbac-roles", "org"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Role deleted",
-        description: "Role deleted successfully.",
+        title: "已删除角色",
+        description: "角色删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot delete role",
+            title: "无法删除角色",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to delete roles.",
+            title: "权限不足",
+            description: "你没有删除角色的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Role not found",
-            description: "The role does not exist.",
+            title: "未找到角色",
+            description: "此角色不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to delete role",
+            title: "删除角色失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6767,13 +6754,13 @@ function getAddGroupMemberFailureReason(error: unknown): string {
   }
   switch (apiError.status) {
     case 403:
-      return "You don't have permission to add group members."
+      return "你没有添加用户组成员的权限。"
     case 404:
-      return "The group or user does not exist."
+      return "用户组或用户不存在。"
     case 409:
-      return "This user is already a member of the group."
+      return "此用户已是用户组成员。"
     default:
-      return "Failed to add member"
+      return "添加成员失败"
   }
 }
 
@@ -6807,36 +6794,36 @@ export function useRbacGroups() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["rbac-groups", "org"] })
       toast({
-        title: "Group created",
-        description: "Group created successfully.",
+        title: "已创建用户组",
+        description: "用户组创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Invalid group",
+            title: "用户组无效",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to create groups.",
+            title: "权限不足",
+            description: "你没有创建用户组的权限。",
             variant: "destructive",
           })
           break
         case 409:
           toast({
-            title: "Group already exists",
-            description: "A group with this name already exists.",
+            title: "用户组已存在",
+            description: "已存在同名用户组。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to create group",
+            title: "创建用户组失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6859,29 +6846,29 @@ export function useRbacGroups() {
       queryClient.invalidateQueries({ queryKey: ["rbac-groups", "org"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Group updated",
-        description: "Group updated successfully.",
+        title: "已更新用户组",
+        description: "用户组更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to update groups.",
+            title: "权限不足",
+            description: "你没有更新用户组的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Group not found",
-            description: "The group does not exist.",
+            title: "未找到用户组",
+            description: "此用户组不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to update group",
+            title: "更新用户组失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6901,29 +6888,29 @@ export function useRbacGroups() {
       queryClient.invalidateQueries({ queryKey: ["rbac-assignments"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Group deleted",
-        description: "Group deleted successfully.",
+        title: "已删除用户组",
+        description: "用户组删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to delete groups.",
+            title: "权限不足",
+            description: "你没有删除用户组的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Group not found",
-            description: "The group does not exist.",
+            title: "未找到用户组",
+            description: "此用户组不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to delete group",
+            title: "删除用户组失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -6968,10 +6955,10 @@ export function useRbacGroups() {
       queryClient.invalidateQueries({ queryKey: ["rbac-groups", "org"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       const total = userIds.length
-      const noun = total === 1 ? "member" : "members"
+      const noun = "位成员"
       if (failedUserIds.length > 0) {
         toast({
-          title: `Added ${total - failedUserIds.length} of ${total} ${noun}`,
+          title: `已添加 ${total - failedUserIds.length}/${total} ${noun}`,
           description: [
             ...new Set(failures.map((failure) => failure.reason)),
           ].join("\n"),
@@ -6979,7 +6966,7 @@ export function useRbacGroups() {
         })
         return
       }
-      toast({ title: `${total} ${noun} added` })
+      toast({ title: `已添加 ${total} ${noun}` })
     },
   })
 
@@ -7000,29 +6987,29 @@ export function useRbacGroups() {
       queryClient.invalidateQueries({ queryKey: ["rbac-groups", "org"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Member removed",
-        description: "Member removed from the group successfully.",
+        title: "已移除成员",
+        description: "已成功从用户组移除成员。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to remove group members.",
+            title: "权限不足",
+            description: "你没有移除用户组成员的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The group or member does not exist.",
+            title: "未找到",
+            description: "用户组或成员不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to remove member",
+            title: "移除成员失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7106,43 +7093,43 @@ export function useRbacAssignments(options?: {
       queryClient.invalidateQueries({ queryKey: ["user-scopes"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Assignment created",
-        description: "Role assigned to group successfully.",
+        title: "已创建授权",
+        description: "已成功为用户组分配角色。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Invalid assignment",
+            title: "授权无效",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to create assignments.",
+            title: "权限不足",
+            description: "你没有创建授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The group, role, or workspace does not exist.",
+            title: "未找到",
+            description: "用户组、角色或工作空间不存在。",
             variant: "destructive",
           })
           break
         case 409:
           toast({
-            title: "Assignment already exists",
-            description: "This group already has an assignment for this scope.",
+            title: "授权已存在",
+            description: "此用户组已有此范围的授权。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to create assignment",
+            title: "创建授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7166,29 +7153,29 @@ export function useRbacAssignments(options?: {
       queryClient.invalidateQueries({ queryKey: ["user-scopes"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Assignment updated",
-        description: "Assignment updated successfully.",
+        title: "已更新授权",
+        description: "授权更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to update assignments.",
+            title: "权限不足",
+            description: "你没有更新授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The assignment or role does not exist.",
+            title: "未找到",
+            description: "授权或角色不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to update assignment",
+            title: "更新授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7209,29 +7196,29 @@ export function useRbacAssignments(options?: {
       queryClient.invalidateQueries({ queryKey: ["user-scopes"] })
       queryClient.invalidateQueries({ queryKey: ["org-members"] })
       toast({
-        title: "Assignment deleted",
-        description: "Assignment removed successfully.",
+        title: "已删除授权",
+        description: "已成功移除授权。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description: "You don't have permission to delete assignments.",
+            title: "权限不足",
+            description: "你没有删除授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The assignment does not exist.",
+            title: "未找到",
+            description: "此授权不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to delete assignment",
+            title: "删除授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7304,44 +7291,43 @@ export function useRbacUserAssignments(options?: {
     onSuccess: async () => {
       await invalidateAssignmentQueries()
       toast({
-        title: "User assignment created",
-        description: "Role assigned to user successfully.",
+        title: "已创建用户授权",
+        description: "已成功为用户分配角色。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Invalid assignment",
+            title: "授权无效",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
           break
         case 403:
           toast({
-            title: "Permission denied",
-            description:
-              "You don't have permission to create user assignments.",
+            title: "权限不足",
+            description: "你没有创建用户授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The user, role, or workspace does not exist.",
+            title: "未找到",
+            description: "用户、角色或工作空间不存在。",
             variant: "destructive",
           })
           break
         case 409:
           toast({
-            title: "Assignment already exists",
-            description: "This user already has an assignment for this scope.",
+            title: "授权已存在",
+            description: "此用户已有此范围的授权。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to create user assignment",
+            title: "创建用户授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7363,30 +7349,29 @@ export function useRbacUserAssignments(options?: {
     onSuccess: async () => {
       await invalidateAssignmentQueries()
       toast({
-        title: "User assignment updated",
-        description: "User assignment updated successfully.",
+        title: "已更新用户授权",
+        description: "用户授权更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description:
-              "You don't have permission to update user assignments.",
+            title: "权限不足",
+            description: "你没有更新用户授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The assignment or role does not exist.",
+            title: "未找到",
+            description: "授权或角色不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to update user assignment",
+            title: "更新用户授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })
@@ -7405,30 +7390,29 @@ export function useRbacUserAssignments(options?: {
     onSuccess: async () => {
       await invalidateAssignmentQueries()
       toast({
-        title: "User assignment deleted",
-        description: "User assignment removed successfully.",
+        title: "已删除用户授权",
+        description: "已成功移除用户授权。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Permission denied",
-            description:
-              "You don't have permission to delete user assignments.",
+            title: "权限不足",
+            description: "你没有删除用户授权的权限。",
             variant: "destructive",
           })
           break
         case 404:
           toast({
-            title: "Not found",
-            description: "The assignment does not exist.",
+            title: "未找到",
+            description: "此授权不存在。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to delete user assignment",
+            title: "删除用户授权失败",
             description: String(error.body?.detail ?? error.message),
             variant: "destructive",
           })

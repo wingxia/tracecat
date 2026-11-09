@@ -49,7 +49,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, InputProps>(
           onClick={() => setIsRevealed((prev) => !prev)}
         >
           <span className="sr-only">
-            {isRevealed ? "Hide password" : "Show password"}
+            {isRevealed ? "隐藏密码" : "显示密码"}
           </span>
           {isRevealed ? (
             <EyeOff aria-hidden="true" className="size-4" />

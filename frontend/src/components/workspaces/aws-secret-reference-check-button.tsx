@@ -20,64 +20,64 @@ export const CHECK_ERROR_MESSAGES: Record<
   { label: string; hint: string }
 > = {
   store_disabled: {
-    label: "Store disabled",
-    hint: "The secret store is disabled. Ask an organization admin to enable it.",
+    label: "存储已禁用",
+    hint: "密钥存储已禁用，请联系组织管理员启用。",
   },
   store_not_authorized: {
-    label: "Store not authorized",
-    hint: "This workspace is not authorized to use the secret store. Ask an organization admin to authorize it.",
+    label: "存储未授权",
+    hint: "此工作空间未获准使用该密钥存储，请联系组织管理员授权。",
   },
   assume_role_failed: {
-    label: "Cannot assume role",
-    hint: "Tracecat could not assume the store's IAM role. Check that the role's trust policy allows the Tracecat principal and includes the store's external ID.",
+    label: "无法代入角色",
+    hint: "Tracecat 无法代入存储的 IAM 角色。请检查角色信任策略是否允许 Tracecat 主体，并包含存储的外部 ID。",
   },
   access_denied: {
-    label: "Access denied",
-    hint: "The store's IAM role cannot read this secret. Allow secretsmanager:GetSecretValue on the secret, and kms:Decrypt if it uses a customer managed key.",
+    label: "访问被拒绝",
+    hint: "存储的 IAM 角色无法读取此密钥。请为密钥授予 secretsmanager:GetSecretValue 权限；若使用客户管理的密钥，还需授予 kms:Decrypt 权限。",
   },
   not_found: {
-    label: "Secret not found",
-    hint: "No secret with this name or ARN exists in the store's region. Check the spelling and region.",
+    label: "未找到密钥",
+    hint: "存储所在区域中不存在此名称或 ARN 的密钥，请检查拼写和区域。",
   },
   decryption_failed: {
-    label: "Decryption failed",
-    hint: "AWS could not decrypt the secret. Allow kms:Decrypt on the secret's KMS key for the store's IAM role.",
+    label: "解密失败",
+    hint: "AWS 无法解密密钥，请为存储的 IAM 角色授予密钥所用 KMS 密钥的 kms:Decrypt 权限。",
   },
   throttled: {
-    label: "Rate limited",
-    hint: "AWS throttled the request. Try again in a moment.",
+    label: "请求限流",
+    hint: "AWS 限制了请求频率，请稍后重试。",
   },
   timeout: {
-    label: "Timed out",
-    hint: "AWS did not respond in time. Try again in a moment.",
+    label: "已超时",
+    hint: "AWS 响应超时，请稍后重试。",
   },
   binary_value: {
-    label: "Binary secret",
-    hint: "The secret stores a binary value. Only text (SecretString) values are supported.",
+    label: "二进制密钥",
+    hint: "密钥存储的是二进制值，目前仅支持文本（SecretString）值。",
   },
   malformed_json: {
-    label: "Not JSON",
-    hint: "The secret value is not a JSON object. Use the whole string mapping, or store the value as a JSON object.",
+    label: "非 JSON",
+    hint: "密钥值不是 JSON 对象。请使用整段字符串映射，或将值存储为 JSON 对象。",
   },
   missing_field: {
-    label: "Missing JSON field",
-    hint: "A mapped JSON field is missing from the secret value. Check the field names in the mapping.",
+    label: "缺少 JSON 字段",
+    hint: "密钥值缺少已映射的 JSON 字段，请检查映射中的字段名称。",
   },
   non_string_field: {
-    label: "Field not a string",
-    hint: "A mapped JSON field is not a string. Only top-level string fields can be mapped.",
+    label: "字段不是字符串",
+    hint: "映射的 JSON 字段不是字符串，目前仅支持映射顶层字符串字段。",
   },
   invalid_mapping: {
-    label: "Request rejected",
-    hint: "AWS rejected the request. The secret may be scheduled for deletion, or the name or ARN is invalid.",
+    label: "请求被拒绝",
+    hint: "AWS 拒绝了请求，密钥可能已计划删除，或者名称或 ARN 无效。",
   },
   region_mismatch: {
-    label: "Region mismatch",
-    hint: "The secret ARN is in a different region than the store. Use a secret from the store's region.",
+    label: "区域不匹配",
+    hint: "密钥 ARN 的区域与存储区域不同，请使用存储所在区域的密钥。",
   },
   unknown: {
-    label: "Check failed",
-    hint: "The check failed for an unknown reason. Try again, or contact support if it continues.",
+    label: "检查失败",
+    hint: "检查因未知原因失败。请重试，若问题持续，请联系支持团队。",
   },
 }
 
@@ -113,7 +113,7 @@ export function useAwsSecretReferenceCheck(
         message:
           error instanceof ApiError
             ? describeApiError(error)
-            : "The check could not run. Try again.",
+            : "无法执行检查，请重试。",
       }
     }
     if (result.ok) {
@@ -125,8 +125,8 @@ export function useAwsSecretReferenceCheck(
       : null
     setState({
       status: "failed",
-      label: failure?.label ?? "Check failed",
-      hint: failure?.hint ?? result.message ?? "The check could not run.",
+      label: failure?.label ?? "检查失败",
+      hint: failure?.hint ?? result.message ?? "无法执行检查。",
       // The API message carries the AWS error code; keep it for troubleshooting.
       detail: failure ? (result.message ?? null) : null,
     })
@@ -161,20 +161,20 @@ export function AwsSecretReferenceCheckButton({
   state: AwsReferenceCheckState
   onCheck: () => void
 }) {
-  let label = "Check access"
+  let label = "检查访问权限"
   let icon: React.ReactNode = null
-  let title = "Check that Tracecat can read this secret"
+  let title = "检查 Tracecat 是否可读取此密钥"
   if (state.status === "checking") {
-    label = "Checking…"
+    label = "检查中…"
     icon = <Loader2Icon className="size-3.5 animate-spin" />
   } else if (state.status === "ok") {
     label = "Reachable"
     icon = <CheckCircle2Icon className="size-3.5 text-green-600" />
-    title = `Resolved keys: ${state.resolvedKeys.join(", ")}. Click to check again.`
+    title = `已解析的键：${state.resolvedKeys.join("、")}。点击重新检查。`
   } else if (state.status === "failed") {
     label = state.label
     icon = <XCircleIcon className="size-3.5 text-destructive" />
-    title = "Click to check again."
+    title = "点击重新检查。"
   }
   return (
     <Button

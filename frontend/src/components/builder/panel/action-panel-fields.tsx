@@ -135,7 +135,7 @@ export function FormLabelComponent({
           {label && <span className="font-semibold capitalize">{label}</span>}
           {deprecated && (
             <span className="rounded border px-1.5 py-0.5 text-[10px] font-medium uppercase leading-none text-muted-foreground">
-              Deprecated
+              已弃用
             </span>
           )}
           {type && (
@@ -287,7 +287,7 @@ export function PolymorphicField({
                 <ExpressionInput
                   value={field.value}
                   onChange={field.onChange}
-                  placeholder="Enter text or @ to begin an expression..."
+                  placeholder={"输入文本或 @ 开始编写表达式…"}
                 />
               </FormItem>
             )}
@@ -311,7 +311,7 @@ export function PolymorphicField({
                   value={field.value}
                   onChange={field.onChange}
                   defaultHeight="text-area"
-                  placeholder="Enter text or @ to begin an expression..."
+                  placeholder={"输入文本或 @ 开始编写表达式…"}
                 />
               </FormItem>
             )}
@@ -389,7 +389,7 @@ export function PolymorphicField({
         value: "yaml",
         label: COMPONENT_LABELS["yaml"],
         icon: COMPONENT_ICONS["yaml"],
-        tooltip: "Use YAML input",
+        tooltip: "使用 YAML 输入",
       },
     ]
   } else {
@@ -409,14 +409,14 @@ export function PolymorphicField({
             value: componentId,
             label: COMPONENT_LABELS[componentId],
             icon: COMPONENT_ICONS[componentId],
-            tooltip: `Use ${COMPONENT_LABELS[componentId]} input`,
+            tooltip: `使用 ${COMPONENT_LABELS[componentId]} 输入`,
           }
         }),
       {
         value: "expression",
         label: COMPONENT_LABELS["expression"],
         icon: COMPONENT_ICONS["expression"],
-        tooltip: "Use Expression input",
+        tooltip: "使用表达式输入",
       },
     ]
   }
@@ -535,14 +535,14 @@ function ComponentContent({
             onChange={field.onChange}
             suggestions={suggestions}
             searchKeys={["label", "value"]}
-            placeholder="Select options..."
+            placeholder={"选择选项…"}
           />
         )
       }
       return (
         <Select value={field.value} onValueChange={field.onChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Select an option" />
+            <SelectValue placeholder={"选择一个选项"} />
           </SelectTrigger>
           <SelectContent>
             {component.options?.map((option: string) => (
@@ -573,7 +573,7 @@ function ComponentContent({
               typeof newTags === "function" ? newTags([]) : newTags
             field.onChange(resolvedTags.map((tag) => tag.text))
           }}
-          placeholder="Add values..."
+          placeholder={"添加值…"}
         />
       )
     case "integer":
@@ -608,8 +608,8 @@ function ComponentContent({
       )
     case "toggle": {
       const stateLabel = field.value
-        ? component.label_on || "On"
-        : component.label_off || "Off"
+        ? component.label_on || "开启"
+        : component.label_off || "关闭"
       return (
         <div className="flex items-center space-x-2">
           <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -718,7 +718,7 @@ function SingleActionTypeField({
               <span className="truncate">
                 {selectedAction
                   ? selectedAction.default_title || selectedAction.action
-                  : "Select action type..."}
+                  : "选择动作类型…"}
               </span>
             </div>
             <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
@@ -731,11 +731,7 @@ function SingleActionTypeField({
             onQueryChange={setSearchValue}
             autoFocus
             estimateSize={76}
-            empty={
-              registryActionsIsLoading
-                ? "Loading actions..."
-                : "No actions found."
-            }
+            empty={registryActionsIsLoading ? "正在加载动作…" : "未找到动作。"}
             onSelect={handleSelect}
             renderItem={({ action }) => {
               const isLocked = action.availability?.locked ?? false
@@ -818,21 +814,21 @@ export function ActionTypeField({
 }
 
 const COMPONENT_LABELS: Record<TracecatComponentId, string> = {
-  text: "Text",
-  "text-area": "Text Area",
-  select: "Select",
-  "tag-input": "Tags",
-  integer: "Integer",
-  float: "Number",
-  toggle: "Toggle",
+  text: "文本",
+  "text-area": "多行文本",
+  select: "选择",
+  "tag-input": "标签",
+  integer: "整数",
+  float: "数字",
+  toggle: "切换",
   code: "Code",
   yaml: "YAML",
   expression: "Expression",
-  "action-type": "Action Type",
-  "workflow-alias": "Workflow Alias",
-  "agent-preset": "Agent Preset",
-  "agent-model": "Agent Model",
-  "mcp-integration": "MCP Integrations",
+  "action-type": "动作类型",
+  "workflow-alias": "工作流别名",
+  "agent-preset": "智能体预设",
+  "agent-model": "智能体模型",
+  "mcp-integration": "MCP 集成",
 }
 
 const COMPONENT_ICONS: Record<TracecatComponentId, LucideIcon> = {
@@ -865,15 +861,15 @@ function AgentPresetSelect({
     { enabled: Boolean(workspaceId) }
   )
 
-  let placeholder = "Select an agent preset"
-  let emptyText = "No agent presets found."
+  let placeholder = "选择智能体预设"
+  let emptyText = "未找到智能体预设。"
   if (!workspaceId) {
-    placeholder = "Select a workspace to load agent presets"
+    placeholder = "选择工作空间以加载智能体预设"
   } else if (presetsIsLoading) {
-    placeholder = "Loading agent presets..."
+    placeholder = "正在加载智能体预设…"
     emptyText = placeholder
   } else if (presetsError) {
-    placeholder = "Failed to load agent presets"
+    placeholder = "加载智能体预设失败"
     emptyText = placeholder
   }
 
@@ -894,9 +890,7 @@ function AgentPresetSelect({
     label = (
       <span className="flex min-w-0 items-center gap-2">
         <span className="truncate font-mono text-xs">{value}</span>
-        <span className="shrink-0 text-xs text-muted-foreground">
-          Not found
-        </span>
+        <span className="shrink-0 text-xs text-muted-foreground">未找到</span>
       </span>
     )
   }
@@ -926,7 +920,7 @@ function AgentPresetSelect({
             selected ? `${selected.name} ${selected.slug}` : undefined
           }
         >
-          <CommandInput placeholder="Search agent presets..." />
+          <CommandInput placeholder={"搜索智能体预设…"} />
           <CommandList>
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
@@ -986,11 +980,11 @@ function AgentModelSelect({
 
   // Shown alone without a saved model, and beside one the catalog cannot check.
   let catalogStatus: string | undefined
-  if (modelsLoading) catalogStatus = "Loading models..."
-  else if (modelsError) catalogStatus = "Failed to load models"
+  if (modelsLoading) catalogStatus = "正在加载模型…"
+  else if (modelsError) catalogStatus = "加载模型失败"
 
-  let placeholder = catalogStatus ?? "Select a model"
-  if (!workspaceId) placeholder = "Select a workspace to load models"
+  let placeholder = catalogStatus ?? "选择模型"
+  if (!workspaceId) placeholder = "选择工作空间以加载模型"
 
   return (
     <AgentModelCombobox
@@ -1008,7 +1002,7 @@ function AgentModelSelect({
       matchAnySource
       disabled={!workspaceId}
       placeholder={placeholder}
-      unavailableLabel="Unavailable in this workspace"
+      unavailableLabel="此工作空间不可用"
       triggerClassName="h-9 w-full"
       contentClassName="w-[max(var(--radix-popover-trigger-width),24rem)]"
     />
@@ -1039,7 +1033,7 @@ function MCPIntegrationField({
         id: integration.id,
         label: integration.name,
         value: integration.id,
-        description: integration.description || "MCP integration",
+        description: integration.description || "MCP 集成",
         icon: (
           <ProviderIcon
             providerId={getMcpProviderIconId(integration.slug)}
@@ -1062,11 +1056,7 @@ function MCPIntegrationField({
       onChange={(next) => field.onChange(next)}
       suggestions={suggestions}
       searchKeys={["label", "value"]}
-      placeholder={
-        mcpIntegrationsIsLoading
-          ? "Loading integrations..."
-          : "Select MCP integrations"
-      }
+      placeholder={mcpIntegrationsIsLoading ? "正在加载集成…" : "选择 MCP 集成"}
     />
   )
 }

@@ -251,7 +251,7 @@ function CatalogEntrySummary({
             rel="noopener noreferrer"
             className="inline-flex w-fit items-center gap-1 text-xs text-blue-600 hover:underline"
           >
-            View docs
+            查看文档
             <ExternalLink className="size-3" />
           </a>
         ) : null}
@@ -266,8 +266,7 @@ type MCPToolPolicyPatch = {
   requires_approval?: boolean
 }
 
-const STDIO_APPROVAL_UNSUPPORTED_HINT =
-  "Approvals are not supported for local (stdio) MCP servers."
+const STDIO_APPROVAL_UNSUPPORTED_HINT = "本地（stdio）MCP 服务器不支持审批。"
 
 function MCPToolPolicyList({
   tools,
@@ -306,15 +305,15 @@ function MCPToolPolicyList({
                 </p>
                 {isMissing ? (
                   <Badge variant="outline" className="h-5 px-1.5 text-[10px]">
-                    Missing
+                    缺失
                   </Badge>
                 ) : !enabled ? (
                   <Badge variant="outline" className="h-5 px-1.5 text-[10px]">
-                    Disabled
+                    已禁用
                   </Badge>
                 ) : requiresApproval ? (
                   <Badge variant="outline" className="h-5 px-1.5 text-[10px]">
-                    Approval
+                    审批
                   </Badge>
                 ) : null}
               </div>
@@ -326,18 +325,18 @@ function MCPToolPolicyList({
             </div>
             <div className="grid grid-cols-2 gap-4 sm:flex sm:items-center sm:gap-5">
               <label className="flex items-center justify-between gap-2 text-xs text-muted-foreground sm:justify-start">
-                Enabled
+                已启用
                 <Switch
                   checked={enabled}
                   disabled={disabled}
                   onCheckedChange={(checked) =>
                     onPolicyChange(tool, { enabled: checked })
                   }
-                  aria-label={`Enable ${tool.name}`}
+                  aria-label={`启用 ${tool.name}`}
                 />
               </label>
               <label className="flex items-center justify-between gap-2 text-xs text-muted-foreground sm:justify-start">
-                Approval
+                审批
                 {approvalsSupported ? (
                   <Switch
                     checked={requiresApproval}
@@ -345,7 +344,7 @@ function MCPToolPolicyList({
                     onCheckedChange={(checked) =>
                       onPolicyChange(tool, { requires_approval: checked })
                     }
-                    aria-label={`Require approval for ${tool.name}`}
+                    aria-label={`要求 ${tool.name} 进行审批`}
                   />
                 ) : (
                   <Tooltip>
@@ -356,7 +355,7 @@ function MCPToolPolicyList({
                         <Switch
                           checked={false}
                           disabled
-                          aria-label={`Require approval for ${tool.name}`}
+                          aria-label={`要求 ${tool.name} 进行审批`}
                         />
                       </span>
                     </TooltipTrigger>
@@ -480,8 +479,8 @@ export function MCPIntegrationDialog({
     (!isEditMode || !mcpIntegrationId || stdioConnectionFieldsAreDirty)
   const stdioTestHint = stdioTestRequiresSave
     ? isEditMode
-      ? "Save before testing stdio changes."
-      : "Save before testing stdio servers."
+      ? "请先保存 stdio 更改，再测试。"
+      : "请先保存 stdio 服务器，再测试。"
     : null
 
   /**
@@ -863,7 +862,7 @@ export function MCPIntegrationDialog({
             if (missingCredentials.length > 0) {
               form.setError("oauth_client_credentials", {
                 type: "manual",
-                message: `Missing required values: ${missingCredentials.join(", ")}`,
+                message: `缺少必填值：${missingCredentials.join(", ")}`,
               })
               return
             }
@@ -876,7 +875,7 @@ export function MCPIntegrationDialog({
             if (missingHeaders.length > 0) {
               form.setError("custom_credentials", {
                 type: "manual",
-                message: `Missing required values: ${missingHeaders.join(", ")}`,
+                message: `缺少必填值：${missingHeaders.join(", ")}`,
               })
               return
             }
@@ -919,7 +918,7 @@ export function MCPIntegrationDialog({
             if (missingHeaders.length > 0) {
               form.setError("custom_credentials", {
                 type: "manual",
-                message: `Missing required values: ${missingHeaders.join(", ")}`,
+                message: `缺少必填值：${missingHeaders.join(", ")}`,
               })
               return
             }
@@ -940,7 +939,7 @@ export function MCPIntegrationDialog({
       )
       if (!hookHandledError) {
         toast({
-          title: `Failed to ${isEditMode ? "update" : "create"} MCP integration`,
+          title: `${isEditMode ? "更新" : "创建"} MCP 集成失败`,
           description: getMcpOAuthConnectErrorDetail(error),
           variant: "destructive",
         })
@@ -972,7 +971,7 @@ export function MCPIntegrationDialog({
         ) : (
           <PlayCircle className="mr-2 size-4" />
         )}
-        Test
+        测试
       </Button>
       {stdioTestHint ? (
         <p className="text-right text-xs text-muted-foreground">
@@ -989,15 +988,15 @@ export function MCPIntegrationDialog({
     mcpIntegration?.tools?.filter((tool) => tool.status !== "missing").length ??
     0
   const dialogTitle = catalogEntry
-    ? `Configure ${catalogEntry.name}`
+    ? `配置 ${catalogEntry.name}`
     : isEditMode
-      ? "Edit MCP server"
-      : "Add MCP server"
+      ? "编辑 MCP 服务器"
+      : "添加 MCP 服务器"
   const dialogDescription = catalogEntry
-    ? "Review the catalog defaults and fill in any workspace-specific values."
+    ? "检查目录默认值，并填写工作空间所需的值。"
     : isEditMode
-      ? "Update how this MCP server connects from this workspace."
-      : "Configure a custom MCP server for this workspace."
+      ? "更新此 MCP 服务器在当前工作空间的连接方式。"
+      : "为此工作空间配置自定义 MCP 服务器。"
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -1010,7 +1009,7 @@ export function MCPIntegrationDialog({
             {...restTriggerProps}
           >
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Add MCP server
+            添加 MCP 服务器
           </Button>
         </DialogTrigger>
       )}
@@ -1046,7 +1045,7 @@ export function MCPIntegrationDialog({
                 <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">
                   {mcpIntegration.server_uri ??
                     mcpIntegration.stdio_command ??
-                    "Custom MCP server"}
+                    "自定义 MCP 服务器"}
                 </p>
               </div>
               {connectionActions}
@@ -1081,7 +1080,7 @@ export function MCPIntegrationDialog({
                       name="connection_option_id"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Connection option</FormLabel>
+                          <FormLabel>连接选项</FormLabel>
                           <FormControl>
                             <div className="grid gap-2 sm:grid-cols-2">
                               {catalogOptions.map((option) => {
@@ -1177,9 +1176,9 @@ export function MCPIntegrationDialog({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Integration name</FormLabel>
+                        <FormLabel>集成名称</FormLabel>
                         <FormControl>
-                          <Input placeholder="My MCP Server" {...field} />
+                          <Input placeholder={"我的 MCP 服务器"} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -1190,15 +1189,15 @@ export function MCPIntegrationDialog({
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>描述</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Optional description for this MCP integration"
+                            placeholder={"此 MCP 集成的可选描述"}
                             {...field}
                           />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Appears in the integrations list for this workspace.
+                          显示在此工作空间的集成列表中。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -1211,7 +1210,7 @@ export function MCPIntegrationDialog({
                       name="server_type"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Server type</FormLabel>
+                          <FormLabel>服务器类型</FormLabel>
                           <FormControl>
                             <Select
                               value={field.value}
@@ -1219,7 +1218,7 @@ export function MCPIntegrationDialog({
                               disabled={isEditMode}
                             >
                               <SelectTrigger>
-                                <SelectValue placeholder="Select server type">
+                                <SelectValue placeholder={"选择服务器类型"}>
                                   {field.value
                                     ? SERVER_TYPES.find(
                                         (opt) => opt.value === field.value
@@ -1249,8 +1248,8 @@ export function MCPIntegrationDialog({
                           </FormControl>
                           <FormDescription className="text-xs">
                             {isEditMode
-                              ? "Server type cannot be changed after creation."
-                              : "Choose how to connect to the MCP server."}
+                              ? "创建后无法更改服务器类型。"
+                              : "选择 MCP 服务器连接方式。"}
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -1266,7 +1265,7 @@ export function MCPIntegrationDialog({
                         name="server_uri"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Server URI</FormLabel>
+                            <FormLabel>服务器 URI</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="https://mcp.example.com/mcp"
@@ -1274,8 +1273,8 @@ export function MCPIntegrationDialog({
                               />
                             </FormControl>
                             <FormDescription className="text-xs">
-                              The MCP server endpoint URL. Must use HTTPS
-                              (localhost allowed with HTTP).
+                              MCP 服务器端点 URL，必须使用 HTTPS（localhost 允许
+                              HTTP）。
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1286,20 +1285,18 @@ export function MCPIntegrationDialog({
                         name="tunnel_id"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Use tunnel (optional)</FormLabel>
+                            <FormLabel>使用隧道（可选）</FormLabel>
                             <FormControl>
                               <TunnelSelect
                                 by="id"
                                 value={field.value}
                                 onChange={(next) => field.onChange(next ?? "")}
-                                noneLabel="None (direct connection)"
+                                noneLabel="无（直接连接）"
                                 className="h-9 text-sm"
                               />
                             </FormControl>
                             <FormDescription className="text-xs">
-                              Reach a server in your private network. The
-                              server&apos;s host and port must be an allowed
-                              target of the tunnel.
+                              连接私有网络中的服务器。服务器的主机和端口必须在隧道允许的目标中。
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1311,14 +1308,16 @@ export function MCPIntegrationDialog({
                           name="auth_type"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Authentication type</FormLabel>
+                              <FormLabel>身份验证类型</FormLabel>
                               <FormControl>
                                 <Select
                                   value={field.value}
                                   onValueChange={field.onChange}
                                 >
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Select authentication type">
+                                    <SelectValue
+                                      placeholder={"选择身份验证类型"}
+                                    >
                                       {field.value
                                         ? AUTH_TYPES.find(
                                             (opt) => opt.value === field.value
@@ -1347,7 +1346,7 @@ export function MCPIntegrationDialog({
                                 </Select>
                               </FormControl>
                               <FormDescription className="text-xs">
-                                Choose how to authenticate with the MCP server.
+                                选择 MCP 服务器身份验证方式。
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -1365,7 +1364,7 @@ export function MCPIntegrationDialog({
                         name="stdio_command"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Stdio command</FormLabel>
+                            <FormLabel>Stdio 命令</FormLabel>
                             <FormControl>
                               {(() => {
                                 const currentCommand = (
@@ -1389,16 +1388,18 @@ export function MCPIntegrationDialog({
                                     }
                                   >
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select stdio command">
+                                      <SelectValue
+                                        placeholder={"选择 stdio 命令"}
+                                      >
                                         {hasLegacyValue
-                                          ? `Legacy (${currentCommand})`
+                                          ? `旧版（${currentCommand}）`
                                           : currentCommand || null}
                                       </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
                                       {hasLegacyValue && (
                                         <SelectItem value="__legacy__">
-                                          Legacy ({currentCommand})
+                                          旧版（{currentCommand})
                                         </SelectItem>
                                       )}
                                       {ALLOWED_COMMANDS.map((cmd) => (
@@ -1412,8 +1413,8 @@ export function MCPIntegrationDialog({
                               })()}
                             </FormControl>
                             <FormDescription className="text-xs">
-                              Stdio command to run the MCP server. Only{" "}
-                              {ALLOWED_COMMANDS.join(", ")} are allowed.
+                              运行 MCP 服务器的 stdio 命令。仅允许{" "}
+                              {ALLOWED_COMMANDS.join(", ")} 。
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1424,11 +1425,11 @@ export function MCPIntegrationDialog({
                         name="stdio_args"
                         render={() => (
                           <FormItem>
-                            <FormLabel>Stdio arguments</FormLabel>
+                            <FormLabel>Stdio 参数</FormLabel>
                             <div className="space-y-2">
                               {stdioArgFields.length === 0 && (
                                 <p className="text-xs text-muted-foreground">
-                                  No arguments configured.
+                                  尚未配置参数。
                                 </p>
                               )}
                               {stdioArgFields.map((argField, index) => (
@@ -1447,7 +1448,7 @@ export function MCPIntegrationDialog({
                                             placeholder={
                                               index === 0
                                                 ? "@modelcontextprotocol/server-github"
-                                                : "Additional argument"
+                                                : "附加参数"
                                             }
                                             className="font-mono text-xs"
                                           />
@@ -1463,9 +1464,7 @@ export function MCPIntegrationDialog({
                                     onClick={() => removeStdioArg(index)}
                                   >
                                     <Trash2 className="size-4" />
-                                    <span className="sr-only">
-                                      Remove argument
-                                    </span>
+                                    <span className="sr-only">移除参数</span>
                                   </Button>
                                 </div>
                               ))}
@@ -1476,12 +1475,11 @@ export function MCPIntegrationDialog({
                                 onClick={() => appendStdioArg({ value: "" })}
                               >
                                 <Plus className="mr-2 size-4" />
-                                Add argument
+                                添加参数
                               </Button>
                             </div>
                             <FormDescription className="text-xs">
-                              Add each command argument as a separate list item,
-                              in order.
+                              按顺序将每个命令参数添加为单独的列表项。
                             </FormDescription>
                             <FormMessage />
                           </FormItem>
@@ -1492,7 +1490,7 @@ export function MCPIntegrationDialog({
                         name="stdio_env"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Stdio environment variables</FormLabel>
+                            <FormLabel>Stdio 环境变量</FormLabel>
                             <FormControl>
                               <CodeEditor
                                 value={field.value || ""}
@@ -1502,9 +1500,8 @@ export function MCPIntegrationDialog({
                               />
                             </FormControl>
                             <FormDescription className="text-xs">
-                              JSON object with environment variables for the
-                              stdio command. Template expressions are supported,
-                              for example{" "}
+                              包含 stdio 命令环境变量的 JSON
+                              对象，支持模板表达式，例如{" "}
                               <code>
                                 {
                                   '{"GITHUB_TOKEN": "${{ SECRETS.github.TOKEN }}"}'
@@ -1521,8 +1518,7 @@ export function MCPIntegrationDialog({
 
                   {isEditMode && mcpIntegration?.tools == null ? (
                     <p className="text-xs text-muted-foreground">
-                      Connection not verified — test the connection to discover
-                      tools.
+                      尚未验证连接，请测试连接以发现工具。
                     </p>
                   ) : null}
 
@@ -1535,14 +1531,14 @@ export function MCPIntegrationDialog({
                       <AccordionItem value="tools" className="border-t">
                         <AccordionTrigger className="py-3 hover:no-underline">
                           <span className="flex items-center gap-2">
-                            Tools ({mcpIntegration.tools.length})
+                            工具（{mcpIntegration.tools.length})
                             {availableToolCount !==
                             mcpIntegration.tools.length ? (
                               <Badge
                                 variant="outline"
                                 className="h-5 px-1.5 text-[10px]"
                               >
-                                {availableToolCount} available
+                                {availableToolCount} 可用
                               </Badge>
                             ) : null}
                           </span>
@@ -1571,7 +1567,7 @@ export function MCPIntegrationDialog({
                       )}
                     >
                       <AccordionTrigger className="py-3 hover:no-underline">
-                        Advanced
+                        高级
                       </AccordionTrigger>
                       <AccordionContent className="space-y-5">
                         {serverType === "http" && authType === "OAUTH2" ? (
@@ -1580,7 +1576,7 @@ export function MCPIntegrationDialog({
                             name="oauth_setup"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>OAuth flow</FormLabel>
+                                <FormLabel>OAuth 流程</FormLabel>
                                 <FormControl>
                                   <Select
                                     value={field.value}
@@ -1601,57 +1597,57 @@ export function MCPIntegrationDialog({
                                     }}
                                   >
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select OAuth flow">
+                                      <SelectValue
+                                        placeholder={"选择 OAuth 流程"}
+                                      >
                                         {field.value === "existing_integration"
-                                          ? "Tracecat OAuth integration"
+                                          ? "Tracecat OAuth 集成"
                                           : field.value === "oauth_client"
-                                            ? "OAuth client credentials"
-                                            : "MCP OAuth discovery"}
+                                            ? "OAuth 客户端凭据"
+                                            : "MCP OAuth 发现"}
                                       </SelectValue>
                                     </SelectTrigger>
                                     <SelectContent>
                                       {hasCatalogOAuthClient ? (
                                         <SelectItem
                                           value="oauth_client"
-                                          textValue="OAuth client credentials"
+                                          textValue={"OAuth 客户端凭据"}
                                         >
                                           <div className="flex flex-col gap-1">
                                             <span className="text-sm font-medium">
-                                              OAuth client credentials
+                                              OAuth 客户端凭据
                                             </span>
                                             <span className="text-xs text-muted-foreground">
-                                              Create a Tracecat OAuth
-                                              integration from this client ID
-                                              and secret.
+                                              使用此客户端 ID 和密钥创建
+                                              Tracecat OAuth 集成。
                                             </span>
                                           </div>
                                         </SelectItem>
                                       ) : null}
                                       <SelectItem
                                         value="mcp_discovery"
-                                        textValue="MCP OAuth discovery"
+                                        textValue={"MCP OAuth 发现"}
                                       >
                                         <div className="flex flex-col gap-1">
                                           <span className="text-sm font-medium">
-                                            MCP OAuth discovery
+                                            MCP OAuth 发现
                                           </span>
                                           <span className="text-xs text-muted-foreground">
-                                            Discover endpoints and register a
-                                            client from the MCP server.
+                                            从 MCP 服务器发现端点并注册客户端。
                                           </span>
                                         </div>
                                       </SelectItem>
                                       <SelectItem
                                         value="existing_integration"
-                                        textValue="Tracecat OAuth integration"
+                                        textValue={"Tracecat OAuth 集成"}
                                       >
                                         <div className="flex flex-col gap-1">
                                           <span className="text-sm font-medium">
-                                            Tracecat OAuth integration
+                                            Tracecat OAuth 集成
                                           </span>
                                           <span className="text-xs text-muted-foreground">
-                                            Use an OAuth integration with a
-                                            known client ID and secret.
+                                            使用具有已知客户端 ID 和密钥的 OAuth
+                                            集成。
                                           </span>
                                         </div>
                                       </SelectItem>
@@ -1659,8 +1655,8 @@ export function MCPIntegrationDialog({
                                   </Select>
                                 </FormControl>
                                 <FormDescription className="text-xs">
-                                  Use discovery by default. Switch only when the
-                                  MCP server needs a preconfigured OAuth client.
+                                  默认使用自动发现。仅在 MCP 服务器要求预配置
+                                  OAuth 客户端时切换。
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -1676,9 +1672,7 @@ export function MCPIntegrationDialog({
                             name="oauth_client_credentials"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>
-                                  OAuth client credentials (JSON)
-                                </FormLabel>
+                                <FormLabel>OAuth 客户端凭据（JSON）</FormLabel>
                                 <FormControl>
                                   <CodeEditor
                                     value={field.value || ""}
@@ -1688,8 +1682,8 @@ export function MCPIntegrationDialog({
                                   />
                                 </FormControl>
                                 <FormDescription className="text-xs">
-                                  Enter the client ID and optional client secret
-                                  from the provider OAuth app.
+                                  输入提供商 OAuth 应用的客户端 ID
+                                  和可选客户端密钥。
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -1705,19 +1699,21 @@ export function MCPIntegrationDialog({
                             name="oauth_integration_id"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>OAuth integration</FormLabel>
+                                <FormLabel>OAuth 集成</FormLabel>
                                 <FormControl>
                                   <Select
                                     value={field.value || ""}
                                     onValueChange={field.onChange}
                                   >
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Select OAuth integration" />
+                                      <SelectValue
+                                        placeholder={"选择 OAuth 集成"}
+                                      />
                                     </SelectTrigger>
                                     <SelectContent>
                                       {integrationsIsLoading ? (
                                         <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                                          Loading integrations...
+                                          正在加载集成…
                                         </div>
                                       ) : connectedOAuthIntegrations.length >
                                         0 ? (
@@ -1757,15 +1753,14 @@ export function MCPIntegrationDialog({
                                         )
                                       ) : (
                                         <div className="px-2 py-1.5 text-xs text-muted-foreground">
-                                          No OAuth integrations available.
+                                          暂无可用的 OAuth 集成。
                                         </div>
                                       )}
                                     </SelectContent>
                                   </Select>
                                 </FormControl>
                                 <FormDescription className="text-xs">
-                                  Select a connected OAuth integration from this
-                                  workspace.
+                                  选择此工作空间中已连接的 OAuth 集成。
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -1779,7 +1774,7 @@ export function MCPIntegrationDialog({
                             name="custom_credentials"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Additional headers (JSON)</FormLabel>
+                                <FormLabel>附加请求头（JSON）</FormLabel>
                                 <FormControl>
                                   <CodeEditor
                                     value={field.value || ""}
@@ -1789,8 +1784,7 @@ export function MCPIntegrationDialog({
                                   />
                                 </FormControl>
                                 <FormDescription className="text-xs">
-                                  Authorization is set from OAuth and cannot be
-                                  overridden.
+                                  Authorization 由 OAuth 设置，无法覆盖。
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -1803,7 +1797,7 @@ export function MCPIntegrationDialog({
                           name="timeout"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Timeout (seconds)</FormLabel>
+                              <FormLabel>超时时间（秒）</FormLabel>
                               <FormControl>
                                 <Input
                                   type="number"
@@ -1827,7 +1821,7 @@ export function MCPIntegrationDialog({
                       name="custom_credentials"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Headers / API key (JSON)</FormLabel>
+                          <FormLabel>请求头 / API 密钥（JSON）</FormLabel>
                           <FormControl>
                             <CodeEditor
                               value={field.value || ""}
@@ -1837,7 +1831,7 @@ export function MCPIntegrationDialog({
                             />
                           </FormControl>
                           <FormDescription className="text-xs">
-                            Enter headers as a JSON object, for example{" "}
+                            以 JSON 对象输入请求头，例如{" "}
                             <code>{`{"Authorization":"Bearer token123"}`}</code>
                           </FormDescription>
                           <FormMessage />
@@ -1867,22 +1861,22 @@ export function MCPIntegrationDialog({
                         disabled={isPending || deleteMcpIntegrationIsPending}
                       >
                         <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-                        Delete
+                        删除
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Remove MCP server?</AlertDialogTitle>
+                        <AlertDialogTitle>移除 MCP 服务器？</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Agents will no longer be able to call{" "}
+                          智能体将无法再调用{" "}
                           <span className="font-medium">
-                            {mcpIntegration?.name ?? "this server"}
+                            {mcpIntegration?.name ?? "此服务器"}
                           </span>
                           .
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>取消</AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                           disabled={deleteMcpIntegrationIsPending}
@@ -1895,7 +1889,7 @@ export function MCPIntegrationDialog({
                           {deleteMcpIntegrationIsPending && (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           )}
-                          Remove
+                          移除
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
@@ -1911,7 +1905,7 @@ export function MCPIntegrationDialog({
                   disabled={isPending}
                 >
                   {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isEditMode ? "Update" : "Connect"}
+                  {isEditMode ? "更新" : "连接"}
                 </Button>
               </div>
             </DialogFooter>

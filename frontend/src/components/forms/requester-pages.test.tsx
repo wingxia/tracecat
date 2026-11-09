@@ -122,7 +122,7 @@ describe("RequesterShell", () => {
   it("is a locked page without the entitlement", () => {
     access = "locked"
     renderShell()
-    expect(screen.getByText("Forms aren't available")).toBeInTheDocument()
+    expect(screen.getByText("表单不可用")).toBeInTheDocument()
     expect(screen.queryByText("Form content")).not.toBeInTheDocument()
   })
 })
@@ -181,7 +181,7 @@ describe("RequesterHome", () => {
     expect(await screen.findByText("FRM-8F3K2A1C")).toBeInTheDocument()
     expect(
       screen.getAllByRole("columnheader").map((cell) => cell.textContent)
-    ).toEqual(["Form", "Reference", "Submitted"])
+    ).toEqual(["表单", "引用", "提交时间"])
     expect(formsListIntakeForms).not.toHaveBeenCalled()
   })
 })
@@ -189,7 +189,7 @@ describe("RequesterHome", () => {
 describe("RequesterForm", () => {
   async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
     await user.type(await screen.findByLabelText(/Reason/), "Screen cracked")
-    await user.click(screen.getByRole("button", { name: "Submit" }))
+    await user.click(screen.getByRole("button", { name: "提交" }))
   }
 
   it("locates, renders and submits with the rendered version, then confirms", async () => {
@@ -203,7 +203,7 @@ describe("RequesterForm", () => {
     await fillAndSubmit(user)
 
     expect(
-      await screen.findByRole("heading", { name: "Request submitted" })
+      await screen.findByRole("heading", { name: "已提交请求" })
     ).toBeInTheDocument()
     expect(renderForm).toHaveBeenCalledWith({
       workspaceId: "workspace-1",
@@ -244,15 +244,13 @@ describe("RequesterForm", () => {
 
     expect(await screen.findByLabelText("Notes")).toBeInTheDocument()
     expect(screen.getByLabelText(/Reason/)).toHaveValue("Screen cracked")
-    expect(
-      screen.getByText(/This form was updated while you were filling it in/)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/填写期间表单已更新/)).toBeInTheDocument()
   })
 
   it.each([
-    ["Form not found", apiError(404, "Form not found")],
+    ["未找到表单", apiError(404, "未找到表单")],
     [
-      "This form isn't accepting requests",
+      "此表单当前不接受请求",
       apiError(409, { code: "form_offline", message: "Offline" }),
     ],
   ])(
@@ -263,9 +261,10 @@ describe("RequesterForm", () => {
       renderWithClient(<RequesterForm formId="form-1" />)
 
       expect(await screen.findByText(title)).toBeInTheDocument()
-      expect(
-        screen.getByRole("link", { name: "Browse forms" })
-      ).toHaveAttribute("href", "/forms")
+      expect(screen.getByRole("link", { name: "浏览表单" })).toHaveAttribute(
+        "href",
+        "/forms"
+      )
     }
   )
 
@@ -275,8 +274,8 @@ describe("RequesterForm", () => {
     renderWithClient(<RequesterForm formId="form-1" />)
 
     expect(
-      await screen.findByText("You can view this form but you can't submit it.")
+      await screen.findByText("你可以查看此表单，但无法提交。")
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "提交" })).toBeDisabled()
   })
 })

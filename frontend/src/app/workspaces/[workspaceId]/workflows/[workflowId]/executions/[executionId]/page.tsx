@@ -38,11 +38,9 @@ export default function ExecutionPage() {
   if (!params) {
     return (
       <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
-        <h1 className="text-lg font-semibold tracking-tight">
-          Invalid parameters
-        </h1>
+        <h1 className="text-lg font-semibold tracking-tight">参数无效</h1>
         <span className="text-center text-sm text-muted-foreground">
-          Unable to load execution details.
+          无法加载执行详情。
         </span>
       </main>
     )
@@ -89,7 +87,7 @@ function ExecutionDetails({ executionId }: { executionId: string }) {
       <ResizablePanel defaultSize={defaultLayout[1]} minSize={18}>
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
           <SectionHead
-            text="Events"
+            text={"执行事件"}
             icon={<CalendarSearchIcon className="size-4" strokeWidth={2} />}
             action={
               execution && (
@@ -104,7 +102,7 @@ function ExecutionDetails({ executionId }: { executionId: string }) {
                   }}
                 >
                   <RotateCcwIcon className="size-3" />
-                  Rerun
+                  重新运行
                 </Button>
               )
             }
@@ -158,10 +156,10 @@ function ExecutionDetails({ executionId }: { executionId: string }) {
             ) : (
               <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
                 <h1 className="text-lg font-semibold tracking-tight">
-                  Select an event
+                  选择执行事件
                 </h1>
                 <span className="text-center text-sm text-muted-foreground">
-                  Click on an event in events to view details.
+                  点击执行事件列表中的条目以查看详情。
                 </span>
               </main>
             )}
@@ -194,7 +192,7 @@ function EventHistoryContent({
     return <AlertNotification message={error.message} />
   }
   if (!execution) {
-    return <NoContent message="No events found." />
+    return <NoContent message={"未找到执行事件。"} />
   }
   return (
     <WorkflowExecutionEventHistory

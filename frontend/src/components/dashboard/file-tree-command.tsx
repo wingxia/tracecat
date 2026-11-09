@@ -108,8 +108,8 @@ export function FileTreeCommand({ items, onSelect }: FileTreeCommandProps) {
   return (
     <Command className="max-h-[calc(var(--radix-popover-content-available-height,100vh)-2px)] rounded-lg border shadow-md">
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Files and Folders">
+        <CommandEmpty>未找到结果。</CommandEmpty>
+        <CommandGroup heading="文件和文件夹">
           {renderTreeItems(items)}
         </CommandGroup>
       </CommandList>

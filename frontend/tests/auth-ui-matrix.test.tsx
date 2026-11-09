@@ -260,12 +260,10 @@ describe("Auth UI matrix", () => {
       render(<SignIn />)
 
       if (expectsSignUp) {
-        expect(
-          screen.getByRole("link", { name: "Sign up" })
-        ).toBeInTheDocument()
+        expect(screen.getByRole("link", { name: "注册" })).toBeInTheDocument()
       } else {
         expect(
-          screen.queryByRole("link", { name: "Sign up" })
+          screen.queryByRole("link", { name: "注册" })
         ).not.toBeInTheDocument()
       }
     }
@@ -279,7 +277,7 @@ describe("Auth UI matrix", () => {
       />
     )
 
-    expect(screen.getByRole("link", { name: "Sign up" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "注册" })).toHaveAttribute(
       "href",
       "/sign-up?returnUrl=%2Finvitations%2Faccept%3Ftoken%3Dtest-token&org=acme"
     )
@@ -290,7 +288,7 @@ describe("Auth UI matrix", () => {
     render(<SignIn />)
 
     expect(
-      screen.getByRole("button", { name: "Social login" })
+      screen.getByRole("button", { name: "第三方登录" })
     ).toBeInTheDocument()
   })
 
@@ -304,10 +302,10 @@ describe("Auth UI matrix", () => {
 
     render(<SignIn organizationSlug="acme" />)
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireEvent.change(screen.getByLabelText("邮箱"), {
       target: { value: "user@example.com" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }))
+    fireEvent.click(screen.getByRole("button", { name: "继续" }))
 
     await waitFor(() => {
       expect(mockDiscoverAuthMethod).toHaveBeenCalledWith({
@@ -318,10 +316,8 @@ describe("Auth UI matrix", () => {
       })
     })
 
-    expect(screen.queryByLabelText("Password")).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole("link", { name: "Sign up" })
-    ).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("密码")).not.toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: "注册" })).not.toBeInTheDocument()
   })
 
   it("starts OIDC login immediately when discovery resolves to oidc", async () => {
@@ -335,10 +331,10 @@ describe("Auth UI matrix", () => {
 
     render(<SignIn returnUrl="/workspaces" />)
 
-    fireEvent.change(screen.getByLabelText("Email"), {
+    fireEvent.change(screen.getByLabelText("邮箱"), {
       target: { value: "user@example.com" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }))
+    fireEvent.click(screen.getByRole("button", { name: "继续" }))
 
     await waitFor(() => {
       expect(mockDiscoverAuthMethod).toHaveBeenCalledWith({
@@ -401,19 +397,17 @@ describe("Auth UI matrix", () => {
       )
 
       if (expectsBasicSignUp) {
-        expect(screen.getByLabelText("Email")).toBeInTheDocument()
-        expect(screen.getByLabelText("Password")).toBeInTheDocument()
-        expect(screen.getByRole("link", { name: "Sign in" })).toHaveAttribute(
+        expect(screen.getByLabelText("邮箱")).toBeInTheDocument()
+        expect(screen.getByLabelText("密码")).toBeInTheDocument()
+        expect(screen.getByRole("link", { name: "登录" })).toHaveAttribute(
           "href",
           "/sign-in?returnUrl=%2Finvitations%2Faccept%3Ftoken%3Dtest-token&org=acme"
         )
       } else {
-        expect(screen.getByText("Sign up unavailable")).toBeInTheDocument()
-        expect(screen.queryByLabelText("Email")).not.toBeInTheDocument()
-        expect(screen.queryByLabelText("Password")).not.toBeInTheDocument()
-        expect(
-          screen.getByRole("link", { name: "Back to sign in" })
-        ).toHaveAttribute(
+        expect(screen.getByText("暂不支持注册")).toBeInTheDocument()
+        expect(screen.queryByLabelText("邮箱")).not.toBeInTheDocument()
+        expect(screen.queryByLabelText("密码")).not.toBeInTheDocument()
+        expect(screen.getByRole("link", { name: "返回登录" })).toHaveAttribute(
           "href",
           "/sign-in?returnUrl=%2Finvitations%2Faccept%3Ftoken%3Dtest-token&org=acme"
         )
@@ -456,9 +450,7 @@ describe("Auth UI matrix", () => {
     await waitFor(() => {
       expect(mockRouterReplace).toHaveBeenCalledWith("/admin")
     })
-    expect(
-      screen.queryByText("No organization access yet")
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText("尚无组织访问权限")).not.toBeInTheDocument()
   })
 
   it("keeps regular users with no organization memberships on the help screen", () => {
@@ -471,7 +463,7 @@ describe("Auth UI matrix", () => {
       </WorkspaceLayout>
     )
 
-    expect(screen.getByText("No organization access yet")).toBeInTheDocument()
+    expect(screen.getByText("尚无组织访问权限")).toBeInTheDocument()
     expect(mockRouterReplace).not.toHaveBeenCalledWith("/admin")
   })
 })

@@ -473,7 +473,7 @@ function MermaidDiagram({ chart }: { chart: string }) {
           setError(
             renderError instanceof Error
               ? renderError.message
-              : "Failed to render Mermaid diagram"
+              : "渲染 Mermaid 图表失败"
           )
         }
       }
@@ -489,11 +489,11 @@ function MermaidDiagram({ chart }: { chart: string }) {
   if (error) {
     return (
       <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm">
-        <p className="font-medium text-destructive">Mermaid diagram error</p>
+        <p className="font-medium text-destructive">Mermaid 图表错误</p>
         <p className="mt-1 font-mono text-xs text-destructive/90">{error}</p>
         <details className="mt-3">
           <summary className="cursor-pointer text-xs text-muted-foreground">
-            Show diagram source
+            显示图表源码
           </summary>
           <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-3 text-xs text-muted-foreground">
             {chart}
@@ -506,14 +506,14 @@ function MermaidDiagram({ chart }: { chart: string }) {
   if (!svg) {
     return (
       <div className="flex items-center justify-center p-4 text-sm text-muted-foreground">
-        Rendering diagram...
+        正在渲染图表…
       </div>
     )
   }
 
   return (
     <div
-      aria-label="Mermaid diagram"
+      aria-label={"Mermaid 图表"}
       className="max-w-full overflow-x-auto p-4 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-none"
       dangerouslySetInnerHTML={{ __html: svg }}
       role="img"

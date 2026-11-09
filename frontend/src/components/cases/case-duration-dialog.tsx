@@ -94,10 +94,10 @@ const getFilterLabel = (
     return CASE_EVENT_FILTER_OPTIONS[eventType].label
   }
   if (isCaseTagEventType(eventType)) {
-    return "Tag"
+    return "标签"
   }
   if (isCaseFieldEventType(eventType)) {
-    return "Field"
+    return "字段"
   }
   return null
 }
@@ -108,14 +108,8 @@ const getOptionIconClass = (color?: string) =>
 
 const formSchema = z
   .object({
-    name: z
-      .string()
-      .min(1, "Name is required")
-      .max(255, "Name must be 255 characters or fewer"),
-    description: z
-      .string()
-      .max(1024, "Description must be 1024 characters or fewer")
-      .optional(),
+    name: z.string().min(1, "名称不能为空").max(255, "名称不能超过 255 个字符"),
+    description: z.string().max(1024, "描述不能超过 1024 个字符").optional(),
     start: anchorSchema,
     end: anchorSchema,
   })
@@ -134,14 +128,14 @@ const formSchema = z
         ctx.addIssue({
           path: ["start", "dropdownDefinitionId"],
           code: z.ZodIssueCode.custom,
-          message: "Select a dropdown.",
+          message: "选择下拉字段。",
         })
       }
       if (!values.start.dropdownOptionIds?.length) {
         ctx.addIssue({
           path: ["start", "dropdownOptionIds"],
           code: z.ZodIssueCode.custom,
-          message: "Select at least one option.",
+          message: "至少选择一个选项。",
         })
       }
     } else if (startRequiresFilter && startFilterValues.length === 0) {
@@ -149,7 +143,7 @@ const formSchema = z
       ctx.addIssue({
         path: ["start", "filterValues"],
         code: z.ZodIssueCode.custom,
-        message: `Select at least one ${label.toLowerCase()}.`,
+        message: `至少选择一个${label.toLowerCase()}。`,
       })
     }
 
@@ -158,14 +152,14 @@ const formSchema = z
         ctx.addIssue({
           path: ["end", "dropdownDefinitionId"],
           code: z.ZodIssueCode.custom,
-          message: "Select a dropdown.",
+          message: "选择下拉字段。",
         })
       }
       if (!values.end.dropdownOptionIds?.length) {
         ctx.addIssue({
           path: ["end", "dropdownOptionIds"],
           code: z.ZodIssueCode.custom,
-          message: "Select at least one option.",
+          message: "至少选择一个选项。",
         })
       }
     } else if (endRequiresFilter && endFilterValues.length === 0) {
@@ -173,7 +167,7 @@ const formSchema = z
       ctx.addIssue({
         path: ["end", "filterValues"],
         code: z.ZodIssueCode.custom,
-        message: `Select a ${label.toLowerCase()}.`,
+        message: `选择一个${label.toLowerCase()}。`,
       })
     }
 
@@ -192,12 +186,12 @@ const formSchema = z
         ctx.addIssue({
           path: ["start", "filterValues"],
           code: z.ZodIssueCode.custom,
-          message: `Remove duplicate ${label.toLowerCase()} selections shared with the "To event".`,
+          message: `请移除与“结束事件”重复的${label.toLowerCase()}选项。`,
         })
         ctx.addIssue({
           path: ["end", "filterValues"],
           code: z.ZodIssueCode.custom,
-          message: `Choose ${label.toLowerCase()} values that differ from the "From event".`,
+          message: `请选择与“开始事件”不同的${label.toLowerCase()}值。`,
         })
       }
     }
@@ -216,13 +210,12 @@ const formSchema = z
         ctx.addIssue({
           path: ["start", "dropdownOptionIds"],
           code: z.ZodIssueCode.custom,
-          message:
-            'Remove duplicate option selections shared with the "To event".',
+          message: "请移除与“结束事件”重复的选项。",
         })
         ctx.addIssue({
           path: ["end", "dropdownOptionIds"],
           code: z.ZodIssueCode.custom,
-          message: 'Choose options that differ from the "From event".',
+          message: "请选择与“开始事件”不同的选项。",
         })
       }
     }
@@ -524,12 +517,12 @@ export function CaseDurationDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
-                      <Input placeholder="Time to resolution" {...field} />
+                      <Input placeholder={"解决用时"} {...field} />
                     </FormControl>
                     <FormDescription>
-                      Choose a descriptive name for this duration metric.
+                      为此时长指标选择便于识别的名称。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -541,16 +534,16 @@ export function CaseDurationDialog({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>描述</FormLabel>
                     <FormControl>
                       <Textarea
                         className="min-h-[100px] text-xs"
-                        placeholder="Optional context for this metric"
+                        placeholder={"此指标的补充说明"}
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Provide additional context for the team (optional).
+                      为团队提供补充说明（可选）。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -561,14 +554,14 @@ export function CaseDurationDialog({
                 <div className="space-y-4 rounded-md border bg-muted/20 p-4">
                   <h4 className="flex items-center gap-2 text-sm font-medium">
                     <Timer className="size-3.5 text-muted-foreground" />
-                    <span>From event</span>
+                    <span>开始事件</span>
                   </h4>
                   <FormField
                     control={form.control}
                     name="start.selection"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Occurrence</FormLabel>
+                        <FormLabel className="text-xs">出现次数</FormLabel>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
@@ -598,7 +591,7 @@ export function CaseDurationDialog({
                     name="start.eventType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Event type</FormLabel>
+                        <FormLabel className="text-xs">事件类型</FormLabel>
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
@@ -646,7 +639,7 @@ export function CaseDurationDialog({
                             </FormLabel>
                             <FormControl className="w-full">
                               <CaseFilterMultiSelect
-                                placeholder={`Select ${startFilterLabel.toLowerCase()}`}
+                                placeholder={`选择 ${startFilterLabel.toLowerCase()}`}
                                 value={field.value ?? []}
                                 options={startFilterOptions}
                                 onChange={(nextValue) => {
@@ -666,7 +659,7 @@ export function CaseDurationDialog({
                         name="start.dropdownDefinitionId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs">Dropdown</FormLabel>
+                            <FormLabel className="text-xs">下拉字段</FormLabel>
                             <Select
                               value={field.value ?? ""}
                               onValueChange={(value) => {
@@ -676,7 +669,7 @@ export function CaseDurationDialog({
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select dropdown" />
+                                  <SelectValue placeholder={"选择下拉字段"} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -697,10 +690,10 @@ export function CaseDurationDialog({
                           name="start.dropdownOptionIds"
                           render={({ field }) => (
                             <FormItem className="space-y-2">
-                              <FormLabel className="text-xs">Option</FormLabel>
+                              <FormLabel className="text-xs">选项</FormLabel>
                               <FormControl className="w-full">
                                 <CaseFilterMultiSelect
-                                  placeholder="Select option"
+                                  placeholder={"选择选项"}
                                   value={field.value ?? []}
                                   options={startDropdownOptions}
                                   onChange={(nextValue) => {
@@ -720,14 +713,14 @@ export function CaseDurationDialog({
                 <div className="space-y-4 rounded-md border bg-muted/20 p-4">
                   <h4 className="flex items-center gap-2 text-sm font-medium">
                     <FlagTriangleRight className="size-3.5 text-muted-foreground" />
-                    <span>To event</span>
+                    <span>结束事件</span>
                   </h4>
                   <FormField
                     control={form.control}
                     name="end.selection"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Occurrence</FormLabel>
+                        <FormLabel className="text-xs">出现次数</FormLabel>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
@@ -757,7 +750,7 @@ export function CaseDurationDialog({
                     name="end.eventType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-xs">Event type</FormLabel>
+                        <FormLabel className="text-xs">事件类型</FormLabel>
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
@@ -801,7 +794,7 @@ export function CaseDurationDialog({
                           </FormLabel>
                           <FormControl className="w-full">
                             <CaseFilterMultiSelect
-                              placeholder={`Select ${endFilterLabel.toLowerCase()}`}
+                              placeholder={`选择 ${endFilterLabel.toLowerCase()}`}
                               value={field.value ?? []}
                               options={endFilterOptions}
                               onChange={(nextValue) => {
@@ -821,7 +814,7 @@ export function CaseDurationDialog({
                         name="end.dropdownDefinitionId"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs">Dropdown</FormLabel>
+                            <FormLabel className="text-xs">下拉字段</FormLabel>
                             <Select
                               value={field.value ?? ""}
                               onValueChange={(value) => {
@@ -831,7 +824,7 @@ export function CaseDurationDialog({
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Select dropdown" />
+                                  <SelectValue placeholder={"选择下拉字段"} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -852,10 +845,10 @@ export function CaseDurationDialog({
                           name="end.dropdownOptionIds"
                           render={({ field }) => (
                             <FormItem className="space-y-2">
-                              <FormLabel className="text-xs">Option</FormLabel>
+                              <FormLabel className="text-xs">选项</FormLabel>
                               <FormControl className="w-full">
                                 <CaseFilterMultiSelect
-                                  placeholder="Select option"
+                                  placeholder={"选择选项"}
                                   value={field.value ?? []}
                                   options={endDropdownOptions}
                                   onChange={(nextValue) => {

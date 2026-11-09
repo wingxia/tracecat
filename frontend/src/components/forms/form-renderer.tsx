@@ -57,10 +57,9 @@ import { cn } from "@/lib/utils"
 /** Where a requester's own submissions are listed. */
 export const MY_SUBMISSIONS_HREF = "/forms?tab=submissions"
 
-const FORM_CHANGED_MESSAGE =
-  "This form was updated while you were filling it in. Check your answers and submit again."
-const GENERIC_ERROR_MESSAGE = "Something went wrong. Try again."
-const READ_ONLY_MESSAGE = "You can view this form but you can't submit it."
+const FORM_CHANGED_MESSAGE = "填写期间表单已更新，请检查回答后再次提交。"
+const GENERIC_ERROR_MESSAGE = "出现了问题，请重试。"
+const READ_ONLY_MESSAGE = "你可以查看此表单，但无法提交。"
 const FOCUSABLE_SELECTOR =
   'input:not([disabled]):not([hidden]), textarea:not([disabled]), button:not([disabled]):not([tabindex="-1"])'
 
@@ -388,22 +387,22 @@ export function FormRenderer({
           <CheckIcon className="size-6" />
         </span>
         <div>
-          <h1 className={formStyles.title}>Request submitted</h1>
+          <h1 className={formStyles.title}>已提交请求</h1>
           {successMessage && (
             <p className={formStyles.description}>{successMessage}</p>
           )}
         </div>
         <div className="flex items-center gap-3 self-stretch rounded-md border bg-muted/50 py-2 pl-3 pr-2 text-left">
           <div className="min-w-0 flex-1">
-            <div className={formStyles.help}>Reference</div>
+            <div className={formStyles.help}>引用</div>
             <div className="truncate font-mono text-sm font-medium">
               {receipt.reference}
             </div>
           </div>
           <CopyButton
             value={receipt.reference}
-            toastMessage="Copied reference to clipboard"
-            tooltipMessage="Copy reference"
+            toastMessage="已将引用复制到剪贴板"
+            tooltipMessage={"复制引用"}
             className="size-8"
             iconClassName="size-4"
           />
@@ -420,11 +419,11 @@ export function FormRenderer({
               setReceipt(null)
             }}
           >
-            Submit another
+            再次提交
           </Button>
           {mode === "live" && (
             <Button asChild variant="outline" className={formStyles.button}>
-              <Link href={MY_SUBMISSIONS_HREF}>My submissions</Link>
+              <Link href={MY_SUBMISSIONS_HREF}>我的提交</Link>
             </Button>
           )}
         </div>
@@ -487,13 +486,11 @@ export function FormRenderer({
       )}
       <div className={formStyles.footer}>
         <span>
-          {mode === "preview" && "Preview. Nothing is submitted."}
-          {mode === "live" &&
-            submitterEmail &&
-            `Submitting as ${submitterEmail}`}
+          {mode === "preview" && "仅预览，不会提交内容。"}
+          {mode === "live" && submitterEmail && `提交身份：${submitterEmail}`}
         </span>
         <Button type="submit" disabled={disabled} className={formStyles.button}>
-          {submitting ? "Submitting..." : "Submit"}
+          {submitting ? "提交中…" : "提交"}
         </Button>
       </div>
     </form>

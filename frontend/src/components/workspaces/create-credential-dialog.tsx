@@ -86,15 +86,15 @@ const oktaAuthMethodOptions: {
 }[] = [
   {
     value: "ssws",
-    label: "API token",
+    label: "API 令牌",
   },
   {
     value: "bearer",
-    label: "Bearer token",
+    label: "Bearer 令牌",
   },
   {
     value: "private_key",
-    label: "Private key",
+    label: "私钥",
   },
 ]
 
@@ -226,7 +226,7 @@ function JsonSyntaxBlock({ value }: { value: string }) {
   function handleCopy() {
     void copyToClipboard({
       value,
-      message: "Copied trust policy.",
+      message: "已复制信任策略。",
     })
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
@@ -240,7 +240,7 @@ function JsonSyntaxBlock({ value }: { value: string }) {
         size="icon"
         className="absolute right-1 top-1 z-10 size-6"
         onClick={handleCopy}
-        aria-label="Copy trust policy"
+        aria-label={"复制信任策略"}
       >
         {copied ? (
           <CheckCheckIcon className="size-3.5" />
@@ -285,8 +285,8 @@ const createSecretSchema = z
     name: z
       .string()
       .trim()
-      .min(1, "Name is required.")
-      .max(100, "Name must be 100 characters or fewer.")
+      .min(1, "名称不能为空。")
+      .max(100, "名称不能超过 100 个字符。")
       .default(""),
     description: z.string().max(255).default(""),
     environment: z
@@ -328,7 +328,7 @@ const createSecretSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["okta_api_token"],
-          message: "Okta API token is required.",
+          message: "Okta API 令牌不能为空。",
         })
       }
       if (
@@ -339,7 +339,7 @@ const createSecretSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["okta_access_token"],
-          message: "Access token or service token is required.",
+          message: "访问令牌或服务令牌不能为空。",
         })
       }
       if (values.okta_auth_method === "private_key") {
@@ -347,22 +347,21 @@ const createSecretSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["okta_client_id"],
-            message: "Client ID is required.",
+            message: "客户端 ID 不能为空。",
           })
         }
         if (!values.okta_scopes?.trim()) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["okta_scopes"],
-            message: "Scopes are required.",
+            message: "权限范围不能为空。",
           })
         }
         if (!isValidOktaPrivateKey(values.okta_private_key)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["okta_private_key"],
-            message:
-              "Private key must be a PEM block or an RSA private JWK (kty, n, e, d).",
+            message: "私钥必须是 PEM 块或 RSA 私钥 JWK（kty、n、e、d）。",
           })
         }
 
@@ -373,7 +372,7 @@ const createSecretSchema = z
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ["okta_dpop_key_rotation_interval"],
-              message: "Rotation interval must be an integer.",
+              message: "轮换间隔必须是整数。",
             })
           } else if (
             seconds < OKTA_MIN_DPOP_KEY_ROTATION_SECONDS ||
@@ -382,7 +381,7 @@ const createSecretSchema = z
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
               path: ["okta_dpop_key_rotation_interval"],
-              message: "Rotation interval must be 3600 to 7776000 seconds.",
+              message: "轮换间隔必须在 3600 至 7776000 秒之间。",
             })
           }
         }
@@ -392,7 +391,7 @@ const createSecretSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["keys"],
-          message: "At least one key is required.",
+          message: "至少需要一个键。",
         })
       }
       values.keys.forEach((item, index) => {
@@ -400,7 +399,7 @@ const createSecretSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["keys", index, "key"],
-            message: "Key is required.",
+            message: "键不能为空。",
           })
         }
         // Only validate value if it's not an optional field from a template
@@ -409,7 +408,7 @@ const createSecretSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["keys", index, "value"],
-            message: "Value is required.",
+            message: "值不能为空。",
           })
         }
       })
@@ -420,8 +419,8 @@ const createSecretSchema = z
         values.private_key,
         ctx,
         ["private_key"],
-        "SSH private key is required.",
-        "Invalid SSH private key format. Must include PEM header and footer.",
+        "SSH 私钥不能为空。",
+        "SSH 私钥格式无效，必须包含 PEM 头尾标记。",
         sshKeyRegex
       )
     }
@@ -431,16 +430,16 @@ const createSecretSchema = z
         values.tls_certificate,
         ctx,
         ["tls_certificate"],
-        "TLS certificate is required.",
-        "Invalid TLS certificate format. Must include PEM header and footer.",
+        "TLS 证书不能为空。",
+        "TLS 证书格式无效，必须包含 PEM 头尾标记。",
         pemCertificateRegex
       )
       validatePemField(
         values.tls_private_key,
         ctx,
         ["tls_private_key"],
-        "TLS private key is required.",
-        "Invalid TLS private key format. Must include PEM header and footer.",
+        "TLS 私钥不能为空。",
+        "TLS 私钥格式无效，必须包含 PEM 头尾标记。",
         sshKeyRegex
       )
     }
@@ -450,8 +449,8 @@ const createSecretSchema = z
         values.ca_certificate,
         ctx,
         ["ca_certificate"],
-        "CA certificate is required.",
-        "Invalid CA certificate format. Must include PEM header and footer.",
+        "CA 证书不能为空。",
+        "CA 证书格式无效，必须包含 PEM 头尾标记。",
         pemCertificateRegex
       )
     }
@@ -682,7 +681,7 @@ export function CreateCredentialDialog({
         })
         methods.setError("okta_private_key", {
           type: "manual",
-          message: "Upload a .pem or .json file.",
+          message: "请上传 .pem 或 .json 文件。",
         })
         resetOktaPrivateKeyFileInput()
         return
@@ -719,7 +718,7 @@ export function CreateCredentialDialog({
         })
         methods.setError("okta_private_key", {
           type: "manual",
-          message: "Failed to read the uploaded private key file.",
+          message: "读取上传的私钥文件失败。",
         })
         resetOktaPrivateKeyFileInput()
       }
@@ -874,8 +873,8 @@ export function CreateCredentialDialog({
 
     if (type === "custom" && secretKeys.length === 0) {
       toast({
-        title: "No keys provided",
-        description: "Please provide at least one key value.",
+        title: "未提供键",
+        description: "请至少提供一个键值。",
         variant: "destructive",
       })
       return
@@ -892,8 +891,8 @@ export function CreateCredentialDialog({
       await createSecret(secret)
       onOpenChange(false)
       toast({
-        title: "Secret created",
-        description: `Secret "${secretName}" has been created successfully.`,
+        title: "已创建密钥",
+        description: `已成功创建密钥“${secretName}”。`,
       })
       methods.reset()
     } catch (error) {
@@ -904,8 +903,8 @@ export function CreateCredentialDialog({
   const onValidationFailed = () => {
     console.error("Form validation failed")
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while adding the new secret.",
+      title: "表单校验失败",
+      description: "添加新密钥时发生校验错误。",
     })
   }
 
@@ -922,9 +921,7 @@ export function CreateCredentialDialog({
       <DialogContent size="xl" className={className}>
         <DialogHeader>
           <DialogTitle>
-            {selectedTool
-              ? `Configure ${selectedTool.name}`
-              : "Create credential"}
+            {selectedTool ? `配置 ${selectedTool.name}` : "创建凭据"}
           </DialogTitle>
         </DialogHeader>
 
@@ -934,7 +931,7 @@ export function CreateCredentialDialog({
             {!isAwsReference && <CreateSecretTooltip />}
             {secretType === "custom" && externalSecretStoresEnabled && (
               <div className="space-y-2">
-                <Label htmlFor={credentialSourceId}>Secret source</Label>
+                <Label htmlFor={credentialSourceId}>密钥来源</Label>
                 <SecretSourcePicker
                   id={credentialSourceId}
                   workspaceId={workspaceId}
@@ -968,16 +965,16 @@ export function CreateCredentialDialog({
                   name="name"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-sm">Name</FormLabel>
+                      <FormLabel className="text-sm">名称</FormLabel>
                       {isTemplateSecret && (
                         <FormDescription className="text-sm">
-                          This name is fixed by the selected template.
+                          此名称由所选模板固定。
                         </FormDescription>
                       )}
                       <FormControl>
                         <Input
                           className="text-sm"
-                          placeholder="Name (snake case)"
+                          placeholder={"名称（蛇形命名）"}
                           readOnly={isTemplateSecret}
                           aria-readonly={isTemplateSecret}
                           {...register("name")}
@@ -993,14 +990,14 @@ export function CreateCredentialDialog({
                   name="description"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-sm">Description</FormLabel>
+                      <FormLabel className="text-sm">描述</FormLabel>
                       <FormDescription className="text-sm">
-                        A description for this secret.
+                        此密钥的描述。
                       </FormDescription>
                       <FormControl>
                         <Input
                           className="text-sm"
-                          placeholder="Description"
+                          placeholder={"描述"}
                           {...register("description")}
                         />
                       </FormControl>
@@ -1014,14 +1011,14 @@ export function CreateCredentialDialog({
                   name="environment"
                   render={() => (
                     <FormItem>
-                      <FormLabel className="text-sm">Environment</FormLabel>
+                      <FormLabel className="text-sm">环境</FormLabel>
                       <FormDescription className="text-sm">
-                        The workflow&apos;s target execution environment.
+                        工作流的目标执行环境。
                       </FormDescription>
                       <FormControl>
                         <Input
                           className="text-sm"
-                          placeholder='Default environment: "default"'
+                          placeholder={"默认环境：“default”"}
                           {...register("environment")}
                         />
                       </FormControl>
@@ -1037,9 +1034,9 @@ export function CreateCredentialDialog({
                     name="type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm">Type</FormLabel>
+                        <FormLabel className="text-sm">输入</FormLabel>
                         <FormDescription className="text-sm">
-                          Choose how this secret is stored.
+                          选择密钥存储方式。
                         </FormDescription>
                         <Select
                           onValueChange={field.onChange}
@@ -1047,32 +1044,32 @@ export function CreateCredentialDialog({
                         >
                           <FormControl>
                             <SelectTrigger className="text-sm">
-                              <SelectValue placeholder="Select a type" />
+                              <SelectValue placeholder={"选择类型"} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
                             <SelectItem value="custom">
                               <span className="flex items-center gap-2">
                                 <Braces className="size-4" />
-                                Key-value pair
+                                键值对
                               </span>
                             </SelectItem>
                             <SelectItem value="ssh_key">
                               <span className="flex items-center gap-2">
                                 <FileKey2 className="size-4" />
-                                SSH private key
+                                SSH 私钥
                               </span>
                             </SelectItem>
                             <SelectItem value="mtls">
                               <span className="flex items-center gap-2">
                                 <KeyRoundIcon className="size-4" />
-                                mTLS certificate + key
+                                mTLS 证书 + 密钥
                               </span>
                             </SelectItem>
                             <SelectItem value="ca_cert">
                               <span className="flex items-center gap-2">
                                 <ShieldCheck className="size-4" />
-                                CA certificate
+                                CA 证书
                               </span>
                             </SelectItem>
                           </SelectContent>
@@ -1091,7 +1088,9 @@ export function CreateCredentialDialog({
                       name="okta_auth_method"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm">Auth method</FormLabel>
+                          <FormLabel className="text-sm">
+                            身份验证方式
+                          </FormLabel>
                           <Select
                             onValueChange={(value) => {
                               const authMethod = value as OktaAuthMethod
@@ -1110,7 +1109,7 @@ export function CreateCredentialDialog({
                           >
                             <FormControl>
                               <SelectTrigger className="text-sm">
-                                <SelectValue placeholder="Select auth method" />
+                                <SelectValue placeholder={"选择身份验证方式"} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -1135,7 +1134,7 @@ export function CreateCredentialDialog({
                       name="okta_base_url"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm">Org URL</FormLabel>
+                          <FormLabel className="text-sm">组织 URL</FormLabel>
                           <FormControl>
                             <Input
                               className="text-sm"
@@ -1144,7 +1143,7 @@ export function CreateCredentialDialog({
                             />
                           </FormControl>
                           <FormDescription className="text-sm">
-                            Optional when actions pass an org URL.
+                            动作已传入组织 URL 时可留空。
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -1158,11 +1157,11 @@ export function CreateCredentialDialog({
                         name="okta_api_token"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">API token</FormLabel>
+                            <FormLabel className="text-sm">API 令牌</FormLabel>
                             <FormControl>
                               <Input
                                 className="text-sm"
-                                placeholder="Okta SSWS API token"
+                                placeholder={"Okta SSWS API 令牌"}
                                 type="password"
                                 {...field}
                               />
@@ -1182,12 +1181,12 @@ export function CreateCredentialDialog({
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-sm">
-                                Access token
+                                访问令牌
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   className="text-sm"
-                                  placeholder="OAuth access token"
+                                  placeholder={"OAuth 访问令牌"}
                                   type="password"
                                   {...field}
                                 />
@@ -1203,12 +1202,12 @@ export function CreateCredentialDialog({
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-sm">
-                                Service token
+                                服务令牌
                               </FormLabel>
                               <FormControl>
                                 <Input
                                   className="text-sm"
-                                  placeholder="OAuth service token"
+                                  placeholder={"OAuth 服务令牌"}
                                   type="password"
                                   {...field}
                                 />
@@ -1230,12 +1229,12 @@ export function CreateCredentialDialog({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="text-sm">
-                                  Client ID
+                                  客户端 ID
                                 </FormLabel>
                                 <FormControl>
                                   <Input
                                     className="text-sm"
-                                    placeholder="Okta OAuth client ID"
+                                    placeholder={"Okta OAuth 客户端 ID"}
                                     {...field}
                                   />
                                 </FormControl>
@@ -1250,7 +1249,7 @@ export function CreateCredentialDialog({
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="text-sm">
-                                  Scopes
+                                  权限范围
                                 </FormLabel>
                                 <FormControl>
                                   <Input
@@ -1260,7 +1259,7 @@ export function CreateCredentialDialog({
                                   />
                                 </FormControl>
                                 <FormDescription className="text-sm">
-                                  Space or comma separated.
+                                  以空格或逗号分隔。
                                 </FormDescription>
                                 <FormMessage />
                               </FormItem>
@@ -1274,11 +1273,11 @@ export function CreateCredentialDialog({
                           name="okta_kid"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-sm">Key ID</FormLabel>
+                              <FormLabel className="text-sm">密钥 ID</FormLabel>
                               <FormControl>
                                 <Input
                                   className="text-sm"
-                                  placeholder="Optional JWK key ID"
+                                  placeholder={"可选的 JWK 密钥 ID"}
                                   {...field}
                                 />
                               </FormControl>
@@ -1299,7 +1298,7 @@ export function CreateCredentialDialog({
                                     DPoP
                                   </FormLabel>
                                   <FormDescription className="text-sm">
-                                    Enable proof-of-possession tokens.
+                                    启用持有证明令牌。
                                   </FormDescription>
                                 </div>
                                 <FormControl>
@@ -1324,7 +1323,7 @@ export function CreateCredentialDialog({
                                   render={({ field: intervalField }) => (
                                     <FormItem>
                                       <FormLabel className="text-sm">
-                                        Key rotation interval
+                                        密钥轮换间隔
                                       </FormLabel>
                                       <FormControl>
                                         <Input
@@ -1335,7 +1334,7 @@ export function CreateCredentialDialog({
                                         />
                                       </FormControl>
                                       <FormDescription className="text-sm">
-                                        Optional seconds; SDK default is 86400.
+                                        秒数，可选；SDK 默认为 86400。
                                       </FormDescription>
                                       <FormMessage />
                                     </FormItem>
@@ -1352,9 +1351,7 @@ export function CreateCredentialDialog({
                           name="okta_private_key"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-sm">
-                                Private key
-                              </FormLabel>
+                              <FormLabel className="text-sm">私钥</FormLabel>
                               <input
                                 ref={oktaPrivateKeyFileInputRef}
                                 type="file"
@@ -1389,8 +1386,8 @@ export function CreateCredentialDialog({
                               </div>
                               <div className="flex flex-wrap items-center justify-between gap-2">
                                 <FormDescription className="text-sm">
-                                  Paste PEM or JWK JSON, or drop a .pem/.json
-                                  file into the field.
+                                  粘贴 PEM 或 JWK JSON，或将 .pem/.json
+                                  文件拖入此字段。
                                 </FormDescription>
                                 <Button
                                   type="button"
@@ -1400,8 +1397,8 @@ export function CreateCredentialDialog({
                                 >
                                   <UploadCloudIcon className="mr-2 size-4" />
                                   {oktaPrivateKeyFileName
-                                    ? "Replace file"
-                                    : "Upload file"}
+                                    ? "替换文件"
+                                    : "上传文件"}
                                 </Button>
                               </div>
                               {oktaPrivateKeyFileName && (
@@ -1426,7 +1423,7 @@ export function CreateCredentialDialog({
                     name={typedKey}
                     render={() => (
                       <FormItem>
-                        <FormLabel className="text-sm">Keys</FormLabel>
+                        <FormLabel className="text-sm">键</FormLabel>
                         {isAwsAssumeRoleTemplate && (
                           <div className="space-y-3">
                             {awsAssumeRoleAccess ? (
@@ -1434,20 +1431,19 @@ export function CreateCredentialDialog({
                                 <Alert>
                                   <InfoIcon className="size-4" />
                                   <AlertTitle className="text-xs">
-                                    Cross-role AWS access
+                                    跨角色 AWS 访问
                                   </AlertTitle>
                                   <AlertDescription className="space-y-3 text-xs">
                                     <p>
-                                      Set <code>AWS_ROLE_ARN</code> to the role
-                                      in the target AWS account. Tracecat
-                                      assumes it with the principal and External
-                                      ID below.{" "}
-                                      <code>AWS_ROLE_SESSION_NAME</code> is not
-                                      used and should not be added.
+                                      设置 <code>AWS_ROLE_ARN</code> 为目标 AWS
+                                      账号中的角色。Tracecat 使用下方主体和外部
+                                      ID 代入该角色。{" "}
+                                      <code>AWS_ROLE_SESSION_NAME</code>{" "}
+                                      不会使用，请勿添加。
                                     </p>
                                     <dl className="grid gap-2 md:grid-cols-[140px_1fr]">
                                       <dt className="text-muted-foreground">
-                                        Tracecat account
+                                        Tracecat 账号
                                       </dt>
                                       <dd className="break-all font-mono text-foreground">
                                         {
@@ -1455,7 +1451,7 @@ export function CreateCredentialDialog({
                                         }
                                       </dd>
                                       <dt className="text-muted-foreground">
-                                        Principal ARN
+                                        主体 ARN
                                       </dt>
                                       <dd className="break-all font-mono text-foreground">
                                         {
@@ -1463,40 +1459,39 @@ export function CreateCredentialDialog({
                                         }
                                       </dd>
                                       <dt className="text-muted-foreground">
-                                        External ID
+                                        外部 ID
                                       </dt>
                                       <dd className="break-all font-mono text-foreground">
                                         {awsAssumeRoleAccess.external_id}
                                       </dd>
                                       <dt className="text-muted-foreground">
-                                        Target role
+                                        目标角色
                                       </dt>
                                       <dd className="break-all font-mono text-foreground">
-                                        {roleArn || "Paste AWS_ROLE_ARN below"}
+                                        {roleArn || "在下方粘贴 AWS_ROLE_ARN"}
                                       </dd>
                                     </dl>
                                   </AlertDescription>
                                 </Alert>
                                 <div className="space-y-1">
                                   <Label className="text-xs font-medium">
-                                    Trust policy
+                                    信任策略
                                   </Label>
                                   <JsonSyntaxBlock value={awsTrustPolicy} />
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                  Create the role in the third-party account,
-                                  add the trust policy above, then paste that
-                                  role ARN into <code>AWS_ROLE_ARN</code>.
+                                  在第三方账号中创建角色，添加上述信任策略，再将角色
+                                  ARN 粘贴到 <code>AWS_ROLE_ARN</code>.
                                 </p>
                               </>
                             ) : awsAssumeRoleAccessIsLoading ? (
                               <p className="text-xs text-muted-foreground">
-                                Loading AWS role access details...
+                                正在加载 AWS 角色访问详情…
                               </p>
                             ) : shouldHideAwsAssumeRoleNote ? null : (
                               <p className="text-xs text-destructive">
                                 {awsAssumeRoleAccessError?.message ||
-                                  "Unable to load AWS role access details."}
+                                  "无法加载 AWS 角色访问详情。"}
                               </p>
                             )}
                           </div>
@@ -1524,7 +1519,7 @@ export function CreateCredentialDialog({
                                       id={`key-${index}`}
                                       className="text-sm"
                                       {...keyRegistration}
-                                      placeholder="Key"
+                                      placeholder={"键"}
                                     />
                                   </FormControl>
                                 )}
@@ -1539,9 +1534,7 @@ export function CreateCredentialDialog({
                                       }
                                     )}
                                     placeholder={
-                                      field.isOptional
-                                        ? "Value (optional)"
-                                        : "Value"
+                                      field.isOptional ? "值（可选）" : "值"
                                     }
                                     type="password"
                                   />
@@ -1589,7 +1582,7 @@ export function CreateCredentialDialog({
                             className="space-x-2 text-xs"
                           >
                             <PlusCircle className="mr-2 size-4" />
-                            Add item
+                            添加条目
                           </Button>
                         </div>
                         <FormMessage />
@@ -1608,12 +1601,12 @@ export function CreateCredentialDialog({
                   <>
                     {renderTextareaField(
                       "tls_certificate",
-                      "TLS certificate",
+                      "TLS 证书",
                       "-----BEGIN CERTIFICATE-----"
                     )}
                     {renderTextareaField(
                       "tls_private_key",
-                      "TLS private key",
+                      "TLS 私钥",
                       "-----BEGIN PRIVATE KEY-----"
                     )}
                   </>
@@ -1621,14 +1614,14 @@ export function CreateCredentialDialog({
                 {secretType === "ca_cert" &&
                   renderTextareaField(
                     "ca_certificate",
-                    "CA certificate",
+                    "CA 证书",
                     "-----BEGIN CERTIFICATE-----"
                   )}
               </DialogBody>
               <DialogFooter>
                 <Button size="sm" type="submit">
                   <KeyRoundIcon className="mr-2 size-4" />
-                  Create credential
+                  创建凭据
                 </Button>
               </DialogFooter>
             </form>

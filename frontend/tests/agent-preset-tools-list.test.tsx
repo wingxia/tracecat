@@ -90,19 +90,19 @@ it("counts a namespace across registry sources and toggles Ask to Auto and back"
   const user = userEvent.setup()
   render(<TestForm />)
   expect(screen.getByText("2 of 3")).toBeInTheDocument()
-  expect(screen.getByText("1 need approval")).toBeInTheDocument()
+  expect(screen.getByText("1 项需要审批")).toBeInTheDocument()
   await user.click(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
   await user.click(
     screen.getByRole("button", {
-      name: "Require approval for tools.test.first",
+      name: "要求 tools.test.first 进行审批",
     })
   )
   expect(values().toolApprovals).toEqual([])
   await user.click(
     screen.getByRole("button", {
-      name: "Require approval for tools.test.first",
+      name: "要求 tools.test.first 进行审批",
     })
   )
   expect(values().toolApprovals).toEqual([
@@ -113,8 +113,8 @@ it("counts a namespace across registry sources and toggles Ask to Auto and back"
 it("opens the picker from the Add tools button", async () => {
   const user = userEvent.setup()
   render(<TestForm />)
-  const addTools = screen.getByRole("button", { name: "Add tools" })
-  expect(addTools).toHaveTextContent("Add tools")
+  const addTools = screen.getByRole("button", { name: "添加工具" })
+  expect(addTools).toHaveTextContent("添加工具")
   await user.click(addTools)
   expect(screen.getByRole("dialog")).toBeInTheDocument()
 })
@@ -136,9 +136,9 @@ it("hides approval and MCP controls when controlled capabilities are off", async
   await user.click(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  expect(screen.queryByText("Ask")).not.toBeInTheDocument()
-  expect(screen.queryByText("Auto")).not.toBeInTheDocument()
-  expect(screen.queryByText("Other approval rules")).not.toBeInTheDocument()
+  expect(screen.queryByText("询问")).not.toBeInTheDocument()
+  expect(screen.queryByText("自动")).not.toBeInTheDocument()
+  expect(screen.queryByText("其他审批规则")).not.toBeInTheDocument()
   expect(screen.queryByText("Test MCP")).not.toBeInTheDocument()
 })
 
@@ -149,12 +149,10 @@ it("explains both approval modes on hover and still toggles", async () => {
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
   const toggle = screen.getByRole("button", {
-    name: "Require approval for tools.test.second",
+    name: "要求 tools.test.second 进行审批",
   })
-  const autoMessage =
-    "Click to require human-in-the-loop approval for this tool call."
-  const askMessage =
-    "This tool call needs human-in-the-loop approval. Click to run it automatically."
+  const autoMessage = "点击为此工具调用启用人工审批。"
+  const askMessage = "此工具调用需要人工审批，点击可改为自动运行。"
   expect(screen.queryByText(autoMessage)).not.toBeInTheDocument()
   await user.hover(toggle)
   expect(
@@ -185,7 +183,7 @@ it("removes all tools in a namespace and their active rules, retaining false ent
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(screen.getByRole("menuitem", { name: "Remove all" }))
+  await user.click(screen.getByRole("menuitem", { name: "全部移除" }))
   expect(values().actions).toEqual([])
   expect(values().toolApprovals).toEqual([
     { tool: "tools.test.second", allow: false },
@@ -198,17 +196,13 @@ it("applies group approvals without changing stored action order", async () => {
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(
-    screen.getByRole("menuitem", { name: "Require approval for all" })
-  )
-  expect(screen.getByText("2 need approval")).toBeInTheDocument()
+  await user.click(screen.getByRole("menuitem", { name: "全部要求审批" }))
+  expect(screen.getByText("2 项需要审批")).toBeInTheDocument()
   expect(values().actions).toEqual(defaults.actions)
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(
-    screen.getByRole("menuitem", { name: "Run all automatically" })
-  )
+  await user.click(screen.getByRole("menuitem", { name: "全部自动运行" }))
   expect(values().toolApprovals).toEqual([])
 })
 
@@ -227,13 +221,13 @@ it("renders other rules and unavailable tools, preserving invisible false rules"
       }}
     />
   )
-  expect(screen.getByText("Unavailable")).toBeInTheDocument()
-  expect(screen.getByText("Other approval rules")).toBeInTheDocument()
+  expect(screen.getByText("不可用")).toBeInTheDocument()
+  expect(screen.getByText("其他审批规则")).toBeInTheDocument()
   expect(screen.queryByText("hidden.rule")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Remove missing.tool" }))
-  await user.click(screen.getByRole("button", { name: "Remove skill.test" }))
+  await user.click(screen.getByRole("button", { name: "移除 missing.tool" }))
+  await user.click(screen.getByRole("button", { name: "移除 skill.test" }))
   await user.click(
-    screen.getByRole("button", { name: "Require approval for mcp.test" })
+    screen.getByRole("button", { name: "要求 mcp.test 进行审批" })
   )
   expect(values().actions).toEqual([])
   expect(values().toolApprovals).toEqual([
@@ -247,9 +241,9 @@ it("shows the prefix filter notice and clears only namespaces", async () => {
     <TestForm values={{ ...defaults, namespaces: ["tools.test.first"] }} />
   )
   expect(
-    screen.getByText("1 listed tool blocked by the stored namespace filter")
+    screen.getByText("列表中有 1 个工具被已存储的命名空间筛选条件阻止")
   ).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Clear" }))
+  await user.click(screen.getByRole("button", { name: "清除" }))
   expect(values()).toEqual({ ...defaults, namespaces: [] })
 })
 
@@ -261,11 +255,11 @@ it("preserves changes when the tab unmounts and remounts", async () => {
   )
   await user.click(
     screen.getByRole("button", {
-      name: "Require approval for tools.test.second",
+      name: "要求 tools.test.second 进行审批",
     })
   )
   await user.click(
-    screen.getByRole("button", { name: "Remove tools.test.first" })
+    screen.getByRole("button", { name: "移除 tools.test.first" })
   )
   rerender(<TestForm show={false} />)
   expect(values().actions).toEqual(["tools.test.second"])
@@ -275,7 +269,7 @@ it("preserves changes when the tab unmounts and remounts", async () => {
   )
   expect(
     screen.getByRole("button", {
-      name: "Require approval for tools.test.second",
+      name: "要求 tools.test.second 进行审批",
     })
   ).toBeInTheDocument()
 })
@@ -292,16 +286,16 @@ it("counts enabled remote MCP approvals and removes the whole integration", asyn
       }}
     />
   )
-  expect(screen.getAllByText("1 need approval")).toHaveLength(1)
-  expect(screen.getAllByText("All tools")).toHaveLength(2)
-  await user.click(screen.getByRole("button", { name: "Remove Test MCP" }))
+  expect(screen.getAllByText("1 项需要审批")).toHaveLength(1)
+  expect(screen.getAllByText("所有工具")).toHaveLength(2)
+  await user.click(screen.getByRole("button", { name: "移除 Test MCP" }))
   expect(values().mcpIntegrations).toEqual(["stdio"])
 })
 
 it("filters in place and disables edits during save", async () => {
   const user = userEvent.setup()
   render(<TestForm isSaving />)
-  expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
@@ -309,19 +303,19 @@ it("filters in place and disables edits during save", async () => {
     expect(item).toHaveAttribute("data-disabled")
   }
   await user.keyboard("{Escape}")
-  await user.click(screen.getByRole("button", { name: "Search allowed tools" }))
+  await user.click(screen.getByRole("button", { name: "搜索允许的工具" }))
   await user.type(
-    screen.getByRole("textbox", { name: "Filter allowed tools" }),
+    screen.getByRole("textbox", { name: "筛选允许的工具" }),
     "first"
   )
   expect(
     screen.getByRole("button", {
-      name: "Require approval for tools.test.first",
+      name: "要求 tools.test.first 进行审批",
     })
   ).toBeDisabled()
   expect(
     screen.queryByRole("button", {
-      name: "Require approval for tools.test.second",
+      name: "要求 tools.test.second 进行审批",
     })
   ).not.toBeInTheDocument()
   expect(
@@ -347,13 +341,13 @@ it.each([
         }}
       />
     )
-    expect(screen.getByText("Loading tools...")).toBeInTheDocument()
-    expect(screen.queryByText("Unavailable")).not.toBeInTheDocument()
+    expect(screen.getByText("正在加载工具…")).toBeInTheDocument()
+    expect(screen.queryByText("不可用")).not.toBeInTheDocument()
     expect(screen.queryByText("mcp-test")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /Remove/ })
+      screen.queryByRole("button", { name: /移除/ })
     ).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
   }
 )
 
@@ -367,10 +361,10 @@ it("shows a failed catalog instead of unavailable tools, even when data is undef
       }}
     />
   )
-  expect(screen.getByText("Tools could not be loaded.")).toBeInTheDocument()
-  expect(screen.queryByText("Loading tools...")).not.toBeInTheDocument()
-  expect(screen.queryByText("Unavailable")).not.toBeInTheDocument()
-  expect(screen.getByRole("button", { name: "Add tools" })).toBeDisabled()
+  expect(screen.getByText("无法加载工具。")).toBeInTheDocument()
+  expect(screen.queryByText("正在加载工具…")).not.toBeInTheDocument()
+  expect(screen.queryByText("不可用")).not.toBeInTheDocument()
+  expect(screen.getByRole("button", { name: "添加工具" })).toBeDisabled()
 })
 
 it("shows skill-contributed policy tools once with approval controls and no removal", async () => {
@@ -386,16 +380,16 @@ it("shows skill-contributed policy tools once with approval controls and no remo
       }}
     />
   )
-  const group = screen.getByText("From skills").parentElement as HTMLElement
+  const group = screen.getByText("来自技能").parentElement as HTMLElement
   expect(within(group).getByText("third")).toBeInTheDocument()
   expect(within(group).getByText("skill.unknown")).toBeInTheDocument()
   expect(
-    within(group).queryByRole("button", { name: /Remove/ })
+    within(group).queryByRole("button", { name: /移除/ })
   ).not.toBeInTheDocument()
-  expect(screen.queryByText("Other approval rules")).not.toBeInTheDocument()
+  expect(screen.queryByText("其他审批规则")).not.toBeInTheDocument()
   await user.click(
     within(group).getByRole("button", {
-      name: "Require approval for skill.unknown",
+      name: "要求 skill.unknown 进行审批",
     })
   )
   expect(values().toolApprovals).toContainEqual({
@@ -404,7 +398,7 @@ it("shows skill-contributed policy tools once with approval controls and no remo
   })
   await user.click(
     within(group).getByRole("button", {
-      name: "Require approval for tools.test.third",
+      name: "要求 tools.test.third 进行审批",
     })
   )
   expect(values().toolApprovals).not.toContainEqual({
@@ -415,7 +409,7 @@ it("shows skill-contributed policy tools once with approval controls and no remo
 
 it("does not invent skill tools when the saved policy is absent", () => {
   render(<TestForm />)
-  expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+  expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
 })
 
 it("keeps no-op bulk Auto clean and restores cleanliness after Ask then Auto", async () => {
@@ -431,16 +425,14 @@ it("keeps no-op bulk Auto clean and restores cleanliness after Ask then Auto", a
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(
-    screen.getByRole("menuitem", { name: "Run all automatically" })
-  )
+  await user.click(screen.getByRole("menuitem", { name: "全部自动运行" }))
   expect(onWrite).not.toHaveBeenCalled()
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
   await user.click(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
   const toggle = screen.getByRole("button", {
-    name: "Require approval for tools.test.first",
+    name: "要求 tools.test.first 进行审批",
   })
   await user.click(toggle)
   expect(toggle).toHaveAttribute("aria-pressed", "true")
@@ -465,22 +457,17 @@ it("hides filtered group headings and shows one no-match line", async () => {
     />
   )
   const count = screen.getByRole("heading", {
-    name: "Tools",
+    name: "工具",
   }).nextElementSibling
   expect(count).toHaveTextContent("2")
-  await user.click(screen.getByRole("button", { name: "Search allowed tools" }))
+  await user.click(screen.getByRole("button", { name: "搜索允许的工具" }))
   await user.type(
-    screen.getByRole("textbox", { name: "Filter allowed tools" }),
+    screen.getByRole("textbox", { name: "筛选允许的工具" }),
     "no-match"
   )
-  for (const label of [
-    "Unavailable",
-    "Other approval rules",
-    "From skills",
-    "Test tools",
-  ])
+  for (const label of ["不可用", "其他审批规则", "来自技能", "Test tools"])
     expect(screen.queryByText(label)).not.toBeInTheDocument()
-  expect(screen.getAllByText("No matching tools")).toHaveLength(1)
+  expect(screen.getAllByText("没有匹配的工具")).toHaveLength(1)
 })
 
 it("does not turn removed saved actions into skill tools or retain their approvals", async () => {
@@ -496,13 +483,13 @@ it("does not turn removed saved actions into skill tools or retain their approva
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
   await user.click(
-    screen.getByRole("button", { name: "Remove tools.test.first" })
+    screen.getByRole("button", { name: "移除 tools.test.first" })
   )
   expect(values().actions).toEqual(["tools.test.second"])
-  expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+  expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
   expect(
     screen.queryByRole("button", {
-      name: "Require approval for tools.test.first",
+      name: "要求 tools.test.first 进行审批",
     })
   ).not.toBeInTheDocument()
   expect(values().toolApprovals).toEqual([])
@@ -519,21 +506,21 @@ it("shows a default-ask action as Ask and stores only its Auto override", async 
     />
   )
   const group = screen.getByRole("button", { name: /Test tools tools.test/ })
-  expect(within(group).getByText("1 need approval")).toBeInTheDocument()
+  expect(within(group).getByText("1 项需要审批")).toBeInTheDocument()
   expect(group.querySelector("div")).toBeNull()
   await user.click(group)
   const toggle = screen.getByRole("button", {
-    name: "Require approval for tools.test.first",
+    name: "要求 tools.test.first 进行审批",
   })
-  expect(toggle).toHaveTextContent("Ask")
+  expect(toggle).toHaveTextContent("询问")
   await user.click(toggle)
-  expect(toggle).toHaveTextContent("Auto")
+  expect(toggle).toHaveTextContent("自动")
   expect(values().toolApprovals).toEqual([
     { tool: actions[0].action, allow: false },
   ])
-  expect(screen.queryByText("1 need approval")).not.toBeInTheDocument()
+  expect(screen.queryByText("1 项需要审批")).not.toBeInTheDocument()
   await user.click(toggle)
-  expect(toggle).toHaveTextContent("Ask")
+  expect(toggle).toHaveTextContent("询问")
   expect(values().toolApprovals).toEqual([])
 })
 
@@ -552,9 +539,9 @@ it("uses action defaults for skill tools and bulk approval changes", async () =>
     />
   )
   const skillToggle = screen.getByRole("button", {
-    name: "Require approval for tools.test.first",
+    name: "要求 tools.test.first 进行审批",
   })
-  expect(skillToggle).toHaveTextContent("Ask")
+  expect(skillToggle).toHaveTextContent("询问")
   await user.click(skillToggle)
   expect(values().toolApprovals).toEqual([
     { tool: actions[0].action, allow: false },
@@ -562,9 +549,7 @@ it("uses action defaults for skill tools and bulk approval changes", async () =>
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(
-    screen.getByRole("menuitem", { name: "Run all automatically" })
-  )
+  await user.click(screen.getByRole("menuitem", { name: "全部自动运行" }))
   expect(values().toolApprovals).toContainEqual({
     tool: actions[1].action,
     allow: false,
@@ -572,9 +557,7 @@ it("uses action defaults for skill tools and bulk approval changes", async () =>
   fireEvent.contextMenu(
     screen.getByRole("button", { name: /Test tools tools.test/ })
   )
-  await user.click(
-    screen.getByRole("menuitem", { name: "Require approval for all" })
-  )
+  await user.click(screen.getByRole("menuitem", { name: "全部要求审批" }))
   expect(values().toolApprovals).toEqual([
     { tool: actions[0].action, allow: false },
   ])
@@ -585,22 +568,21 @@ it.each(["tool", "group"])(
   async (target) => {
     const user = userEvent.setup()
     render(<TestForm listProps={{ skillActions: [actions[0].action] }} />)
-    expect(screen.queryByText("From skills")).not.toBeInTheDocument()
+    expect(screen.queryByText("来自技能")).not.toBeInTheDocument()
     const group = screen.getByRole("button", { name: /Test tools tools.test/ })
     if (target === "group") {
       fireEvent.contextMenu(group)
-      await user.click(screen.getByRole("menuitem", { name: "Remove all" }))
+      await user.click(screen.getByRole("menuitem", { name: "全部移除" }))
     } else {
       await user.click(group)
       await user.click(
-        screen.getByRole("button", { name: "Remove tools.test.first" })
+        screen.getByRole("button", { name: "移除 tools.test.first" })
       )
     }
-    const skillGroup = screen.getByText("From skills")
-      .parentElement as HTMLElement
+    const skillGroup = screen.getByText("来自技能").parentElement as HTMLElement
     expect(
       within(skillGroup).getByRole("button", {
-        name: "Require approval for tools.test.first",
+        name: "要求 tools.test.first 进行审批",
       })
     ).toHaveAttribute("aria-pressed", "true")
     expect(values().actions).not.toContain(actions[0].action)
@@ -629,19 +611,19 @@ it("renders a caller-built index without registry or MCP data", async () => {
   const group = screen.getByRole("button", { name: /Test MCP test-mcp/ })
   expect(group).toHaveTextContent("1 of 3")
   expect(group).toHaveAttribute("aria-expanded", "false")
-  expect(screen.queryByText("All tools")).not.toBeInTheDocument()
+  expect(screen.queryByText("所有工具")).not.toBeInTheDocument()
   expect(
     screen.getByRole("button", { name: /Tools test tools\.test/ })
   ).toHaveTextContent("1 of 1")
-  expect(screen.getByText("Unavailable")).toBeInTheDocument()
+  expect(screen.getByText("不可用")).toBeInTheDocument()
   expect(screen.getByText("mcp.other.gone")).toBeInTheDocument()
 
   await user.click(group)
   expect(screen.getByText("mcp.test-mcp.read")).toBeInTheDocument()
   expect(screen.queryByText("mcp.test-mcp.write")).not.toBeInTheDocument()
-  expect(screen.queryByText("Ask")).not.toBeInTheDocument()
+  expect(screen.queryByText("询问")).not.toBeInTheDocument()
   await user.click(
-    screen.getByRole("button", { name: "Remove mcp.test-mcp.read" })
+    screen.getByRole("button", { name: "移除 mcp.test-mcp.read" })
   )
   // The entry is in the MCP section but is stored in, and removed from, actions.
   expect(onChange).toHaveBeenCalledWith({
@@ -663,9 +645,9 @@ it("keeps the single All tools row for whole-integration entries of a passed ind
     </TooltipProvider>
   )
   expect(screen.getByText("Test MCP")).toBeInTheDocument()
-  expect(screen.getByText("All tools")).toBeInTheDocument()
+  expect(screen.getByText("所有工具")).toBeInTheDocument()
   expect(screen.queryByRole("button", { name: /Test MCP test-mcp/ })).toBeNull()
-  await user.click(screen.getByRole("button", { name: "Remove Test MCP" }))
+  await user.click(screen.getByRole("button", { name: "移除 Test MCP" }))
   expect(onChange).toHaveBeenCalledWith({ actions: [], mcpIntegrations: [] })
 })
 
@@ -678,7 +660,7 @@ it("writes only the changed field on a toggle", async () => {
   )
   await user.click(
     screen.getByRole("button", {
-      name: `Require approval for ${actions[1].action}`,
+      name: `要求 ${actions[1].action} 进行审批`,
     })
   )
   expect(onWrite).toHaveBeenCalledTimes(1)

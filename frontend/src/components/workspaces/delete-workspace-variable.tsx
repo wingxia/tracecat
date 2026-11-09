@@ -39,14 +39,13 @@ export function DeleteVariableAlertDialog({
       {children}
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete variable</AlertDialogTitle>
+          <AlertDialogTitle>删除变量</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this variable from the workspace?
-            This action cannot be undone.
+            确定要从工作空间删除此变量吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={async () => {
@@ -57,7 +56,7 @@ export function DeleteVariableAlertDialog({
               setSelectedVariable(null)
             }}
           >
-            Confirm
+            确认
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

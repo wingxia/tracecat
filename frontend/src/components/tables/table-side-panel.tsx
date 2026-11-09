@@ -24,7 +24,7 @@ function jsonSheetLinter(view: EditorView): Diagnostic[] {
     JSON.parse(content)
     return []
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Invalid JSON"
+    const msg = err instanceof Error ? err.message : "JSON 无效"
     const posMatch = msg.match(/position (\d+)/)
     const pos = posMatch ? Number.parseInt(posMatch[1], 10) : 0
     const from = Math.min(pos, content.length)
@@ -148,7 +148,7 @@ function EditTextPanel({
       </div>
       <div className="flex shrink-0 items-center justify-end gap-2 border-t px-4 py-3">
         <Button variant="outline" size="sm" onClick={closePanel}>
-          Cancel
+          取消
         </Button>
         <Button
           size="sm"
@@ -157,7 +157,7 @@ function EditTextPanel({
             closePanel()
           }}
         >
-          Save
+          保存
         </Button>
       </div>
     </div>
@@ -204,7 +204,7 @@ function EditJsonPanel({
       onSave?.(parsed)
       closePanel()
     } catch {
-      setError("Invalid JSON")
+      setError("JSON 无效")
     }
   }, [localValue, onSave, closePanel])
 
@@ -265,10 +265,10 @@ function EditJsonPanel({
       )}
       <div className="flex shrink-0 items-center justify-end gap-2 border-t px-4 py-3">
         <Button variant="outline" size="sm" onClick={closePanel}>
-          Cancel
+          取消
         </Button>
         <Button size="sm" onClick={handleSave}>
-          Save
+          保存
         </Button>
       </div>
     </div>

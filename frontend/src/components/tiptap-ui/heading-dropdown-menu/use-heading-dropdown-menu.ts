@@ -123,7 +123,7 @@ export function useHeadingDropdownMenu(config?: UseHeadingDropdownMenuConfig) {
     isActive,
     canToggle: canToggleState,
     levels,
-    label: "Heading",
+    label: "标题",
     Icon: activeLevel ? headingIcons[activeLevel] : HeadingIcon,
   }
 }

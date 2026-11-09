@@ -38,7 +38,7 @@ async function listAllLibrarySkills(
 function showError(title: string, error: TracecatApiError) {
   toast({
     title,
-    description: getApiErrorDetail(error) ?? "Please try again.",
+    description: getApiErrorDetail(error) ?? "请重试。",
     variant: "destructive",
   })
 }
@@ -77,9 +77,9 @@ export function useSkillLibrary(
       await skillLibraryInstallLibrarySkill({ workspaceId, slug }),
     onSuccess: (skill) => {
       invalidateLibrary()
-      toast({ title: "Installed skill", description: skill.slug })
+      toast({ title: "已安装技能", description: skill.slug })
     },
-    onError: (error) => showError("Failed to install skill", error),
+    onError: (error) => showError("安装技能失败", error),
   })
 
   const uninstallMutation = useMutation<void, TracecatApiError, string>({
@@ -87,9 +87,9 @@ export function useSkillLibrary(
       await skillLibraryUninstallLibrarySkill({ workspaceId, slug }),
     onSuccess: (_, slug) => {
       invalidateLibrary()
-      toast({ title: "Uninstalled skill", description: slug })
+      toast({ title: "已卸载技能", description: slug })
     },
-    onError: (error) => showError("Failed to uninstall skill", error),
+    onError: (error) => showError("卸载技能失败", error),
   })
 
   const installManyMutation = useMutation<
@@ -104,10 +104,10 @@ export function useSkillLibrary(
       }),
     onSuccess: (skills) =>
       toast({
-        title: "Installed skills",
+        title: "已安装多个技能",
         description: skills.map((skill) => skill.slug).join(", "),
       }),
-    onError: (error) => showError("Failed to install skills", error),
+    onError: (error) => showError("批量安装技能失败", error),
     onSettled: invalidateLibrary,
   })
 
@@ -118,8 +118,8 @@ export function useSkillLibrary(
         requestBody: { slugs },
       }),
     onSuccess: (_, slugs) =>
-      toast({ title: "Uninstalled skills", description: slugs.join(", ") }),
-    onError: (error) => showError("Failed to uninstall skills", error),
+      toast({ title: "已卸载多个技能", description: slugs.join(", ") }),
+    onError: (error) => showError("批量卸载技能失败", error),
     onSettled: invalidateLibrary,
   })
 
@@ -132,11 +132,11 @@ export function useSkillLibrary(
         queryKey: ["skill-directory-items", workspaceId],
       })
       toast({
-        title: "Forked skill",
-        description: `${skill.name} is now an editable workspace skill.`,
+        title: "已创建技能分支副本",
+        description: `${skill.name} 现为可编辑的工作空间技能。`,
       })
     },
-    onError: (error) => showError("Failed to fork skill", error),
+    onError: (error) => showError("创建技能分支失败", error),
   })
 
   return {

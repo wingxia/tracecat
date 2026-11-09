@@ -97,7 +97,7 @@ export function GitSyncPushTab({
     useWorkspaceSyncExport(workspaceId)
   const queryClient = useQueryClient()
 
-  const [message, setMessage] = useState("Export workspace config")
+  const [message, setMessage] = useState("导出工作空间配置")
   const [mode, setMode] = useState<WorkspaceSyncPushMode>("pull-request")
   const [previewRequested, setPreviewRequested] = useState(false)
 
@@ -242,16 +242,16 @@ export function GitSyncPushTab({
           reviewRequestShort,
         }),
         description: sourcePackage
-          ? "No customer workspace changed. Merge it, then cut a release and deploy it from Admin, Managed Workspaces."
+          ? "客户工作空间尚未更改。合并后，请在“管理后台 › 托管工作空间”中创建发布版本并部署。"
           : (result.commit.message ?? result.commit.sha ?? undefined),
         action: prUrl ? (
           <ToastAction
             asChild
-            altText={`Open ${reviewRequest}`}
+            altText={`打开${reviewRequest}`}
             className="gap-1.5"
           >
             <a href={prUrl} target="_blank" rel="noopener noreferrer">
-              View {reviewRequestShort}
+              查看 {reviewRequestShort}
               <ExternalLinkIcon className="size-3.5" />
             </a>
           </ToastAction>
@@ -260,7 +260,7 @@ export function GitSyncPushTab({
     } catch (error) {
       if (error instanceof SyncOperationWaitCancelled) return
       toast({
-        title: "Push failed",
+        title: "推送失败",
         description: (
           <ExportErrorMessage error={error} workspaceId={workspaceId} />
         ),
@@ -287,7 +287,7 @@ export function GitSyncPushTab({
         </div>
         {workspacePackageError && (
           <GitSyncNotice tone="error">
-            Could not read the managed resources package:{" "}
+            无法读取托管资源包：{" "}
             <ExportErrorMessage
               announce={false}
               error={workspacePackageError}
@@ -302,13 +302,12 @@ export function GitSyncPushTab({
         ))}
         {isBlocked && (
           <GitSyncNotice tone="warning">
-            Pushing to {blockedBranch} directly is off. Pick or create another
-            branch.
+            直接推送到 {blockedBranch} 已禁用。请选择或创建其他分支。
           </GitSyncNotice>
         )}
         {previewError && (
           <GitSyncNotice tone="error">
-            Could not preview this push:{" "}
+            无法预览此次推送：{" "}
             <ExportErrorMessage
               announce={false}
               error={previewError}
@@ -334,7 +333,7 @@ export function GitSyncPushTab({
                     visiblePreview.resource_diffs,
                     compareRef
                   )
-                : `${previewDiffCount} change(s), compared with ${compareRef ?? "the branch"}`
+                : `与 ${compareRef ?? "此分支"} 相比有 ${previewDiffCount} 项更改`
             }
             resources={visiblePreview.resources ?? []}
             diffs={visiblePreview.resource_diffs ?? []}
@@ -344,8 +343,8 @@ export function GitSyncPushTab({
           <GitSyncPreviewEmpty
             description={
               sourcePackage
-                ? `Preview to see what the package adds and removes, compared with ${compareRef ?? "the branch"}.`
-                : `Preview to skim what this push includes, compared with ${compareRef ?? "the branch"}.`
+                ? `预览软件包相对于 ${compareRef ?? "此分支"} 的新增和移除内容。`
+                : `预览此次推送相对于 ${compareRef ?? "此分支"} 包含的变更。`
             }
             isLoading={previewIsLoading}
             disabled={!compareRef || workspacePackageIsFetching}
@@ -354,8 +353,8 @@ export function GitSyncPushTab({
         )}
       </div>
 
-      <GitSyncActionBar label="Push actions">
-        <span className="text-xs text-muted-foreground">Into</span>
+      <GitSyncActionBar label={"推送操作"}>
+        <span className="text-xs text-muted-foreground">目标</span>
         <GitSyncBranchPicker
           branches={repoBranches}
           branch={targetBranch}
@@ -370,8 +369,8 @@ export function GitSyncPushTab({
           onSelectBranch={selectBranch}
         />
         <Input
-          aria-label="Commit message"
-          placeholder="Commit message"
+          aria-label={"提交说明"}
+          placeholder={"提交说明"}
           value={message}
           onChange={(event) => setMessage(event.target.value)}
           className="h-8 min-w-48 flex-1"
@@ -406,7 +405,7 @@ export function GitSyncPushTab({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>确定吗？</AlertDialogTitle>
             <AlertDialogDescription>
               {getPushConfirmation({
                 isPackage: Boolean(sourcePackage),
@@ -419,7 +418,7 @@ export function GitSyncPushTab({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={pushDisabled}
               onClick={() => void handlePush()}
@@ -485,7 +484,7 @@ function PushSplitButton({
           <Button
             type="button"
             size="sm"
-            aria-label="Push options"
+            aria-label={"推送选项"}
             disabled={menuDisabled}
             className="rounded-l-none border-l border-primary-foreground/30 px-2"
           >
@@ -502,18 +501,18 @@ function PushSplitButton({
             <DropdownMenuRadioItem value="pull-request" className="items-start">
               <span className="flex flex-col gap-0.5">
                 <span className="font-medium">
-                  Push and open {reviewRequestShort}
+                  推送并打开 {reviewRequestShort}
                 </span>
                 <span className="text-xs text-muted-foreground">
-                  Review and merge happen in the {reviewRequest}
+                  审核与合并将在此处进行： {reviewRequest}
                 </span>
               </span>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="direct" className="items-start">
               <span className="flex flex-col gap-0.5">
-                <span className="font-medium">Push only</span>
+                <span className="font-medium">仅推送</span>
                 <span className="text-xs text-muted-foreground">
-                  Commits to the branch, no {reviewRequest}
+                  提交到分支，不创建 {reviewRequest}
                 </span>
               </span>
             </DropdownMenuRadioItem>
@@ -577,17 +576,17 @@ function getPushButtonLabel({
   reviewRequestShort: string
 }): string {
   if (isPending) {
-    return isPackage ? "Publishing..." : "Pushing..."
+    return isPackage ? "发布中…" : "推送中…"
   }
   if (isBlocked) {
-    return "Pick another branch"
+    return "选择其他分支"
   }
   // Keep the label stable; the preview above already shows what changes.
-  const push = isPackage ? "Publish package" : "Push"
+  const push = isPackage ? "发布软件包" : "推送"
   if (createPr) {
-    return `${push} and open ${reviewRequestShort}`
+    return `${push}并创建 ${reviewRequestShort}`
   }
-  return `${push} to ${targetBranch}`
+  return `${push}到 ${targetBranch}`
 }
 
 function getPushConfirmation({
@@ -605,13 +604,13 @@ function getPushConfirmation({
   baseBranch: string | undefined
   reviewRequest: string
 }): string {
-  const files = `${fileCount} changed ${fileCount === 1 ? "file" : "files"}`
-  const subject = isPackage ? `the package (${files})` : files
-  const commit = `This commits ${subject} to ${targetBranch}`
+  const files = `${fileCount} 个已更改文件`
+  const subject = isPackage ? `软件包（${files}）` : files
+  const commit = `此操作会将${subject}提交到 ${targetBranch}`
   if (createPr) {
-    return `${commit} and opens a ${reviewRequest} into ${baseBranch ?? "the base branch"}.`
+    return `${commit}，并创建合并到 ${baseBranch ?? "基础分支"} 的${reviewRequest}。`
   }
-  return `${commit} without a ${reviewRequest}.`
+  return `${commit}，不创建${reviewRequest}。`
 }
 
 function getPushToastTitle({
@@ -626,24 +625,22 @@ function getPushToastTitle({
   reviewRequestShort: string
 }): string {
   if (isPackage && hasPr) {
-    return `Package ${reviewRequestShort} ready`
+    return `软件包 ${reviewRequestShort} 已就绪`
   }
   if (isPackage) {
-    return `Package published to ${targetBranch}`
+    return `软件包已发布到 ${targetBranch}`
   }
   if (hasPr) {
-    return `${reviewRequestShort} ready`
+    return `${reviewRequestShort} 已就绪`
   }
-  return `Pushed to ${targetBranch}`
+  return `已推送到 ${targetBranch}`
 }
 
 function getPushPreviewSummary(
   diffs: PullResourceDiff[],
   compareRef: string | undefined
 ): string {
-  const ref = compareRef ?? "the branch"
+  const ref = compareRef ?? "此分支"
   const counts = formatChangeCounts(diffs)
-  return counts
-    ? `${counts}, compared with ${ref}`
-    : `No changes compared with ${ref}`
+  return counts ? `与 ${ref} 相比，${counts}` : `与 ${ref} 相比没有更改`
 }

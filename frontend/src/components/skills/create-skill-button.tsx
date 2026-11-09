@@ -113,9 +113,8 @@ export function CreateSkillButton({
       setShowUploadConfirmDialog(true)
     } catch (error) {
       toast({
-        title: "Drop upload failed",
-        description:
-          getApiErrorDetail(error) ?? "Failed to read dropped files.",
+        title: "拖放上传失败",
+        description: getApiErrorDetail(error) ?? "读取拖放的文件失败。",
         variant: "destructive",
       })
     }
@@ -183,8 +182,8 @@ export function CreateSkillButton({
       router.push(`/workspaces/${workspaceId}/skills/${created.id}`)
     } catch (error) {
       toast({
-        title: "Upload failed",
-        description: getApiErrorDetail(error) ?? "Failed to upload skill.",
+        title: "上传失败",
+        description: getApiErrorDetail(error) ?? "上传技能失败。",
         variant: "destructive",
       })
     } finally {
@@ -214,7 +213,7 @@ export function CreateSkillButton({
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create
+            创建
             <ChevronDownIcon className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -229,18 +228,16 @@ export function CreateSkillButton({
           <DropdownMenuItem onSelect={() => setShowNewSkillDialog(true)}>
             <FilePlus className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Skill</span>
-              <span className="text-xs text-muted-foreground">
-                Start from scratch
-              </span>
+              <span>技能</span>
+              <span className="text-xs text-muted-foreground">从头开始</span>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setShowUploadSkillDialog(true)}>
             <Upload className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Upload</span>
+              <span>上传</span>
               <span className="text-xs text-muted-foreground">
-                Upload an existing skill directory
+                上传现有技能目录
               </span>
             </div>
           </DropdownMenuItem>
@@ -248,10 +245,8 @@ export function CreateSkillButton({
             <DropdownMenuItem onSelect={onCreateFolder}>
               <FolderIcon className="size-4 text-foreground/80" />
               <div className="flex flex-col text-xs">
-                <span>Folder</span>
-                <span className="text-xs text-muted-foreground">
-                  Group skills
-                </span>
+                <span>文件夹</span>
+                <span className="text-xs text-muted-foreground">技能分组</span>
               </div>
             </DropdownMenuItem>
           ) : null}

@@ -199,7 +199,7 @@ function renderChatSessionPane(
           workspaceId="workspace-1"
           modelInfo={{ name: "gpt-test", provider: "openai" }}
           placeholder="Ask Tracecat..."
-          inputDisabledPlaceholder="Creating chat..."
+          inputDisabledPlaceholder="正在创建对话…"
           surface="workspace-chat"
           toolsEnabled={false}
           {...nextProps}
@@ -227,8 +227,7 @@ describe("ChatSessionPane optimistic first send", () => {
   })
 
   it("adopts persisted child history and disables direct messages", async () => {
-    const description =
-      "This subagent conversation is read-only. Message the parent conversation instead."
+    const description = "此子智能体对话为只读，请在上级对话中发送消息。"
     const message: ApiUIMessage = {
       id: "child-message",
       role: "assistant",
@@ -258,7 +257,7 @@ describe("ChatSessionPane optimistic first send", () => {
     expect(await screen.findByText("Child result")).toBeInTheDocument()
     expect(screen.getByText(description)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(description)).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Submit" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "提交" })).toBeDisabled()
     expect(mockUseVercelChatResult.sendMessage).not.toHaveBeenCalled()
   })
 
@@ -276,7 +275,7 @@ describe("ChatSessionPane optimistic first send", () => {
     fireEvent.change(input, {
       target: { value: "Summarize this workspace" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }))
+    fireEvent.click(screen.getByRole("button", { name: "提交" }))
 
     await waitFor(() =>
       expect(onBeforeSend).toHaveBeenCalledWith(
@@ -290,7 +289,7 @@ describe("ChatSessionPane optimistic first send", () => {
       await screen.findByText("Summarize this workspace")
     ).toBeInTheDocument()
     expect(screen.getByTestId("agent-running-line")).toBeInTheDocument()
-    expect(screen.getByPlaceholderText("Creating chat...")).toBeDisabled()
+    expect(screen.getByPlaceholderText("正在创建对话…")).toBeDisabled()
   })
 
   it("restores the draft when the session creation is cancelled", async () => {
@@ -303,12 +302,12 @@ describe("ChatSessionPane optimistic first send", () => {
 
     const input = screen.getByPlaceholderText("Ask Tracecat...")
     fireEvent.change(input, {
-      target: { value: "Try again" },
+      target: { value: "重试" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }))
+    fireEvent.click(screen.getByRole("button", { name: "提交" }))
 
     await waitFor(() => expect(input).not.toBeDisabled())
-    expect(input).toHaveValue("Try again")
+    expect(input).toHaveValue("重试")
     expect(screen.queryByTestId("agent-running-line")).not.toBeInTheDocument()
   })
 
@@ -333,7 +332,7 @@ describe("ChatSessionPane optimistic first send", () => {
     fireEvent.change(input, {
       target: { value: "Repeat this" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }))
+    fireEvent.click(screen.getByRole("button", { name: "提交" }))
 
     await waitFor(() => expect(onBeforeSend).toHaveBeenCalled())
     expect(screen.getByTestId("agent-running-line")).toBeInTheDocument()
@@ -465,14 +464,14 @@ function timeline(): string[] {
     const card = within(element)
     const shown =
       card.queryByTestId("tool-output")?.textContent ??
-      card.queryByText("Stopped before completion")?.textContent
+      card.queryByText("未完成即停止")?.textContent
     const operation = card.getByTestId("tool-input").textContent
     const state = card.getByTestId("tool-state").textContent
     return { element, label: `${operation}: ${state} (${shown})` }
   })
   const markers = screen
-    .queryAllByText("Interrupted", { exact: true })
-    .map((element) => ({ element, label: "Interrupted" }))
+    .queryAllByText("已中断", { exact: true })
+    .map((element) => ({ element, label: "已中断" }))
   return [...cards, ...markers]
     .sort((a, b) =>
       a.element.compareDocumentPosition(b.element) &
@@ -496,10 +495,10 @@ describe("ChatSessionPane stopped approved calls", () => {
 
     // The cancel shows at once, while the first call is still running.
     expect(timeline()).toEqual([
-      "first: output-interrupted (Stopped before completion)",
-      "second: output-interrupted (Stopped before completion)",
-      "third: output-interrupted (Stopped before completion)",
-      "Interrupted",
+      "first: output-interrupted (未完成即停止)",
+      "second: output-interrupted (未完成即停止)",
+      "third: output-interrupted (未完成即停止)",
+      "已中断",
     ])
 
     mockUseVercelChatResult.status = "ready"
@@ -512,9 +511,9 @@ describe("ChatSessionPane stopped approved calls", () => {
     // marker still closes the turn.
     expect(timeline()).toEqual([
       'first: output-available ({"executed":"first"})',
-      "second: output-interrupted (Stopped before completion)",
-      "third: output-interrupted (Stopped before completion)",
-      "Interrupted",
+      "second: output-interrupted (未完成即停止)",
+      "third: output-interrupted (未完成即停止)",
+      "已中断",
     ])
   })
 
@@ -530,7 +529,7 @@ describe("ChatSessionPane stopped approved calls", () => {
       'first: output-available ({"executed":"first"})',
       "second: output-error (Tool call cancelled)",
       "third: output-error (Tool call cancelled)",
-      "Interrupted",
+      "已中断",
     ])
   })
 
@@ -539,10 +538,10 @@ describe("ChatSessionPane stopped approved calls", () => {
     renderChatSessionPane()
 
     expect(timeline()).toEqual([
-      "first: output-interrupted (Stopped before completion)",
-      "second: output-interrupted (Stopped before completion)",
-      "third: output-interrupted (Stopped before completion)",
-      "Interrupted",
+      "first: output-interrupted (未完成即停止)",
+      "second: output-interrupted (未完成即停止)",
+      "third: output-interrupted (未完成即停止)",
+      "已中断",
     ])
   })
 
@@ -590,7 +589,7 @@ describe("ChatSessionPane stopped approved calls", () => {
       'first: output-available ({"executed":"first"})',
       "second: output-error (Tool call cancelled)",
       "third: output-error (Tool call cancelled)",
-      "Interrupted",
+      "已中断",
     ])
   })
 })
@@ -712,7 +711,7 @@ describe("ChatSessionPane response actions", () => {
       expect(timeline()).toEqual(
         CALLS.map((id) => `${id}: output-available ({"executed":"${id}"})`)
       )
-      const retry = screen.getAllByRole("button", { name: "Retry" })
+      const retry = screen.getAllByRole("button", { name: "重试" })
       expect(retry).toHaveLength(1)
 
       // Retrying resubmits the approvals rather than the original prompt.
@@ -736,7 +735,7 @@ describe("ChatSessionPane response actions", () => {
     const requests = retryRequests(mockUseVercelChatResult.messages)
     renderChatSessionPane()
 
-    const retry = screen.getAllByRole("button", { name: "Retry" })
+    const retry = screen.getAllByRole("button", { name: "重试" })
     expect(retry).toHaveLength(1)
     fireEvent.click(retry[0])
 
@@ -780,7 +779,7 @@ describe("ChatSessionPane response actions", () => {
       const requests = retryRequests(mockUseVercelChatResult.messages)
       renderChatSessionPane()
 
-      const retry = screen.getAllByRole("button", { name: "Retry" })
+      const retry = screen.getAllByRole("button", { name: "重试" })
       expect(retry).toHaveLength(1)
       fireEvent.click(retry[0])
 
@@ -830,8 +829,8 @@ describe("ChatSessionPane compaction badge", () => {
     ]
     renderChatSessionPane()
 
-    expect(screen.getByText("Compacted conversation")).toBeInTheDocument()
-    expect(screen.getByText("1,234 tokens")).toBeInTheDocument()
+    expect(screen.getByText("已压缩对话")).toBeInTheDocument()
+    expect(screen.getByText("1,234 令牌")).toBeInTheDocument()
   })
 
   it("shows one progress indicator for a live compaction until it completes", () => {
@@ -844,10 +843,10 @@ describe("ChatSessionPane compaction badge", () => {
     ]
     const { rerenderChatSessionPane } = renderChatSessionPane()
 
-    const badge = screen.getByText("Compacting conversation").parentElement
+    const badge = screen.getByText("正在压缩对话").parentElement
     expect(badge?.querySelector(".animate-spin")).toBeInTheDocument()
     expect(screen.queryByTestId("agent-running-line")).not.toBeInTheDocument()
-    expect(screen.queryByText("Compacted conversation")).not.toBeInTheDocument()
+    expect(screen.queryByText("已压缩对话")).not.toBeInTheDocument()
 
     // The turn keeps streaming after an automatic compaction completes, so
     // the generic loader returns.
@@ -861,11 +860,9 @@ describe("ChatSessionPane compaction badge", () => {
     rerenderChatSessionPane()
 
     // The result replaces the in-progress badge.
-    expect(
-      screen.queryByText("Compacting conversation")
-    ).not.toBeInTheDocument()
-    expect(screen.getByText("Compacted conversation")).toBeInTheDocument()
-    expect(screen.getByText("190,934 tokens")).toBeInTheDocument()
+    expect(screen.queryByText("正在压缩对话")).not.toBeInTheDocument()
+    expect(screen.getByText("已压缩对话")).toBeInTheDocument()
+    expect(screen.getByText("190,934 令牌")).toBeInTheDocument()
     expect(screen.getByTestId("agent-running-line")).toBeInTheDocument()
   })
 
@@ -877,11 +874,9 @@ describe("ChatSessionPane compaction badge", () => {
     ]
     renderChatSessionPane()
 
-    expect(screen.getByText("Compaction failed")).toBeInTheDocument()
-    expect(
-      screen.queryByText("Compacting conversation")
-    ).not.toBeInTheDocument()
-    expect(screen.queryByText("Compacted conversation")).not.toBeInTheDocument()
+    expect(screen.getByText("压缩失败")).toBeInTheDocument()
+    expect(screen.queryByText("正在压缩对话")).not.toBeInTheDocument()
+    expect(screen.queryByText("已压缩对话")).not.toBeInTheDocument()
   })
 })
 
@@ -1044,7 +1039,7 @@ function renderServerBackedPane(approvalsDisabled = false) {
 
 /** The approval batch's Submit, shown in place of the prompt box. */
 function approvalSubmit(): HTMLElement {
-  return screen.getByRole("button", { name: "Submit" })
+  return screen.getByRole("button", { name: "提交" })
 }
 
 describe("ChatSessionPane approvals decided elsewhere", () => {
@@ -1089,8 +1084,8 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
     renderServerBackedPane(true)
     const first = within(await screen.findByTestId("approval-card-first"))
 
-    expect(first.getByRole("button", { name: "Approve" })).toBeDisabled()
-    for (const submit of screen.getAllByRole("button", { name: "Submit" })) {
+    expect(first.getByRole("button", { name: "批准" })).toBeDisabled()
+    for (const submit of screen.getAllByRole("button", { name: "提交" })) {
       expect(submit).toBeDisabled()
     }
   })
@@ -1104,7 +1099,7 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
 
     // The Inbox decided the batch before this tab refreshed.
     fetchSession.mockResolvedValue(serverChat(RESOLVED))
-    fireEvent.click(first.getByRole("button", { name: "Approve" }))
+    fireEvent.click(first.getByRole("button", { name: "批准" }))
     fireEvent.click(approvalSubmit())
 
     await waitFor(() =>
@@ -1139,7 +1134,7 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
     function approveButton(id: string): HTMLElement {
       return within(screen.getByTestId(`approval-card-${id}`)).getByRole(
         "button",
-        { name: "Approve" }
+        { name: "批准" }
       )
     }
     mockUseVercelChatResult.messages = pausedWith(() => "pending")
@@ -1162,7 +1157,7 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
       expect(
         within(screen.getByTestId("approval-card-first")).queryByRole(
           "button",
-          { name: "Approve" }
+          { name: "批准" }
         )
       ).not.toBeInTheDocument()
     )
@@ -1201,13 +1196,13 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
     fetchSession.mockResolvedValue(serverChat(pausedWith(() => "pending")))
     renderServerBackedPane()
     await waitFor(() =>
-      expect(card("first").getByRole("button", { name: "Deny" })).toBeEnabled()
+      expect(card("first").getByRole("button", { name: "拒绝" })).toBeEnabled()
     )
 
     // This tab denies the first call and approves the second, but the Inbox
     // already approved the first.
-    fireEvent.click(card("first").getByRole("button", { name: "Deny" }))
-    fireEvent.click(card("second").getByRole("button", { name: "Approve" }))
+    fireEvent.click(card("first").getByRole("button", { name: "拒绝" }))
+    fireEvent.click(card("second").getByRole("button", { name: "批准" }))
     fetchSession.mockResolvedValue(
       serverChat(pausedWith((id) => (id === "first" ? "approved" : "pending")))
     )
@@ -1223,11 +1218,11 @@ describe("ChatSessionPane approvals decided elsewhere", () => {
     // The first card never shows this tab's unsent denial as its decision.
     await waitFor(() =>
       expect(
-        screen.queryByPlaceholderText("Reason, sent to the agent")
+        screen.queryByPlaceholderText("原因，将发送给智能体")
       ).not.toBeInTheDocument()
     )
     expect(
-      card("second").queryByRole("button", { name: "Approve" })
+      card("second").queryByRole("button", { name: "批准" })
     ).not.toBeInTheDocument()
   })
 })

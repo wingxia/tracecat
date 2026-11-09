@@ -1,6 +1,7 @@
 "use client"
 
 import { format, isValid, parse } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { CalendarIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 import type { FormFieldBlock } from "@/client"
@@ -143,7 +144,7 @@ export function SelectWidget(props: FormWidgetProps) {
         aria-required={field.required}
         className={formControlClass(invalid)}
       >
-        <SelectValue placeholder={field.placeholder ?? "Select an option"} />
+        <SelectValue placeholder={field.placeholder ?? "选择一个选项"} />
       </SelectTrigger>
       <SelectContent>
         {(field.options ?? []).map((option) => (
@@ -191,9 +192,7 @@ export function TagsWidget(props: FormWidgetProps) {
       searchKeys={tags ? TAG_SEARCH_KEYS : OPTION_SEARCH_KEYS}
       allowCustomTags={tags}
       disableSuggestions={tags}
-      placeholder={
-        field.placeholder ?? (tags ? "Type and press Enter" : "Select options")
-      }
+      placeholder={field.placeholder ?? (tags ? "输入后按回车" : "选择选项")}
       disabled={disabled}
       // The inner text input hardcodes 12 px; raise it to 14 px from here.
       inputClassName={cn(
@@ -230,7 +229,8 @@ export function DateWidget(props: FormWidgetProps) {
   function handleSelect(selected: Date | undefined) {
     setOpen(false)
     if (!selected) return onChange(null)
-    if (!withTime) return onChange(format(selected, DATE_FORMAT))
+    if (!withTime)
+      return onChange(format(selected, DATE_FORMAT, { locale: zhCN }))
     // Keep the time already chosen; a first pick starts at midnight.
     const next = new Date(selected)
     next.setHours(date?.getHours() ?? 0, date?.getMinutes() ?? 0, 0, 0)
@@ -266,8 +266,8 @@ export function DateWidget(props: FormWidgetProps) {
           <CalendarIcon className="size-4 text-muted-foreground" />
           <span id={`${id}-value`}>
             {date
-              ? format(date, "MMM d, yyyy")
-              : (field.placeholder ?? "Pick a date")}
+              ? format(date, "yyyy年M月d日", { locale: zhCN })
+              : (field.placeholder ?? "选择日期")}
           </span>
         </Button>
       </PopoverTrigger>
@@ -288,8 +288,8 @@ export function DateWidget(props: FormWidgetProps) {
       {picker}
       <Input
         type="time"
-        aria-label={`${field.label} time`}
-        value={date ? format(date, "HH:mm") : ""}
+        aria-label={`${field.label}时间`}
+        value={date ? format(date, "HH:mm", { locale: zhCN }) : ""}
         onChange={(event) => handleTimeChange(event.target.value)}
         disabled={disabled || !date}
         className={formControlClass(

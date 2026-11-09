@@ -18,14 +18,14 @@ describe("formatRunIfCondition", () => {
 describe("RunIfBadge", () => {
   it("shows only the icon when compact and not expanded", () => {
     render(<RunIfBadge runIf={RUN_IF} compact expanded={false} />)
-    const badge = screen.getByLabelText(/^Run if /)
+    const badge = screen.getByLabelText(/^运行条件：/)
     expect(badge).toHaveAttribute("data-state", "collapsed")
     expect(badge.querySelector("pre")).toBeNull()
   })
 
   it("shows the full condition when compact and expanded", () => {
     render(<RunIfBadge runIf={RUN_IF} compact expanded />)
-    const badge = screen.getByLabelText(/^Run if /)
+    const badge = screen.getByLabelText(/^运行条件：/)
     expect(badge).toHaveAttribute("data-state", "expanded")
     expect(badge.querySelector("pre")?.textContent).toBe(
       formatRunIfCondition(RUN_IF)
@@ -34,7 +34,7 @@ describe("RunIfBadge", () => {
 
   it("always shows the full condition when compact mode is off", () => {
     render(<RunIfBadge runIf={RUN_IF} compact={false} expanded={false} />)
-    const badge = screen.getByLabelText(/^Run if /)
+    const badge = screen.getByLabelText(/^运行条件：/)
     expect(badge).toHaveAttribute("data-state", "expanded")
     expect(badge.querySelector("pre")).not.toBeNull()
   })
@@ -77,7 +77,7 @@ describe("RunIfBadge stacked conditions", () => {
 
   it("stacks multi-clause conditions one clause per line", () => {
     render(<RunIfBadge runIf={MULTI} compact expanded />)
-    const badge = screen.getByLabelText(/^Run if /)
+    const badge = screen.getByLabelText(/^运行条件：/)
     expect(badge.querySelector("pre")).toBeNull()
     const stack = screen.getByTestId("run-if-stack")
     expect(stack.children).toHaveLength(2)

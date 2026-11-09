@@ -97,7 +97,7 @@ export function WorkflowActions({
           rel="noopener noreferrer"
         >
           <ExternalLink className="mr-2 size-3.5" />
-          Open in new tab
+          在新标签页中打开
         </Link>
       </ContextMenuItem>
       {item.alias && (
@@ -111,7 +111,7 @@ export function WorkflowActions({
           }}
         >
           <Copy className="mr-2 size-3.5" />
-          Copy workflow alias
+          复制工作流别名
         </ContextMenuItem>
       )}
       <ContextMenuItem
@@ -124,7 +124,7 @@ export function WorkflowActions({
         }}
       >
         <Pencil className="mr-2 size-3.5" />
-        Rename workflow
+        重命名工作流
       </ContextMenuItem>
       {showMoveToFolder && (
         <ContextMenuItem
@@ -137,7 +137,7 @@ export function WorkflowActions({
           }}
         >
           <FolderUp className="mr-2 size-3.5" />
-          Move to folder
+          移至文件夹
         </ContextMenuItem>
       )}
       {availableTags && availableTags.length > 0 ? (
@@ -148,7 +148,7 @@ export function WorkflowActions({
             onClick={(e) => e.stopPropagation()}
           >
             <TagsIcon className="mr-2 size-3.5" />
-            Tags
+            标签
           </ContextMenuSubTrigger>
           <ContextMenuPortal>
             <ContextMenuSubContent>
@@ -170,8 +170,8 @@ export function WorkflowActions({
                             tagId: tag.id,
                           })
                           toast({
-                            title: "Tag removed",
-                            description: `Successfully removed tag "${tag.name}" from workflow`,
+                            title: "已移除标签",
+                            description: `已从工作流移除标签“${tag.name}”`,
                           })
                         } else {
                           // Add tag if doesn't exist
@@ -183,15 +183,15 @@ export function WorkflowActions({
                             },
                           })
                           toast({
-                            title: "Tag added",
-                            description: `Successfully added tag "${tag.name}" to workflow`,
+                            title: "已添加标签",
+                            description: `已为工作流添加标签“${tag.name}”`,
                           })
                         }
                       } catch (error) {
                         console.error("Failed to modify tag:", error)
                         toast({
-                          title: "Error",
-                          description: `Failed to ${hasTag ? "remove" : "add"} tag ${hasTag ? "from" : "to"} workflow`,
+                          title: "错误",
+                          description: `${hasTag ? "移除" : "添加"}工作流标签失败（${hasTag ? "来自" : "更改为"}）`,
                           variant: "destructive",
                         })
                       }
@@ -216,7 +216,7 @@ export function WorkflowActions({
           onClick={(e) => e.stopPropagation()}
         >
           <TagsIcon className="mr-2 size-3.5" />
-          <span>Loading tags...</span>
+          <span>正在加载标签…</span>
         </ContextMenuItem>
       ) : (
         <ContextMenuItem
@@ -224,7 +224,7 @@ export function WorkflowActions({
           onClick={(e) => e.stopPropagation()}
         >
           <TagsIcon className="mr-2 size-3.5" />
-          <span>No tags available</span>
+          <span>暂无可用标签</span>
         </ContextMenuItem>
       )}
       <ContextMenuItem
@@ -236,7 +236,7 @@ export function WorkflowActions({
         }}
       >
         <DownloadIcon className="mr-2 size-3.5" />
-        Export draft
+        导出草稿
       </ContextMenuItem>
       <ContextMenuItem
         className="text-xs"
@@ -247,7 +247,7 @@ export function WorkflowActions({
         }}
       >
         <DownloadIcon className="mr-2 size-3.5" />
-        Export saved
+        导出已保存版本
       </ContextMenuItem>
       <ContextMenuItem
         className="text-xs"
@@ -257,7 +257,7 @@ export function WorkflowActions({
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy workflow ID
+        复制工作流 ID
       </ContextMenuItem>
       <ContextMenuItem
         className="text-xs"
@@ -268,7 +268,7 @@ export function WorkflowActions({
         }}
       >
         <CopyPlus className="mr-2 size-3.5" />
-        Duplicate workflow
+        复制工作流
       </ContextMenuItem>
       <ContextMenuSeparator />
       <DeleteWorkflowAlertDialogTrigger asChild disabled={isLocked}>
@@ -281,7 +281,7 @@ export function WorkflowActions({
           }}
         >
           <Trash2 className="mr-2 size-3.5" />
-          Delete
+          删除
         </ContextMenuItem>
       </DeleteWorkflowAlertDialogTrigger>
     </ContextMenuGroup>
@@ -310,7 +310,7 @@ export function FolderActions({
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy folder ID
+        复制文件夹 ID
       </ContextMenuItem>
       <ContextMenuItem
         className="text-xs"
@@ -322,7 +322,7 @@ export function FolderActions({
         }}
       >
         <Pencil className="mr-2 size-3.5" />
-        Rename folder
+        重命名文件夹
       </ContextMenuItem>
       <ContextMenuItem
         className="text-xs"
@@ -334,7 +334,7 @@ export function FolderActions({
         }}
       >
         <FolderKanban className="mr-2 size-3.5" />
-        Move folder
+        移动文件夹
       </ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem
@@ -354,7 +354,7 @@ export function FolderActions({
         }}
       >
         <Trash2 className="mr-2 size-3.5" />
-        Delete
+        删除
       </ContextMenuItem>
     </ContextMenuGroup>
   )

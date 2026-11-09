@@ -68,13 +68,12 @@ export function ActionRunHistory({
         <Tooltip>
           <TooltipTrigger asChild>
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              Recent runs
+              最近运行
               <InfoIcon className="size-3.5" />
             </span>
           </TooltipTrigger>
           <TooltipContent className="max-w-64">
-            Lock to a run and draft runs reuse its result. Published runs ignore
-            locks.
+            锁定运行记录后，草稿运行将复用其结果。已发布版本的运行会忽略锁定。
           </TooltipContent>
         </Tooltip>
         <div className="flex items-center gap-2">
@@ -83,12 +82,11 @@ export function ActionRunHistory({
               <TooltipTrigger asChild>
                 <span className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
                   <AlertTriangleIcon className="size-3.5" />
-                  Locked run expired
+                  锁定的运行记录已过期
                 </span>
               </TooltipTrigger>
               <TooltipContent className="max-w-64">
-                The locked run is no longer in run history, so draft runs run
-                this action fresh.
+                锁定的运行记录已不在历史中，草稿运行将重新执行此动作。
               </TooltipContent>
             </Tooltip>
           )}
@@ -101,17 +99,19 @@ export function ActionRunHistory({
               onClick={() => updateAction({ locked_execution_id: null })}
             >
               <LockOpenIcon className="size-3.5" />
-              Unlock
+              解锁
             </Button>
           )}
         </div>
       </div>
       <div className="divide-y rounded-md border">
         {workflowExecutionsIsLoading ? (
-          <div className="p-3 text-xs text-muted-foreground">Loading runs…</div>
+          <div className="p-3 text-xs text-muted-foreground">
+            正在加载运行记录…
+          </div>
         ) : runs.length === 0 ? (
           <div className="p-3 text-xs text-muted-foreground">
-            No runs yet. Run the workflow to lock this action to a result.
+            暂无运行记录。先运行工作流，再将此动作锁定到某个结果。
           </div>
         ) : (
           runs.map((run) => (
@@ -147,7 +147,7 @@ function ActionRunRow({
   const event = execution?.events.findLast((e) => e.action_ref === actionRef)
   const reusable = event?.status === "COMPLETED"
   const label = !execution
-    ? "Loading…"
+    ? "加载中…"
     : !event
       ? "Didn't run"
       : event.status.toLowerCase().replace("_", " ")
@@ -159,7 +159,7 @@ function ActionRunRow({
         "size-3.5 shrink-0"
       )}
       <span className="truncate">
-        {new Date(run.start_time).toLocaleString(undefined, {
+        {new Date(run.start_time).toLocaleString("zh-CN", {
           month: "short",
           day: "numeric",
           hour: "numeric",
@@ -168,7 +168,7 @@ function ActionRunRow({
       </span>
       {run.execution_type === "draft" && (
         <Badge variant="secondary" className="h-5 px-1.5 text-[10px]">
-          Draft
+          草稿
         </Badge>
       )}
       <span className="ml-auto shrink-0 capitalize text-muted-foreground">
@@ -181,7 +181,7 @@ function ActionRunRow({
               <LockIcon className="size-3.5" />
             </span>
           </TooltipTrigger>
-          <TooltipContent>Locked to this run</TooltipContent>
+          <TooltipContent>已锁定到此运行记录</TooltipContent>
         </Tooltip>
       ) : reusable && !readOnly ? (
         <Tooltip>
@@ -191,13 +191,13 @@ function ActionRunRow({
               size="icon"
               variant="ghost"
               className="size-7 shrink-0 opacity-0 focus-visible:opacity-100 group-hover:opacity-100"
-              aria-label="Lock to this run"
+              aria-label={"锁定到此运行记录"}
               onClick={onLock}
             >
               <LockIcon className="size-3.5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Lock to this run</TooltipContent>
+          <TooltipContent>锁定到此运行记录</TooltipContent>
         </Tooltip>
       ) : (
         <span className="size-7 shrink-0" />

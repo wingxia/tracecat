@@ -45,7 +45,7 @@ it("distinguishes fields that share a display name", async () => {
     />
   )
 
-  await user.click(screen.getByText("Select field"))
+  await user.click(screen.getByText("选择 字段"))
 
   expect(screen.getAllByText("Shared name")).toHaveLength(2)
   expect(screen.getByText("first_reference")).toBeInTheDocument()

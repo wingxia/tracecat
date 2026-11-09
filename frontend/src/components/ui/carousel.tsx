@@ -216,7 +216,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ArrowLeftIcon className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">上一张</span>
     </Button>
   )
 })
@@ -245,7 +245,7 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ArrowRightIcon className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">下一张</span>
     </Button>
   )
 })

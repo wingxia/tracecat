@@ -310,7 +310,7 @@ function ClearFieldRow({
       <div className="p-1">
         <button
           type="button"
-          aria-label={`Clear ${fieldLabel} field`}
+          aria-label={`清除 ${fieldLabel} 字段`}
           className="flex w-full cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground focus-visible:bg-accent focus-visible:text-accent-foreground"
           onClick={onClear}
         >
@@ -318,7 +318,7 @@ function ClearFieldRow({
             className="h-3 w-3 shrink-0 text-muted-foreground"
             aria-hidden
           />
-          Clear
+          清除
         </button>
       </div>
     </>
@@ -334,8 +334,8 @@ function booleanSelectValue(value: unknown): "true" | "false" | "" {
 
 /** Display label for a boolean field value; empty string when unset. */
 function booleanDisplayLabel(value: unknown): string {
-  if (value === true) return "True"
-  if (value === false) return "False"
+  if (value === true) return "真"
+  if (value === false) return "假"
   return ""
 }
 
@@ -427,7 +427,7 @@ export function CustomFieldInner({
                 <Input
                   type="text"
                   {...field}
-                  placeholder="Empty"
+                  placeholder={"空"}
                   value={String(field.value || "")}
                   className={baseInputClassName}
                   style={inputStyle}
@@ -458,7 +458,7 @@ export function CustomFieldInner({
                       ? ""
                       : String(field.value)
                   }
-                  placeholder="Empty"
+                  placeholder={"空"}
                   onChange={(e) => field.onChange(e.target.value)}
                   className={baseInputClassName}
                   style={inputStyle}
@@ -538,7 +538,7 @@ export function CustomFieldInner({
                       <SelectValue
                         placeholder={
                           <div className="flex w-full items-center justify-end text-right text-sm">
-                            <span className="text-muted-foreground">Empty</span>
+                            <span className="text-muted-foreground">空</span>
                           </div>
                         }
                       >
@@ -549,17 +549,17 @@ export function CustomFieldInner({
                     </SelectTrigger>
                     <SelectContent align="end">
                       <SelectItem value="true">
-                        <span className="text-sm">True</span>
+                        <span className="text-sm">真</span>
                       </SelectItem>
                       <SelectItem value="false">
-                        <span className="text-sm">False</span>
+                        <span className="text-sm">假</span>
                       </SelectItem>
                       {hasValue && (
                         <>
                           <SelectSeparator />
                           <SelectItem
                             value={CLEAR_SELECT_VALUE}
-                            aria-label={`Clear ${customField.display_name} field`}
+                            aria-label={`清除 ${customField.display_name} 字段`}
                             // Radix sets aria-labelledby on every item, which
                             // outranks aria-label; drop it so the label wins.
                             aria-labelledby={undefined}
@@ -569,7 +569,7 @@ export function CustomFieldInner({
                                 className="h-3 w-3 shrink-0 text-muted-foreground"
                                 aria-hidden
                               />
-                              Clear
+                              清除
                             </span>
                           </SelectItem>
                         </>
@@ -698,7 +698,7 @@ export function CustomFieldInner({
                         style={inputStyle}
                       >
                         <span className="truncate">
-                          {currentValue || "Select..."}
+                          {currentValue || "选择…"}
                         </span>
                       </Button>
                     </FormControl>
@@ -706,12 +706,12 @@ export function CustomFieldInner({
                   <PopoverContent className="w-56 p-0" align="end">
                     <Command>
                       <CommandInput
-                        placeholder="Search..."
+                        placeholder={"搜索…"}
                         className="h-8 text-sm"
                       />
                       <CommandList className="max-h-56">
                         <CommandEmpty className="py-2 text-center text-sm">
-                          No option found
+                          未找到选项
                         </CommandEmpty>
                         <CommandGroup>
                           {options.map((option) => (
@@ -814,7 +814,7 @@ export function CustomFieldInner({
                             style={inputStyle}
                           >
                             {currentValues.length === 0 ? (
-                              <span className="truncate">Select...</span>
+                              <span className="truncate">选择…</span>
                             ) : (
                               <MultiSelectBadges values={currentValues} />
                             )}
@@ -845,12 +845,12 @@ export function CustomFieldInner({
                   <PopoverContent className="w-56 p-0" align="end">
                     <Command>
                       <CommandInput
-                        placeholder="Search..."
+                        placeholder={"搜索…"}
                         className="h-8 text-sm"
                       />
                       <CommandList className="max-h-56">
                         <CommandEmpty className="py-2 text-center text-sm">
-                          No option found
+                          未找到选项
                         </CommandEmpty>
                         <CommandGroup>
                           {options.map((option) => (
@@ -899,7 +899,7 @@ export function CustomFieldInner({
                 <Input
                   type="text"
                   {...field}
-                  placeholder="Empty"
+                  placeholder={"空"}
                   value={String(field.value ?? "")}
                   className={baseInputClassName}
                   style={inputStyle}

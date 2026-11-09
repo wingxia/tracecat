@@ -91,7 +91,7 @@ export function CaseDescriptionEditor({
         preserveToolbarSpace
         toolbarStatus={toolbarStatus}
         renderMermaidWhenBlurred
-        placeholder="Describe the case..."
+        placeholder={"描述事件…"}
         className="case-description-editor"
         autoFocus={autoFocus}
         enableImages={imagesEnabled}

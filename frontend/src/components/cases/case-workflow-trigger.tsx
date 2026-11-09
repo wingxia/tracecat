@@ -80,11 +80,11 @@ export function CaseWorkflowTrigger({ caseData }: CaseWorkflowTriggerProps) {
         open={isCommandOpen}
         onOpenChange={(open) => setIsCommandOpen(open)}
       >
-        <CommandInput placeholder="Search workflows..." />
+        <CommandInput placeholder={"搜索工作流…"} />
         <CommandList>
-          <CommandEmpty>No workflows found</CommandEmpty>
+          <CommandEmpty>未找到工作流</CommandEmpty>
           {availableWorkflows.length > 0 ? (
-            <CommandGroup heading="Workflows">
+            <CommandGroup heading={"工作流"}>
               {availableWorkflows.map((workflow) => (
                 <CommandItem
                   key={workflow.id}

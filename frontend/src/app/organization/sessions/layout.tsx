@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Sessions | Organization",
+  title: "会话 | 组织",
 }
 
 export default function SessionsLayout({

@@ -71,29 +71,29 @@ function ChangePinForm({
     try {
       await updatePin.mutateAsync({ targetId: target.id, pinnedTag })
       toast({
-        title: "Pin updated",
-        description: `${target.workspace_name} is pinned to ${pinnedTag}. Preview and apply to roll it out.`,
+        title: "已更新固定版本",
+        description: `${target.workspace_name} 已固定到 ${pinnedTag}。预览并应用以部署该版本。`,
       })
       onDone()
     } catch (err) {
-      toastApiError("Failed to update pin", err)
+      toastApiError("更新固定版本失败", err)
     }
   }
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Change pin</DialogTitle>
+        <DialogTitle>更改固定版本</DialogTitle>
         <DialogDescription>
           {target.organization_name} / {target.workspace_name}
         </DialogDescription>
       </DialogHeader>
       <DialogBody>
         <div className="space-y-2">
-          <Label>Pinned tag</Label>
+          <Label>固定标签</Label>
           <Select value={pinnedTag} onValueChange={setPinnedTag}>
             <SelectTrigger>
-              <SelectValue placeholder="Select a tag" />
+              <SelectValue placeholder={"选择标签"} />
             </SelectTrigger>
             <SelectContent>
               {tags.map((tag) => (
@@ -105,13 +105,11 @@ function ChangePinForm({
           </Select>
           {isRollback && (
             <p className="text-xs text-amber-600 dark:text-amber-400">
-              This tag is older than the current pin. Applying it rolls the
-              target back.
+              此标签早于当前固定版本，应用后将回滚目标。
             </p>
           )}
           <p className="text-xs text-muted-foreground">
-            Changing the pin doesn&apos;t apply anything. Preview and apply a
-            rollout to update the workspace.
+            更改固定版本不会立即生效。预览并应用部署后才会更新工作空间。
           </p>
         </div>
       </DialogBody>
@@ -121,7 +119,7 @@ function ChangePinForm({
           onClick={handleSave}
           disabled={updatePin.isPending || pinnedTag === target.pinned_tag}
         >
-          {updatePin.isPending ? "Saving..." : "Save"}
+          {updatePin.isPending ? "保存中…" : "保存"}
         </Button>
       </DialogFooter>
     </>

@@ -465,7 +465,7 @@ describe("AgentsDashboard entitlement split", () => {
       const tooltip = await screen.findByRole("tooltip", {}, { timeout: 2000 })
       expect(within(tooltip).getAllByRole("listitem")).toHaveLength(10)
       expect(tooltip).toHaveTextContent(slugs[8])
-      expect(tooltip).toHaveTextContent("and 2 more")
+      expect(tooltip).toHaveTextContent("另有 2 项")
     })
 
     it("caps registry tiles at eight after deduplication", () => {
@@ -510,7 +510,7 @@ describe("AgentsDashboard entitlement split", () => {
 
     expect(screen.getByText("Legacy preset")).toBeInTheDocument()
     expect(screen.queryByText("legacy")).not.toBeInTheDocument()
-    expect(screen.queryByText("View")).not.toBeInTheDocument()
+    expect(screen.queryByText("视图")).not.toBeInTheDocument()
   })
 
   it("uses the folder directory and tag catalog when entitled", () => {
@@ -521,14 +521,14 @@ describe("AgentsDashboard entitlement split", () => {
 
     expect(lastOptions(mockUseAgentDirectoryItems)?.enabled).toBe(true)
     expect(lastOptions(mockUseAgentTagCatalog)?.enabled).toBe(true)
-    expect(screen.getByText("View")).toBeInTheDocument()
+    expect(screen.getByText("视图")).toBeInTheDocument()
   })
 
   it("sets the default through the context menu without opening the agent", async () => {
     renderDashboard()
     fireEvent.contextMenu(screen.getByText(PRESET.name))
     await userEvent.click(
-      await screen.findByRole("menuitem", { name: "Make default" })
+      await screen.findByRole("menuitem", { name: "设为默认" })
     )
     expect(mockSetDefaultAgent).toHaveBeenCalledWith(PRESET.id)
     expect(mockPush).not.toHaveBeenCalled()
@@ -541,7 +541,7 @@ describe("AgentsDashboard entitlement split", () => {
     renderDashboard()
     fireEvent.contextMenu(screen.getByText(PRESET.name))
     expect(
-      screen.queryByRole("menuitem", { name: "Make default" })
+      screen.queryByRole("menuitem", { name: "设为默认" })
     ).not.toBeInTheDocument()
   })
 
@@ -556,7 +556,7 @@ describe("AgentsDashboard entitlement split", () => {
       renderDashboard()
       fireEvent.contextMenu(screen.getByText(PRESET.name))
       const toggle = await screen.findByRole("menuitemcheckbox", {
-        name: "Use in chat",
+        name: "在对话中使用",
       })
       expect(toggle).toHaveAttribute("aria-checked", String(enabled))
       await userEvent.click(toggle)
@@ -573,7 +573,7 @@ describe("AgentsDashboard entitlement split", () => {
     renderDashboard()
     fireEvent.contextMenu(screen.getByText(PRESET.name))
     expect(
-      screen.queryByRole("menuitemcheckbox", { name: "Use in chat" })
+      screen.queryByRole("menuitemcheckbox", { name: "在对话中使用" })
     ).not.toBeInTheDocument()
   })
 
@@ -581,12 +581,12 @@ describe("AgentsDashboard entitlement split", () => {
     mockManagedPresetIds.current = new Set([PRESET.id])
     renderDashboard()
     fireEvent.contextMenu(screen.getByText(PRESET.name))
-    await screen.findByRole("menuitem", { name: "Make default" })
+    await screen.findByRole("menuitem", { name: "设为默认" })
     expect(
-      screen.queryByRole("menuitemcheckbox", { name: "Use in chat" })
+      screen.queryByRole("menuitemcheckbox", { name: "在对话中使用" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("menuitem", { name: "Delete" })
+      screen.queryByRole("menuitem", { name: "删除" })
     ).not.toBeInTheDocument()
   })
 
@@ -601,7 +601,7 @@ describe("AgentsDashboard entitlement split", () => {
     renderDashboard()
     fireEvent.contextMenu(screen.getByText(PRESET.name))
     const toggle = await screen.findByRole("menuitemcheckbox", {
-      name: "Use in chat",
+      name: "在对话中使用",
     })
     expect(toggle).toHaveAttribute("aria-checked", "true")
     await userEvent.click(toggle)
@@ -616,14 +616,14 @@ describe("AgentsDashboard entitlement split", () => {
       workspace: { default_agent_preset_id: PRESET.id },
     })
     renderDashboard()
-    expect(screen.getByText("Default")).toBeInTheDocument()
+    expect(screen.getByText("默认")).toBeInTheDocument()
     expect(
-      screen.getByRole("link", { name: `Default agent: ${PRESET.name}` })
+      screen.getByRole("link", { name: `默认智能体：${PRESET.name}` })
     ).toHaveAttribute("href", `/workspaces/workspace-1/agents/${PRESET.id}`)
     fireEvent.contextMenu(screen.getByText(PRESET.name))
-    expect(
-      screen.getByRole("menuitem", { name: "Make default" })
-    ).toHaveAttribute("data-disabled")
+    expect(screen.getByRole("menuitem", { name: "设为默认" })).toHaveAttribute(
+      "data-disabled"
+    )
     expect(agentFoldersGetFolder).not.toHaveBeenCalled()
   })
 
@@ -646,7 +646,7 @@ describe("AgentsDashboard entitlement split", () => {
     })
     renderDashboard()
     await userEvent.hover(
-      screen.getByRole("link", { name: `Default agent: ${PRESET.name}` })
+      screen.getByRole("link", { name: `默认智能体：${PRESET.name}` })
     )
     await waitFor(
       () => {
@@ -667,7 +667,7 @@ describe("AgentsDashboard entitlement split", () => {
     expect(
       screen.queryByRole("link", { name: /Default agent:/ })
     ).not.toBeInTheDocument()
-    expect(screen.queryByText("Default")).not.toBeInTheDocument()
+    expect(screen.queryByText("默认")).not.toBeInTheDocument()
   })
 
   it("hides stale or deleted default details rather than linking to a missing preset", () => {
@@ -746,7 +746,7 @@ describe("AgentsDashboard entitlement split", () => {
       await userEvent.hover(screen.getByText("+13"))
       const tooltip = await screen.findByRole("tooltip")
       expect(within(tooltip).getAllByRole("listitem")).toHaveLength(10)
-      expect(tooltip).toHaveTextContent("and 3 more")
+      expect(tooltip).toHaveTextContent("另有 3 项")
     })
 
     it.each([
@@ -812,7 +812,7 @@ describe("AgentsDashboard entitlement split", () => {
       })
       mockUseWorkflowReferences.mockReturnValue({ workflowReferences: [] })
       renderDashboard()
-      await userEvent.click(screen.getByRole("button", { name: /MCP servers/ }))
+      await userEvent.click(screen.getByRole("button", { name: /MCP 服务器/ }))
       expect(
         await screen.findByRole("option", { name: /jira/ })
       ).toBeInTheDocument()
@@ -839,37 +839,34 @@ describe("AgentsDashboard entitlement split", () => {
       })
       renderCatalog("view=folders")
       expect(lastOptions(mockUseAgentPresets)?.enabled).toBe(true)
-      await userEvent.click(screen.getByRole("button", { name: /MCP servers/ }))
+      await userEvent.click(screen.getByRole("button", { name: /MCP 服务器/ }))
       expect(
         await screen.findByRole("option", { name: /jira/ })
       ).toBeInTheDocument()
     })
 
     it.each([
-      [REFERENCES_LOADING, "Loading workflows..."],
+      [REFERENCES_LOADING, "正在加载工作流…"],
       [
         {
           workflowReferences: undefined,
           workflowReferencesIsLoading: false,
           workflowReferencesError: new Error("boom"),
         },
-        "Failed to load workflows.",
+        "加载工作流失败。",
       ],
     ])(
       "reflects the references request in the empty workflow filter",
       async (references, message) => {
         renderCatalog("", references)
-        await userEvent.click(screen.getByRole("button", { name: /Workflows/ }))
+        await userEvent.click(screen.getByRole("button", { name: /工作流/ }))
         expect(await screen.findByText(message)).toBeInTheDocument()
       }
     )
 
     it.each([
-      [{ mcpIntegrationsIsLoading: true }, "Loading MCP servers..."],
-      [
-        { mcpIntegrationsError: new Error("boom") },
-        "Failed to load MCP servers.",
-      ],
+      [{ mcpIntegrationsIsLoading: true }, "正在加载 MCP 服务器…"],
+      [{ mcpIntegrationsError: new Error("boom") }, "加载 MCP 服务器失败。"],
     ])(
       "reflects the MCP integrations request in the empty MCP filter",
       async (state, message) => {
@@ -885,7 +882,7 @@ describe("AgentsDashboard entitlement split", () => {
         })
         renderDashboard()
         await userEvent.click(
-          screen.getByRole("button", { name: /MCP servers/ })
+          screen.getByRole("button", { name: /MCP 服务器/ })
         )
         expect(await screen.findByText(message)).toBeInTheDocument()
       }
@@ -893,7 +890,7 @@ describe("AgentsDashboard entitlement split", () => {
 
     it("writes selected MCP servers to the URL", async () => {
       renderCatalog("view=list&mcp=github")
-      await userEvent.click(screen.getByRole("button", { name: /MCP servers/ }))
+      await userEvent.click(screen.getByRole("button", { name: /MCP 服务器/ }))
       await userEvent.click(await screen.findByRole("option", { name: /jira/ }))
       expect(mockReplace).toHaveBeenLastCalledWith(
         "/workspaces/workspace-1/agents?view=list&mcp=github&mcp=jira"
@@ -902,7 +899,7 @@ describe("AgentsDashboard entitlement split", () => {
 
     it("waits for workflow references before applying a workflow filter", () => {
       renderCatalog("workflow=wf_beta", REFERENCES_LOADING)
-      expect(screen.queryByText("No agents yet")).not.toBeInTheDocument()
+      expect(screen.queryByText("暂无智能体")).not.toBeInTheDocument()
       expect(screen.queryByText("Triage agent")).not.toBeInTheDocument()
     })
 
@@ -912,7 +909,7 @@ describe("AgentsDashboard entitlement split", () => {
         workflowReferencesIsLoading: false,
         workflowReferencesError: new Error("boom"),
       })
-      expect(screen.getByText("Failed to load agents.")).toBeInTheDocument()
+      expect(screen.getByText("加载智能体失败。")).toBeInTheDocument()
     })
 
     it("does not wait on workflow references without a workflow filter", () => {
@@ -927,7 +924,7 @@ describe("AgentsDashboard entitlement split", () => {
         renderCatalog("workflow=wf_beta")
         expect(lastOptions(mockUseWorkflowReferences)?.enabled).toBe(false)
         expect(
-          screen.queryByRole("button", { name: /Workflows/ })
+          screen.queryByRole("button", { name: /工作流/ })
         ).not.toBeInTheDocument()
         expect(screen.queryByTestId("workflow-badges")).not.toBeInTheDocument()
         expect(screen.getByText("Enrich agent")).toBeInTheDocument()

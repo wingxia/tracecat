@@ -51,11 +51,11 @@ import {
 const gitHubAppFormSchema = z.object({
   organizationName: z
     .string()
-    .min(1, "Organization name is required")
-    .max(100, "Organization name must be less than 100 characters"),
+    .min(1, "组织名称不能为空")
+    .max(100, "组织名称必须少于 100 个字符"),
   githubHost: z
     .string()
-    .url("Please enter a valid URL")
+    .url("请输入有效的 URL")
     .refine(
       (url) => {
         try {
@@ -74,7 +74,7 @@ const gitHubAppFormSchema = z.object({
       },
       {
         message:
-          "Must be a valid HTTPS GitHub URL (github.com or GitHub Enterprise)",
+          "必须是有效的 HTTPS GitHub URL（github.com 或 GitHub Enterprise）",
       }
     )
     .default("https://github.com"),
@@ -98,8 +98,8 @@ export function GitHubAppSetup() {
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.has("setup_success")) {
       toast({
-        title: "GitHub App configured successfully!",
-        description: "Your GitHub App has been created and installed.",
+        title: "GitHub 应用配置成功！",
+        description: "GitHub 应用已创建并安装。",
       })
       window.history.replaceState({}, document.title, window.location.pathname)
     }
@@ -112,8 +112,8 @@ export function GitHubAppSetup() {
     setDialogOpen(false)
     refetchCredentialsStatus()
     toast({
-      title: "GitHub App configured successfully!",
-      description: "Your GitHub App credentials have been saved.",
+      title: "GitHub 应用配置成功！",
+      description: "GitHub 应用凭据已保存。",
     })
   }
 
@@ -122,17 +122,14 @@ export function GitHubAppSetup() {
       await deleteCredentials.mutateAsync()
       setDeleteDialogOpen(false)
       toast({
-        title: "GitHub App credentials deleted",
-        description: "Git sync has been disconnected.",
+        title: "已删除 GitHub 应用凭据",
+        description: "Git 同步已断开。",
       })
     } catch (error) {
       console.error("Failed to delete GitHub App credentials:", error)
       toast({
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to delete credentials",
+        title: "错误",
+        description: error instanceof Error ? error.message : "删除凭据失败",
         variant: "destructive",
       })
     }
@@ -157,19 +154,19 @@ export function GitHubAppSetup() {
             <p className="text-sm font-medium">GitHub</p>
             <p className="text-xs text-muted-foreground">
               {isCorrupted ? (
-                "Stored credentials are unreadable. Re-enter the GitHub App credentials to reconnect."
+                "已保存的凭据无法读取，请重新输入 GitHub 应用凭据以连接。"
               ) : isConfigured ? (
                 <>
-                  App ID: {credentialsStatus?.app_id}
+                  应用 ID： {credentialsStatus?.app_id}
                   {credentialsStatus?.has_webhook_secret
-                    ? ` · Webhook secret: ${credentialsStatus.webhook_secret_preview}`
-                    : " · Webhook secret: not set"}
+                    ? ` · Webhook 密钥：${credentialsStatus.webhook_secret_preview}`
+                    : " · Webhook 密钥：未设置"}
                   {credentialsStatus?.client_id
-                    ? ` · Client ID: ${credentialsStatus.client_id}`
-                    : " · Client ID: not set"}
+                    ? ` · 客户端 ID：${credentialsStatus.client_id}`
+                    : " · 客户端 ID：未设置"}
                 </>
               ) : (
-                "Not connected"
+                "未连接"
               )}
             </p>
           </div>
@@ -182,7 +179,7 @@ export function GitHubAppSetup() {
                 size="sm"
                 onClick={() => setDialogOpen(true)}
               >
-                {isCorrupted ? "Reconnect" : "Update"}
+                {isCorrupted ? "重新连接" : "更新"}
               </Button>
               <Button
                 variant="destructive"
@@ -194,7 +191,7 @@ export function GitHubAppSetup() {
             </>
           ) : (
             <Button size="sm" onClick={() => setDialogOpen(true)}>
-              Connect
+              连接
             </Button>
           )}
         </div>
@@ -214,22 +211,22 @@ export function GitHubAppSetup() {
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete GitHub App credentials</AlertDialogTitle>
+            <AlertDialogTitle>删除 GitHub 应用凭据</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the GitHub App credentials? This
-              will disable workflow synchronization with your Git repositories.
+              确定要删除 GitHub 应用凭据吗？此操作将禁用与 Git
+              仓库的工作流同步。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteCredentials.isPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleteCredentials.isPending}
               className="bg-destructive hover:bg-destructive/90"
             >
-              {deleteCredentials.isPending ? "Deleting..." : "Delete"}
+              {deleteCredentials.isPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -266,8 +263,8 @@ function GitHubConnectionDialog({
   const onSubmit = async (data: GitHubAppFormData) => {
     if (!manifest?.manifest) {
       toast({
-        title: "Error",
-        description: "No manifest available to submit",
+        title: "错误",
+        description: "没有可提交的应用清单",
         variant: "destructive",
       })
       return
@@ -276,12 +273,12 @@ function GitHubConnectionDialog({
     try {
       const urlObj = new URL(data.githubHost)
       if (urlObj.protocol !== "https:") {
-        throw new Error("HTTPS required")
+        throw new Error("必须使用 HTTPS")
       }
     } catch {
       toast({
-        title: "Invalid GitHub host",
-        description: "Please use a valid HTTPS GitHub URL",
+        title: "GitHub 主机无效",
+        description: "请使用有效的 HTTPS GitHub URL",
         variant: "destructive",
       })
       return
@@ -316,8 +313,8 @@ function GitHubConnectionDialog({
     document.body.removeChild(formEl)
 
     toast({
-      title: "Redirecting to GitHub",
-      description: "Opening GitHub App creation page in new tab",
+      title: "正在跳转到 GitHub",
+      description: "正在新标签页中打开 GitHub 应用创建页面",
     })
   }
 
@@ -326,17 +323,17 @@ function GitHubConnectionDialog({
       <DialogContent size="lg" className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {hasStoredCredentials ? "Update GitHub App" : "Connect GitHub App"}
+            {hasStoredCredentials ? "更新 GitHub 应用" : "连接 GitHub 应用"}
           </DialogTitle>
         </DialogHeader>
         <DialogBody>
           <Tabs defaultValue="create" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="create" disableUnderline>
-                Create app
+                创建应用
               </TabsTrigger>
               <TabsTrigger value="existing" disableUnderline>
-                Use existing
+                使用现有应用
               </TabsTrigger>
             </TabsList>
             <TabsContent value="create" className="space-y-4 pt-2">
@@ -350,9 +347,9 @@ function GitHubConnectionDialog({
                     name="organizationName"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel>Organization name</FormLabel>
+                        <FormLabel>组织名称</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="My Organization" />
+                          <Input {...field} placeholder={"我的组织"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -363,12 +360,12 @@ function GitHubConnectionDialog({
                     name="githubHost"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel>GitHub host URL</FormLabel>
+                        <FormLabel>GitHub 主机 URL</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="https://github.com" />
                         </FormControl>
                         <p className="text-xs text-muted-foreground">
-                          For GitHub Enterprise, enter your instance URL
+                          使用 GitHub Enterprise 时，请输入实例 URL
                         </p>
                         <FormMessage />
                       </FormItem>
@@ -380,7 +377,7 @@ function GitHubConnectionDialog({
                     disabled={!manifest?.manifest}
                   >
                     <ExternalLinkIcon className="size-4" />
-                    Create GitHub App
+                    创建 GitHub 应用
                   </Button>
                 </form>
               </Form>

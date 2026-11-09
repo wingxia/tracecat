@@ -9,11 +9,11 @@ jest.mock("@/components/builder/events/events-workflow", () => ({
 it("offers the Form trigger filter", async () => {
   render(<EventsSidebarToolbar />)
 
-  await userEvent.click(screen.getByRole("button", { name: "Filter" }))
+  await userEvent.click(screen.getByRole("button", { name: "筛选" }))
 
   const entries = screen
     .getAllByRole("menuitemcheckbox")
     .map((item) => item.textContent)
-  expect(entries).toContain("Form")
+  expect(entries).toContain("表单")
   expect(entries).toContain("Webhook")
 })

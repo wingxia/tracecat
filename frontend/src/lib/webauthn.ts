@@ -93,15 +93,13 @@ function toRequestOptions(options: Json): PublicKeyCredentialRequestOptions {
 function describeWebAuthnError(error: unknown): Error {
   if (error instanceof DOMException) {
     if (error.name === "NotAllowedError") {
-      return new Error("The security key request was cancelled or timed out.")
+      return new Error("安全密钥请求已取消或超时。")
     }
     if (error.name === "InvalidStateError") {
-      return new Error("This security key is already registered.")
+      return new Error("此安全密钥已注册。")
     }
     if (error.name === "SecurityError") {
-      return new Error(
-        "Security keys need HTTPS and must be used on the Tracecat domain."
-      )
+      return new Error("安全密钥需要 HTTPS，且必须在 Tracecat 域名下使用。")
     }
   }
   return error instanceof Error ? error : new Error(String(error))
@@ -121,7 +119,7 @@ export async function registerSecurityKey(
     throw describeWebAuthnError(error)
   }
   if (!credential) {
-    throw new Error("Security key registration was cancelled.")
+    throw new Error("安全密钥注册已取消。")
   }
   const response = credential.response as AuthenticatorAttestationResponse
   return await authCompleteRegistration({
@@ -156,7 +154,7 @@ export async function verifyWithSecurityKey(): Promise<MfaStatusRead> {
     throw describeWebAuthnError(error)
   }
   if (!credential) {
-    throw new Error("Security key verification was cancelled.")
+    throw new Error("安全密钥验证已取消。")
   }
   const response = credential.response as AuthenticatorAssertionResponse
   return await authCompleteAuthentication({

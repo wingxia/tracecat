@@ -47,8 +47,8 @@ describe("ControlsHeader on the forms list", () => {
 
     render(<ControlsHeader />)
 
-    expect(screen.getByRole("heading", { name: "Forms" })).toBeInTheDocument()
-    expect(Boolean(screen.queryByRole("button", { name: "Create form" }))).toBe(
+    expect(screen.getByRole("heading", { name: "表单" })).toBeInTheDocument()
+    expect(Boolean(screen.queryByRole("button", { name: "创建表单" }))).toBe(
       shown
     )
   })

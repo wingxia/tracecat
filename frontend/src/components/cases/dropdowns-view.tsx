@@ -49,8 +49,8 @@ export function DropdownsView() {
       <div className="size-full overflow-auto">
         <div className="container flex h-full max-w-[1000px] items-center justify-center py-8">
           <EntitlementRequiredEmptyState
-            title="Enterprise only"
-            description="Case dropdowns are only available on enterprise plans."
+            title={"仅限企业版"}
+            description={"事件下拉字段仅适用于企业版套餐。"}
           >
             <Button
               variant="link"
@@ -63,7 +63,7 @@ export function DropdownsView() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>
@@ -78,22 +78,19 @@ export function DropdownsView() {
 
   if (workspaceError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Error loading workspace info."
-      />
+      <AlertNotification level="error" message={"加载工作空间信息出错。"} />
     )
   }
 
   if (!workspace) {
-    return <AlertNotification level="error" message="Workspace not found." />
+    return <AlertNotification level="error" message={"未找到工作空间。"} />
   }
 
   if (dropdownDefinitionsError) {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading dropdowns: ${dropdownDefinitionsError.message}`}
+        message={`加载下拉字段出错：${dropdownDefinitionsError.message}`}
       />
     )
   }
@@ -107,9 +104,9 @@ export function DropdownsView() {
               <EmptyMedia variant="icon">
                 <ListIcon className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No dropdowns defined yet</EmptyTitle>
+              <EmptyTitle>尚未定义下拉字段</EmptyTitle>
               <EmptyDescription>
-                Add your first dropdown using the button in the header
+                使用顶部按钮添加第一个下拉字段
               </EmptyDescription>
             </EmptyHeader>
           </Empty>

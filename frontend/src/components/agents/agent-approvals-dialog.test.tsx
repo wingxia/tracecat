@@ -62,17 +62,17 @@ describe("AgentApprovalsDialog", () => {
     )
 
     expect(screen.getByTestId("approval-batch")).toBeInTheDocument()
-    const [, secondDeny] = screen.getAllByRole("button", { name: "Deny" })
-    const [firstApprove] = screen.getAllByRole("button", { name: "Approve" })
+    const [, secondDeny] = screen.getAllByRole("button", { name: "拒绝" })
+    const [firstApprove] = screen.getAllByRole("button", { name: "批准" })
     fireEvent.click(firstApprove)
     fireEvent.click(secondDeny)
     fireEvent.change(
       screen.getByRole("textbox", {
-        name: "Deny reason for core.http_request",
+        name: "拒绝 core.http_request 的原因",
       }),
       { target: { value: "Wrong host" } }
     )
-    fireEvent.click(screen.getByRole("button", { name: /^Submit/ }))
+    fireEvent.click(screen.getByRole("button", { name: /^提交/ }))
 
     await waitFor(() =>
       expect(approvalsSubmitApprovals).toHaveBeenCalledWith({

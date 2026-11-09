@@ -111,7 +111,7 @@ function baseStatusMeta(
 
 const STATUS_METADATA: Record<AgentDerivedStatus, AgentStatusMetadata> = {
   PENDING_APPROVAL: {
-    label: "Pending approvals",
+    label: "待审批",
     priority: 0,
     tone: "warning",
   },
@@ -123,7 +123,7 @@ const STATUS_METADATA: Record<AgentDerivedStatus, AgentStatusMetadata> = {
   CONTINUED_AS_NEW: baseStatusMeta("CONTINUED_AS_NEW", 6, "info"),
   COMPLETED: baseStatusMeta("COMPLETED", 7, "success"),
   UNKNOWN: {
-    label: "Unknown",
+    label: "未知",
     priority: 8,
     tone: "neutral",
   },

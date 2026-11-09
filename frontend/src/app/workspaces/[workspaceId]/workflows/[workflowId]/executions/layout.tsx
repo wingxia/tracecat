@@ -113,7 +113,7 @@ function WorkflowExecutionsPanelGroup({
         >
           <div className="flex h-full flex-col overflow-hidden">
             <SectionHead
-              text="Workflow runs"
+              text={"工作流运行记录"}
               icon={<ListVideoIcon className="size-4" strokeWidth={2} />}
             />
             <div className="flex-1 overflow-auto">

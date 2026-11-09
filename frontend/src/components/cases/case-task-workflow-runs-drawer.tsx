@@ -1,6 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import Link from "next/link"
 import type { CaseTaskRead, WorkflowRunReadMinimal } from "@/client"
 import { CaseValueDrawer } from "@/components/cases/case-value-drawer"
@@ -33,7 +34,7 @@ export function CaseTaskWorkflowRunsDrawer({
     <CaseValueDrawer
       open={open}
       onOpenChange={onOpenChange}
-      title="Workflow runs"
+      title={"工作流运行记录"}
       description={task.title}
     >
       {open && (
@@ -72,7 +73,7 @@ function CaseTaskWorkflowRunsList({
   if (error) {
     return (
       <p className="p-4 text-xs text-red-600 dark:text-red-400">
-        Failed to load workflow runs: {error.message}
+        加载工作流运行记录失败： {error.message}
       </p>
     )
   }
@@ -80,7 +81,7 @@ function CaseTaskWorkflowRunsList({
   if (runs.length === 0) {
     return (
       <p className="p-4 text-xs text-muted-foreground">
-        No workflow runs yet. Runs started from this task show up here.
+        暂无工作流运行记录。从此任务启动的运行会显示在这里。
       </p>
     )
   }
@@ -103,7 +104,7 @@ function CaseTaskWorkflowRunsList({
             disabled={isFetchingNextPage}
             onClick={() => fetchNextPage()}
           >
-            {isFetchingNextPage ? "Loading…" : "Load more"}
+            {isFetchingNextPage ? "加载中…" : "加载更多"}
           </Button>
         </div>
       )}
@@ -131,7 +132,7 @@ function startedLabel(startTime: string): string {
   if (Number.isNaN(date.getTime())) {
     return "-"
   }
-  return formatDistanceToNow(date, { addSuffix: true })
+  return formatDistanceToNow(date, { locale: zhCN, addSuffix: true })
 }
 
 function WorkflowRunLink({
@@ -150,7 +151,7 @@ function WorkflowRunLink({
       />
       <div className="flex min-w-0 flex-1 flex-col">
         <span className="truncate text-xs font-medium">
-          {run.workflow_title ?? "Untitled workflow"}
+          {run.workflow_title ?? "未命名工作流"}
         </span>
         <span className="truncate text-[11px] text-muted-foreground">
           {undoSlugify(run.status.toLowerCase())} ·{" "}

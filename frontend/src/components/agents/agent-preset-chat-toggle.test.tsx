@@ -60,7 +60,7 @@ describe("AgentPresetChatToggle", () => {
         <AgentPresetChatToggle workspaceId="workspace-1" presetId="preset-1" />,
         { wrapper: TooltipProvider }
       )
-      const toggle = screen.getByRole("switch", { name: "Use in chat" })
+      const toggle = screen.getByRole("switch", { name: "在对话中使用" })
       expect(toggle).toHaveAttribute("aria-checked", String(enabled))
       await userEvent.click(toggle)
       expect(mockUpdateAgentPreset).toHaveBeenCalledWith({
@@ -85,7 +85,9 @@ describe("AgentPresetChatToggle", () => {
         />,
         { wrapper: TooltipProvider }
       )
-      expect(screen.getByRole("switch", { name: "Use in chat" })).toBeDisabled()
+      expect(
+        screen.getByRole("switch", { name: "在对话中使用" })
+      ).toBeDisabled()
       expect(mockUpdateAgentPreset).not.toHaveBeenCalled()
     }
   )
@@ -96,11 +98,10 @@ describe("AgentPresetChatToggle", () => {
       <AgentPresetChatToggle workspaceId="workspace-1" presetId="preset-1" />,
       { wrapper: TooltipProvider }
     )
-    await userEvent.click(screen.getByRole("switch", { name: "Use in chat" }))
-    expect(screen.getByRole("switch", { name: "Use in chat" })).toHaveAttribute(
-      "aria-checked",
-      "false"
-    )
+    await userEvent.click(screen.getByRole("switch", { name: "在对话中使用" }))
+    expect(
+      screen.getByRole("switch", { name: "在对话中使用" })
+    ).toHaveAttribute("aria-checked", "false")
   })
 
   it("orders chat visibility, discard, Push, versions, then Publish", async () => {
@@ -125,11 +126,11 @@ describe("AgentPresetChatToggle", () => {
         />
       </TooltipProvider>
     )
-    const toggle = screen.getByRole("switch", { name: "Use in chat" })
-    const discard = screen.getByRole("button", { name: "Discard" })
+    const toggle = screen.getByRole("switch", { name: "在对话中使用" })
+    const discard = screen.getByRole("button", { name: "放弃" })
     const push = screen.getByRole("button", { name: "Push" })
     const history = screen.getByRole("button", { name: "History" })
-    const publish = screen.getByRole("button", { name: "Publish" })
+    const publish = screen.getByRole("button", { name: "发布" })
     for (const [before, after] of [
       [toggle, discard],
       [discard, push],
@@ -170,9 +171,9 @@ describe("AgentPresetChatToggle", () => {
       </TooltipProvider>
     )
     expect(
-      screen.queryByRole("button", { name: "Discard" })
+      screen.queryByRole("button", { name: "放弃" })
     ).not.toBeInTheDocument()
-    const publish = screen.getByRole("button", { name: "Publish" })
+    const publish = screen.getByRole("button", { name: "发布" })
     expect(publish).toHaveAttribute("aria-disabled", "true")
     await userEvent.click(publish)
     expect(submit).not.toHaveBeenCalled()
@@ -190,7 +191,7 @@ describe("AgentPresetChatToggle", () => {
       expect(screen.getByRole("button", { name: "Push" })).toBeInTheDocument()
       expect(screen.queryByRole("switch")).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Publish" })
+        screen.queryByRole("button", { name: "发布" })
       ).not.toBeInTheDocument()
     }
   )

@@ -51,7 +51,7 @@ function AttachmentImageNodeView({ node, extension, selected }: NodeViewProps) {
     if (!src) {
       return (
         <NodeViewWrapper className={wrapperClass}>
-          <AttachmentImagePlaceholder label="Image unavailable" />
+          <AttachmentImagePlaceholder label={"图片不可用"} />
         </NodeViewWrapper>
       )
     }
@@ -65,7 +65,7 @@ function AttachmentImageNodeView({ node, extension, selected }: NodeViewProps) {
   if (isError || !workspaceId) {
     return (
       <NodeViewWrapper className={wrapperClass}>
-        <AttachmentImagePlaceholder label={alt || "Image unavailable"} />
+        <AttachmentImagePlaceholder label={alt || "图片不可用"} />
       </NodeViewWrapper>
     )
   }
@@ -75,7 +75,7 @@ function AttachmentImageNodeView({ node, extension, selected }: NodeViewProps) {
       <NodeViewWrapper className={wrapperClass}>
         <Skeleton
           className="h-40 w-full max-w-sm rounded-md"
-          aria-label={isLoading ? "Loading image" : undefined}
+          aria-label={isLoading ? "正在加载图片" : undefined}
         />
       </NodeViewWrapper>
     )

@@ -182,7 +182,7 @@ function ApprovalButton({
       <button
         type="button"
         aria-pressed={ask}
-        aria-label={`Require approval for ${tool}`}
+        aria-label={`要求 ${tool} 进行审批`}
         disabled={disabled}
         onClick={onToggle}
         className={cn(
@@ -191,7 +191,7 @@ function ApprovalButton({
           ask ? APPROVAL_TEXT : "text-muted-foreground"
         )}
       >
-        {ask ? "Needs approval" : "Auto"}
+        {ask ? "需要审批" : "自动"}
       </button>
     </span>
   )
@@ -268,7 +268,7 @@ export function AgentPresetRailTools({
   return (
     <section>
       <RailSectionHeader
-        title="Tools"
+        title={"工具"}
         count={ready ? selectedCount : undefined}
         extra={
           approvalCount > 0 ? (
@@ -279,18 +279,18 @@ export function AgentPresetRailTools({
               )}
             >
               <span className={APPROVAL_DOT} />
-              {approvalCount} need{approvalCount === 1 ? "s" : ""} approval
+              {approvalCount} 项需要审批
             </span>
           ) : null
         }
-        addLabel="Add tools"
+        addLabel={"添加工具"}
         onAdd={() => setPickerOpen(true)}
         addDisabled={!ready || isSaving}
       />
-      {loading ? <RailEmpty>Loading tools...</RailEmpty> : null}
+      {loading ? <RailEmpty>正在加载工具…</RailEmpty> : null}
       {toolsLoadError ? (
         <RailEmpty>
-          <span className="text-destructive">Unable to load tools.</span>
+          <span className="text-destructive">无法加载工具。</span>
         </RailEmpty>
       ) : null}
       {ready &&
@@ -318,11 +318,11 @@ export function AgentPresetRailTools({
               {group.approvals > 0 ? (
                 <span
                   className={APPROVAL_DOT}
-                  title={`${group.approvals} ${group.approvals === 1 ? "needs" : "need"} approval`}
+                  title={`${group.approvals} 项需要审批`}
                 />
               ) : null}
               <span className="min-w-12 whitespace-nowrap text-right text-xs tabular-nums text-muted-foreground">
-                {group.selected.length} of {group.entries.length}
+                {group.selected.length} / {group.entries.length}
               </span>
             </button>
           ))
@@ -332,7 +332,7 @@ export function AgentPresetRailTools({
             <div key={id} className={cn(RAIL_LIST_ROW, "h-[34px] py-0")}>
               {entry ? <ToolLogo entry={entry} /> : <LogoTile>?</LogoTile>}
               <span className="shrink-0 whitespace-nowrap text-[13.5px]">
-                {entry?.title ?? "Unavailable MCP server"}
+                {entry?.title ?? "MCP 服务器不可用"}
               </span>
               <span className="min-w-0 truncate font-mono text-[11.5px] text-muted-foreground/70">
                 {entry?.integration?.slug ?? id}
@@ -343,7 +343,7 @@ export function AgentPresetRailTools({
                 variant="ghost"
                 size="icon"
                 className={RAIL_REMOVE_BUTTON}
-                aria-label={`Remove ${entry?.title ?? id}`}
+                aria-label={`移除 ${entry?.title ?? id}`}
                 disabled={isSaving}
                 onClick={() => removeIntegration(id)}
               >
@@ -352,11 +352,11 @@ export function AgentPresetRailTools({
               {approvals > 0 ? (
                 <span
                   className={APPROVAL_DOT}
-                  title={`${approvals} ${approvals === 1 ? "needs" : "need"} approval`}
+                  title={`${approvals} 项需要审批`}
                 />
               ) : null}
               <span className="min-w-12 whitespace-nowrap text-right text-xs text-muted-foreground">
-                MCP · all
+                MCP · 全部
               </span>
             </div>
           ))
@@ -365,10 +365,10 @@ export function AgentPresetRailTools({
         <button
           type="button"
           className={cn(RAIL_LIST_ROW, "h-[34px] py-0")}
-          onClick={() => onOpenGroup(UNAVAILABLE_GROUP, "Unavailable")}
+          onClick={() => onOpenGroup(UNAVAILABLE_GROUP, "不可用")}
         >
           <LogoTile>?</LogoTile>
-          <span className="text-[13.5px] text-destructive">Unavailable</span>
+          <span className="text-[13.5px] text-destructive">不可用</span>
           <span className="flex-1" />
           <span className="min-w-12 text-right text-xs text-muted-foreground">
             {unknown.length}
@@ -378,7 +378,7 @@ export function AgentPresetRailTools({
       {ready && skillOnly.length > 0 ? (
         <div className="pt-1">
           <p className="px-2 pb-0.5 text-xs text-muted-foreground/70">
-            From skills
+            来自技能
           </p>
           {skillOnly.map((key) => {
             const ask = getToolApproval(value.toolApprovals, key, index)
@@ -408,7 +408,7 @@ export function AgentPresetRailTools({
       {ready && otherRules.length > 0 ? (
         <div className="pt-1">
           <p className="px-2 pb-0.5 text-xs text-muted-foreground/70">
-            Other approval rules
+            其他审批规则
           </p>
           {otherRules.map(({ tool }) => {
             const entry = index.byKey.get(tool)
@@ -436,8 +436,8 @@ export function AgentPresetRailTools({
       {ready && value.namespaces.length > 0 ? (
         <div className="flex items-center gap-2 px-2 pt-1 text-xs text-muted-foreground">
           <span className="min-w-0 flex-1">
-            {blocked.length} listed {blocked.length === 1 ? "tool" : "tools"}{" "}
-            blocked by the stored namespace filter
+            {blocked.length} 已列出 {blocked.length === 1 ? "个工具" : "个工具"}{" "}
+            被已保存的命名空间筛选规则阻止
           </span>
           <Button
             type="button"
@@ -447,7 +447,7 @@ export function AgentPresetRailTools({
             disabled={isSaving}
             onClick={() => onChange({ ...value, namespaces: [] })}
           >
-            Clear
+            清除
           </Button>
         </div>
       ) : null}
@@ -571,15 +571,15 @@ export function AgentPresetRailToolGroup({
   if (toolsLoadError) {
     return (
       <RailEmpty>
-        <span className="text-destructive">Unable to load tools.</span>
+        <span className="text-destructive">无法加载工具。</span>
       </RailEmpty>
     )
   }
   if (!ready) {
-    return <RailEmpty>Loading tools...</RailEmpty>
+    return <RailEmpty>正在加载工具…</RailEmpty>
   }
   if (!rows.length) {
-    return <RailEmpty>No tools selected here.</RailEmpty>
+    return <RailEmpty>尚未选择工具。</RailEmpty>
   }
 
   return (
@@ -592,22 +592,22 @@ export function AgentPresetRailToolGroup({
           </span>
           <span className="flex-1" />
           <span className="text-xs text-muted-foreground">
-            {group.selected.length} of {group.entries.length} selected
+            {group.selected.length} / {group.entries.length} 已选择
           </span>
         </div>
       ) : null}
       <div className="mb-1 flex h-8 items-center gap-2 border-b border-border/60 pr-0.5 pl-2">
         <span className="flex-1 text-xs text-muted-foreground">
-          {rows.length} {rows.length === 1 ? "tool" : "tools"}
+          {rows.length} {rows.length === 1 ? "个工具" : "个工具"}
         </span>
         <div
           role="group"
-          aria-label="Approval for all tools"
+          aria-label={"审批所有工具"}
           className="flex rounded-md bg-foreground/[0.06] p-0.5"
         >
           {[
-            { ask: false, label: "Auto", pressed: allAuto },
-            { ask: true, label: "Needs approval", pressed: allAsk },
+            { ask: false, label: "自动", pressed: allAuto },
+            { ask: true, label: "需要审批", pressed: allAsk },
           ].map((option) => (
             <button
               key={option.label}
@@ -640,7 +640,7 @@ export function AgentPresetRailToolGroup({
             variant="ghost"
             size="icon"
             className={RAIL_REMOVE_BUTTON}
-            aria-label={`Remove ${row.title}`}
+            aria-label={`移除 ${row.title}`}
             disabled={isSaving}
             onClick={() => remove(row.key)}
           >
@@ -650,7 +650,7 @@ export function AgentPresetRailToolGroup({
             <TunnelSelect
               value={toolTunnels[row.key]}
               onChange={(next) => setTunnel(row.key, next)}
-              noneLabel="No tunnel"
+              noneLabel="无隧道"
               disabled={isSaving}
               className="h-7 w-28 shrink-0 shadow-none"
             />
@@ -672,7 +672,7 @@ export function AgentPresetRailToolGroup({
           onClick={() => setPickerOpen(true)}
           disabled={isSaving}
         >
-          Add tools
+          添加工具
         </Button>
         <Button
           type="button"
@@ -685,7 +685,7 @@ export function AgentPresetRailToolGroup({
           disabled={isSaving}
           onClick={removeAll}
         >
-          Remove all
+          全部移除
         </Button>
       </div>
       <ToolPickerDialog

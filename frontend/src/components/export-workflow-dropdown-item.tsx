@@ -42,7 +42,7 @@ export function ExportMenuItem({
       }}
     >
       {icon}
-      {label ?? `Export to ${format.toUpperCase()}`}
+      {label ?? `导出为 ${format.toUpperCase()}`}
     </ToggleableDropdownItem>
   )
 }

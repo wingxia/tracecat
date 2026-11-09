@@ -47,7 +47,7 @@ describe("FormsRouteLayout", () => {
     renderLayout()
 
     expect(screen.getByTestId("workspace-shell")).toBeInTheDocument()
-    expect(screen.getByText("Forms aren't available")).toBeInTheDocument()
+    expect(screen.getByText("表单不可用")).toBeInTheDocument()
     expect(screen.queryByRole("status")).not.toBeInTheDocument()
   })
 

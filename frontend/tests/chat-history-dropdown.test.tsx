@@ -51,7 +51,7 @@ describe("ChatHistoryDropdown", () => {
       />
     )
 
-    fireEvent.click(screen.getByText("Chats"))
+    fireEvent.click(screen.getByText("对话"))
 
     expect(screen.getByText(unsafeTitle)).toBeInTheDocument()
     expect(() => {
@@ -134,15 +134,15 @@ describe("ChatHistoryDropdown", () => {
       />
     )
 
-    fireEvent.click(screen.getByText("Chats"))
+    fireEvent.click(screen.getByText("对话"))
 
     expect(screen.getByText("Renamed investigation")).toBeInTheDocument()
-    expect(screen.getAllByText("From comment")).toHaveLength(1)
+    expect(screen.getAllByText("来自评论")).toHaveLength(1)
     expect(screen.getByText("Investigate case comment")).toBeInTheDocument()
     expect(screen.getByText("case comment follow-up")).toBeInTheDocument()
 
-    fireEvent.change(screen.getByPlaceholderText("Search chats..."), {
-      target: { value: "from comment" },
+    fireEvent.change(screen.getByPlaceholderText("搜索对话…"), {
+      target: { value: "来自评论" },
     })
 
     expect(screen.getByText("Renamed investigation")).toBeInTheDocument()

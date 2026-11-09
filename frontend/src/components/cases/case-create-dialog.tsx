@@ -45,9 +45,9 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 const createCaseSchema = z.object({
   summary: z
     .string()
-    .min(1, "Summary is required")
-    .max(200, "Summary cannot exceed 200 characters"),
-  description: z.string().min(1, "Description is required"),
+    .min(1, "摘要不能为空")
+    .max(200, "摘要不能超过 200 个字符"),
+  description: z.string().min(1, "描述不能为空"),
   status: z.string() as z.ZodType<CaseStatus>,
   priority: z.string() as z.ZodType<CasePriority>,
   severity: z.string() as z.ZodType<CaseSeverity>,
@@ -108,8 +108,7 @@ export function CreateCaseDialog({
       } else {
         form.setError("root", {
           type: "manual",
-          message:
-            error instanceof Error ? error.message : "Failed to create case",
+          message: error instanceof Error ? error.message : "创建事件失败",
         })
         console.error("Error creating case:", error)
       }
@@ -120,9 +119,9 @@ export function CreateCaseDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="lg" className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Create case</DialogTitle>
+          <DialogTitle>创建事件</DialogTitle>
           <DialogDescription>
-            Create a new case to track and manage incidents and issues.
+            创建事件以跟踪和管理安全事件与问题。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -136,10 +135,10 @@ export function CreateCaseDialog({
                 name="summary"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Summary</FormLabel>
+                    <FormLabel>摘要</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Brief description of the case..."
+                        placeholder={"事件简要描述…"}
                         {...field}
                         value={field.value ?? ""}
                       />
@@ -154,10 +153,10 @@ export function CreateCaseDialog({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>描述</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Detailed description of the case..."
+                        placeholder={"事件详细描述…"}
                         className="min-h-[100px] text-xs"
                         {...field}
                         value={field.value ?? ""}
@@ -174,14 +173,14 @@ export function CreateCaseDialog({
                   name="status"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Status</FormLabel>
+                      <FormLabel>状态</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select status" />
+                            <SelectValue placeholder={"选择状态"} />
                           </SelectTrigger>
                           <SelectContent>
                             {Object.values(STATUSES).map((status) => (
@@ -208,14 +207,14 @@ export function CreateCaseDialog({
                   name="priority"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Priority</FormLabel>
+                      <FormLabel>优先级</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select priority" />
+                            <SelectValue placeholder={"选择优先级"} />
                           </SelectTrigger>
                           <SelectContent>
                             {Object.values(PRIORITIES).map((priority) => (
@@ -242,14 +241,14 @@ export function CreateCaseDialog({
                   name="severity"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Severity</FormLabel>
+                      <FormLabel>严重程度</FormLabel>
                       <FormControl>
                         <Select
                           value={field.value}
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger>
-                            <SelectValue placeholder="Select severity" />
+                            <SelectValue placeholder={"选择严重程度"} />
                           </SelectTrigger>
                           <SelectContent>
                             {Object.values(SEVERITIES).map((severity) => (
@@ -280,7 +279,7 @@ export function CreateCaseDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={createCaseIsPending}>
-                Create case
+                创建事件
               </Button>
             </DialogFooter>
           </form>

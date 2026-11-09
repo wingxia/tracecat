@@ -88,9 +88,8 @@ export function OrgRegistrySshKeySection() {
       console.error("Failed to save SSH key", error)
       if (removedExisting) {
         toast({
-          title: "SSH key removed but the new key was not saved",
-          description:
-            "Add an SSH key so Tracecat can sync the repository again.",
+          title: "已移除 SSH 密钥，但未能保存新密钥",
+          description: "请添加 SSH 密钥，以便 Tracecat 重新同步仓库。",
           variant: "destructive",
         })
       }
@@ -132,14 +131,14 @@ export function OrgRegistrySshKeySection() {
   } else if (orgSSHKeysError) {
     body = (
       <p className="px-3 py-6 text-center text-sm text-destructive">
-        {getApiErrorDetail(orgSSHKeysError) ?? "Couldn't load SSH keys."}
+        {getApiErrorDetail(orgSSHKeysError) ?? "无法加载 SSH 密钥。"}
       </p>
     )
   } else if (sshKeys.length === 0) {
     body = (
       <div className="flex items-center gap-3 px-3 py-2.5">
         <KeyRoundIcon className="size-4 shrink-0 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground">No SSH key added</p>
+        <p className="text-sm text-muted-foreground">尚未添加 SSH 密钥</p>
       </div>
     )
   } else {
@@ -158,7 +157,7 @@ export function OrgRegistrySshKeySection() {
                   </span>
                   {isRegistry && (
                     <Badge variant="secondary" className="text-xs">
-                      In use
+                      使用中
                     </Badge>
                   )}
                 </div>
@@ -174,7 +173,7 @@ export function OrgRegistrySshKeySection() {
                       variant="ghost"
                       size="icon"
                       className="size-7"
-                      aria-label="SSH key actions"
+                      aria-label={"SSH 密钥操作"}
                     >
                       <MoreHorizontalIcon className="size-4" />
                     </Button>
@@ -183,7 +182,7 @@ export function OrgRegistrySshKeySection() {
                     {canReplaceThis && (
                       <DropdownMenuItem onSelect={() => setReplaceOpen(true)}>
                         <RefreshCcw className="mr-2 size-4" />
-                        Replace SSH key
+                        替换 SSH 密钥
                       </DropdownMenuItem>
                     )}
                     {canDelete && (
@@ -192,7 +191,7 @@ export function OrgRegistrySshKeySection() {
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2Icon className="mr-2 size-4" />
-                        Delete
+                        删除
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
@@ -209,26 +208,25 @@ export function OrgRegistrySshKeySection() {
     <div className="space-y-2">
       <div className="space-y-1">
         <div className="flex items-center justify-between gap-4">
-          <p className="text-sm font-medium leading-none">SSH key</p>
+          <p className="text-sm font-medium leading-none">SSH 密钥</p>
           {showAdd && (
             <CreateSSHKeyDialog
               handler={handleCreate}
-              title="Add SSH key"
-              description="Paste the private key. Tracecat uses it to clone the custom registry repository."
-              submitLabel="Add SSH key"
+              title={"添加 SSH 密钥"}
+              description={"粘贴私钥，Tracecat 将使用它克隆自定义注册表仓库。"}
+              submitLabel={"添加 SSH 密钥"}
               fieldConfig={sshKeyFieldConfig}
             >
               <CreateSSHKeyDialogTrigger asChild>
                 <Button type="button" variant="outline" size="sm">
-                  Add SSH key
+                  添加 SSH 密钥
                 </Button>
               </CreateSSHKeyDialogTrigger>
             </CreateSSHKeyDialog>
           )}
         </div>
         <p className="text-sm text-muted-foreground">
-          Tracecat uses this key to clone the repository. Add the public key to
-          the repository as a read-only deploy key.
+          Tracecat 使用此密钥克隆仓库。请将公钥作为只读部署密钥添加到仓库。
         </p>
       </div>
       <div className="rounded-md border">{body}</div>
@@ -238,9 +236,9 @@ export function OrgRegistrySshKeySection() {
           open={replaceOpen}
           onOpenChange={setReplaceOpen}
           handler={handleCreate}
-          title="Replace SSH key"
-          description="Paste the new private key. Tracecat removes the current key when you save."
-          submitLabel="Replace SSH key"
+          title={"替换 SSH 密钥"}
+          description={"粘贴新私钥，保存时 Tracecat 会移除当前密钥。"}
+          submitLabel={"替换 SSH 密钥"}
           fieldConfig={sshKeyFieldConfig}
         />
       )}
@@ -255,22 +253,22 @@ export function OrgRegistrySshKeySection() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete SSH key?</AlertDialogTitle>
+            <AlertDialogTitle>删除 SSH 密钥？</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently deletes{" "}
+              此操作将永久删除{" "}
               <span className="font-mono">{keyPendingRemove?.name ?? ""}</span>.
               {keyPendingRemove && isRegistryKey(keyPendingRemove)
-                ? " Tracecat can't sync the repository until you add a new key."
+                ? " 添加新密钥之前，Tracecat 无法同步仓库。"
                 : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmRemove}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete key
+              删除密钥
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

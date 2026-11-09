@@ -21,10 +21,8 @@ export default function SkillLibrarySkillPage() {
     return (
       <div className="flex h-full items-center justify-center p-6">
         <Alert className="max-w-md">
-          <AlertTitle>Access denied</AlertTitle>
-          <AlertDescription>
-            You do not have permission to view the skill library.
-          </AlertDescription>
+          <AlertTitle>访问被拒绝</AlertTitle>
+          <AlertDescription>你没有查看技能库的权限。</AlertDescription>
         </Alert>
       </div>
     )

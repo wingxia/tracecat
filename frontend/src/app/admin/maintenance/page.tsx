@@ -59,14 +59,14 @@ export default function AdminMaintenancePage() {
       setLastReport(operation.report)
       setReportedOperationId(operationId)
       toast({
-        title: "Backfill complete",
-        description: `Created ${operation.report.inserted} case interaction records.`,
+        title: "回填完成",
+        description: `已创建 ${operation.report.inserted} 条事件交互记录。`,
       })
     } else if (operation?.status === "failed") {
       setReportedOperationId(operationId)
       toast({
-        title: "Backfill failed",
-        description: "The maintenance operation did not complete.",
+        title: "回填失败",
+        description: "维护操作未完成。",
         variant: "destructive",
       })
     }
@@ -78,14 +78,14 @@ export default function AdminMaintenancePage() {
       setOperationId(started.operation_id)
       setLastReport(undefined)
       toast({
-        title: "Backfill started",
-        description: "The maintenance operation is running in the background.",
+        title: "回填已启动",
+        description: "维护操作正在后台运行。",
       })
     } catch (error) {
       console.error("Failed to start case agent interaction backfill", error)
       toast({
-        title: "Could not start backfill",
-        description: "The maintenance operation could not be started.",
+        title: "无法启动回填",
+        description: "无法启动维护操作。",
         variant: "destructive",
       })
     }
@@ -109,11 +109,9 @@ export default function AdminMaintenancePage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Maintenance
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">维护</h2>
             <p className="text-base text-muted-foreground">
-              Run platform-wide data maintenance operations.
+              执行整个平台的数据维护操作。
             </p>
           </div>
         </div>
@@ -123,22 +121,19 @@ export default function AdminMaintenancePage() {
             <DatabaseIcon />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>Case agent interactions</ItemTitle>
+            <ItemTitle>事件智能体交互</ItemTitle>
             <ItemDescription className="line-clamp-none">
-              Backfill successful historical case and comment mutations from
-              persisted agent session history. Reads and failed tool calls are
-              ignored, and the operation is safe to rerun.
+              从已保存的智能体会话历史中回填成功的事件和评论变更。忽略读取操作和失败的工具调用，可安全地重复运行。
             </ItemDescription>
             {isRunning ? (
               <p className="mt-2 text-sm text-muted-foreground">
-                Backfill is running in the background. You can safely leave this
-                page.
+                回填正在后台运行，可以离开此页面。
               </p>
             ) : lastReport ? (
               <p className="mt-2 text-sm text-muted-foreground">
-                Last run: {lastReport.inserted} inserted, {lastReport.existing}{" "}
-                already present, and {skippedCount} skipped across{" "}
-                {lastReport.sessions_scanned} sessions.
+                上次运行： {lastReport.inserted} 条已插入，{" "}
+                {lastReport.existing} 条已存在， {skippedCount} 条已跳过，涉及{" "}
+                {lastReport.sessions_scanned} 个会话。
               </p>
             ) : null}
           </ItemContent>
@@ -149,24 +144,20 @@ export default function AdminMaintenancePage() {
                   {isRunning ? (
                     <LoaderCircleIcon className="mr-2 size-4 animate-spin" />
                   ) : null}
-                  {isRunning ? "Running..." : "Run backfill"}
+                  {isRunning ? "运行中…" : "运行回填"}
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    Run case interaction backfill?
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>回填事件交互记录？</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This scans agent session history across every workspace and
-                    records successful historical case mutations. It may take
-                    several minutes on larger deployments.
+                    此操作会扫描所有工作空间的智能体会话历史，记录历史上成功的事件变更。大型部署可能需要几分钟。
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>取消</AlertDialogCancel>
                   <AlertDialogAction onClick={handleRunBackfill}>
-                    Run backfill
+                    运行回填
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

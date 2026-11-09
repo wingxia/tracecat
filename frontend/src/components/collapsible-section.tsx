@@ -57,10 +57,10 @@ function CollapsibleSection({
             />
             <div className="flex flex-1 items-center justify-end space-x-2">
               {showToggleText && (
-                <span className="text-xs">{isOpen ? "Close" : "Expand"}</span>
+                <span className="text-xs">{isOpen ? "关闭" : "展开"}</span>
               )}
               <CaretSortIcon className="size-4" strokeWidth={2.5} />
-              <span className="sr-only">Toggle</span>
+              <span className="sr-only">切换</span>
             </div>
           </Button>
         </CollapsibleTrigger>

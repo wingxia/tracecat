@@ -25,7 +25,7 @@ export function getExportError(
   )
   if (diagnostics.length === 0) return null
   return {
-    detail: getApiErrorDetail(error) ?? "Push failed",
+    detail: getApiErrorDetail(error) ?? "推送失败",
     diagnostics,
     omitted_count:
       "omitted_count" in body && typeof body.omitted_count === "number"
@@ -45,7 +45,7 @@ export function ExportErrorMessage({
   announce?: boolean
 }) {
   const result = getExportError(error)
-  if (!result) return <>{getApiErrorDetail(error) ?? "Request failed"}</>
+  if (!result) return <>{getApiErrorDetail(error) ?? "请求失败"}</>
   return (
     <div className="space-y-1" role={announce ? "alert" : undefined}>
       <ul className="space-y-1">
@@ -62,7 +62,7 @@ export function ExportErrorMessage({
         ))}
       </ul>
       {!!result.omitted_count && (
-        <p>{result.omitted_count} additional error(s) omitted.</p>
+        <p>{result.omitted_count} 个其他错误已省略。</p>
       )}
     </div>
   )

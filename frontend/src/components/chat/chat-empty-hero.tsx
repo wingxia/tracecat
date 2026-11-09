@@ -18,8 +18,8 @@ export function ChatEmptyHero({ children, className }: ChatEmptyHeroProps) {
   const { user } = useAuth()
   const firstName = user?.firstName?.trim()
   const greeting = firstName
-    ? `What should we get done, ${firstName}?`
-    : "What should we get done?"
+    ? `${firstName}，你想完成什么任务？`
+    : "你想完成什么任务？"
 
   return (
     <div

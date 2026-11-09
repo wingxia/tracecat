@@ -3,6 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { Copy, CopyPlus, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useCallback, useMemo, useRef, useState } from "react"
@@ -185,7 +186,7 @@ const renderRelativeDate = (value?: string) => {
 
   const dt = new Date(value)
   const shortTime = capitalizeFirst(shortTimeAgo(dt))
-  const fullDateTime = format(dt, "PPpp")
+  const fullDateTime = format(dt, "PPpp", { locale: zhCN })
 
   return (
     <Tooltip>
@@ -222,7 +223,7 @@ function AgentActionsMenu({
           className="size-6 p-0"
           onClick={(event) => event.stopPropagation()}
         >
-          <span className="sr-only">Open menu</span>
+          <span className="sr-only">打开菜单</span>
           <DotsHorizontalIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -233,7 +234,7 @@ function AgentActionsMenu({
       >
         <DropdownMenuItem className="text-xs" onClick={() => onCopy(preset)}>
           <Copy className="mr-2 size-3.5" />
-          Copy agent ID
+          复制智能体 ID
         </DropdownMenuItem>
         <DropdownMenuItem
           className="text-xs"
@@ -241,7 +242,7 @@ function AgentActionsMenu({
           onClick={() => onDuplicate(preset)}
         >
           <CopyPlus className="mr-2 size-3.5" />
-          {isDuplicating ? "Duplicating..." : "Duplicate agent"}
+          {isDuplicating ? "复制中…" : "复制智能体"}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -249,7 +250,7 @@ function AgentActionsMenu({
           onClick={() => onDelete(preset)}
         >
           <Trash2 className="mr-2 size-3.5" />
-          Delete
+          删除
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -326,7 +327,7 @@ export function AgentsTable() {
   const toolbarProps: DataTableToolbarProps<AgentPresetTableRow> = useMemo(
     () => ({
       filterProps: {
-        placeholder: "Search agents...",
+        placeholder: "搜索智能体…",
         column: "name",
       },
     }),
@@ -337,21 +338,21 @@ export function AgentsTable() {
     try {
       await navigator.clipboard.writeText(preset.id)
       toast({
-        title: "Agent ID copied",
+        title: "已复制智能体 ID",
         description: (
           <div className="flex flex-col space-y-2">
             <span>
-              Agent ID copied for <b className="inline-block">{preset.name}</b>
+              已复制智能体 ID： <b className="inline-block">{preset.name}</b>
             </span>
-            <span className="text-muted-foreground">ID: {preset.id}</span>
+            <span className="text-muted-foreground">ID： {preset.id}</span>
           </div>
         ),
       })
     } catch (error) {
       console.error("Failed to copy to clipboard:", error)
       toast({
-        title: "Failed to copy",
-        description: "Could not copy agent ID to clipboard",
+        title: "复制失败",
+        description: "无法将智能体 ID 复制到剪贴板",
         variant: "destructive",
       })
     }
@@ -389,8 +390,8 @@ export function AgentsTable() {
       } catch (error) {
         console.error("Failed to duplicate agent preset:", error)
         toast({
-          title: "Duplicate failed",
-          description: "Could not duplicate agent. Please try again.",
+          title: "复制失败",
+          description: "无法复制智能体，请重试。",
           variant: "destructive",
         })
       } finally {
@@ -424,7 +425,7 @@ export function AgentsTable() {
       {
         accessorKey: "name",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Agent" />
+          <DataTableColumnHeader column={column} title={"智能体"} />
         ),
         cell: ({ row }) => {
           const name = row.getValue<AgentPresetTableRow["name"]>("name")
@@ -432,7 +433,7 @@ export function AgentsTable() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <span className="block truncate text-xs font-medium">
-                  {name || "Untitled agent"}
+                  {name || "未命名智能体"}
                 </span>
               </TooltipTrigger>
               {name ? (
@@ -453,7 +454,7 @@ export function AgentsTable() {
       {
         id: "tools",
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Tools" />
+          <DataTableColumnHeader column={column} title={"工具"} />
         ),
         enableSorting: false,
         cell: ({ row }) => {
@@ -466,7 +467,7 @@ export function AgentsTable() {
 
           const toolList = toolBadges.length
             ? toolBadges
-            : [{ id: "all-tools", label: "All tools" }]
+            : [{ id: "all-tools", label: "所有工具" }]
 
           return (
             <div className="flex flex-wrap items-center gap-1 text-xs">
@@ -545,7 +546,7 @@ export function AgentsTable() {
           <DataTableColumnHeader
             className="text-xs"
             column={column}
-            title="Provider"
+            title={"提供商"}
           />
         ),
         cell: ({ row }) => {
@@ -577,7 +578,7 @@ export function AgentsTable() {
           <DataTableColumnHeader
             className="text-xs"
             column={column}
-            title="Model"
+            title={"模型"}
           />
         ),
         cell: ({ row }) => {
@@ -603,7 +604,7 @@ export function AgentsTable() {
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title="Created"
+            title={"创建时间"}
             className="justify-end"
             buttonClassName="ml-auto h-8 justify-end px-0 data-[state=open]:bg-accent"
           />
@@ -626,7 +627,7 @@ export function AgentsTable() {
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title="Updated"
+            title={"更新时间"}
             className="justify-end"
             buttonClassName="ml-auto h-8 justify-end px-0 data-[state=open]:bg-accent"
           />
@@ -678,8 +679,8 @@ export function AgentsTable() {
           toolbarProps={toolbarProps}
           isLoading={presetsIsLoading}
           error={presetsError ?? null}
-          emptyMessage="No agents found."
-          errorMessage="Error loading agents."
+          emptyMessage={"未找到智能体。"}
+          errorMessage={"加载智能体出错。"}
           getRowHref={(row) =>
             `/workspaces/${workspaceId}/agents/${row.original.id}`
           }

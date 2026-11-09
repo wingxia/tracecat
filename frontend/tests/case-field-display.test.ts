@@ -34,7 +34,7 @@ describe("case field display formatting", () => {
   })
 
   it("formats booleans and labeled objects for badges", () => {
-    expect(formatCaseFieldDisplayLabel(true)).toBe("Yes")
+    expect(formatCaseFieldDisplayLabel(true)).toBe("是")
     expect(
       formatCaseFieldDisplayLabel({
         label: "Apple",

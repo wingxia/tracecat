@@ -51,13 +51,13 @@ export interface CasePanelDefinition {
 
 /** Panel definitions in display order. */
 export const CASE_PANELS: readonly CasePanelDefinition[] = [
-  { key: "description", label: "Description", icon: AlignLeft, shortcut: 1 },
-  { key: "tasks", label: "Tasks", icon: ListChecks, shortcut: 2 },
-  { key: "attachments", label: "Attachments", icon: Paperclip, shortcut: 3 },
-  { key: "sub-cases", label: "Sub-cases", icon: ListTree, shortcut: 4 },
-  { key: "rows", label: "Tables", icon: Table2, shortcut: 5 },
-  { key: "payload", label: "Payload", icon: Braces, shortcut: 6 },
-  { key: "activity", label: "Activity", icon: Activity, shortcut: 7 },
+  { key: "description", label: "描述", icon: AlignLeft, shortcut: 1 },
+  { key: "tasks", label: "任务", icon: ListChecks, shortcut: 2 },
+  { key: "attachments", label: "附件", icon: Paperclip, shortcut: 3 },
+  { key: "sub-cases", label: "子事件", icon: ListTree, shortcut: 4 },
+  { key: "rows", label: "数据表", icon: Table2, shortcut: 5 },
+  { key: "payload", label: "数据载荷", icon: Braces, shortcut: 6 },
+  { key: "activity", label: "活动", icon: Activity, shortcut: 7 },
 ]
 
 /**

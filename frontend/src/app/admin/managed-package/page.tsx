@@ -41,12 +41,10 @@ export default function AdminManagedPackagePage() {
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
             <h2 className="text-2xl font-semibold tracking-tight">
-              Managed Workspaces
+              托管工作空间
             </h2>
             <p className="text-base text-muted-foreground">
-              Three separate steps: publish the package from the source
-              workspace, cut a release tag, then deploy that tag to customer
-              workspaces. Customers change only at the last step.
+              分三步执行：从源工作空间发布软件包，创建版本标签，再将标签部署到客户工作空间。只有最后一步会更新客户环境。
             </p>
           </div>
         </div>

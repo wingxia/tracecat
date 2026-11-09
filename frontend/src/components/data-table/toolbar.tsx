@@ -63,7 +63,7 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         {filterProps && (
           <Input
-            placeholder={filterProps.placeholder ?? "Filter..."}
+            placeholder={filterProps.placeholder ?? "筛选…"}
             value={
               table.getColumn(filterProps.column)?.getFilterValue() as string
             }
@@ -89,7 +89,7 @@ export function DataTableToolbar<TData>({
             onClick={() => table.resetColumnFilters()}
             className="h-8 px-2 text-xs text-foreground/80 lg:px-3"
           >
-            Reset
+            重置
             <Cross2Icon className="ml-2 size-4" />
           </Button>
         )}
@@ -103,20 +103,19 @@ export function DataTableToolbar<TData>({
               >
                 <span className="flex items-center">
                   <Trash2Icon className="size-4" />
-                  <span className="ml-2">Delete</span>
+                  <span className="ml-2">删除</span>
                 </span>
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+                <AlertDialogTitle>确认删除</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Are you sure you want to delete the selected items? This
-                  action cannot be undone.
+                  确定要删除所选项目吗？此操作无法撤销。
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>取消</AlertDialogCancel>
                 <AlertDialogAction
                   variant="destructive"
                   onClick={async () => {
@@ -136,10 +135,10 @@ export function DataTableToolbar<TData>({
                   {isDeleting ? (
                     <span className="flex items-center">
                       <Spinner className="size-4" />
-                      <span className="ml-2">Deleting...</span>
+                      <span className="ml-2">删除中…</span>
                     </span>
                   ) : (
-                    "Delete"
+                    "删除"
                   )}
                 </AlertDialogAction>
               </AlertDialogFooter>

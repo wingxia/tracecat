@@ -52,7 +52,7 @@ describe("workflow-trigger-payload", () => {
     })
 
     it("returns a readable error for invalid JSON", () => {
-      expect(validateTriggerPayload("{")).toContain("Invalid JSON format")
+      expect(validateTriggerPayload("{")).toContain("JSON 格式无效")
     })
   })
 

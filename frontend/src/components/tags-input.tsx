@@ -116,7 +116,7 @@ export function MultiTagCommandInput({
   value: valueProp,
   onChange,
   suggestions = [],
-  placeholder = "Add tags...",
+  placeholder = "添加标签…",
   className,
   inputClassName,
   disabled = false,
@@ -336,7 +336,7 @@ export function MultiTagCommandInput({
                   {!disabled && (
                     <button
                       type="button"
-                      aria-label={`Remove ${tag.group ? `${tag.group} · ` : ""}${tag.text}`}
+                      aria-label={`移除 ${tag.group ? `${tag.group} · ` : ""}${tag.text}`}
                       onClick={(e) => {
                         e.stopPropagation()
                         handleRemoveTag(tag.value)
@@ -438,7 +438,7 @@ export function MultiTagCommandInput({
           >
             <ScrollArea className="max-h-[300px]">
               <CommandList>
-                <CommandEmpty>No suggestions found.</CommandEmpty>
+                <CommandEmpty>未找到建议。</CommandEmpty>
                 {filteredSuggestions.map((suggestion, index) => {
                   return (
                     <CommandItem
@@ -489,7 +489,7 @@ export function MultiTagCommandInput({
                     className="flex cursor-pointer gap-2"
                   >
                     <span className="text-xs text-muted-foreground">
-                      Add &quot;{customTagText}&quot;
+                      添加“{customTagText}”
                     </span>
                   </CommandItem>
                 )}

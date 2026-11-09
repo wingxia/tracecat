@@ -149,7 +149,7 @@ function useFileUpload(options: UploadOptions) {
           )
         )
         options.onError?.(
-          error instanceof Error ? error : new Error("Upload failed")
+          error instanceof Error ? error : new Error("上传失败")
         )
       }
       return null
@@ -423,11 +423,11 @@ const DropZoneContent: React.FC<{ maxSize: number; limit: number }> = ({
 
     <div className="tiptap-image-upload-content">
       <span className="tiptap-image-upload-text">
-        <em>Click to upload</em> or drag and drop
+        <em>点击上传</em> 或拖放文件
       </span>
       <span className="tiptap-image-upload-subtext">
-        Maximum {limit} file{limit === 1 ? "" : "s"}, {maxSize / 1024 / 1024}MB
-        each.
+        每个文件最大 {limit} 文件{limit === 1 ? "" : ""},{" "}
+        {maxSize / 1024 / 1024}MB。
       </span>
     </div>
   </>
@@ -517,7 +517,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
         <div className="tiptap-image-upload-previews">
           {fileItems.length > 1 && (
             <div className="tiptap-image-upload-header">
-              <span>Uploading {fileItems.length} files</span>
+              <span>上传中 {fileItems.length} 个文件</span>
               <Button
                 type="button"
                 data-style="ghost"
@@ -526,7 +526,7 @@ export const ImageUploadNode: React.FC<NodeViewProps> = (props) => {
                   clearAllFiles()
                 }}
               >
-                Clear All
+                全部清除
               </Button>
             </div>
           )}

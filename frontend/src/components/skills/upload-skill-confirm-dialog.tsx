@@ -48,10 +48,10 @@ export function UploadSkillConfirmDialog({
     >
       <AlertDialogContent className="sm:max-w-[480px]">
         <AlertDialogHeader>
-          <AlertDialogTitle>Upload skill</AlertDialogTitle>
+          <AlertDialogTitle>上传技能</AlertDialogTitle>
           <AlertDialogDescription>
-            {fileCount} {fileCount === 1 ? "file" : "files"} ({formattedSize})
-            will be uploaded.
+            {fileCount} {fileCount === 1 ? "文件" : "个文件"} ({formattedSize}
+            ）将被上传。
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -68,7 +68,7 @@ export function UploadSkillConfirmDialog({
             ))}
             {fileCount > 50 && (
               <div className="pt-1 text-xs text-muted-foreground">
-                and {fileCount - 50} more...
+                另有 {fileCount - 50} 个文件…
               </div>
             )}
           </div>
@@ -76,7 +76,7 @@ export function UploadSkillConfirmDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel disabled={pending} onClick={onCancel}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
@@ -86,7 +86,7 @@ export function UploadSkillConfirmDialog({
             }}
           >
             {pending && <Loader2 className="mr-2 size-4 animate-spin" />}
-            Upload
+            上传
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

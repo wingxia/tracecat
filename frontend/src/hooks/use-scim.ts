@@ -38,15 +38,15 @@ const SCIM_DIRECTORY_SUMMARY_KEY = ["scim-directory-summary"]
 function toastScimError(title: string, error: TracecatApiError) {
   if (error.status === 403) {
     toast({
-      title: "Permission denied",
-      description: "You don't have permission to manage SCIM provisioning.",
+      title: "权限不足",
+      description: "你没有管理 SCIM 用户配置的权限。",
       variant: "destructive",
     })
     return
   }
   toast({
     title,
-    description: getApiErrorDetail(error) ?? "An unexpected error occurred.",
+    description: getApiErrorDetail(error) ?? "发生意外错误。",
     variant: "destructive",
   })
 }
@@ -90,7 +90,7 @@ export function useScimConnection() {
       onSuccess: () => {
         void queryClient.invalidateQueries({ queryKey: SCIM_CONNECTION_KEY })
       },
-      onError: (error) => toastScimError("Failed to issue SCIM token", error),
+      onError: (error) => toastScimError("签发 SCIM 令牌失败", error),
     })
 
   const { mutateAsync: disconnect, isPending: disconnectIsPending } =
@@ -99,11 +99,11 @@ export function useScimConnection() {
       onSuccess: async () => {
         await queryClient.invalidateQueries()
         toast({
-          title: "SCIM disconnected",
-          description: "Group members were kept as manual members.",
+          title: "SCIM 已断开",
+          description: "用户组成员已保留为手动成员。",
         })
       },
-      onError: (error) => toastScimError("Failed to disconnect SCIM", error),
+      onError: (error) => toastScimError("断开 SCIM 连接失败", error),
     })
 
   return {
@@ -215,10 +215,9 @@ export function useScimMappings() {
         queryKey: SCIM_DIRECTORY_SUMMARY_KEY,
       })
       await queryClient.invalidateQueries({ queryKey: ["rbac-groups"] })
-      toast({ title: "Mapping changes applied" })
+      toast({ title: "已应用映射更改" })
     },
-    onError: (error) =>
-      toastScimError("Failed to apply mapping changes", error),
+    onError: (error) => toastScimError("应用映射更改失败", error),
   })
 
   return {
@@ -242,7 +241,7 @@ export function useScimActivation() {
     ScimReviewRequest
   >({
     mutationFn: (requestBody) => scimReviewScimActivation({ requestBody }),
-    onError: (error) => toastScimError("Failed to review SCIM changes", error),
+    onError: (error) => toastScimError("审核 SCIM 更改失败", error),
   })
   const activate = useMutation<
     void,
@@ -254,11 +253,11 @@ export function useScimActivation() {
     onSuccess: async () => {
       await queryClient.invalidateQueries()
       toast({
-        title: "SCIM activated",
-        description: "Eligible directory users have been admitted.",
+        title: "SCIM 已激活",
+        description: "符合条件的目录用户已获准加入。",
       })
     },
-    onError: (error) => toastScimError("Failed to activate SCIM", error),
+    onError: (error) => toastScimError("启用 SCIM 失败", error),
   })
   return { review, activate }
 }

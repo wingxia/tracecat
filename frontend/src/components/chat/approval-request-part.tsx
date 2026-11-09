@@ -101,7 +101,7 @@ export class ApprovalsAlreadyDecidedError extends Error {}
  */
 /** Composer placeholder for users whose role lacks `agent:execute`. */
 export const AGENT_EXECUTE_REQUIRED_MESSAGE =
-  "Your role cannot run agents. Ask an admin for the agent:execute scope."
+  "你的角色无法运行智能体，请联系管理员申请 agent:execute 权限。"
 
 export const ApprovalComposerContext = createContext<{
   /** Calls the prompt box is answering. */
@@ -204,8 +204,8 @@ export function ApprovalRequestPart({
           if (!overrideArgs) {
             toast({
               variant: "destructive",
-              title: "Invalid override args",
-              description: `Override args for ${approval.tool_name} must be a JSON object.`,
+              title: "覆盖参数无效",
+              description: `${approval.tool_name} 的覆盖参数必须是 JSON 对象。`,
             })
             return
           }
@@ -265,9 +265,8 @@ export function ApprovalRequestPart({
   const handleSubmit = useCallback(async () => {
     if (!onSubmit || !hasSelectedPendingDecision) {
       toast({
-        title: "Pending decisions",
-        description:
-          "Choose an action for at least one tool before continuing.",
+        title: "待处理决策",
+        description: "继续前请至少为一个工具选择处理方式。",
       })
       return
     }
@@ -343,7 +342,7 @@ export function ApprovalRequestPart({
         className="-ml-2 h-7 gap-1.5 px-2 text-xs text-muted-foreground"
       >
         <PencilIcon className="size-3" />
-        {isEditing ? "Discard edits" : "Edit arguments"}
+        {isEditing ? "放弃编辑" : "编辑参数"}
       </Button>
     )
   }
@@ -422,7 +421,7 @@ export function ApprovalRequestPart({
                   </CollapsibleTrigger>
                   <div
                     role="group"
-                    aria-label={`Decision for ${actionId}`}
+                    aria-label={`${actionId} 的决策`}
                     className="flex shrink-0 overflow-hidden rounded-[7px] border"
                   >
                     <button
@@ -437,7 +436,7 @@ export function ApprovalRequestPart({
                       }
                       className="h-[22px] px-2.5 text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-50 aria-pressed:bg-muted aria-pressed:text-foreground"
                     >
-                      Deny
+                      拒绝
                     </button>
                     <button
                       type="button"
@@ -455,7 +454,7 @@ export function ApprovalRequestPart({
                       }
                       className="h-[26px] border-l px-[11px] text-xs font-medium text-muted-foreground hover:text-foreground disabled:opacity-50 aria-pressed:bg-primary aria-pressed:text-primary-foreground"
                     >
-                      {isEditing ? "Approve with edits" : "Approve"}
+                      {isEditing ? "修改并批准" : "批准"}
                     </button>
                   </div>
                 </div>
@@ -473,7 +472,7 @@ export function ApprovalRequestPart({
               {denied && (
                 <div className="pl-[50px]">
                   <Input
-                    aria-label={`Deny reason for ${actionId}`}
+                    aria-label={`拒绝 ${actionId} 的原因`}
                     value={decision.reason ?? ""}
                     onChange={(event) =>
                       setDecision(toolCallId, {
@@ -481,7 +480,7 @@ export function ApprovalRequestPart({
                         reason: event.target.value,
                       })
                     }
-                    placeholder="Reason, sent to the agent"
+                    placeholder={"原因，将发送给智能体"}
                     disabled={disabled}
                     className="h-7 text-xs"
                   />
@@ -514,7 +513,7 @@ export function ApprovalRequestPart({
         onClick={denyBatch}
         className={DECISION_BUTTON_CLASS}
       >
-        Deny
+        拒绝
         {isComposer && <Kbd>Esc</Kbd>}
       </Button>
       <Button
@@ -525,7 +524,7 @@ export function ApprovalRequestPart({
         className={cn(DECISION_BUTTON_CLASS, PRIMARY_BUTTON_CLASS)}
       >
         {submitting && <Loader2 className="size-3 animate-spin" />}
-        Submit
+        提交
         {isComposer && (
           <Kbd inverted>
             <CornerDownLeftIcon className="size-3" />
@@ -546,7 +545,7 @@ export function ApprovalRequestPart({
           onClick={denyLone}
           className={DECISION_BUTTON_CLASS}
         >
-          Deny
+          拒绝
           {isComposer && <Kbd>Esc</Kbd>}
         </Button>
         <Button
@@ -556,7 +555,7 @@ export function ApprovalRequestPart({
           onClick={approveLone}
           className={cn(DECISION_BUTTON_CLASS, PRIMARY_BUTTON_CLASS)}
         >
-          {loneEditing ? "Approve with edits" : "Approve"}
+          {loneEditing ? "修改并批准" : "批准"}
           {isComposer && (
             <Kbd inverted>
               <CornerDownLeftIcon className="size-3" />
@@ -579,7 +578,7 @@ export function ApprovalRequestPart({
         data-testid={
           lone ? `approval-card-${lone.tool_call_id}` : "approval-batch"
         }
-        aria-label={lone ? "Approval required" : "Approvals required"}
+        aria-label={lone ? "需要审批" : "需要审批"}
         className="rounded-[14px] border bg-background px-3.5 pb-3 pt-3 shadow-sm outline-none"
       >
         {lone ? (
@@ -590,7 +589,7 @@ export function ApprovalRequestPart({
                 {reconstructActionType(lone.tool_name)}
               </span>
             </div>
-            <p className="mt-2 text-sm font-medium">Allow this tool call?</p>
+            <p className="mt-2 text-sm font-medium">允许此次工具调用？</p>
             <div className="mt-2 max-h-48 overflow-auto">
               {loneEditing ? (
                 renderEditor(lone)
@@ -606,7 +605,7 @@ export function ApprovalRequestPart({
         ) : (
           <>
             <p className="text-sm font-medium">
-              Allow {pending.length} tool calls?
+              允许 {pending.length} 次工具调用？
             </p>
             <div className="mt-1 max-h-64 overflow-auto">
               {renderBatchRows("")}
@@ -616,7 +615,7 @@ export function ApprovalRequestPart({
         )}
         {decidedElsewhere && (
           <p className="mt-2 text-xs text-muted-foreground">
-            This approval was already decided elsewhere.
+            此审批已在其他位置处理。
           </p>
         )}
       </section>
@@ -694,7 +693,7 @@ export function ApprovalRequestPart({
         <section
           key={lone.tool_call_id}
           data-testid={`approval-card-${lone.tool_call_id}`}
-          aria-label="Approval required"
+          aria-label={"需要审批"}
           className="my-2 rounded-[10px] border bg-background"
         >
           <header className="flex items-center justify-between gap-3 border-b px-3.5 py-2.5">
@@ -704,7 +703,7 @@ export function ApprovalRequestPart({
                 {reconstructActionType(lone.tool_name)}
               </span>
             </div>
-            <ApprovalStatus>Needs your approval</ApprovalStatus>
+            <ApprovalStatus>需要你的批准</ApprovalStatus>
           </header>
           <div className="px-3.5 py-3">
             {loneEditing ? (
@@ -722,15 +721,15 @@ export function ApprovalRequestPart({
       {!waitingInComposer && pending.length > 1 && (
         <section
           data-testid="approval-batch"
-          aria-label="Approvals required"
+          aria-label={"需要审批"}
           onKeyDown={handleKeyDown}
           className="my-2 rounded-[10px] border bg-background"
         >
           <div className="flex items-center justify-between gap-3 border-b px-3.5 py-2.5">
             <span className="text-sm font-medium">
-              {pending.length} tool calls
+              {pending.length} 次工具调用
             </span>
-            <ApprovalStatus>Need your approval</ApprovalStatus>
+            <ApprovalStatus>需要你的批准</ApprovalStatus>
           </div>
           {renderBatchRows("px-3.5")}
           <footer className="flex justify-end border-t px-3.5 py-2">
@@ -742,12 +741,12 @@ export function ApprovalRequestPart({
         <p className="text-xs text-muted-foreground">
           {cannotExecuteAgents
             ? AGENT_EXECUTE_REQUIRED_MESSAGE
-            : "Approval submission is not available in this context."}
+            : "当前上下文不支持提交审批。"}
         </p>
       )}
       {decidedElsewhere && !waitingInComposer && (
         <p className="text-xs text-muted-foreground">
-          This approval was already decided elsewhere.
+          此审批已在其他位置处理。
         </p>
       )}
     </div>
@@ -812,7 +811,7 @@ function foldLargeNested({ depth, size }: { depth: number; size: number }) {
 function ArgsTree({ args }: { args: unknown }) {
   const value = parseArgs(args)
   if (countArgs(value) === 0) {
-    return <p className="text-xs text-muted-foreground">No arguments</p>
+    return <p className="text-xs text-muted-foreground">无参数</p>
   }
   return (
     <JsonViewWithControls
@@ -836,7 +835,7 @@ function ApprovalArgs({ args }: { args: unknown }) {
   if (countArgs(value) === 0) {
     return (
       <p className={cn(ARGS_WELL_CLASS, "text-xs text-muted-foreground")}>
-        No arguments
+        无参数
       </p>
     )
   }
@@ -847,11 +846,11 @@ function ApprovalArgs({ args }: { args: unknown }) {
         type="button"
         size="icon"
         variant="ghost"
-        aria-label="Copy arguments"
+        aria-label={"复制参数"}
         onClick={() =>
           copyToClipboard({
             value: formatArgs(value),
-            message: "Copied arguments",
+            message: "已复制参数",
           })
         }
         className="absolute right-1.5 top-1.5 size-[22px] text-muted-foreground/60 hover:text-foreground [&_svg]:size-3"
@@ -897,7 +896,7 @@ function hasArgs(args: unknown): boolean {
 function summarizeArgs(args: unknown): string {
   const value = parseArgs(args)
   if (!value || typeof value !== "object" || Array.isArray(value)) {
-    return countArgs(value) === 0 ? "No arguments" : formatArgs(value)
+    return countArgs(value) === 0 ? "无参数" : formatArgs(value)
   }
   const parts = Object.entries(value).map(([key, item]) => {
     if (Array.isArray(item)) {
@@ -908,7 +907,7 @@ function summarizeArgs(args: unknown): string {
     }
     return `${key}: ${typeof item === "string" ? item : JSON.stringify(item)}`
   })
-  return parts.length ? parts.join(", ") : "No arguments"
+  return parts.length ? parts.join(", ") : "无参数"
 }
 
 /** The tool line state for a call, from its decision and whether it is sending. */

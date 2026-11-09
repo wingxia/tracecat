@@ -32,7 +32,7 @@ describe("Bitbucket provider overview", () => {
     expect(
       screen.queryByText("Cloud connection controls")
     ).not.toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Connect" }))
+    await user.click(screen.getByRole("button", { name: "连接" }))
     expect(screen.getByText("Cloud connection controls")).toBeInTheDocument()
     expect(
       screen.getByText("Data Center connection controls")
@@ -45,8 +45,8 @@ describe("Bitbucket provider overview", () => {
       const mock = provider === "cloud" ? mockCloud : mockDataCenter
       mock.mockReturnValue({ credentialsStatus: { exists: true } })
       render(<BitbucketSettings />)
-      expect(screen.getByText("Connected")).toBeInTheDocument()
-      expect(screen.getByRole("button", { name: "Manage" })).toBeInTheDocument()
+      expect(screen.getByText("已连接")).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: "管理" })).toBeInTheDocument()
     }
   )
 
@@ -56,9 +56,7 @@ describe("Bitbucket provider overview", () => {
       credentialsStatusError: new Error("unavailable"),
     })
     render(<BitbucketSettings />)
-    expect(
-      screen.getByText("Unable to load all connections")
-    ).toBeInTheDocument()
-    expect(screen.queryByText("Connected")).not.toBeInTheDocument()
+    expect(screen.getByText("无法加载全部连接")).toBeInTheDocument()
+    expect(screen.queryByText("已连接")).not.toBeInTheDocument()
   })
 })

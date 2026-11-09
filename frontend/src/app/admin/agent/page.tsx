@@ -35,7 +35,7 @@ function getProviderIconId(provider?: string | null): string {
 
 function getProviderLabel(provider?: string | null): string {
   if (!provider) {
-    return "Unknown"
+    return "未知"
   }
   switch (provider) {
     case "anthropic":
@@ -60,7 +60,7 @@ function getProviderLabel(provider?: string | null): string {
 }
 
 function getModelLabel(model: { model_name?: string | null }): string {
-  return model.model_name || "Unnamed model"
+  return model.model_name || "未命名模型"
 }
 
 function getMetadataNumber(metadata: unknown, key: string): number | null {
@@ -75,7 +75,7 @@ function formatTokenCount(value: number | null): string {
   if (value == null) {
     return "n/a"
   }
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("zh-CN", {
     maximumFractionDigits: 1,
     notation: "compact",
   }).format(value)
@@ -140,7 +140,7 @@ export default function AdminAgentPage() {
   if (error) {
     return (
       <div className="text-center text-muted-foreground">
-        Failed to load platform catalog entries.
+        加载平台模型目录失败。
       </div>
     )
   }
@@ -151,11 +151,10 @@ export default function AdminAgentPage() {
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
             <h2 className="text-2xl font-semibold tracking-tight">
-              Agent models
+              智能体模型
             </h2>
             <p className="text-base text-muted-foreground">
-              Review the shared platform model library loaded from the committed
-              catalog snapshot during startup.
+              查看启动时从已提交的目录快照加载的共享平台模型库。
             </p>
           </div>
         </div>
@@ -163,16 +162,15 @@ export default function AdminAgentPage() {
         <section className="space-y-4">
           <div className="space-y-2">
             <h3 className="text-lg font-semibold tracking-tight">
-              Platform catalog
+              平台模型目录
             </h3>
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search models or providers"
+              placeholder={"搜索模型或提供商"}
             />
             <p className="text-xs text-muted-foreground">
-              Showing {loadedModelCount} platform models, grouped by provider
-              and sorted by model name.
+              显示 {loadedModelCount} 个平台模型，按提供商分组并按模型名称排序。
             </p>
           </div>
 
@@ -196,7 +194,7 @@ export default function AdminAgentPage() {
                             {getProviderLabel(section.provider)}
                           </p>
                           <p className="text-xs text-muted-foreground">
-                            {section.models.length} models
+                            {section.models.length} 个模型
                           </p>
                         </div>
                       </div>
@@ -204,9 +202,9 @@ export default function AdminAgentPage() {
                     <AccordionContent className="pt-0">
                       <div className="pb-4">
                         <div className="hidden grid-cols-[minmax(0,1fr)_88px_88px] gap-4 px-3 py-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground sm:grid">
-                          <span>Model</span>
-                          <span className="text-right">Context</span>
-                          <span className="text-right">Output</span>
+                          <span>模型</span>
+                          <span className="text-right">上下文</span>
+                          <span className="text-right">输出</span>
                         </div>
                         {section.models.map((model) => (
                           <div
@@ -218,8 +216,8 @@ export default function AdminAgentPage() {
                                 {getModelLabel(model)}
                               </p>
                               <p className="text-xs text-muted-foreground sm:hidden">
-                                {getModelContextLabel(model)} ctx {"·"}{" "}
-                                {getModelOutputLabel(model)} out
+                                {getModelContextLabel(model)} 上下文 {"·"}{" "}
+                                {getModelOutputLabel(model)} 输出
                               </p>
                             </div>
                             <p className="hidden text-right text-xs text-muted-foreground sm:block">
@@ -237,7 +235,7 @@ export default function AdminAgentPage() {
               </Accordion>
             ) : (
               <div className="px-4 py-6 text-sm text-muted-foreground">
-                No platform models matched this search.
+                没有匹配的平台模型。
               </div>
             )}
           </div>

@@ -87,14 +87,13 @@ const ALL_PROVIDERS: VcsProvider[] = [
 
 /** Short name of the organization credential each provider connects with. */
 const ACCESS_SOURCES: Record<VcsProvider, string> = {
-  github: "GitHub App",
-  gitlab: "GitLab token",
-  bitbucket: "Bitbucket token",
-  bitbucket_data_center: "Bitbucket Data Center token",
+  github: "GitHub 应用",
+  gitlab: "GitLab 令牌",
+  bitbucket: "Bitbucket 令牌",
+  bitbucket_data_center: "Bitbucket Data Center 令牌",
 }
 
-const SUBTITLE =
-  "Push this workspace's workflows to Git and pull reviewed changes back."
+const SUBTITLE = "将此工作空间的工作流推送到 Git，并拉取已审核的更改。"
 
 const SYNC_QUERY_KEYS = [
   "workflow-sync-branches",
@@ -161,16 +160,16 @@ export function GitSyncConnectionPanel({
             onClick={onBack}
           >
             <ArrowLeftIcon className="size-3.5" />
-            {isConnected ? "Back to changes" : "Back"}
+            {isConnected ? "返回变更列表" : "返回"}
           </Button>
         )}
         <div className="space-y-2">
           <h2 className="text-2xl font-semibold tracking-tight">
-            {isConnected ? "Repository connection" : "Connect a repository"}
+            {isConnected ? "仓库连接" : "连接仓库"}
           </h2>
           <p className="text-sm text-muted-foreground">
             {isConnected
-              ? `Shared by everyone in this workspace. Access uses the organization's ${ACCESS_SOURCES[provider]}.`
+              ? `此工作空间所有成员共享，通过组织的 ${ACCESS_SOURCES[provider]} 访问。`
               : SUBTITLE}
           </p>
         </div>
@@ -200,26 +199,24 @@ function ConnectSkeleton() {
 function NoProviderState({ canSetUp }: { canSetUp: boolean }) {
   return (
     <div className="space-y-3">
-      <h3 className="text-base font-semibold">
-        Your organization hasn&apos;t set up a Git provider
-      </h3>
+      <h3 className="text-base font-semibold">组织尚未设置 Git 提供商</h3>
       {canSetUp ? (
         <>
           <p className="text-sm text-muted-foreground">
-            Set up GitHub, GitLab or Bitbucket once in Organization › Git
-            providers. Every workspace can then connect a repository.
+            在“组织 › Git 提供商”中配置 GitHub、GitLab 或 Bitbucket
+            后，各工作空间即可连接仓库。
           </p>
           <Button variant="outline" size="sm" className="gap-1.5" asChild>
             <Link href="/organization/vcs">
-              Set up a Git provider
+              设置 Git 提供商
               <ArrowUpRight className="size-3.5" />
             </Link>
           </Button>
         </>
       ) : (
         <p className="text-sm text-muted-foreground">
-          Ask an org admin to set one up in Organization › Git providers. You
-          can connect a repository here once they have.
+          请联系组织管理员在“组织 › Git
+          提供商”中完成配置，之后即可在此连接仓库。
         </p>
       )}
     </div>
@@ -287,7 +284,7 @@ function GitSyncConnect({
     <div className="space-y-8">
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
-          <Label htmlFor="git-sync-provider">Provider</Label>
+          <Label htmlFor="git-sync-provider">提供商</Label>
           <ProviderSelect
             id="git-sync-provider"
             candidates={candidates}
@@ -299,7 +296,7 @@ function GitSyncConnect({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="git-sync-repository">Repository</Label>
+          <Label htmlFor="git-sync-repository">仓库</Label>
           <RepositoryField
             id="git-sync-repository"
             provider={provider}
@@ -322,7 +319,7 @@ function GitSyncConnect({
               repository.parsed.kind === "empty"
             }
           >
-            {isUpdating ? "Connecting..." : "Connect"}
+            {isUpdating ? "连接中…" : "连接"}
           </Button>
           {provider && (
             <span className="text-xs text-muted-foreground">
@@ -516,11 +513,11 @@ function resolveConnection(
   const repository = findAppRepository(remote, repositories)
   if (!repository) {
     const nextStep = canManageOrgSettings
-      ? "Add it to the app's repositories on GitHub, then try again."
-      : "Ask an org admin to add it to the app's repositories."
+      ? "请在 GitHub 中将其添加到应用可访问的仓库，然后重试。"
+      : "请联系组织管理员将其添加到应用可访问的仓库。"
     return {
       kind: "invalid",
-      message: `The GitHub App can't reach ${remote.path}. ${nextStep}`,
+      message: `GitHub 应用无法访问 ${remote.path}。${nextStep}`,
     }
   }
   if (remote.ref) {
@@ -530,7 +527,7 @@ function resolveConnection(
 }
 
 function getProviderHint(provider: VcsProvider, host: string | undefined) {
-  return `Paste the SSH clone URL from ${host ?? GIT_PROVIDER_LABELS[provider]}.`
+  return `粘贴来自 ${host ?? GIT_PROVIDER_LABELS[provider]} 的 SSH 克隆 URL。`
 }
 
 /** Access source for the provider, claiming only what the data supports. */
@@ -544,10 +541,10 @@ function getAccessLine(
     )
     const [account] = accounts
     if (accounts.size === 1 && account) {
-      return `Uses the GitHub App on ${account}.`
+      return `使用 ${account} 的 GitHub 应用。`
     }
   }
-  return `Uses the organization's ${ACCESS_SOURCES[provider]}.`
+  return `使用组织的 ${ACCESS_SOURCES[provider]}。`
 }
 
 /** Provider for the connection; read-only when only one is set up. */
@@ -572,7 +569,7 @@ function ProviderSelect({
         id={id}
         className="h-10 [&>span]:flex [&>span]:items-center [&>span]:gap-2"
       >
-        <SelectValue placeholder="Choose where the repository lives" />
+        <SelectValue placeholder={"选择仓库所在位置"} />
       </SelectTrigger>
       <SelectContent>
         {candidates.map((candidate) => (
@@ -634,7 +631,7 @@ function RepositoryField({
           <code className="font-mono text-foreground">
             {parsed.remote.path}
           </code>{" "}
-          on {parsed.remote.host}
+          于 {parsed.remote.host}
           {parsed.remote.ref && ` at ${parsed.remote.ref}`}
         </span>
       </p>
@@ -648,7 +645,7 @@ function RepositoryField({
     <div className="space-y-1.5">
       <Input
         id={id}
-        aria-label="Repository"
+        aria-label={"仓库"}
         aria-invalid={Boolean(error)}
         className={cn(
           "h-10 font-mono",
@@ -689,7 +686,7 @@ function AppRepositoryList({
   let content: ReactNode
   if (isLoading) {
     content = (
-      <div className="space-y-2" aria-label="Loading repositories">
+      <div className="space-y-2" aria-label={"正在加载仓库"}>
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-9 w-full" />
         <Skeleton className="h-9 w-full" />
@@ -698,13 +695,13 @@ function AppRepositoryList({
   } else if (hasError) {
     content = (
       <p className="text-sm text-muted-foreground">
-        Couldn&apos;t load the list. A pasted SSH clone URL still works.
+        无法加载列表，仍可粘贴 SSH 克隆 URL。
       </p>
     )
   } else if (matches.length === 0) {
     content = (
       <p className="text-sm text-muted-foreground">
-        No match. Paste the SSH clone URL to check it.
+        没有匹配项。请粘贴 SSH 克隆 URL 进行检查。
       </p>
     )
   } else {
@@ -730,9 +727,7 @@ function AppRepositoryList({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm font-medium">
-        Repositories the GitHub App can reach
-      </p>
+      <p className="text-sm font-medium">GitHub 应用可访问的仓库</p>
       {content}
     </div>
   )
@@ -743,14 +738,14 @@ function RepositoryVisibility({ isPrivate }: { isPrivate: boolean }) {
     return (
       <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
         <LockIcon className="size-3" />
-        Private
+        私有
       </span>
     )
   }
   return (
     <span className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
       <GlobeIcon className="size-3" />
-      Public
+      公开
     </span>
   )
 }
@@ -819,10 +814,10 @@ function ConnectedRepository({
             disabled={isUpdating}
             onClick={() => setConfirmOpen(true)}
           >
-            Disconnect
+            断开连接
           </Button>
           <span className="text-xs text-muted-foreground">
-            Stops push and pull for this workspace.
+            停止此工作空间的推送和拉取。
           </span>
         </div>
       )}
@@ -830,20 +825,19 @@ function ConnectedRepository({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Disconnect {repoName ?? gitRepoUrl}?
+              断开连接 {repoName ?? gitRepoUrl}?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Push and pull stop until a repository is connected again. Nothing
-              in this workspace or the repository is deleted.
+              重新连接仓库前，推送和拉取将停止。不会删除工作空间或仓库中的内容。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => void handleDisconnect()}
             >
-              Disconnect
+              断开连接
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -940,7 +934,7 @@ function RepositoryEditor({
         onChange={setInput}
       />
       <p className="text-xs text-muted-foreground">
-        Changing the repository clears any preview on this page.
+        更改仓库会清除此页面上的所有预览。
       </p>
       <div className="flex gap-2">
         <Button
@@ -952,10 +946,10 @@ function RepositoryEditor({
             repository.parsed.kind === "empty"
           }
         >
-          {isUpdating ? "Saving..." : "Save"}
+          {isUpdating ? "保存中…" : "保存"}
         </Button>
         <Button type="button" variant="outline" size="sm" onClick={onDone}>
-          Cancel
+          取消
         </Button>
       </div>
     </form>
@@ -1008,7 +1002,7 @@ function ConnectionSheet({
     if (!canSync) {
       return (
         <span className="font-mono">
-          {getWorkspaceSyncConfiguredRef(gitRepoUrl) ?? "Repository default"}
+          {getWorkspaceSyncConfiguredRef(gitRepoUrl) ?? "仓库默认"}
         </span>
       )
     }
@@ -1035,13 +1029,13 @@ function ConnectionSheet({
     <dl className="divide-y border-y text-sm">
       <SheetRow
         icon={<VcsProviderIcon provider={provider} size="sm" />}
-        label="Provider"
+        label={"提供商"}
       >
         {getProviderSource(provider, host, repositories)}
       </SheetRow>
       <SheetRow
         icon={<BookMarkedIcon className="size-4" />}
-        label="Repository"
+        label={"仓库"}
         alignTop={Boolean(repositoryEditor)}
       >
         {repositoryEditor ?? (
@@ -1055,19 +1049,19 @@ function ConnectionSheet({
                 className="shrink-0 text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 onClick={onEditRepository}
               >
-                Change
+                更改
               </button>
             )}
           </span>
         )}
       </SheetRow>
-      <SheetRow icon={<GitBranchIcon className="size-4" />} label="Branch">
+      <SheetRow icon={<GitBranchIcon className="size-4" />} label={"分支"}>
         {renderBranch()}
       </SheetRow>
       {canSync && (
         <SheetRow
           icon={<GitCommitHorizontalIcon className="size-4" />}
-          label="Latest commit"
+          label={"最新提交"}
         >
           <LatestCommit
             isLoading={commitsIsLoading || branchesIsLoading}
@@ -1123,9 +1117,9 @@ function getProviderSource(
     )
     const [account] = accounts
     if (accounts.size === 1 && account) {
-      return `GitHub App · installed on ${account}`
+      return `GitHub 应用 · 安装于 ${account}`
     }
-    return "GitHub App"
+    return "GitHub 应用"
   }
   const label = GIT_PROVIDER_LABELS[provider]
   if (provider === "bitbucket" || !host) {
@@ -1199,14 +1193,14 @@ function BranchSelect({
       disabled={isUpdating}
     >
       <SelectTrigger
-        aria-label="Branch"
+        aria-label={"分支"}
         className="h-8 w-auto min-w-44 max-w-full gap-2 font-mono text-sm"
       >
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         <SelectItem value={DEFAULT_BRANCH_VALUE}>
-          <span className="font-mono">{defaultBranch ?? "Default"}</span>
+          <span className="font-mono">{defaultBranch ?? "默认"}</span>
           <span className="ml-2 font-sans text-xs text-muted-foreground">
             default
           </span>
@@ -1221,7 +1215,7 @@ function BranchSelect({
             {branch.name === configuredRef &&
               configuredRef === defaultBranch && (
                 <span className="ml-2 font-sans text-xs text-muted-foreground">
-                  pinned
+                  已固定
                 </span>
               )}
           </SelectItem>
@@ -1247,11 +1241,11 @@ function BranchValue({
     return (
       <span className="flex items-center gap-1.5 text-destructive">
         <AlertTriangleIcon className="size-3.5" />
-        Could not reach repository
+        无法访问仓库
       </span>
     )
   }
-  return <span className="font-mono">{branch ?? "Unknown"}</span>
+  return <span className="font-mono">{branch ?? "未知"}</span>
 }
 
 function LatestCommit({
@@ -1267,7 +1261,7 @@ function LatestCommit({
     return <Skeleton className="h-4 w-48 rounded-sm" />
   }
   if (!commit) {
-    return <span className="text-muted-foreground">No commits yet</span>
+    return <span className="text-muted-foreground">暂无提交</span>
   }
   // Who and when say more about the repo's state than the message, which
   // stays available on hover.
@@ -1276,7 +1270,7 @@ function LatestCommit({
       <span className="font-mono text-[13px]">
         {commit.sha.substring(0, 7)}
       </span>
-      {` · ${commit.author || "Unknown author"}`}
+      {` · ${commit.author || "未知作者"}`}
       {commit.date && ` · ${getRelativeTime(new Date(commit.date))}`}
     </span>
   )

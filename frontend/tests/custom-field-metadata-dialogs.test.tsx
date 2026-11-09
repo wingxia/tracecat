@@ -66,11 +66,9 @@ describe("custom field metadata dialogs", () => {
       <AddCustomFieldDialog open onOpenChange={jest.fn()} />
     )
 
-    await user.type(screen.getByRole("textbox", { name: "Name" }), "2FA status")
-    expect(
-      screen.getByText("Reference: field_2fa_status_2")
-    ).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Create field" }))
+    await user.type(screen.getByRole("textbox", { name: "名称" }), "2FA status")
+    expect(screen.getByText("引用： field_2fa_status_2")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "创建字段" }))
 
     await waitFor(() => {
       expect(mockCasesCreateField).toHaveBeenCalledWith({
@@ -93,15 +91,15 @@ describe("custom field metadata dialogs", () => {
       />
     )
 
-    const nameInput = screen.getByRole("textbox", { name: "Name" })
-    const referenceInput = screen.getByRole("textbox", { name: "Reference" })
+    const nameInput = screen.getByRole("textbox", { name: "名称" })
+    const referenceInput = screen.getByRole("textbox", { name: "引用" })
     await user.clear(nameInput)
     await user.type(nameInput, "2FA determination")
     expect(referenceInput).toHaveValue("analyst_verdict_v2")
     expect(referenceInput).toHaveAccessibleDescription(
-      "Used in APIs and workflows. Changing it may break existing references."
+      "用于 API 和工作流，修改可能破坏现有引用。"
     )
-    await user.click(screen.getByRole("button", { name: "Save changes" }))
+    await user.click(screen.getByRole("button", { name: "保存更改" }))
 
     await waitFor(() => {
       expect(mockCasesUpdateField).toHaveBeenCalledWith({
@@ -127,21 +125,21 @@ describe("custom field metadata dialogs", () => {
       />
     )
 
-    const referenceInput = screen.getByRole("textbox", { name: "Reference" })
+    const referenceInput = screen.getByRole("textbox", { name: "引用" })
     await user.clear(referenceInput)
     await user.type(referenceInput, "2FA determination")
-    await user.click(screen.getByRole("button", { name: "Save changes" }))
+    await user.click(screen.getByRole("button", { name: "保存更改" }))
 
     expect(
       await screen.findByText(
-        "Reference must start with a letter or underscore and contain only letters, numbers, and underscores"
+        "引用必须以字母或下划线开头，且只能包含字母、数字和下划线"
       )
     ).toBeInTheDocument()
     expect(mockCasesUpdateField).not.toHaveBeenCalled()
 
     await user.clear(referenceInput)
     await user.type(referenceInput, "final_determination")
-    await user.click(screen.getByRole("button", { name: "Save changes" }))
+    await user.click(screen.getByRole("button", { name: "保存更改" }))
 
     await waitFor(() => {
       expect(mockCasesUpdateField).toHaveBeenCalledWith({
@@ -179,7 +177,7 @@ describe("custom field metadata dialogs", () => {
         />
       )
 
-      await user.click(screen.getByRole("button", { name: "Save changes" }))
+      await user.click(screen.getByRole("button", { name: "保存更改" }))
 
       await waitFor(() => {
         expect(mockCasesUpdateField).toHaveBeenCalledWith({

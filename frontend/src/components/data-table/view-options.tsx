@@ -36,7 +36,7 @@ export function DataTableViewOptions<TData>({
           className="ml-auto hidden h-8 focus-visible:ring-0 lg:flex"
         >
           <MixerHorizontalIcon className="mr-2 size-4 text-xs" />
-          View
+          视图
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[150px]">

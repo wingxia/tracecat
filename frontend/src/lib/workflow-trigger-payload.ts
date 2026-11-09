@@ -73,9 +73,9 @@ export function validateTriggerPayload(payload: string): string | null {
     return null
   } catch (error) {
     if (error instanceof Error) {
-      return `Invalid JSON format: ${error.message}`
+      return `JSON 格式无效：${error.message}`
     }
-    return "Invalid JSON format: Unknown error occurred"
+    return "JSON 格式无效：发生未知错误"
   }
 }
 

@@ -73,7 +73,7 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 
 const CREATE_TUNNEL_FORM_ID = "create-tunnel-form"
 const KUBERNETES_ONLY_MESSAGE =
-  "This deployment has no tunnel gateway backend, so tunnels can't be created or used. Deploy Tracecat with the Helm chart and enable tunnels."
+  "此部署没有隧道网关后端，无法创建或使用隧道。请使用 Helm Chart 部署 Tracecat 并启用隧道。"
 const TUNNEL_NAME_PATTERN = /^[a-z0-9]([a-z0-9_-]*[a-z0-9])?$/
 
 /**
@@ -104,7 +104,7 @@ export function parseTunnelTargets(text: string): TunnelTarget[] {
     targets.push({ host, ports })
   }
   if (targets.length === 0) {
-    throw new Error("Add at least one target")
+    throw new Error("请至少添加一个目标")
   }
   return targets
 }
@@ -143,7 +143,7 @@ export function CreateTunnelButton() {
         onClick={() => setCreateOpen(true)}
       >
         <PlusIcon className="mr-1 h-3.5 w-3.5" />
-        Create tunnel
+        创建隧道
       </Button>
       <CreateTunnelDialog
         open={createOpen}
@@ -156,7 +156,7 @@ export function CreateTunnelButton() {
             setCreated(result)
           } catch (err) {
             toast({
-              title: "Failed to create tunnel",
+              title: "创建隧道失败",
               description: getApiErrorDetail(err),
               variant: "destructive",
             })
@@ -169,17 +169,16 @@ export function CreateTunnelButton() {
       >
         <DialogContent size="md">
           <DialogHeader>
-            <DialogTitle>Install the site connector</DialogTitle>
+            <DialogTitle>安装站点连接器</DialogTitle>
             <DialogDescription>
-              Run this on a host that can reach your targets. It contains a
-              secret and is only shown once.
+              在可访问目标的主机上运行此命令，其中包含密钥，仅显示一次。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             {created ? (
               <SecretValue
                 value={created.site_install_command}
-                toastMessage="Install command copied"
+                toastMessage="已复制安装命令"
               />
             ) : null}
           </DialogBody>
@@ -229,15 +228,15 @@ export function WorkspaceTunnels() {
     body = (
       <div className="flex h-full p-6">
         <EntitlementRequiredEmptyState
-          title="Unable to check plan access"
-          description="Reload the page to try again."
+          title={"无法检查套餐权限"}
+          description={"请重新加载页面后重试。"}
         >
           <Button
             variant="outline"
             size="sm"
             onClick={() => window.location.reload()}
           >
-            Reload
+            重新加载
           </Button>
         </EntitlementRequiredEmptyState>
       </div>
@@ -246,8 +245,8 @@ export function WorkspaceTunnels() {
     body = (
       <div className="flex h-full p-6">
         <EntitlementRequiredEmptyState
-          title="Upgrade required"
-          description="Tunnels are unavailable on your current plan."
+          title={"需要升级"}
+          description={"当前套餐不支持隧道。"}
         >
           <Button
             variant="link"
@@ -260,7 +259,7 @@ export function WorkspaceTunnels() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Learn more <ArrowUpRight className="size-4" />
+              了解更多 <ArrowUpRight className="size-4" />
             </a>
           </Button>
         </EntitlementRequiredEmptyState>
@@ -271,7 +270,7 @@ export function WorkspaceTunnels() {
       <div className="p-6">
         <AlertNotification
           level="error"
-          message={`Error loading tunnels: ${error.message}`}
+          message={`加载隧道出错：${error.message}`}
         />
       </div>
     )
@@ -289,7 +288,7 @@ export function WorkspaceTunnels() {
             <EmptyMedia variant="icon">
               <NetworkIcon className="size-5 text-muted-foreground/60" />
             </EmptyMedia>
-            <EmptyTitle>Tunnels require Kubernetes</EmptyTitle>
+            <EmptyTitle>隧道需要 Kubernetes</EmptyTitle>
             <EmptyDescription>{KUBERNETES_ONLY_MESSAGE}</EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -303,10 +302,9 @@ export function WorkspaceTunnels() {
             <EmptyMedia variant="icon">
               <NetworkIcon className="size-5 text-muted-foreground/60" />
             </EmptyMedia>
-            <EmptyTitle>No tunnels yet</EmptyTitle>
+            <EmptyTitle>暂无隧道</EmptyTitle>
             <EmptyDescription>
-              Create a tunnel to let actions reach hosts in your private
-              network.
+              创建隧道，让动作访问私有网络中的主机。
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -341,7 +339,7 @@ export function WorkspaceTunnels() {
               <TunnelStatusCell workspaceId={workspaceId} tunnel={tunnel} />
             </div>
             <Switch
-              aria-label={`Enable ${tunnel.name}`}
+              aria-label={`启用 ${tunnel.name}`}
               checked={tunnel.enabled}
               disabled={canUpdate !== true}
               onCheckedChange={async (enabled) => {
@@ -352,7 +350,7 @@ export function WorkspaceTunnels() {
                   })
                 } catch (err) {
                   toast({
-                    title: "Failed to update tunnel",
+                    title: "更新隧道失败",
                     description: getApiErrorDetail(err),
                     variant: "destructive",
                   })
@@ -365,7 +363,7 @@ export function WorkspaceTunnels() {
                   variant="ghost"
                   size="icon"
                   className="size-7"
-                  aria-label={`Actions for ${tunnel.name}`}
+                  aria-label={`${tunnel.name} 的操作`}
                 >
                   <MoreHorizontal className="size-4" />
                 </Button>
@@ -376,7 +374,7 @@ export function WorkspaceTunnels() {
                   onSelect={() => setRotateTarget(tunnel)}
                 >
                   <KeyRoundIcon className="mr-2 size-4" />
-                  Rotate gateway key
+                  轮换网关密钥
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={canDelete !== true}
@@ -384,7 +382,7 @@ export function WorkspaceTunnels() {
                   onSelect={() => setDeleteTarget(tunnel)}
                 >
                   <Trash2Icon className="mr-2 size-4" />
-                  Delete
+                  删除
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -400,7 +398,7 @@ export function WorkspaceTunnels() {
         <div className="p-4">
           <AlertNotification
             level="warning"
-            message={`Tunnels require Kubernetes. ${KUBERNETES_ONLY_MESSAGE}`}
+            message={`隧道需要 Kubernetes。${KUBERNETES_ONLY_MESSAGE}`}
           />
         </div>
         {body}
@@ -418,15 +416,14 @@ export function WorkspaceTunnels() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Rotate gateway key</AlertDialogTitle>
+            <AlertDialogTitle>轮换网关密钥</AlertDialogTitle>
             <AlertDialogDescription>
-              The current key stops working immediately. Tracecat-run gateways
-              restart with the new key; gateways you run yourself must be
-              updated.
+              当前密钥将立即失效。由 Tracecat
+              运行的网关会使用新密钥重启，自行运行的网关需要手动更新。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={issueGatewayKeyPending}
               onClick={async () => {
@@ -435,7 +432,7 @@ export function WorkspaceTunnels() {
                   setIssuedKey(await issueGatewayKey(rotateTarget.id))
                 } catch (err) {
                   toast({
-                    title: "Failed to rotate gateway key",
+                    title: "轮换网关密钥失败",
                     description: getApiErrorDetail(err),
                     variant: "destructive",
                   })
@@ -444,7 +441,7 @@ export function WorkspaceTunnels() {
                 }
               }}
             >
-              Rotate
+              轮换
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -456,17 +453,16 @@ export function WorkspaceTunnels() {
       >
         <DialogContent size="md">
           <DialogHeader>
-            <DialogTitle>Gateway key</DialogTitle>
+            <DialogTitle>网关密钥</DialogTitle>
             <DialogDescription>
-              Only needed for gateways you run yourself. This key is only shown
-              once.
+              仅自行运行的网关需要此密钥，密钥只显示一次。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             {issuedKey ? (
               <SecretValue
                 value={issuedKey.gateway_key}
-                toastMessage="Gateway key copied"
+                toastMessage="已复制网关密钥"
               />
             ) : null}
           </DialogBody>
@@ -479,13 +475,13 @@ export function WorkspaceTunnels() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleteTarget?.name}?</AlertDialogTitle>
+            <AlertDialogTitle>删除 {deleteTarget?.name}?</AlertDialogTitle>
             <AlertDialogDescription>
               {referencesLoading
-                ? "Checking where this tunnel is used..."
+                ? "正在检查隧道的使用位置…"
                 : referencedBy.length > 0
-                  ? "This tunnel is still in use. Remove it from these resources, then delete it."
-                  : "Nothing uses this tunnel."}
+                  ? "此隧道仍在使用中。请先从这些资源中移除，再删除隧道。"
+                  : "没有资源使用此隧道。"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {referencedBy.length > 0 ? (
@@ -495,7 +491,7 @@ export function WorkspaceTunnels() {
             />
           ) : null}
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={
@@ -507,7 +503,7 @@ export function WorkspaceTunnels() {
                   await deleteTunnel(deleteTarget.id)
                 } catch (err) {
                   toast({
-                    title: "Failed to delete tunnel",
+                    title: "删除隧道失败",
                     description: getApiErrorDetail(err),
                     variant: "destructive",
                   })
@@ -516,7 +512,7 @@ export function WorkspaceTunnels() {
                 }
               }}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -526,9 +522,9 @@ export function WorkspaceTunnels() {
 }
 
 const REFERENCE_KIND_LABELS: Record<TunnelReference["kind"], string> = {
-  mcp_integration: "MCP server",
-  agent_preset: "Agent",
-  workflow: "Workflow",
+  mcp_integration: "MCP 服务器",
+  agent_preset: "智能体",
+  workflow: "工作流",
 }
 
 function tunnelReferenceHref(
@@ -597,7 +593,7 @@ function SecretValue({
       <CopyButton
         value={value}
         toastMessage={toastMessage}
-        tooltipMessage="Copy"
+        tooltipMessage={"复制"}
         className="size-6 shrink-0"
         iconClassName="size-4 text-foreground/70"
       />
@@ -628,25 +624,25 @@ function TunnelStatusCell({
     enabled: tunnel.enabled,
   })
   if (!tunnel.enabled) {
-    return <span className="text-xs text-muted-foreground">Disabled</span>
+    return <span className="text-xs text-muted-foreground">已禁用</span>
   }
   if (isLoading) {
-    return <span className="text-xs text-muted-foreground">Checking…</span>
+    return <span className="text-xs text-muted-foreground">检查中…</span>
   }
   if (error || !data) {
-    return <StatusDot label="Unknown" ok={null} />
+    return <StatusDot label={"未知"} ok={null} />
   }
   return (
     <div className="flex items-center gap-3">
       {data.site_online !== null ? (
         <StatusDot
-          label={data.site_online ? "Site online" : "Site offline"}
+          label={data.site_online ? "站点在线" : "站点离线"}
           ok={data.site_online}
         />
       ) : null}
       {data.gateway_ready !== null && data.gateway_ready !== undefined ? (
         <StatusDot
-          label={data.gateway_ready ? "Gateway ready" : "Gateway starting"}
+          label={data.gateway_ready ? "网关就绪" : "网关启动中"}
           ok={data.gateway_ready}
         />
       ) : null}
@@ -691,10 +687,9 @@ function CreateTunnelDialog({
     >
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Create tunnel</DialogTitle>
+          <DialogTitle>创建隧道</DialogTitle>
           <DialogDescription>
-            Tracecat provisions the Pangolin site, client, and resources for
-            each target.
+            Tracecat 会为每个目标配置 Pangolin 站点、客户端和资源。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -706,7 +701,7 @@ function CreateTunnelDialog({
               const trimmed = name.trim()
               if (!TUNNEL_NAME_PATTERN.test(trimmed) || trimmed.length > 63) {
                 setFormError(
-                  "Name must be lowercase letters, digits, - or _, up to 63 characters."
+                  "名称只能包含小写字母、数字、- 或 _，最多 63 个字符。"
                 )
                 return
               }
@@ -728,7 +723,7 @@ function CreateTunnelDialog({
           >
             <div className="space-y-2">
               <Label htmlFor="tunnel-name" className="text-xs">
-                Name
+                名称
               </Label>
               <Input
                 id="tunnel-name"
@@ -740,19 +735,19 @@ function CreateTunnelDialog({
             </div>
             <div className="space-y-2">
               <Label htmlFor="tunnel-description" className="text-xs">
-                Description
+                描述
               </Label>
               <Input
                 id="tunnel-description"
                 className="text-xs"
-                placeholder="Optional"
+                placeholder={"可选"}
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor="tunnel-targets" className="text-xs">
-                Targets
+                目标
               </Label>
               <Textarea
                 id="tunnel-targets"
@@ -762,8 +757,8 @@ function CreateTunnelDialog({
                 onChange={(event) => setTargets(event.target.value)}
               />
               <p className="text-xs text-muted-foreground">
-                One host per line as host:port. Separate multiple ports with
-                commas. Actions can only reach these hosts and ports.
+                每行以 host:port
+                格式填写一个主机，多个端口用逗号分隔。动作只能访问这些主机和端口。
               </p>
             </div>
             {formError ? (
@@ -778,7 +773,7 @@ function CreateTunnelDialog({
             form={CREATE_TUNNEL_FORM_ID}
             disabled={pending}
           >
-            Create tunnel
+            创建隧道
           </Button>
         </DialogFooter>
       </DialogContent>

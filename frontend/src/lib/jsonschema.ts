@@ -131,20 +131,20 @@ export function jsonSchemaToZod(schema: JSONSchema7): z.ZodTypeAny {
         if (schema.minLength) {
           stringSchema = stringSchema.min(
             schema.minLength,
-            `Minimum ${schema.minLength} characters`
+            `至少 ${schema.minLength} 个字符`
           )
         }
         if (schema.maxLength) {
           stringSchema = stringSchema.max(
             schema.maxLength,
-            `Maximum ${schema.maxLength} characters`
+            `最多 ${schema.maxLength} 个字符`
           )
         }
         if (schema.format === "email") {
-          stringSchema = stringSchema.email("Invalid email format")
+          stringSchema = stringSchema.email("邮箱格式无效")
         }
         if (schema.format === "uri" || schema.format === "url") {
-          stringSchema = stringSchema.url("Invalid URL format")
+          stringSchema = stringSchema.url("URL 格式无效")
         }
         if (schema.enum) {
           return z.enum(schema.enum as [string, ...string[]])
@@ -156,29 +156,29 @@ export function jsonSchemaToZod(schema: JSONSchema7): z.ZodTypeAny {
         if (schema.minimum !== undefined) {
           numberSchema = numberSchema.min(
             schema.minimum,
-            `Minimum value is ${schema.minimum}`
+            `最小值为 ${schema.minimum}`
           )
         }
         if (schema.maximum !== undefined) {
           numberSchema = numberSchema.max(
             schema.maximum,
-            `Maximum value is ${schema.maximum}`
+            `最大值为 ${schema.maximum}`
           )
         }
         return numberSchema
 
       case "integer":
-        let intSchema = z.number().int("Must be an integer")
+        let intSchema = z.number().int("必须为整数")
         if (schema.minimum !== undefined) {
           intSchema = intSchema.min(
             schema.minimum,
-            `Minimum value is ${schema.minimum}`
+            `最小值为 ${schema.minimum}`
           )
         }
         if (schema.maximum !== undefined) {
           intSchema = intSchema.max(
             schema.maximum,
-            `Maximum value is ${schema.maximum}`
+            `最大值为 ${schema.maximum}`
           )
         }
         return intSchema

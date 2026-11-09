@@ -39,10 +39,10 @@ export default function ScimSettingsPage() {
       <PageShell>
         <ScimPageHeader />
         <Alert>
-          <AlertTitle>Unable to check plan access</AlertTitle>
-          <AlertDescription>Reload the page to try again.</AlertDescription>
+          <AlertTitle>无法检查套餐权限</AlertTitle>
+          <AlertDescription>请重新加载页面后重试。</AlertDescription>
           <Button variant="outline" onClick={() => window.location.reload()}>
-            Reload
+            重新加载
           </Button>
         </Alert>
       </PageShell>
@@ -53,8 +53,10 @@ export default function ScimSettingsPage() {
       <PageShell>
         <ScimPageHeader />
         <EntitlementRequiredEmptyState
-          title="Not available on your plan"
-          description="SCIM provisioning requires the access control add-on. Contact your Tracecat account team to enable it."
+          title={"当前套餐不支持"}
+          description={
+            "SCIM 用户配置需要访问控制附加服务，请联系 Tracecat 客户团队启用。"
+          }
         />
       </PageShell>
     )
@@ -64,8 +66,8 @@ export default function ScimSettingsPage() {
       <PageShell>
         <ScimPageHeader />
         <EntitlementRequiredEmptyState
-          title="You lack permission"
-          description="You need permission to manage SCIM provisioning."
+          title={"权限不足"}
+          description={"你需要管理 SCIM 用户配置的权限。"}
         />
       </PageShell>
     )

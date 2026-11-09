@@ -78,10 +78,9 @@ export function OrgRegistryVersionsShell({
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full items-start justify-between gap-4">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">Versions</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">版本</h2>
             <p className="text-base text-muted-foreground">
-              Sync commits from the remote repository and choose which version
-              is active.
+              从远程仓库同步提交，并选择生效的版本。
             </p>
           </div>
           {action}
@@ -94,7 +93,7 @@ export function OrgRegistryVersionsShell({
 
 /** Normalise an API error detail into a sentence with terminal punctuation. */
 function formatErrorSentence(detail: string | null | undefined): string {
-  const text = detail?.trim() || "Unknown error"
+  const text = detail?.trim() || "未知错误"
   return /[.!?]$/.test(text) ? text : `${text}.`
 }
 
@@ -291,9 +290,9 @@ export function OrgRegistryVersions() {
             <EmptyMedia variant="icon">
               <LockIcon />
             </EmptyMedia>
-            <EmptyTitle>You don't have access to registry versions</EmptyTitle>
+            <EmptyTitle>你无权访问注册表版本</EmptyTitle>
             <EmptyDescription>
-              Ask an organization admin for the registry read permission.
+              请向组织管理员申请注册表读取权限。
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -309,15 +308,15 @@ export function OrgRegistryVersions() {
             <EmptyMedia variant="icon">
               <GitBranchIcon />
             </EmptyMedia>
-            <EmptyTitle>No repository connected</EmptyTitle>
+            <EmptyTitle>尚未连接仓库</EmptyTitle>
             <EmptyDescription>
-              Connect a Git repository before syncing registry versions.
+              同步注册表版本前，请先连接 Git 仓库。
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
             <Button variant="outline" size="sm" asChild>
               <Link href="/organization/settings/custom-registry">
-                Connect a repository
+                连接仓库
               </Link>
             </Button>
           </EmptyContent>
@@ -354,7 +353,7 @@ export function OrgRegistryVersions() {
           syncRepoIsPending ? "mr-1.5 size-3.5 animate-spin" : "mr-1.5 size-3.5"
         }
       />
-      Sync from remote
+      从远程同步
     </Button>
   ) : null
 
@@ -366,22 +365,22 @@ export function OrgRegistryVersions() {
             {repo.origin}
           </span>
           <span aria-hidden="true">·</span>
-          <span>Last synced {lastSyncedLabel}</span>
+          <span>上次同步 {lastSyncedLabel}</span>
         </div>
 
         {commitsError && (
           <Alert>
             <AlertTriangleIcon className="size-4" />
-            <AlertTitle>Couldn't load commits from {branch}</AlertTitle>
+            <AlertTitle>无法加载提交，来源为 {branch}</AlertTitle>
             <AlertDescription>
-              {formatErrorSentence(getApiErrorDetail(commitsError))} Check the{" "}
+              {formatErrorSentence(getApiErrorDetail(commitsError))} 请检查{" "}
               <Link
                 href="/organization/settings/custom-registry"
                 className="underline underline-offset-2"
               >
-                SSH key on the Repository page
+                仓库页面上的 SSH 密钥
               </Link>{" "}
-              and that the branch exists.
+              并确认分支存在。
             </AlertDescription>
           </Alert>
         )}
@@ -394,9 +393,9 @@ export function OrgRegistryVersions() {
               <EmptyMedia variant="icon">
                 <GitCommitIcon />
               </EmptyMedia>
-              <EmptyTitle>No commits found</EmptyTitle>
+              <EmptyTitle>未找到提交</EmptyTitle>
               <EmptyDescription>
-                The {branch} branch of the remote repository has no commits yet.
+                此 {branch} 远程分支尚无提交。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -456,25 +455,24 @@ export function OrgRegistryVersions() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete registry version?</AlertDialogTitle>
+            <AlertDialogTitle>删除注册表版本？</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes version{" "}
+              此操作将永久移除版本{" "}
               <span className="font-mono">
                 {versionPendingDelete
                   ? shortVersion(versionPendingDelete.version)
                   : ""}
               </span>
-              . Only versions that are not current and not used by published
-              workflows can be deleted.
+              。只能删除非当前版本且未被已发布工作流使用的版本。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

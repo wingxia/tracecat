@@ -86,7 +86,7 @@ export function CompactJsonViewer({
     (typeof src === "object" && Object.keys(src as object).length === 0)
 
   if (isEmpty) {
-    return <span className="text-xs text-muted-foreground">No data</span>
+    return <span className="text-xs text-muted-foreground">暂无数据</span>
   }
 
   return (
@@ -109,7 +109,7 @@ export function CompactJsonViewer({
       <button
         onClick={handleCopy}
         className="shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
-        aria-label="Copy JSON"
+        aria-label={"复制 JSON"}
       >
         {copied ? (
           <CheckCheckIcon className="size-3 text-green-600" />

@@ -73,7 +73,7 @@ export function CaseParentBreadcrumb({
       className="mb-1 flex min-w-0 items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground"
     >
       <CornerDownRight className="size-3 shrink-0" />
-      <span className="shrink-0">Sub-case of</span>
+      <span className="shrink-0">所属父事件</span>
       <span className="shrink-0 font-medium">{parent.short_id}</span>
       <span className="truncate">{parent.summary}</span>
     </Link>
@@ -182,15 +182,15 @@ export function CaseSubCasesPanel({
     )
     if (result.error) {
       console.error("Failed to remove sub-case:", result.error)
-      toast({ variant: "destructive", title: "Failed to remove sub-case" })
+      toast({ variant: "destructive", title: "移除子事件失败" })
     } else if (result.failed > 0) {
       toast({
         variant: "destructive",
-        title: "Failed to remove sub-case",
+        title: "移除子事件失败",
         description: result.errors[0],
       })
     } else {
-      toast({ title: `Removed ${subCase.short_id} from this case` })
+      toast({ title: `已从此事件移除 ${subCase.short_id}` })
     }
     setRemovingId(null)
     await invalidateCaseHierarchy(queryClient)
@@ -205,8 +205,7 @@ export function CaseSubCasesPanel({
             workspaceId={workspaceId}
           />
           <p className="text-xs text-muted-foreground">
-            Sub-cases are one level deep, so this case can't have its own
-            sub-cases.
+            子事件只支持一层嵌套，因此此事件不能再包含子事件。
           </p>
         </div>
       </div>
@@ -231,7 +230,7 @@ export function CaseSubCasesPanel({
               ) : (
                 <ChevronRight className="size-3.5" />
               )}
-              Sub-cases{total > 0 ? ` (${total})` : ""}
+              子事件{total > 0 ? ` (${total})` : ""}
             </Button>
           </CollapsibleTrigger>
           {canUpdate && (
@@ -242,7 +241,7 @@ export function CaseSubCasesPanel({
               onClick={() => setAddDialogOpen(true)}
             >
               <Plus className="mr-1 size-3.5" />
-              Add sub-cases
+              添加子事件
             </Button>
           )}
         </div>
@@ -253,8 +252,8 @@ export function CaseSubCasesPanel({
               <Input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search sub-cases..."
-                aria-label="Search sub-cases"
+                placeholder={"搜索子事件…"}
+                aria-label={"搜索子事件"}
                 className="h-8 border-none bg-transparent p-0 text-sm shadow-none focus-visible:ring-0"
               />
             </div>
@@ -265,14 +264,14 @@ export function CaseSubCasesPanel({
                 ))}
               {error && (
                 <p className="px-2 py-2 text-sm text-muted-foreground">
-                  Failed to load sub-cases
+                  加载子事件失败
                 </p>
               )}
               {!isLoading && !error && subCases.length === 0 && (
                 <p className="px-2 py-2 text-sm text-muted-foreground">
                   {debouncedSearch
-                    ? "No sub-cases match your search"
-                    : "No sub-cases yet. Group related cases here from the cases list or with Add sub-cases."}
+                    ? "没有匹配的子事件"
+                    : "暂无子事件。可从事件列表或通过“添加子事件”将相关事件分组到此处。"}
                 </p>
               )}
               {subCases.map((subCase) => (
@@ -287,8 +286,8 @@ export function CaseSubCasesPanel({
                         onClick={() => handleRemove(subCase)}
                         disabled={removingId !== null}
                         className="flex size-6 shrink-0 items-center justify-center rounded-md text-muted-foreground opacity-0 transition hover:bg-muted hover:text-foreground focus-visible:opacity-100 group-hover:opacity-100 disabled:opacity-50"
-                        aria-label={`Remove ${subCase.short_id} from this case`}
-                        title="Remove from this case"
+                        aria-label={`从此事件移除 ${subCase.short_id}`}
+                        title={"从此事件移除"}
                       >
                         {removingId === subCase.id ? (
                           <Spinner className="size-3" />
@@ -311,7 +310,7 @@ export function CaseSubCasesPanel({
                   )}
                 >
                   {isFetchingNextPage && <Spinner className="size-3" />}
-                  Load more
+                  加载更多
                 </button>
               )}
             </div>
@@ -482,18 +481,18 @@ function AddSubCasesDialog({
     const added = result.succeededIds.size
     if (result.error) {
       console.error("Failed to add sub-cases:", result.error)
-      toast({ variant: "destructive", title: "Failed to add sub-cases" })
+      toast({ variant: "destructive", title: "添加子事件失败" })
       return { close: false, succeededIds: result.succeededIds }
     }
     if (result.failed > 0) {
       toast({
         variant: "destructive",
-        title: `${added} added, ${result.failed} failed`,
+        title: `已添加 ${added} 个，失败 ${result.failed} 个`,
         description: result.errors[0],
       })
       return { close: false, succeededIds: result.succeededIds }
     }
-    toast({ title: `Added ${added} sub-case${added === 1 ? "" : "s"}` })
+    toast({ title: `已添加 ${added} 个子事件${added === 1 ? "" : ""}` })
     return { close: true }
   }
 
@@ -502,8 +501,10 @@ function AddSubCasesDialog({
       open={open}
       onOpenChange={onOpenChange}
       workspaceId={workspaceId}
-      title={`Add sub-cases to ${parent.short_id}`}
-      description="Selected cases are hidden from the cases list by default and listed under this case. Cases with their own sub-cases can't be added."
+      title={`向 ${parent.short_id} 添加子事件`}
+      description={
+        "所选事件默认在事件列表中隐藏，并显示在此事件下方。已包含子事件的事件无法添加。"
+      }
       // Sub-cases of other parents can be moved here.
       hierarchy="all"
       multiple
@@ -512,7 +513,7 @@ function AddSubCasesDialog({
       }
       isDisabled={(item) => item.num_sub_cases > 0}
       confirmLabel={(items) =>
-        items.length > 0 ? `Add ${items.length}` : "Add"
+        items.length > 0 ? `添加 ${items.length} 项` : "添加"
       }
       onConfirm={handleConfirm}
     />
@@ -549,8 +550,8 @@ function CasePickerList({
       <Input
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Search cases by ID or summary..."
-        aria-label="Search cases"
+        placeholder={"按 ID 或摘要搜索事件…"}
+        aria-label={"搜索事件"}
         autoFocus
       />
       <div
@@ -564,7 +565,7 @@ function CasePickerList({
           </div>
         )}
         {!isLoading && candidates.length === 0 && (
-          <p className="p-3 text-sm text-muted-foreground">No cases found</p>
+          <p className="p-3 text-sm text-muted-foreground">未找到事件</p>
         )}
         {candidates.map((item) => {
           const selected = isSelected(item)
@@ -608,7 +609,7 @@ function CasePickerList({
             className="flex w-full items-center justify-center gap-2 px-3 py-2 text-xs text-muted-foreground hover:bg-muted/50 hover:text-foreground"
           >
             {isFetchingNextPage && <Spinner className="size-3" />}
-            Load more
+            加载更多
           </button>
         )}
       </div>

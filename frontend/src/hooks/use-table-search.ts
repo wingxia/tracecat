@@ -92,14 +92,9 @@ export function useTableSearch(workspaceId: string, tableId: string) {
   }
   function mutationError(error: ApiError) {
     toast({
-      title:
-        error.status === 409
-          ? "Search settings changed"
-          : "Could not update semantic search",
+      title: error.status === 409 ? "搜索设置已更改" : "无法更新语义搜索",
       description:
-        error.status === 409
-          ? "The latest settings have been refreshed. Try again."
-          : "Try again in a moment.",
+        error.status === 409 ? "已刷新最新设置，请重试。" : "请稍后重试。",
       variant: "destructive",
     })
     void refresh()

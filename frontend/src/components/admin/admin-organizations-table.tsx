@@ -52,7 +52,7 @@ export function AdminOrganizationsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Name"
+                title={"名称"}
               />
             ),
             cell: ({ row }) => (
@@ -73,7 +73,7 @@ export function AdminOrganizationsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Slug"
+                title={"标识"}
               />
             ),
             cell: ({ row }) => (
@@ -90,7 +90,7 @@ export function AdminOrganizationsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Tier"
+                title={"套餐"}
               />
             ),
             cell: ({ row }) => {
@@ -107,15 +107,11 @@ export function AdminOrganizationsTable() {
 
               if (orgTiersLoading) {
                 return (
-                  <span className="text-xs text-muted-foreground">
-                    Loading...
-                  </span>
+                  <span className="text-xs text-muted-foreground">加载中…</span>
                 )
               }
 
-              return (
-                <span className="text-xs text-muted-foreground">Default</span>
-              )
+              return <span className="text-xs text-muted-foreground">默认</span>
             },
             enableSorting: false,
             enableHiding: false,
@@ -126,14 +122,14 @@ export function AdminOrganizationsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Active"
+                title={"已启用"}
               />
             ),
             cell: ({ row }) => (
               <div className="text-xs">
                 {row.getValue<OrgRead["is_active"]>("is_active")
-                  ? "Active"
-                  : "Inactive"}
+                  ? "已启用"
+                  : "已停用"}
               </div>
             ),
             enableSorting: true,
@@ -145,7 +141,7 @@ export function AdminOrganizationsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Created"
+                title={"创建时间"}
               />
             ),
             cell: ({ row }) => {
@@ -154,7 +150,7 @@ export function AdminOrganizationsTable() {
               const date = new Date(createdAt)
               return (
                 <div className="text-xs text-muted-foreground">
-                  {date.toLocaleDateString()}
+                  {date.toLocaleDateString("zh-CN")}
                 </div>
               )
             },
@@ -169,7 +165,7 @@ export function AdminOrganizationsTable() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="size-8 p-0">
-                      <span className="sr-only">Open menu</span>
+                      <span className="sr-only">打开菜单</span>
                       <DotsHorizontalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -185,7 +181,7 @@ export function AdminOrganizationsTable() {
                         window.location.assign("/workspaces")
                       }}
                     >
-                      Enter organization
+                      进入组织
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -193,32 +189,32 @@ export function AdminOrganizationsTable() {
                         navigator.clipboard.writeText(row.original.id)
                       }
                     >
-                      Copy ID
+                      复制 ID
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => setEditOrgId(row.original.id)}
                     >
-                      Edit organization
+                      编辑组织
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => setTierOrgId(row.original.id)}
                     >
-                      Manage tier
+                      管理套餐
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => setDomainsOrgId(row.original.id)}
                     >
-                      Manage domains
+                      管理域名
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => setInvitationsOrgId(row.original.id)}
                     >
-                      Manage invitations
+                      管理邀请
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => setRegistryOrgId(row.original.id)}
                     >
-                      Manage registry
+                      管理注册表
                     </DropdownMenuItem>
                     {multiTenantEnabled && (
                       <>
@@ -227,7 +223,7 @@ export function AdminOrganizationsTable() {
                           className="text-rose-500 focus:text-rose-600"
                           onSelect={() => setDeleteOrg(row.original)}
                         >
-                          Delete organization
+                          删除组织
                         </DropdownMenuItem>
                       </>
                     )}
@@ -291,7 +287,7 @@ export function AdminOrganizationsTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<OrgRead> = {
   filterProps: {
-    placeholder: "Filter organizations...",
+    placeholder: "筛选组织…",
     column: "name",
   },
 }

@@ -239,7 +239,7 @@ describe("SuccessEvent", () => {
       "TRIGGER"
     )
     expect(
-      screen.queryByText("This action returned no result (null).")
+      screen.queryByText("此动作未返回结果（null）。")
     ).not.toBeInTheDocument()
   })
 

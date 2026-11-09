@@ -66,10 +66,8 @@ export function ChatManager({
           ) : (
             <div className="h-full flex items-center justify-center border border-dashed border-border rounded-lg">
               <div className="text-center text-muted-foreground">
-                <p className="text-sm">Select a chat from the list</p>
-                <p className="text-xs mt-1">
-                  or create a new one to get started
-                </p>
+                <p className="text-sm">从列表中选择对话</p>
+                <p className="text-xs mt-1">或创建新对话以开始使用</p>
               </div>
             </div>
           )}

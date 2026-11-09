@@ -14,7 +14,7 @@ const DEFAULT_MAX_FILES = 10
 let nextFileKey = 0
 
 function describeLimits(accept: string[], maxFiles: number): string {
-  const count = maxFiles === 1 ? "One file" : `Up to ${maxFiles} files`
+  const count = maxFiles === 1 ? "一个文件" : `最多 ${maxFiles} 个文件`
   return accept.length > 0 ? `${accept.join(", ")}. ${count}.` : `${count}.`
 }
 
@@ -23,8 +23,8 @@ function toFileItems(value: unknown): FormFileItem[] {
 }
 
 function statusLabel(item: FormFileItem): string | null {
-  if (item.status === "uploading") return "Uploading..."
-  if (item.status === "failed") return item.error ?? "Upload failed"
+  if (item.status === "uploading") return "上传中…"
+  if (item.status === "failed") return item.error ?? "上传失败"
   return null
 }
 
@@ -77,7 +77,7 @@ export function FileWidget(props: FormWidgetProps) {
       }
       if (typeof maxSize === "number" && file.size > maxSize) {
         item.status = "failed"
-        item.error = `Files can be at most ${formatFileSize(maxSize)}`
+        item.error = `单个文件不能超过 ${formatFileSize(maxSize)}`
       }
       return { file, item }
     })
@@ -95,7 +95,7 @@ export function FileWidget(props: FormWidgetProps) {
         (error: unknown) =>
           patch(item.key, {
             status: "failed",
-            error: error instanceof Error ? error.message : "Upload failed",
+            error: error instanceof Error ? error.message : "上传失败",
           })
       )
     }
@@ -134,9 +134,9 @@ export function FileWidget(props: FormWidgetProps) {
             onClick={() => inputRef.current?.click()}
             className="rounded-sm font-medium text-foreground underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:no-underline"
           >
-            {maxFiles === 1 ? "Choose a file" : "Choose files"}
+            {maxFiles === 1 ? "选择文件" : "选择多个文件"}
           </button>{" "}
-          or drag {maxFiles === 1 ? "it" : "them"} here
+          或拖动 {maxFiles === 1 ? "文件" : "文件"} 到此处
         </span>
         <span className={formStyles.help}>
           {describeLimits(accept, maxFiles)}
@@ -189,7 +189,7 @@ export function FileWidget(props: FormWidgetProps) {
                 variant="ghost"
                 size="icon"
                 disabled={disabled}
-                aria-label={`Remove ${item.name}`}
+                aria-label={`移除 ${item.name}`}
                 onClick={() =>
                   update((current) =>
                     current.filter(({ key }) => key !== item.key)

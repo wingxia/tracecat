@@ -236,14 +236,12 @@ describe("exact-first case search UI", () => {
       screen.queryByRole("combobox", { name: "Case search scope" })
     ).not.toBeInTheDocument()
     expect(
-      screen.getByRole("group", { name: "Current view filters" })
+      screen.getByRole("group", { name: "当前视图筛选条件" })
     ).not.toBeDisabled()
     expect(
-      screen.queryByText("No cases match the current filters.")
+      screen.queryByText("没有符合当前筛选条件的事件。")
     ).not.toBeInTheDocument()
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Load more cases" })
-    )
+    fireEvent.click(await screen.findByRole("button", { name: "加载更多事件" }))
     await screen.findByRole("button", { name: "CASE-0042" })
     expect(casesQueryCases).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -257,8 +255,8 @@ describe("exact-first case search UI", () => {
   it("shows dates without unsupported hierarchy labels or controls", async () => {
     setup({ hierarchyEnabled: false })
     await waitFor(() => expect(casesQueryCases).toHaveBeenCalledTimes(1))
-    expect(screen.queryByText("Parents only")).not.toBeInTheDocument()
-    expect(screen.queryByText("All cases")).not.toBeInTheDocument()
+    expect(screen.queryByText("仅父事件")).not.toBeInTheDocument()
+    expect(screen.queryByText("所有事件")).not.toBeInTheDocument()
     expect(screen.queryByRole("switch")).not.toBeInTheDocument()
   })
 
@@ -270,10 +268,10 @@ describe("exact-first case search UI", () => {
       has_more: false,
       total_estimate: 0,
     })
-    fireEvent.change(screen.getByRole("textbox", { name: "Search cases" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "搜索事件" }), {
       target: { value: "CASE-0042" },
     })
-    await screen.findByRole("region", { name: "Exact match" })
+    await screen.findByRole("region", { name: "精确匹配" })
     expect(casesQueryCases).toHaveBeenCalledTimes(2)
     expect(jest.mocked(casesQueryCases).mock.calls.at(-1)?.[0]).toEqual(
       expect.objectContaining({
@@ -285,10 +283,10 @@ describe("exact-first case search UI", () => {
       })
     )
     expect(
-      screen.getByText("Exact match · Outside current filters")
+      screen.getByText("精确匹配 · 不符合当前筛选条件")
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("group", { name: "Current view filters" })
+      screen.getByRole("group", { name: "当前视图筛选条件" })
     ).not.toBeDisabled()
     fireEvent.click(screen.getByRole("button", { name: "CASE-0042" }))
     expect(mockPush).toHaveBeenCalledWith(
@@ -300,12 +298,12 @@ describe("exact-first case search UI", () => {
     const user = userEvent.setup()
     setup()
     const sortControl = screen.getByRole("combobox", {
-      name: "Case sort field",
+      name: "事件排序字段",
     })
     expect(sortControl).not.toBeDisabled()
     fireEvent.keyDown(sortControl, { key: "ArrowDown" })
-    await user.click(await screen.findByRole("option", { name: /^Assignee/ }))
-    expect(sortControl).toHaveTextContent("Assignee")
+    await user.click(await screen.findByRole("option", { name: /^负责人/ }))
+    expect(sortControl).toHaveTextContent("负责人")
     await waitFor(() =>
       expect(casesQueryCases).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -317,9 +315,9 @@ describe("exact-first case search UI", () => {
       )
     )
     fireEvent.keyDown(sortControl, { key: "ArrowDown" })
-    await user.click(await screen.findByRole("option", { name: /^Tags/ }))
-    expect(sortControl).toHaveTextContent("Tags")
-    await user.click(screen.getByRole("button", { name: "Sort descending" }))
+    await user.click(await screen.findByRole("option", { name: /^标签/ }))
+    expect(sortControl).toHaveTextContent("标签")
+    await user.click(screen.getByRole("button", { name: "降序排序" }))
     await waitFor(() =>
       expect(casesQueryCases).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -330,8 +328,8 @@ describe("exact-first case search UI", () => {
         })
       )
     )
-    await user.click(screen.getByRole("button", { name: "Reset" }))
-    expect(sortControl).toHaveTextContent("Updated")
+    await user.click(screen.getByRole("button", { name: "重置" }))
+    expect(sortControl).toHaveTextContent("更新时间")
     await waitFor(() =>
       expect(casesQueryCases).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -347,7 +345,7 @@ describe("exact-first case search UI", () => {
   it("keeps the search input focused while a new search loads", async () => {
     const user = userEvent.setup()
     setup({ lexicalControls: true })
-    const searchInput = screen.getByRole("textbox", { name: "Search cases" })
+    const searchInput = screen.getByRole("textbox", { name: "搜索事件" })
     await waitFor(() => expect(screen.queryByRole("status")).toBeTruthy())
     await waitFor(() => expect(casesQueryCases).toHaveBeenCalled())
     await user.click(searchInput)
@@ -361,12 +359,10 @@ describe("exact-first case search UI", () => {
     )
     await waitFor(() =>
       expect(
-        screen.getByText("No cases match the current filters.")
+        screen.getByText("没有符合当前筛选条件的事件。")
       ).toBeInTheDocument()
     )
-    expect(screen.getByRole("textbox", { name: "Search cases" })).toBe(
-      searchInput
-    )
+    expect(screen.getByRole("textbox", { name: "搜索事件" })).toBe(searchInput)
     expect(searchInput).toHaveFocus()
   })
 
@@ -402,13 +398,13 @@ describe("exact-first case search UI", () => {
         </WorkspaceIdProvider>
       </DefaultQueryClientProvider>
     )
-    const searchInput = screen.getByRole("textbox", { name: "Search cases" })
+    const searchInput = screen.getByRole("textbox", { name: "搜索事件" })
     await waitFor(() => expect(casesQueryCases).toHaveBeenCalled())
     await user.click(searchInput)
     await user.type(searchInput, "malware")
 
-    expect(await screen.findByText("Search took too long")).toBeInTheDocument()
-    expect(screen.queryByText(/Failed to load cases/)).not.toBeInTheDocument()
+    expect(await screen.findByText("搜索超时")).toBeInTheDocument()
+    expect(screen.queryByText(/load cases 失败/)).not.toBeInTheDocument()
     expect(searchInput).toHaveFocus()
     await waitFor(() =>
       expect(casesQueryCaseAggregates).toHaveBeenCalledTimes(2)
@@ -419,13 +415,13 @@ describe("exact-first case search UI", () => {
   it("restores relevance for the next words search after Reset", async () => {
     const user = userEvent.setup()
     setup({ lexicalControls: true })
-    const searchInput = screen.getByRole("textbox", { name: "Search cases" })
+    const searchInput = screen.getByRole("textbox", { name: "搜索事件" })
     fireEvent.change(searchInput, { target: { value: "synthetic" } })
     const sortControl = screen.getByRole("combobox", {
-      name: "Case sort field",
+      name: "事件排序字段",
     })
     fireEvent.keyDown(sortControl, { key: "ArrowDown" })
-    await user.click(await screen.findByRole("option", { name: /^Tags/ }))
+    await user.click(await screen.findByRole("option", { name: /^标签/ }))
     await waitFor(() =>
       expect(casesQueryCases).toHaveBeenLastCalledWith(
         expect.objectContaining({
@@ -433,7 +429,7 @@ describe("exact-first case search UI", () => {
         })
       )
     )
-    await user.click(screen.getByRole("button", { name: "Reset" }))
+    await user.click(screen.getByRole("button", { name: "重置" }))
     expect(searchInput).toHaveValue("")
     fireEvent.change(searchInput, { target: { value: "next words" } })
     await waitFor(() =>
@@ -448,7 +444,7 @@ describe("exact-first case search UI", () => {
         })
       )
     )
-    expect(sortControl).toHaveTextContent("Relevance")
+    expect(sortControl).toHaveTextContent("相关度")
   })
 
   it("shows the exact match before ordinary matches without duplicating it", async () => {
@@ -462,7 +458,7 @@ describe("exact-first case search UI", () => {
       has_more: false,
     })
     setup()
-    const exact = await screen.findByRole("region", { name: "Exact match" })
+    const exact = await screen.findByRole("region", { name: "精确匹配" })
     expect(
       within(exact).getByRole("button", { name: "CASE-0042" })
     ).toBeInTheDocument()
@@ -510,14 +506,14 @@ describe("exact-first case search UI", () => {
         )
     )
     setup()
-    await screen.findByRole("region", { name: "Exact match" })
+    await screen.findByRole("region", { name: "精确匹配" })
     await waitFor(() =>
       expect(screen.getByTestId("ordinary-results")).toHaveAttribute(
         "data-closed-count",
         "0"
       )
     )
-    expect(screen.getByText("2 cases")).toBeInTheDocument()
+    expect(screen.getByText("2 个事件")).toBeInTheDocument()
   })
 
   it("clears the promoted result without changing the saved date constraint", async () => {
@@ -527,17 +523,17 @@ describe("exact-first case search UI", () => {
       items: [{ ...CASE, is_exact_match: true, is_outside_filters: true }],
       has_more: false,
     })
-    fireEvent.change(screen.getByRole("textbox", { name: "Search cases" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "搜索事件" }), {
       target: { value: CASE.id },
     })
-    await screen.findByRole("region", { name: "Exact match" })
+    await screen.findByRole("region", { name: "精确匹配" })
     mockCasesResponse({ items: [], has_more: false })
-    fireEvent.change(screen.getByRole("textbox", { name: "Search cases" }), {
+    fireEvent.change(screen.getByRole("textbox", { name: "搜索事件" }), {
       target: { value: "" },
     })
     await waitFor(() =>
       expect(
-        screen.queryByRole("region", { name: "Exact match" })
+        screen.queryByRole("region", { name: "精确匹配" })
       ).not.toBeInTheDocument()
     )
     expect(casesQueryCases).toHaveBeenLastCalledWith(

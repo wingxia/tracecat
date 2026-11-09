@@ -38,11 +38,11 @@ export function getUrlHint(url: string): string | undefined {
   try {
     const parsed = new URL(url)
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-      return "URL must start with http:// or https://"
+      return "URL 必须以 http:// 或 https:// 开头"
     }
     return undefined
   } catch {
-    return "Enter a valid URL, e.g. https://example.com"
+    return "输入有效的 URL，例如 https://example.com"
   }
 }
 
@@ -129,7 +129,7 @@ export function UrlFieldPopover({
     []
   )
 
-  const displayText = value ? value.label || value.url : "Add..."
+  const displayText = value ? value.label || value.url : "添加…"
   const triggerClassName = cn(
     "min-w-0 truncate text-right text-sm",
     value
@@ -191,11 +191,11 @@ export function UrlFieldPopover({
             event.preventDefault()
           }
         }}
-        aria-label={`Edit ${fieldLabel} URL`}
+        aria-label={`编辑 ${fieldLabel} URL`}
         className="w-[min(24rem,calc(100vw-2rem))] space-y-1 p-1.5"
       >
         <Input
-          placeholder="Display label"
+          placeholder={"显示标签"}
           value={labelDraft}
           onChange={(event) => setLabelDraft(event.target.value)}
           onKeyDown={handleInputKeyDown}
@@ -217,8 +217,8 @@ export function UrlFieldPopover({
             type="button"
             size="icon"
             variant="ghost"
-            title="Apply"
-            aria-label="Apply"
+            title={"应用"}
+            aria-label={"应用"}
             disabled={!canApply}
             onClick={handleApply}
             className="size-7 shrink-0"
@@ -230,8 +230,8 @@ export function UrlFieldPopover({
             type="button"
             size="icon"
             variant="ghost"
-            title="Open in new window"
-            aria-label="Open in new window"
+            title={"在新窗口中打开"}
+            aria-label={"在新窗口中打开"}
             disabled={!canOpen}
             onClick={handleOpenLink}
             className="size-7 shrink-0"
@@ -242,8 +242,8 @@ export function UrlFieldPopover({
             type="button"
             size="icon"
             variant="ghost"
-            title="Remove URL"
-            aria-label="Remove URL"
+            title={"移除 URL"}
+            aria-label={"移除 URL"}
             onClick={handleRemove}
             className="size-7 shrink-0"
           >

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Chat",
+  title: "对话",
 }
 
 export default function WorkspaceChatLayout({

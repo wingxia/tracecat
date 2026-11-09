@@ -86,9 +86,7 @@ export function FormFieldErrorBoundary({
       errorId={errorId}
       errorInfo={null}
     >
-      {fallbackInput || (
-        <Input placeholder="Simplified text input (error mode)" />
-      )}
+      {fallbackInput || <Input placeholder={"简化文本输入（错误模式）"} />}
     </FormFieldErrorFallback>
   )
 
@@ -197,9 +195,9 @@ export function TemplatePillErrorBoundary({
   }) => (
     <span
       className="cm-template-pill cm-template-error"
-      title={`Error: ${error?.message}`}
+      title={`错误：${error?.message}`}
     >
-      [Error]
+      [错误]
     </span>
   )
 

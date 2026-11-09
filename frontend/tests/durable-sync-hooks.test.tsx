@@ -369,7 +369,7 @@ it.each([true, false])(
     await act(async () => {
       await expect(
         result.current.pullWorkflows({ commit_sha: "abc" })
-      ).rejects.toThrow("Preview expired or is no longer ready")
+      ).rejects.toThrow("预览已过期或不再就绪")
     })
     expect(workflowsApplySyncOperation).not.toHaveBeenCalled()
     const fresh = {
@@ -431,7 +431,7 @@ it.each([403, 404, 503, "network"] as const)(
       await act(async () => {
         await expect(
           result.current.pullWorkflows({ commit_sha: "abc" })
-        ).rejects.toThrow("Preview expired or is no longer ready")
+        ).rejects.toThrow("预览已过期或不再就绪")
       })
       expect(workflowsApplySyncOperation).not.toHaveBeenCalled()
       const fresh = { ...operation, id: "fresh-operation" }
@@ -508,7 +508,7 @@ it.each([false, true])(
     await act(async () => {
       await expect(
         result.current.exportWorkspace({ operationId: ready.id })
-      ).rejects.toThrow("Preview expired or is no longer ready")
+      ).rejects.toThrow("预览已过期或不再就绪")
     })
     expect(workflowsApplySyncOperation).not.toHaveBeenCalled()
   }

@@ -110,7 +110,7 @@ const discoveryReady = {
   refetchBackends: mockRefetchBackends,
 }
 const multipleBackends = [
-  { id: "oss", name: "Open source" },
+  { id: "oss", name: "打开来源" },
   { id: "ee", name: "Enterprise" },
 ]
 
@@ -136,7 +136,7 @@ beforeEach(() => {
     backends: [
       {
         id: "oss",
-        name: "Open source",
+        name: "打开来源",
       },
     ],
   })
@@ -206,7 +206,7 @@ describe("ChatInterface backend selection", () => {
   it("hides the selector when only the built-in mode is available", () => {
     renderChat()
     expect(
-      screen.queryByRole("combobox", { name: "Backend (dev)" })
+      screen.queryByRole("combobox", { name: "后端（开发）" })
     ).not.toBeInTheDocument()
   })
 
@@ -223,7 +223,7 @@ describe("ChatInterface backend selection", () => {
     })
     renderChat({ surface: "regular" })
     expect(
-      screen.queryByRole("combobox", { name: "Backend (dev)" })
+      screen.queryByRole("combobox", { name: "后端（开发）" })
     ).not.toBeInTheDocument()
     expect(mockUseAgentBackends).toHaveBeenCalledWith("workspace-1", {
       enabled: false,
@@ -250,7 +250,7 @@ describe("ChatInterface backend selection", () => {
     })
     mockGetChat.mockReturnValue({ id: "chat-1", backend_id: "oss" })
     renderChat({ chatId: "chat-1" })
-    expect(screen.queryByText("Open source")).not.toBeInTheDocument()
+    expect(screen.queryByText("打开来源")).not.toBeInTheDocument()
   })
 
   it("keeps a new sidebar draft open when prior chats exist", async () => {
@@ -268,9 +268,9 @@ describe("ChatInterface backend selection", () => {
     ])
     mockGetChat.mockReturnValue({ id: "chat-1", backend_id: "oss" })
     renderChat({ surface: "regular" })
-    expect(screen.getByText("Open source")).toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "New chat" }))
-    fireEvent.click(screen.getByRole("button", { name: "Start new chat" }))
+    expect(screen.getByText("打开来源")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "新建对话" }))
+    fireEvent.click(screen.getByRole("button", { name: "开始新对话" }))
     expect(
       await screen.findByRole("button", { name: "Send first message" })
     ).toBeInTheDocument()
@@ -295,8 +295,8 @@ describe("ChatInterface backend selection", () => {
       backendsLoading: false,
     })
     renderChat({ surface: "regular" })
-    const selector = screen.getByRole("combobox", { name: "Backend (dev)" })
-    expect(selector).toHaveTextContent("Server default")
+    const selector = screen.getByRole("combobox", { name: "后端（开发）" })
+    expect(selector).toHaveTextContent("服务器默认")
     expect(mockCreateChat).not.toHaveBeenCalled()
     fireEvent.keyDown(selector, { key: "ArrowDown" })
     fireEvent.click(await screen.findByRole("option", { name: "Enterprise" }))
@@ -318,7 +318,7 @@ describe("ChatInterface backend selection", () => {
       })
       const { rerender } = renderChat({ surface: "regular" })
       fireEvent.keyDown(
-        screen.getByRole("combobox", { name: "Backend (dev)" }),
+        screen.getByRole("combobox", { name: "后端（开发）" }),
         {
           key: "ArrowDown",
         }
@@ -340,14 +340,14 @@ describe("ChatInterface backend selection", () => {
       )
       if (keepChoice) {
         expect(
-          screen.getByRole("combobox", { name: "Backend (dev)" })
-        ).toHaveTextContent("Server default")
+          screen.getByRole("combobox", { name: "后端（开发）" })
+        ).toHaveTextContent("服务器默认")
         fireEvent.click(
           screen.getByRole("button", { name: "Send first message" })
         )
       } else {
         expect(
-          screen.queryByRole("combobox", { name: "Backend (dev)" })
+          screen.queryByRole("combobox", { name: "后端（开发）" })
         ).not.toBeInTheDocument()
       }
       await waitFor(() => expect(mockCreateChat).toHaveBeenCalledTimes(1))
@@ -366,17 +366,15 @@ describe("ChatInterface backend selection", () => {
         backendsError: new Error("Discovery failed"),
       })
       renderChat({ surface })
-      expect(screen.getByRole("alert")).toHaveTextContent(
-        "Unable to load chat backends"
-      )
-      expect(screen.getByRole("button", { name: "New chat" })).toBeDisabled()
+      expect(screen.getByRole("alert")).toHaveTextContent("无法加载对话后端")
+      expect(screen.getByRole("button", { name: "新建对话" })).toBeDisabled()
       // The mock pane deliberately invokes the callback even when disabled.
       const sendButton = screen.queryByRole("button", {
         name: "Send first message",
       })
       if (sendButton) fireEvent.click(sendButton)
       expect(mockCreateChat).not.toHaveBeenCalled()
-      fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+      fireEvent.click(screen.getByRole("button", { name: "重试" }))
       expect(mockRefetchBackends).toHaveBeenCalledTimes(1)
     }
   )
@@ -405,7 +403,7 @@ describe("ChatInterface backend selection", () => {
     )
     expect(screen.queryByRole("alert")).not.toBeInTheDocument()
     expect(mockCreateChat).not.toHaveBeenCalled()
-    fireEvent.keyDown(screen.getByRole("combobox", { name: "Backend (dev)" }), {
+    fireEvent.keyDown(screen.getByRole("combobox", { name: "后端（开发）" }), {
       key: "ArrowDown",
     })
     fireEvent.click(await screen.findByRole("option", { name: "Enterprise" }))
@@ -453,7 +451,7 @@ describe("ChatInterface agent:execute gating", () => {
       await screen.findByText("agent:execute required")
     ).toBeInTheDocument()
     expect(mockCreateChat).not.toHaveBeenCalled()
-    expect(screen.getByRole("button", { name: "New chat" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "新建对话" })).toBeDisabled()
   })
 
   it("auto-creates a chat with agent:execute", async () => {
@@ -470,7 +468,7 @@ describe("ChatInterface agent:execute gating", () => {
 
     // Loading scopes hold creation and show no denial.
     expect(mockCreateChat).not.toHaveBeenCalled()
-    expect(screen.getByRole("button", { name: "New chat" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "新建对话" })).toBeDisabled()
     expect(screen.queryByText("agent:execute required")).not.toBeInTheDocument()
 
     setScopeResult("agent:execute", true)
@@ -528,9 +526,9 @@ describe("ChatInterface model readiness", () => {
     })
     renderChat({ surface: "regular" })
 
-    expect(screen.getByText("Default model not enabled")).toBeInTheDocument()
+    expect(screen.getByText("默认模型未启用")).toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: /No default model/ })
+      screen.queryByRole("link", { name: /没有默认模型/ })
     ).not.toBeInTheDocument()
   })
 
@@ -543,10 +541,8 @@ describe("ChatInterface model readiness", () => {
     })
     renderChat({ surface: "regular" })
 
-    expect(screen.getByText("Workspace models disabled")).toBeInTheDocument()
-    expect(
-      screen.getByText(/organization admin can enable more models/)
-    ).toBeInTheDocument()
+    expect(screen.getByText("工作空间模型已禁用")).toBeInTheDocument()
+    expect(screen.getByText(/组织管理员也可启用更多模型/)).toBeInTheDocument()
   })
 
   it("keeps an existing chat's transcript when no model is usable", () => {
@@ -571,9 +567,7 @@ describe("ChatInterface model readiness", () => {
       "data-input-disabled",
       "true"
     )
-    expect(
-      screen.queryByText("Default model not enabled")
-    ).not.toBeInTheDocument()
+    expect(screen.queryByText("默认模型未启用")).not.toBeInTheDocument()
   })
 
   it("shows the role denial instead of model setup without agent:execute", () => {
@@ -588,7 +582,7 @@ describe("ChatInterface model readiness", () => {
 
     expect(screen.getByText("agent:execute required")).toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: /No default model/ })
+      screen.queryByRole("link", { name: /没有默认模型/ })
     ).not.toBeInTheDocument()
   })
 
@@ -600,9 +594,10 @@ describe("ChatInterface model readiness", () => {
     })
     renderChat({ surface: "regular" })
 
-    expect(
-      screen.getByRole("link", { name: /No default model/ })
-    ).toHaveAttribute("href", "/organization/settings/agent")
+    expect(screen.getByRole("link", { name: /没有默认模型/ })).toHaveAttribute(
+      "href",
+      "/organization/settings/agent"
+    )
   })
 })
 
@@ -617,16 +612,16 @@ describe("ChatInterface session fetch errors", () => {
     renderChat({ chatId: "chat-1" })
 
     expect(screen.getByText("Transcript of chat-1")).toBeInTheDocument()
-    expect(screen.queryByText("Failed to load chat")).not.toBeInTheDocument()
+    expect(screen.queryByText("加载对话失败")).not.toBeInTheDocument()
   })
 
   it("offers a retry when the session never loaded", () => {
     mockGetChatError.mockReturnValue(new Error("boom"))
     renderChat({ chatId: "chat-1" })
 
-    expect(screen.getByText("Failed to load chat")).toBeInTheDocument()
-    expect(screen.getByLabelText("New chat")).toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+    expect(screen.getByText("加载对话失败")).toBeInTheDocument()
+    expect(screen.getByLabelText("新建对话")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "重试" }))
     expect(mockRefetchChat).toHaveBeenCalledTimes(1)
   })
 })

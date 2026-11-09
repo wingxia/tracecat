@@ -161,7 +161,7 @@ function EmbeddedTableArtifact({
     return (
       <div className="p-4">
         <AlertNotification
-          message={tableError?.message ?? "Error loading table"}
+          message={tableError?.message ?? "加载数据表出错"}
           variant="error"
         />
       </div>
@@ -209,7 +209,7 @@ function EmbeddedAgentArtifact({
     return (
       <div className="p-4">
         <AlertNotification
-          message={presetError?.message ?? "Error loading agent"}
+          message={presetError?.message ?? "加载智能体出错"}
           variant="error"
         />
       </div>
@@ -256,7 +256,7 @@ function ArtifactSummary({
             <Button size="sm" variant="outline" className="h-8 gap-1.5" asChild>
               <Link href={href}>
                 <ExternalLink className="size-3.5" />
-                Open full view
+                打开完整视图
               </Link>
             </Button>
           ) : null}
@@ -271,15 +271,15 @@ function ArtifactFields({ artifact }: { artifact: WorkspaceChatArtifact }) {
     case "run":
       return (
         <dl className="grid grid-cols-[6rem_1fr] gap-x-3 gap-y-2">
-          <ArtifactField label="Status" value={artifact.status} />
-          <ArtifactField label="Started" value={artifact.startedAt} />
-          <ArtifactField label="Run ID" value={artifact.id} monospace />
+          <ArtifactField label={"状态"} value={artifact.status} />
+          <ArtifactField label={"开始时间"} value={artifact.startedAt} />
+          <ArtifactField label={"运行 ID"} value={artifact.id} monospace />
         </dl>
       )
     case "form":
       return (
         <dl className="grid grid-cols-[6rem_1fr] gap-x-3 gap-y-2">
-          <ArtifactField label="Status" value={artifact.status ?? "unknown"} />
+          <ArtifactField label={"状态"} value={artifact.status ?? "unknown"} />
         </dl>
       )
     case "generic":

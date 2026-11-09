@@ -157,15 +157,15 @@ function remapDraftChangesAfterMove(
 function describeMoveError(error: unknown): string {
   switch (getApiErrorCode(error)) {
     case "move_target_exists":
-      return "A file already exists at that path."
+      return "此路径已存在文件。"
     case "move_source_not_found":
-      return "The original file no longer exists."
+      return "原始文件已不存在。"
     case "skill_md_immovable":
-      return "SKILL.md must stay at the root of the skill."
+      return "SKILL.md 必须保留在技能根目录。"
     case "invalid_move":
-      return "Source and destination must differ."
+      return "源位置和目标位置必须不同。"
     default:
-      return getApiErrorDetail(error) ?? "Failed to move file."
+      return getApiErrorDetail(error) ?? "移动文件失败。"
   }
 }
 
@@ -443,12 +443,12 @@ export function useSkillsStudio(params: {
       return
     }
     if (visibleFiles.some((file) => file.path === path)) {
-      setPendingCreateError("A file at that path already exists.")
+      setPendingCreateError("此路径下已存在文件。")
       return
     }
     if (!isEditablePath(path)) {
       setPendingCreateError(
-        "Only text file types (.md, .py, .ts, .json, .yaml, …) can be created inline."
+        "仅支持在线创建文本类型的文件，如 .md、.py、.ts、.json、.yaml。"
       )
       return
     }
@@ -489,8 +489,8 @@ export function useSkillsStudio(params: {
       const sourcePrefix = `${moveSource.fromPath}/`
       if (toFolderPath !== null && toFolderPath === moveSource.fromPath) {
         toast({
-          title: "Move skipped",
-          description: "Source and destination are the same.",
+          title: "已跳过移动",
+          description: "源位置与目标位置相同。",
         })
         setMoveSource(null)
         return
@@ -501,8 +501,8 @@ export function useSkillsStudio(params: {
           toFolderPath.startsWith(sourcePrefix))
       ) {
         toast({
-          title: "Invalid move",
-          description: "Cannot move a folder into itself.",
+          title: "移动无效",
+          description: "无法将文件夹移入自身。",
           variant: "destructive",
         })
         return
@@ -569,7 +569,7 @@ export function useSkillsStudio(params: {
       setMoveSource(null)
     } catch (error) {
       toast({
-        title: "Move failed",
+        title: "移动失败",
         description: describeMoveError(error),
       })
     }
@@ -606,7 +606,7 @@ export function useSkillsStudio(params: {
       return
     }
     if (renameTarget.isFolder && newPath === SKILL_MD_PATH) {
-      setRenameError("That path is reserved for the root SKILL.md file.")
+      setRenameError("此路径保留给根目录的 SKILL.md 文件。")
       return
     }
 
@@ -617,7 +617,7 @@ export function useSkillsStudio(params: {
         newPath === renameTarget.fromPath ||
         newPath.startsWith(sourcePrefix)
       ) {
-        setRenameError("Cannot rename a folder into itself.")
+        setRenameError("无法将文件夹重命名到其自身内部。")
         return
       }
       const movedFiles = visibleFiles.filter(
@@ -639,9 +639,7 @@ export function useSkillsStudio(params: {
       }
     } else {
       if (!isEditablePath(newPath)) {
-        setRenameError(
-          "File extension must remain compatible (for example .md, .py, .ts, .json)."
-        )
+        setRenameError("文件扩展名必须保持兼容，例如 .md、.py、.ts、.json。")
         return
       }
       operations.push({
@@ -759,8 +757,8 @@ export function useSkillsStudio(params: {
       })
     } catch (error) {
       toast({
-        title: "Save failed",
-        description: getApiErrorDetail(error) ?? "Failed to save working copy.",
+        title: "保存失败",
+        description: getApiErrorDetail(error) ?? "保存工作副本失败。",
         variant: "destructive",
       })
     } finally {
@@ -774,8 +772,8 @@ export function useSkillsStudio(params: {
       await publishSkill({ skillId })
     } catch (error) {
       toast({
-        title: "Publish failed",
-        description: getApiErrorDetail(error) ?? "Failed to publish skill.",
+        title: "发布失败",
+        description: getApiErrorDetail(error) ?? "发布技能失败。",
         variant: "destructive",
       })
     }

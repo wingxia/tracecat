@@ -20,10 +20,10 @@ export default function MembersPage() {
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
             <h2 className="text-2xl font-semibold tracking-tight">
-              Members and access control
+              成员与访问控制
             </h2>
             <p className="text-md text-muted-foreground">
-              Manage organization members, roles, and groups.
+              管理组织成员、角色和用户组。
             </p>
           </div>
         </div>
@@ -36,13 +36,13 @@ export default function MembersPage() {
             <Tabs defaultValue="members" className="w-full">
               <TabsList className="inline-flex h-auto w-auto justify-start gap-0 rounded-none border-b border-border/30 bg-transparent p-0">
                 <TabsTrigger value="members" className={tabTriggerClassName}>
-                  Members
+                  成员
                 </TabsTrigger>
                 <TabsTrigger value="roles" className={tabTriggerClassName}>
-                  Roles
+                  角色
                 </TabsTrigger>
                 <TabsTrigger value="groups" className={tabTriggerClassName}>
-                  Groups
+                  用户组
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="members" className="mt-6">

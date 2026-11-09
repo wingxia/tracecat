@@ -33,10 +33,10 @@ const REVEAL =
 type RerunFilter = "all" | "fixed" | "runs" | "unmatched"
 
 const FILTERS: { id: RerunFilter; title: string }[] = [
-  { id: "all", title: "All actions" },
-  { id: "fixed", title: "Fixed" },
-  { id: "runs", title: "Runs again" },
-  { id: "unmatched", title: "Can't reuse" },
+  { id: "all", title: "所有动作" },
+  { id: "fixed", title: "已固定" },
+  { id: "runs", title: "将重新运行" },
+  { id: "unmatched", title: "无法复用" },
 ]
 
 /** Rerun a past execution against the draft or a published version. */
@@ -68,9 +68,7 @@ export function WorkflowRerunDialog({
           }}
           className="flex h-[min(88dvh,800px)] w-[min(96vw,1120px)] max-w-none flex-col gap-0 overflow-hidden p-0 shadow-none [&>button]:hidden"
         >
-          <DialogTitle className="sr-only">
-            Rerun with fixed results
-          </DialogTitle>
+          <DialogTitle className="sr-only">使用固定结果重新运行</DialogTitle>
           <RerunBody
             executionId={executionId}
             workflowId={workflowId}
@@ -212,13 +210,13 @@ function RerunBody({
         <Search className="size-4 text-muted-foreground" />
         <input
           ref={searchRef}
-          aria-label="Search actions"
+          aria-label={"搜索动作"}
           value={query}
           onChange={(event) => {
             setQuery(event.target.value)
             listRef.current?.scrollTo({ top: 0 })
           }}
-          placeholder={`Search ${counts.all.toLocaleString()} actions`}
+          placeholder={`搜索 ${counts.all.toLocaleString("zh-CN")} 个动作`}
           className="h-9 min-w-0 flex-1 border-0 bg-transparent text-sm outline-none focus-visible:ring-0"
         />
         {(rerunPlanIsLoading || rerunExecutionIsPending) && (
@@ -228,10 +226,10 @@ function RerunBody({
       </div>
       <div className="flex min-h-0 flex-1">
         <nav
-          aria-label="Rerun options"
+          aria-label={"重新运行选项"}
           className="w-48 shrink-0 overflow-y-auto border-r py-2 md:w-60"
         >
-          <RailLabel>Show</RailLabel>
+          <RailLabel>显示</RailLabel>
           {FILTERS.map((item) => (
             <RailButton
               key={item.id}
@@ -246,9 +244,9 @@ function RerunBody({
               {item.title}
             </RailButton>
           ))}
-          <RailLabel>Run against</RailLabel>
+          <RailLabel>运行版本</RailLabel>
           <RailButton active={useDraft} onClick={() => setTarget(DRAFT_TARGET)}>
-            Draft
+            草稿
           </RailButton>
           {definitions?.map((defn) => (
             <RailButton
@@ -256,7 +254,7 @@ function RerunBody({
               active={target === String(defn.version)}
               onClick={() => setTarget(String(defn.version))}
             >
-              Version {defn.version}
+              版本 {defn.version}
             </RailButton>
           ))}
         </nav>
@@ -270,7 +268,7 @@ function RerunBody({
           <div
             ref={listRef}
             role="list"
-            aria-label="Actions"
+            aria-label={"动作"}
             className="min-h-0 flex-1 overflow-auto"
           >
             <div
@@ -308,17 +306,15 @@ function RerunBody({
               })}
             </div>
             {rerunPlan && rows.length === 0 && (
-              <p className="p-4 text-sm text-muted-foreground">
-                No actions found.
-              </p>
+              <p className="p-4 text-sm text-muted-foreground">未找到动作。</p>
             )}
           </div>
         </div>
       </div>
       <div className="flex h-14 shrink-0 items-center gap-2 border-t px-4 text-xs">
         <span>
-          {selected.size} of {fixable.size} reusable{" "}
-          {fixable.size === 1 ? "result" : "results"} fixed
+          {selected.size} / {fixable.size} 可复用{" "}
+          {fixable.size === 1 ? "个结果" : "个结果"} 已固定
         </span>
         <Button
           type="button"
@@ -328,7 +324,7 @@ function RerunBody({
           disabled={fixable.size === 0 || selected.size === fixable.size}
           onClick={() => setSelected(new Set(fixable))}
         >
-          Fix all
+          全部固定
         </Button>
         <Button
           type="button"
@@ -338,7 +334,7 @@ function RerunBody({
           disabled={selected.size === 0}
           onClick={() => setSelected(new Set())}
         >
-          Fix none
+          取消所有固定
         </Button>
         <Button
           type="button"
@@ -347,7 +343,7 @@ function RerunBody({
           className="ml-auto"
           onClick={onCancel}
         >
-          Cancel
+          取消
         </Button>
         <Button
           type="button"
@@ -356,7 +352,9 @@ function RerunBody({
           onClick={handleRun}
           disabled={runDisabled}
         >
-          {selected.size > 0 ? `Rerun with ${selected.size} fixed` : "Rerun"}
+          {selected.size > 0
+            ? `固定 ${selected.size} 个结果并重新运行`
+            : "重新运行"}
         </Button>
       </div>
     </>
@@ -402,7 +400,7 @@ function RailButton({
             warn && "text-amber-600 dark:text-amber-400"
           )}
         >
-          {count.toLocaleString()}
+          {count.toLocaleString("zh-CN")}
         </span>
       )}
     </button>
@@ -424,7 +422,7 @@ function PlanNotices({
   if (error) {
     notices.push(
       <Notice key="error" tone="error">
-        Could not match this run: {getErrorMessage(error)}
+        无法匹配此运行记录： {getErrorMessage(error)}
       </Notice>
     )
   }
@@ -432,7 +430,7 @@ function PlanNotices({
     notices.push(
       <Notice key="inputs" tone="error">
         <span className="whitespace-pre-wrap">
-          Inputs don&apos;t match the target: {plan.inputs_error}
+          输入与目标不匹配： {plan.inputs_error}
         </span>
       </Notice>
     )
@@ -441,8 +439,8 @@ function PlanNotices({
     notices.push(
       <Notice key="unmatched" tone="warn">
         {plan.unmatched_refs.length}{" "}
-        {plan.unmatched_refs.length === 1 ? "result" : "results"} can&apos;t be
-        reused: the target has no matching action.
+        {plan.unmatched_refs.length === 1 ? "个结果" : "个结果"}{" "}
+        无法复用：目标中没有匹配的动作。
       </Notice>
     )
   }
@@ -454,8 +452,8 @@ function PlanNotices({
       >
         <RotateCcwIcon className="size-3.5 text-muted-foreground" />
         <span>
-          Rerunning from <span className="font-mono">{rerunFromRef}</span> and
-          everything after it
+          重新运行起点： <span className="font-mono">{rerunFromRef}</span>{" "}
+          及其后的所有动作
         </span>
         <Button
           type="button"
@@ -465,7 +463,7 @@ function PlanNotices({
           onClick={onClearRerunFrom}
         >
           <XIcon className="size-3" />
-          Clear
+          清除
         </Button>
       </div>
     )
@@ -524,7 +522,7 @@ function ActionRow({
       <span className="flex w-4 shrink-0 items-center justify-center">
         {fixable && (
           <Checkbox
-            aria-label={`Fix ${action.ref}`}
+            aria-label={`固定 ${action.ref}`}
             checked={fixed}
             onClick={(event) => event.stopPropagation()}
             onCheckedChange={() => onToggle(action.ref)}
@@ -548,7 +546,7 @@ function ActionRow({
           }}
         >
           <RotateCcwIcon className="size-3" />
-          Rerun from here
+          从此处重新运行
         </Button>
       )}
       <RerunStatus action={action} fixed={fixed} />
@@ -568,7 +566,7 @@ function RerunStatus({
     case "not_in_target":
       return (
         <Badge variant="outline" className={cn(badge, "text-amber-600")}>
-          Not in target
+          目标中不存在
         </Badge>
       )
     case "action_changed":
@@ -578,7 +576,7 @@ function RerunStatus({
           className={cn(badge, "text-amber-600")}
           title={action.reason ?? undefined}
         >
-          Action changed
+          动作已更改
         </Badge>
       )
     default:
@@ -586,7 +584,7 @@ function RerunStatus({
         return (
           <Badge variant="secondary" className={cn(badge, "gap-1")}>
             <PinIcon className="size-2.5" />
-            Fixed
+            已固定
           </Badge>
         )
       }
@@ -595,7 +593,7 @@ function RerunStatus({
           className="max-w-56 shrink-0 truncate text-muted-foreground"
           title={action.reason ?? undefined}
         >
-          {action.reason ? `Runs · ${action.reason}` : "Runs"}
+          {action.reason ? `运行记录 · ${action.reason}` : "运行记录"}
         </span>
       )
   }
@@ -616,5 +614,5 @@ function getErrorMessage(body: unknown): string {
       return detail.message
     }
   }
-  return "Unexpected error"
+  return "意外错误"
 }

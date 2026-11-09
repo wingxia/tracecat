@@ -126,7 +126,7 @@ export function CasePanelSwitcher({
     <div
       ref={tablistRef}
       role="tablist"
-      aria-label="Case sections"
+      aria-label={"事件分区"}
       aria-orientation="horizontal"
       className={cn(
         "flex items-center",

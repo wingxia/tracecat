@@ -42,27 +42,27 @@ export function SkillsCatalogViewToggle({
     {
       mode: SkillsCatalogViewMode.Skills,
       icon: Pyramid,
-      tooltip: "Skills",
+      tooltip: "技能",
       href: skillsHref,
-      ariaLabel: "Skills view",
+      ariaLabel: "技能视图",
     },
     ...(tagsHref
       ? [
           {
             mode: SkillsCatalogViewMode.Tags,
             icon: TagIcon,
-            tooltip: "Skill tags",
+            tooltip: "技能标签",
             href: tagsHref,
-            ariaLabel: "Skill tags view",
+            ariaLabel: "技能标签视图",
           },
         ]
       : []),
     {
       mode: SkillsCatalogViewMode.Library,
       icon: LibraryIcon,
-      tooltip: "Skill library",
+      tooltip: "技能库",
       href: libraryHref,
-      ariaLabel: "Skill library view",
+      ariaLabel: "技能库视图",
     },
   ]
 

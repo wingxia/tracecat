@@ -67,7 +67,7 @@ export function SkillLibraryActionButton({
             variant="ghost"
             className="h-full rounded-l-none px-1.5"
             disabled={disabled}
-            aria-label="More actions"
+            aria-label={"更多操作"}
           >
             <ChevronDownIcon className="size-3.5" />
           </Button>

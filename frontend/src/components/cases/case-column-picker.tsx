@@ -123,7 +123,7 @@ export function CaseColumnPicker({
           )}
         >
           <SlidersHorizontalIcon className="size-3.5 text-muted-foreground" />
-          <span>Display</span>
+          <span>显示</span>
           {selectedCount > 0 && (
             <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
               {selectedCount}
@@ -138,17 +138,14 @@ export function CaseColumnPicker({
         sideOffset={4}
       >
         <Command>
-          <CommandInput
-            placeholder="Search columns..."
-            className="h-8 text-xs"
-          />
+          <CommandInput placeholder={"搜索列…"} className="h-8 text-xs" />
           <CommandList>
             <CommandEmpty className="py-3 text-center text-xs text-muted-foreground">
-              No columns found.
+              未找到列。
             </CommandEmpty>
 
             {dropdownDefinitions && dropdownDefinitions.length > 0 && (
-              <CommandGroup heading="Dropdowns">
+              <CommandGroup heading={"下拉选项"}>
                 {dropdownDefinitions.map((def) => {
                   const columnId = `dropdown:${def.ref}`
                   const isSelected = visibleColumnIds.includes(columnId)
@@ -181,7 +178,7 @@ export function CaseColumnPicker({
             )}
 
             {nonReservedFields.length > 0 && (
-              <CommandGroup heading="Fields">
+              <CommandGroup heading={"字段"}>
                 {nonReservedFields.map((field) => {
                   const columnId = `field:${field.id}`
                   const isSelected = visibleColumnIds.includes(columnId)
@@ -204,7 +201,7 @@ export function CaseColumnPicker({
             )}
 
             {durationDefinitions && durationDefinitions.length > 0 && (
-              <CommandGroup heading="Durations">
+              <CommandGroup heading={"时长指标"}>
                 {durationDefinitions.map((def) => {
                   const columnId = `duration:${def.id}`
                   const isSelected = visibleColumnIds.includes(columnId)

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Actions",
+  title: "动作",
 }
 
 export default function ActionsLayout({

@@ -54,7 +54,7 @@ export function WorkflowExecutionEventHistory({
             latestEvent.close_time ||
               latestEvent.start_time ||
               latestEvent.schedule_time
-          ).toLocaleTimeString()
+          ).toLocaleTimeString("zh-CN")
         : "-"
       const childWorkflowRunLink = getChildWorkflowRunLink(
         relatedEvents,
@@ -86,10 +86,10 @@ export function WorkflowExecutionEventHistory({
         {execution.status === "RUNNING" ? (
           <div className="flex items-center justify-center gap-2">
             <Spinner className="size-3" />
-            <span>Waiting for events...</span>
+            <span>正在等待执行事件…</span>
           </div>
         ) : (
-          <span>No events</span>
+          <span>暂无执行事件</span>
         )}
       </div>
     )
@@ -113,7 +113,7 @@ export function WorkflowExecutionEventHistory({
         latestEvent?.action_name === "core.loop.start" ? loopMeta : undefined
       const loopTooltip =
         latestEvent?.action_name === "core.loop.start" && loopMeta
-          ? `Iteration ${loopMeta}`
+          ? `迭代 ${loopMeta}`
           : loopMeta
 
       return {
@@ -126,11 +126,11 @@ export function WorkflowExecutionEventHistory({
               <TooltipTrigger asChild>
                 <span className="inline-flex items-center gap-0.5">
                   <PinIcon className="size-2.5" />
-                  Fixed
+                  已固定
                 </span>
               </TooltipTrigger>
               <TooltipContent side="top" className="font-mono tracking-tight">
-                Result reused from {latestEvent.fixed_from_execution_id}
+                结果复用自 {latestEvent.fixed_from_execution_id}
               </TooltipContent>
             </Tooltip>
           ) : undefined),
@@ -171,7 +171,7 @@ export function WorkflowExecutionEventHistory({
               onSelect={() => onRerunFrom(actionRef)}
             >
               <RotateCcwIcon className="size-3.5" />
-              Rerun from this action
+              从此动作重新运行
             </ContextMenuItem>
           ) : undefined,
       }

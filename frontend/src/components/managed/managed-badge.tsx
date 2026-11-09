@@ -32,14 +32,14 @@ export function ManagedBadge({
   const relative = formatRelative(deployedAt)
   const absolute = Number.isNaN(deployedAt.getTime())
     ? null
-    : deployedAt.toLocaleString()
+    : deployedAt.toLocaleString("zh-CN")
   // The tooltip is pointer-only, so its details also go in the accessible
   // name for keyboard and screen reader users. The name leaves out "detach",
   // since many places that show the badge have no detach control.
   const ariaLabel = [
-    "Managed by Tracecat",
-    `deployed from tag ${managed.deployed_tag}`,
-    relative ? `last rollout ${relative}` : null,
+    "由 Tracecat 托管",
+    `部署自标签 ${managed.deployed_tag}`,
+    relative ? `上次部署 ${relative}` : null,
   ]
     .filter(Boolean)
     .join(", ")
@@ -58,16 +58,14 @@ export function ManagedBadge({
             )}
           >
             <LockKeyholeIcon className="size-3" />
-            {!compact && <span>Managed by Tracecat</span>}
+            {!compact && <span>由 Tracecat 托管</span>}
           </span>
         </TooltipTrigger>
         <TooltipContent className="max-w-xs space-y-1">
-          <p className="font-medium">Managed by Tracecat</p>
-          <p>Deployed from tag {managed.deployed_tag}</p>
-          {relative && (
-            <p title={absolute ?? undefined}>Last rollout {relative}</p>
-          )}
-          <p>Detach to edit.</p>
+          <p className="font-medium">由 Tracecat 托管</p>
+          <p>部署来源标签 {managed.deployed_tag}</p>
+          {relative && <p title={absolute ?? undefined}>上次部署 {relative}</p>}
+          <p>创建独立副本以编辑。</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -90,7 +88,7 @@ export function DetachedNote({ detached, className }: DetachedNoteProps) {
       )}
     >
       <UnlinkIcon className="size-3" />
-      Detached from {detached.original_name}
+      副本来源 {detached.original_name}
     </span>
   )
 }

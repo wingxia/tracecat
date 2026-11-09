@@ -543,16 +543,16 @@ function envValueIssues(spec: OTelEnvSpec, value: string): string[] {
       ? parts.map((part) => part.toLowerCase())
       : parts
     if (normalizedParts.some((part) => !allowed.has(part))) {
-      issues.push(`${spec.key} supports ${spec.values.join(", ")}.`)
+      issues.push(`${spec.key} 支持 ${spec.values.join("、")}。`)
     }
   }
   if (POSITIVE_INTEGER_KEYS.has(spec.key)) {
     if (!/^[1-9]\d*$/.test(value)) {
-      issues.push(`${spec.key} must be a positive integer.`)
+      issues.push(`${spec.key} 必须为正整数。`)
     } else if (!Number.isSafeInteger(Number(value))) {
       // Number.parseInt would silently round (or overflow to Infinity,
       // serialized as null) before submission.
-      issues.push(`${spec.key} must be at most ${Number.MAX_SAFE_INTEGER}.`)
+      issues.push(`${spec.key} 不能超过 ${Number.MAX_SAFE_INTEGER}。`)
     }
   }
   if (spec.key === ENDPOINT_KEY) {
@@ -560,25 +560,25 @@ function envValueIssues(spec: OTelEnvSpec, value: string): string[] {
     try {
       endpoint = new URL(value)
     } catch {
-      issues.push(`${spec.key} must be an absolute HTTP(S) URL.`)
+      issues.push(`${spec.key} 必须为绝对 HTTP(S) URL。`)
       return issues
     }
     if (
       (endpoint.protocol !== "http:" && endpoint.protocol !== "https:") ||
       !endpoint.hostname
     ) {
-      issues.push(`${spec.key} must be an absolute HTTP(S) URL.`)
+      issues.push(`${spec.key} 必须为绝对 HTTP(S) URL。`)
     }
     if (endpoint.username || endpoint.password) {
-      issues.push(`${spec.key} must not include credentials.`)
+      issues.push(`${spec.key} 不能包含凭据。`)
     }
     // Check the raw string: URL.search/hash are "" for a bare "?" or "#",
     // after which the relay would append the OTLP path past the delimiter.
     if (value.includes("?")) {
-      issues.push(`${spec.key} must not include a query string.`)
+      issues.push(`${spec.key} 不能包含查询字符串。`)
     }
     if (value.includes("#")) {
-      issues.push(`${spec.key} must not include a fragment.`)
+      issues.push(`${spec.key} 不能包含片段标识。`)
     }
   }
   if (spec.key === "OTEL_RESOURCE_ATTRIBUTES") {
@@ -588,7 +588,7 @@ function envValueIssues(spec: OTelEnvSpec, value: string): string[] {
       issues.push(
         error instanceof Error
           ? error.message
-          : "OTEL_RESOURCE_ATTRIBUTES is invalid."
+          : "OTEL_RESOURCE_ATTRIBUTES 无效。"
       )
     }
   }
@@ -611,16 +611,16 @@ export function validateEnvMap(
 
   for (const [key, value] of Object.entries(env)) {
     if (RESERVED_ENV_VARS.has(key)) {
-      issues.push(`${key} is managed by Tracecat.`)
+      issues.push(`${key} 由 Tracecat 管理。`)
       continue
     }
     const spec = OTEL_ENV_SPEC_BY_KEY.get(key)
     if (!spec) {
-      issues.push(`${key} is not supported.`)
+      issues.push(`不支持 ${key}。`)
       continue
     }
     if (value.trim() === "") {
-      issues.push(`${key} needs a value.`)
+      issues.push(`${key} 需要填写值。`)
       continue
     }
     for (const message of envValueIssues(spec, value)) {
@@ -634,7 +634,7 @@ export function validateEnvMap(
       const value = env[exporterKey]
       if (value === undefined) continue
       if (value.trim().toLowerCase() === "otlp" && !generic) {
-        issues.push(`${exporterKey}=otlp needs ${ENDPOINT_KEY}.`)
+        issues.push(`${exporterKey}=otlp 需要配置 ${ENDPOINT_KEY}。`)
       }
     }
   }
@@ -659,7 +659,7 @@ export function validateForm(
   const signalOn =
     form.signals.traces || form.signals.metrics || form.signals.logs
   if (requireOtlpEndpoint && signalOn && form.endpoint.trim() === "") {
-    issues.push("Add a collector endpoint to export the selected signals.")
+    issues.push("添加收集器端点以导出所选信号。")
   }
   return issues
 }
@@ -686,22 +686,20 @@ export function validateAgentOtelHeaderEntries(
   for (const entry of entries) {
     const name = entry.name.trim()
     if (!name || !entry.value.trim()) {
-      return ["Headers must map non-empty names to non-empty string values."]
+      return ["请求头的名称和值都必须为非空字符串。"]
     }
     if (!HEADER_NAME_PATTERN.test(name)) {
       return [
-        `Header name ${name} is not a valid HTTP header name ` +
+        `请求头名称 ${name} 不是有效的 HTTP 请求头名称 ` +
           "(letters, digits, and !#$%&'*+-.^_`|~).",
       ]
     }
     if (HEADER_VALUE_INVALID_PATTERN.test(entry.value)) {
-      return [
-        `Header ${name} value must contain only printable ASCII characters.`,
-      ]
+      return [`请求头 ${name} 的值只能包含可打印的 ASCII 字符。`]
     }
     const normalizedName = name.toLowerCase()
     if (seenNames.has(normalizedName)) {
-      return [`Header name ${name} is duplicated.`]
+      return [`请求头名称 ${name} 重复。`]
     }
     seenNames.add(normalizedName)
   }

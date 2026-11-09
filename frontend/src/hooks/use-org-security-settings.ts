@@ -41,21 +41,21 @@ export function useOrgSecuritySettings() {
         queryKey: ORG_SECURITY_SETTINGS_QUERY_KEY,
       })
       toast({
-        title: "Updated IP allowlist",
-        description: "Organization IP allowlist saved successfully.",
+        title: "已更新 IP 白名单",
+        description: "已成功保存组织 IP 白名单。",
       })
     },
     onError: (error) => {
       if (error.status === 403) {
         toast({
-          title: "Forbidden",
-          description: "You cannot perform this action",
+          title: "禁止访问",
+          description: "你无法执行此操作",
         })
         return
       }
       toast({
-        title: "Failed to update IP allowlist",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "更新 IP 白名单失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },

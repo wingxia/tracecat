@@ -130,12 +130,12 @@ export function OrgRegistryVersionsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">Commit</TableHead>
-            <TableHead>Message</TableHead>
-            <TableHead className="w-[110px]">Status</TableHead>
-            <TableHead className="w-[130px]">Synced</TableHead>
+            <TableHead className="w-[200px]">提交</TableHead>
+            <TableHead>消息</TableHead>
+            <TableHead className="w-[110px]">状态</TableHead>
+            <TableHead className="w-[130px]">已同步</TableHead>
             <TableHead className="w-10">
-              <span className="sr-only">Actions</span>
+              <span className="sr-only">动作</span>
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -148,7 +148,7 @@ export function OrgRegistryVersionsTable({
                     colSpan={COLUMN_COUNT}
                     className="bg-muted/40 py-1.5 text-xs text-muted-foreground"
                   >
-                    Other synced versions
+                    其他已同步版本
                   </TableCell>
                 </TableRow>
               )}
@@ -225,7 +225,7 @@ function VersionTableRow({
               {commit.message.split("\n")[0]}
             </p>
             <p className="text-xs text-muted-foreground">
-              {commit.author || "Unknown"} ·{" "}
+              {commit.author || "未知"} ·{" "}
               {getRelativeTime(new Date(commit.date))}
             </p>
           </div>
@@ -247,7 +247,7 @@ function VersionTableRow({
                 variant="ghost"
                 size="icon"
                 className="size-7"
-                aria-label="Version actions"
+                aria-label={"版本操作"}
               >
                 {isPending ? (
                   <Spinner className="size-3.5" />
@@ -263,7 +263,7 @@ function VersionTableRow({
                   onSelect={() => onSyncCommit(commit)}
                 >
                   <RefreshCcw className="mr-2 size-4" />
-                  Sync this commit
+                  同步此提交
                 </DropdownMenuItem>
               )}
               {showPromote && version && (
@@ -272,13 +272,13 @@ function VersionTableRow({
                   onSelect={() => onPromote(version)}
                 >
                   <ArrowUpIcon className="mr-2 size-4" />
-                  Promote
+                  提升
                 </DropdownMenuItem>
               )}
               {showCompare && version && (
                 <DropdownMenuItem onSelect={() => onCompare(version)}>
                   <DiffIcon className="mr-2 size-4" />
-                  Compare…
+                  比较…
                 </DropdownMenuItem>
               )}
               {showDelete && version && (
@@ -290,7 +290,7 @@ function VersionTableRow({
                     className="text-destructive focus:text-destructive"
                   >
                     <Trash2Icon className="mr-2 size-4" />
-                    Delete
+                    删除
                   </DropdownMenuItem>
                 </>
               )}
@@ -304,12 +304,12 @@ function VersionTableRow({
 
 function VersionStatus({ row }: { row: VersionRow }) {
   if (row.isCurrent) {
-    return <Badge variant="default">Current</Badge>
+    return <Badge variant="default">当前</Badge>
   }
   if (row.version) {
-    return <Badge variant="secondary">Synced</Badge>
+    return <Badge variant="secondary">已同步</Badge>
   }
-  return <span className="text-xs text-muted-foreground">Not synced</span>
+  return <span className="text-xs text-muted-foreground">尚未同步</span>
 }
 
 /** Part of the version name that isn't the bare commit SHA, if any. */

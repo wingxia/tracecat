@@ -79,14 +79,14 @@ export function PlatformRegistryVersionsTable() {
         versionId: version.id,
       })
       toast({
-        title: "Version promoted",
-        description: `Version ${version.version} is now the current version.`,
+        title: "已提升版本",
+        description: `版本 ${version.version} 已设为当前版本。`,
       })
     } catch (error) {
       console.error("Failed to promote version", error)
       toast({
-        title: "Failed to promote version",
-        description: "Please try again.",
+        title: "提升版本失败",
+        description: "请重试。",
         variant: "destructive",
       })
     } finally {
@@ -102,16 +102,16 @@ export function PlatformRegistryVersionsTable() {
         version_ids: selectedVersions.map((version) => version.id),
       })
       toast({
-        title: "Artifact backfill started",
-        description: `Workflow ${result.workflow_id} queued ${result.requested_count} version${result.requested_count === 1 ? "" : "s"}.`,
+        title: "已启动构建产物回填",
+        description: `工作流 ${result.workflow_id} 已将 ${result.requested_count} 个版本${result.requested_count === 1 ? "" : ""}加入队列。`,
       })
       setSelectedVersions([])
       setClearSelectionTrigger((value) => value + 1)
     } catch (error) {
       console.error("Failed to start artifact backfill", error)
       toast({
-        title: "Failed to start artifact backfill",
-        description: "Please try again.",
+        title: "启动构建产物回填失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -127,8 +127,8 @@ export function PlatformRegistryVersionsTable() {
         versionId: versionPendingDelete.id,
       })
       toast({
-        title: "Version deleted",
-        description: `Version ${versionPendingDelete.version} was removed.`,
+        title: "已删除版本",
+        description: `已移除版本 ${versionPendingDelete.version}。`,
       })
       setSelectedVersions((versions) =>
         versions.filter((version) => version.id !== versionPendingDelete.id)
@@ -138,9 +138,8 @@ export function PlatformRegistryVersionsTable() {
     } catch (error) {
       console.error("Failed to delete version", error)
       toast({
-        title: "Failed to delete version",
-        description:
-          "Only non-current versions with no workflow usage can be deleted.",
+        title: "删除版本失败",
+        description: "只能删除未被工作流使用的非当前版本。",
         variant: "destructive",
       })
     } finally {
@@ -153,7 +152,7 @@ export function PlatformRegistryVersionsTable() {
   ).length
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading versions...</div>
+    return <div className="text-muted-foreground">正在加载版本…</div>
   }
 
   return (
@@ -161,8 +160,8 @@ export function PlatformRegistryVersionsTable() {
       <div className="flex items-center justify-between gap-3">
         <div className="text-xs text-muted-foreground">
           {selectedVersions.length > 0
-            ? `${selectedVersions.length} selected, ${selectedMissingCount} missing artifacts`
-            : "No versions selected"}
+            ? `已选择 ${selectedVersions.length} 个，其中 ${selectedMissingCount} 个缺少构建产物`
+            : "未选择版本"}
         </div>
         <Button
           variant="outline"
@@ -171,7 +170,7 @@ export function PlatformRegistryVersionsTable() {
           disabled={selectedVersions.length === 0 || backfillArtifactsPending}
         >
           <RefreshCwIcon className="mr-1 size-3" />
-          {backfillArtifactsPending ? "Starting..." : "Backfill artifacts"}
+          {backfillArtifactsPending ? "启动中…" : "回填构建产物"}
         </Button>
       </div>
       <DataTable
@@ -183,7 +182,7 @@ export function PlatformRegistryVersionsTable() {
             id: "select",
             header: ({ table }) => (
               <Checkbox
-                aria-label="Select visible versions"
+                aria-label={"选择可见版本"}
                 checked={
                   table.getIsAllPageRowsSelected()
                     ? true
@@ -198,7 +197,7 @@ export function PlatformRegistryVersionsTable() {
             ),
             cell: ({ row }) => (
               <Checkbox
-                aria-label={`Select version ${row.original.version}`}
+                aria-label={`选择版本 ${row.original.version}`}
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 onClick={(event) => event.stopPropagation()}
@@ -213,7 +212,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Version"
+                title={"版本"}
               />
             ),
             cell: ({ row }) => {
@@ -223,7 +222,7 @@ export function PlatformRegistryVersionsTable() {
                   <span className="text-xs font-mono">{version.version}</span>
                   {(version.is_current ?? false) && (
                     <span className="flex items-center">
-                      <span className="sr-only">Current</span>
+                      <span className="sr-only">当前</span>
                       <span
                         aria-hidden="true"
                         className="flex size-1.5 rounded-full bg-[hsl(var(--success)/0.55)]"
@@ -242,7 +241,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Repository"
+                title={"仓库"}
               />
             ),
             cell: ({ row }) => {
@@ -263,7 +262,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Commit"
+                title={"提交"}
               />
             ),
             cell: ({ row }) => (
@@ -281,7 +280,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Artifacts"
+                title={"构建产物"}
               />
             ),
             cell: ({ row }) => {
@@ -293,7 +292,7 @@ export function PlatformRegistryVersionsTable() {
                   }
                   className="font-normal"
                 >
-                  {(version.artifacts_ready ?? false) ? "Ready" : "Missing"}
+                  {(version.artifacts_ready ?? false) ? "就绪" : "缺失"}
                 </Badge>
               )
             },
@@ -306,7 +305,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Usage"
+                title={"使用情况"}
               />
             ),
             cell: ({ row }) => {
@@ -319,10 +318,10 @@ export function PlatformRegistryVersionsTable() {
                     }
                     className="font-normal"
                   >
-                    {(version.in_use ?? false) ? "In use" : "Unused"}
+                    {(version.in_use ?? false) ? "使用中" : "未使用"}
                   </Badge>
                   <span className="text-xs text-muted-foreground">
-                    {version.workflow_definition_count ?? 0} defs
+                    {version.workflow_definition_count ?? 0} 定义
                   </span>
                 </div>
               )
@@ -336,7 +335,7 @@ export function PlatformRegistryVersionsTable() {
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Created"
+                title={"创建时间"}
               />
             ),
             cell: ({ row }) => {
@@ -372,11 +371,11 @@ export function PlatformRegistryVersionsTable() {
                     disabled={isPromoting || isDeleting}
                   >
                     {isPromoting ? (
-                      "Promoting..."
+                      "提升中…"
                     ) : (
                       <>
                         <CheckIcon className="mr-1 size-3" />
-                        Promote
+                        提升
                       </>
                     )}
                   </Button>
@@ -389,11 +388,11 @@ export function PlatformRegistryVersionsTable() {
                       className="text-destructive hover:text-destructive"
                     >
                       {isDeleting ? (
-                        "Deleting..."
+                        "删除中…"
                       ) : (
                         <>
                           <Trash2Icon className="mr-1 size-3" />
-                          Delete
+                          删除
                         </>
                       )}
                     </Button>
@@ -416,19 +415,19 @@ export function PlatformRegistryVersionsTable() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete registry version?</AlertDialogTitle>
+            <AlertDialogTitle>删除注册表版本？</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently removes version {versionPendingDelete?.version}.
-              Only non-current versions with no workflow usage can be deleted.
+              此操作将永久移除版本 {versionPendingDelete?.version}
+              。只能删除未被工作流使用的非当前版本。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -439,7 +438,7 @@ export function PlatformRegistryVersionsTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<RegistryVersionRead> = {
   filterProps: {
-    placeholder: "Filter versions...",
+    placeholder: "筛选版本…",
     column: "version",
   },
 }

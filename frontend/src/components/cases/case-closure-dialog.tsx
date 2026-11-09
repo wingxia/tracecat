@@ -179,7 +179,7 @@ export function CaseClosureDialog({
     }
   }, [isValid, fieldValues, dropdownValues, onSubmit, onOpenChange])
 
-  const statusLabel = targetStatus === "closed" ? "Close" : "Resolve"
+  const statusLabel = targetStatus === "closed" ? "关闭" : "解决"
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -189,11 +189,11 @@ export function CaseClosureDialog({
         {...nonDismissableDialogProps}
       >
         <DialogHeader>
-          <DialogTitle>{statusLabel} case</DialogTitle>
+          <DialogTitle>{statusLabel} 事件</DialogTitle>
           <DialogDescription>
-            Fill in the required fields before{" "}
-            {targetStatus === "closed" ? "closing" : "resolving"}{" "}
-            {isBulk ? `${selectedCount} cases` : "this case"}.
+            请先填写必填字段，再执行{" "}
+            {targetStatus === "closed" ? "关闭" : "解决"}{" "}
+            {isBulk ? `${selectedCount} 个事件` : "此事件"}.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -201,9 +201,8 @@ export function CaseClosureDialog({
             <Alert>
               <AlertTriangle className="size-4" />
               <AlertDescription>
-                These values will override existing field and dropdown values
-                for all {selectedCount} selected{" "}
-                {selectedCount === 1 ? "case" : "cases"}.
+                这些值会覆盖所有事件现有的字段和下拉选项值，共 {selectedCount}{" "}
+                已选择 {selectedCount === 1 ? "事件" : "个事件"}.
               </AlertDescription>
             </Alert>
           )}
@@ -238,7 +237,7 @@ export function CaseClosureDialog({
                   }
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select an option..." />
+                    <SelectValue placeholder={"选择选项…"} />
                   </SelectTrigger>
                   <SelectContent>
                     {dd.options?.map((opt) => (
@@ -267,9 +266,7 @@ export function CaseClosureDialog({
             disabled={!isValid || isSubmitting}
             onClick={handleSubmit}
           >
-            {isSubmitting
-              ? `${statusLabel === "Close" ? "Closing" : "Resolving"}...`
-              : `${statusLabel} case`}
+            {isSubmitting ? `${statusLabel}中…` : `${statusLabel} 事件`}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -316,7 +313,7 @@ function ClosureFieldInput({
           <Input
             value={typeof value === "string" ? value : ""}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={`Enter ${field.display_name}...`}
+            placeholder={`输入 ${field.display_name}…`}
           />
         </div>
       )
@@ -349,7 +346,7 @@ function ClosureFieldInput({
               onValidationChange?.(!isValid)
               onChange(trimmed)
             }}
-            placeholder={`Enter ${field.display_name}...`}
+            placeholder={`输入 ${field.display_name}…`}
           />
         </div>
       )
@@ -362,11 +359,11 @@ function ClosureFieldInput({
             onValueChange={(val) => onChange(val === "true")}
           >
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select..." />
+              <SelectValue placeholder={"选择…"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="true">True</SelectItem>
-              <SelectItem value="false">False</SelectItem>
+              <SelectItem value="true">真</SelectItem>
+              <SelectItem value="false">假</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -437,7 +434,7 @@ function ClosureFieldInput({
           <Input
             value={typeof value === "string" ? value : ""}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={`Enter ${field.display_name}...`}
+            placeholder={`输入 ${field.display_name}…`}
           />
         </div>
       )
@@ -489,7 +486,7 @@ function UrlField({
         <Input
           value={urlVal.label}
           onChange={(e) => onChange({ ...urlVal, label: e.target.value })}
-          placeholder="Display text"
+          placeholder={"显示文本"}
         />
         <Input
           type="url"
@@ -519,7 +516,7 @@ function SelectField({
         onValueChange={onChange}
       >
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Select..." />
+          <SelectValue placeholder={"选择…"} />
         </SelectTrigger>
         <SelectContent>
           {field.options?.map((opt) => (
@@ -571,15 +568,15 @@ function MultiSelectField({
                 ))}
               </span>
             ) : (
-              <span className="text-muted-foreground">Select...</span>
+              <span className="text-muted-foreground">选择…</span>
             )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[200px] p-0" align="start" portal={true}>
           <Command>
-            <CommandInput placeholder="Search..." />
+            <CommandInput placeholder={"搜索…"} />
             <CommandList>
-              <CommandEmpty>No options.</CommandEmpty>
+              <CommandEmpty>暂无选项。</CommandEmpty>
               <CommandGroup>
                 {field.options?.map((opt) => (
                   <CommandItem
@@ -607,7 +604,7 @@ function jsonLinter(view: EditorView) {
     JSON.parse(content)
     return []
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Invalid JSON"
+    const msg = err instanceof Error ? err.message : "JSON 无效"
     const posMatch = msg.match(/position (\d+)/)
     const pos = posMatch ? Number.parseInt(posMatch[1], 10) : 0
     const from = Math.min(pos, content.length)
@@ -680,7 +677,7 @@ function JsonField({
       setError(null)
       onValidationChange?.(false)
     } catch {
-      setError("Invalid JSON")
+      setError("JSON 无效")
       onValidationChange?.(true)
     }
   }

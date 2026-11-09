@@ -72,15 +72,15 @@ export function getWorkspaceSyncPushButtonLabel({
 }: WorkspaceSyncPushButtonLabelOptions): string {
   const reviewRequestAbbreviation = getReviewRequestAbbreviation(provider)
   if (isPending) {
-    return "Pushing..."
+    return "推送中…"
   }
   if (!outcome.createPr) {
-    return "Push directly"
+    return "直接推送"
   }
   if (isCreatingBranch) {
-    return `Push & open ${reviewRequestAbbreviation}`
+    return `推送并创建 ${reviewRequestAbbreviation}`
   }
-  return `Update branch & open ${reviewRequestAbbreviation}`
+  return `更新分支并创建 ${reviewRequestAbbreviation}`
 }
 
 export function getWorkspaceSyncPushResultLabel({
@@ -89,12 +89,12 @@ export function getWorkspaceSyncPushResultLabel({
   provider,
 }: WorkspaceSyncPushMessageOptions): string {
   if (outcome.willCreatePr) {
-    return `${getReviewRequestAbbreviation(provider)} into ${defaultBranch ?? "default branch"}`
+    return `${getReviewRequestAbbreviation(provider)} 合并到 ${defaultBranch ?? "默认分支"}`
   }
   if (outcome.isPullRequestBlocked) {
-    return "Choose a non-default branch"
+    return "选择非默认分支"
   }
-  return "Direct commit"
+  return "直接提交"
 }
 
 export function getWorkspaceSyncPushWarning({
@@ -106,15 +106,15 @@ export function getWorkspaceSyncPushWarning({
   const reviewRequestLabel = getReviewRequestLabel(provider)
   if (outcome.isPullRequestBlocked) {
     if (!allowDirectPush) {
-      return `Select or create a non-default branch to open a ${reviewRequestLabel} into ${defaultBranch ?? "the default branch"}.`
+      return `选择或创建非默认分支，以发起合并到 ${defaultBranch ?? "默认分支"} 的${reviewRequestLabel}。`
     }
-    return `Select or create a non-default branch to open a ${reviewRequestLabel} into ${defaultBranch ?? "the default branch"}, or switch to direct push.`
+    return `选择或创建非默认分支，以发起合并到 ${defaultBranch ?? "默认分支"} 的${reviewRequestLabel}，或切换到直接推送。`
   }
   if (!outcome.createPr && outcome.targetIsDefault) {
-    return `This commits directly to ${defaultBranch ?? "the default branch"}. No ${reviewRequestLabel} will be created.`
+    return `此操作会直接提交到 ${defaultBranch ?? "默认分支"}，不创建${reviewRequestLabel}。`
   }
   if (!outcome.createPr) {
-    return `This commits directly to the selected branch. No ${reviewRequestLabel} will be created.`
+    return `此操作会直接提交到所选分支，不创建${reviewRequestLabel}。`
   }
   return null
 }
@@ -175,7 +175,7 @@ export function WorkspaceSyncPushModeTabs({
           content: (
             <span className="flex items-center gap-1.5">
               <GitPullRequestIcon className="size-3.5" />
-              Open {reviewRequestAbbreviation}
+              打开 {reviewRequestAbbreviation}
             </span>
           ),
         },
@@ -184,7 +184,7 @@ export function WorkspaceSyncPushModeTabs({
           content: (
             <span className="flex items-center gap-1.5">
               <GitBranchIcon className="size-3.5" />
-              Push directly
+              直接推送
             </span>
           ),
         },

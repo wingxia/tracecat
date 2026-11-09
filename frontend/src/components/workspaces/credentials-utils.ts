@@ -20,10 +20,10 @@ export interface CredentialGroup {
 
 /** Labels for workspace-scoped secret types. */
 export const workspaceSecretTypeLabels: Record<WorkspaceSecretType, string> = {
-  custom: "Custom",
-  ssh_key: "SSH key",
+  custom: "自定义",
+  ssh_key: "SSH 密钥",
   mtls: "mTLS",
-  ca_cert: "CA certificate",
+  ca_cert: "CA 证书",
 }
 
 /**
@@ -31,10 +31,10 @@ export const workspaceSecretTypeLabels: Record<WorkspaceSecretType, string> = {
  * Kept for any code that still references all SecretType values.
  */
 export const credentialSecretTypeLabels: Record<SecretType, string> = {
-  custom: "Custom",
-  ssh_key: "SSH key",
+  custom: "自定义",
+  ssh_key: "SSH 密钥",
   mtls: "mTLS",
-  ca_cert: "CA certificate",
+  ca_cert: "CA 证书",
   github_app: "GitHub app",
 }
 

@@ -44,11 +44,11 @@ describe("AwsSecretReferenceForm", () => {
     fireEvent.change(screen.getByPlaceholderText("hello_world"), {
       target: { value: "SECRETS.hello_world.hello" },
     })
-    fireEvent.click(screen.getByRole("button", { name: /Save reference/ }))
+    fireEvent.click(screen.getByRole("button", { name: /保存引用/ }))
 
     expect(
       await screen.findByText(
-        "Enter only the name, e.g. hello_world, not the full SECRETS.<name>.<key> reference."
+        "仅输入名称，如 hello_world，不要填写完整的 SECRETS.<name>.<key> 引用。"
       )
     ).toBeInTheDocument()
     expect(mockCreateReference).not.toHaveBeenCalled()

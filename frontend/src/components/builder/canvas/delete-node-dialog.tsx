@@ -24,19 +24,18 @@ export function DeleteActionNodeDialog({
     <AlertDialog {...rest}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete action node</AlertDialogTitle>
+          <AlertDialogTitle>删除动作节点</AlertDialogTitle>
           <AlertDialogDescription className="space-y-2">
-            Are you sure you want to delete this action node? This will remove
-            it from the workflow and delete any connections to other nodes.
+            确定要删除此动作节点吗？此操作将从工作流中移除该节点，并删除与其他节点的所有连接。
             <br />
             <br />
-            <strong>This action cannot be undone.</strong>
+            <strong>此操作无法撤销。</strong>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={onConfirm}>
-            Delete
+            删除
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

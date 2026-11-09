@@ -53,9 +53,8 @@ describe("useOrgAgentOtelSettings", () => {
 
     await waitFor(() =>
       expect(toast).toHaveBeenCalledWith({
-        title: "Failed to update agent telemetry",
-        description:
-          "An error occurred while updating agent telemetry settings: Network Error",
+        title: "更新智能体遥测失败",
+        description: "更新智能体遥测设置时出错：Network Error",
       })
     )
   })

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Skills",
+  title: "技能",
 }
 
 /** Applies shared metadata and renders the nested Skills route content. */

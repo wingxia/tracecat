@@ -156,9 +156,9 @@ export function UpdateCaseDurationDialog({
           onOpenChange(true)
         }
       }}
-      title="Update duration"
-      description="Modify this duration metric."
-      submitLabel={isUpdating ? "Saving..." : "Save changes"}
+      title={"更新时长指标"}
+      description={"修改此时长指标。"}
+      submitLabel={isUpdating ? "保存中…" : "保存更改"}
       isSubmitting={isUpdating}
       initialValues={initialValues}
       onSubmit={handleSubmit}

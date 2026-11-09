@@ -45,17 +45,17 @@ export function SkillLibraryUninstallDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>
             {single
-              ? `Uninstall ${providerName}?`
-              : `Uninstall all ${providerName} skills?`}
+              ? `卸载 ${providerName}？`
+              : `卸载所有 ${providerName} 技能？`}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {single
-              ? "This removes the skill from this workspace. If an agent still uses it, the uninstall is rejected and the skill stays installed."
-              : `This removes ${skillCount} skills from this workspace. If an agent still uses any of them, the entire uninstall is rejected and all skills stay installed.`}
+              ? "此操作会从工作空间移除此技能。如果仍有智能体使用它，卸载将被拒绝，技能会保留。"
+              : `此操作会从工作空间移除 ${skillCount} 个技能。如果仍有智能体使用其中任一技能，整个卸载操作将被拒绝，所有技能都会保留。`}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={pending}>取消</AlertDialogCancel>
           <AlertDialogAction
             disabled={pending}
             onClick={(event) => {
@@ -65,7 +65,7 @@ export function SkillLibraryUninstallDialog({
             variant="destructive"
           >
             {pending && <Loader2 className="mr-2 size-4 animate-spin" />}
-            {single ? "Uninstall" : "Uninstall all"}
+            {single ? "卸载" : "全部卸载"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

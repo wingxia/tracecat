@@ -46,8 +46,8 @@ describe("CustomFieldsTable", () => {
       </QueryClientProvider>
     )
 
-    expect(screen.getByText("Field name")).toBeInTheDocument()
-    expect(screen.getByText("Reference")).toBeInTheDocument()
+    expect(screen.getByText("字段名称")).toBeInTheDocument()
+    expect(screen.getByText("引用")).toBeInTheDocument()
     expect(screen.getByText("Analyst verdict")).toBeInTheDocument()
     expect(screen.getByText("analyst_verdict")).toBeInTheDocument()
     expect(
@@ -55,9 +55,7 @@ describe("CustomFieldsTable", () => {
         .getAllByRole("columnheader")
         .slice(0, 3)
         .map((header) => header.textContent)
-    ).toEqual(["Field name", "Data type", "Reference"])
-    expect(
-      screen.getByPlaceholderText("Filter fields by name...")
-    ).toBeInTheDocument()
+    ).toEqual(["字段名称", "数据类型", "引用"])
+    expect(screen.getByPlaceholderText("按名称筛选字段…")).toBeInTheDocument()
   })
 })

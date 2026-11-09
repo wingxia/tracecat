@@ -26,10 +26,10 @@ export function JSONSchemaTable({ schema }: { schema: TracecatJsonSchema }) {
       <TableHeader>
         <TableRow className="h-6 text-xs capitalize ">
           <TableHead className="min-w-max whitespace-nowrap font-bold">
-            Parameter
+            参数
           </TableHead>
-          <TableHead className="font-bold">Type</TableHead>
-          <TableHead className="font-bold">Default</TableHead>
+          <TableHead className="font-bold">输入</TableHead>
+          <TableHead className="font-bold">默认</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -45,7 +45,7 @@ export function JSONSchemaTable({ schema }: { schema: TracecatJsonSchema }) {
                   {row.required && " *"}
                   {row.deprecated && (
                     <span className="ml-2 rounded border px-1.5 py-0.5 font-sans text-[10px] font-medium uppercase tracking-normal text-muted-foreground">
-                      Deprecated
+                      已弃用
                     </span>
                   )}
                 </TableCell>
@@ -66,12 +66,12 @@ export function JSONSchemaTable({ schema }: { schema: TracecatJsonSchema }) {
                         {row.parameter}
                       </span>
                       <span className="whitespace-nowrap text-xs text-muted-foreground/80">
-                        &nbsp;{row.required ? "(required)" : "(optional)"}
+                        &nbsp;{row.required ? "（必填）" : "（可选）"}
                       </span>
                     </div>
                     <div className="w-full space-y-1">
                       <span className="text-xs font-semibold text-muted-foreground">
-                        Description
+                        描述
                       </span>
                       <p className="break-words text-xs text-foreground/70">
                         {row.description}
@@ -84,10 +84,10 @@ export function JSONSchemaTable({ schema }: { schema: TracecatJsonSchema }) {
                     </div>
                     <div className="w-full space-y-1">
                       <span className="text-xs font-semibold text-muted-foreground">
-                        Constraints
+                        约束
                       </span>
                       <p className="break-words text-xs text-foreground/70">
-                        {row.constraints || "None"}
+                        {row.constraints || "无"}
                       </p>
                     </div>
                   </HoverCardContent>

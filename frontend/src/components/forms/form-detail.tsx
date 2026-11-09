@@ -1,6 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   BotIcon,
   ChevronRightIcon,
@@ -64,12 +65,12 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 
 function actorName(actor: FormActorRead | null | undefined): string {
   if (actor?.type === "service_account") {
-    return actor.name ?? "Service account"
+    return actor.name ?? "服务账号"
   }
   const fullName = [actor?.first_name, actor?.last_name]
     .filter(Boolean)
     .join(" ")
-  return fullName || actor?.email || "Unknown"
+  return fullName || actor?.email || "未知"
 }
 
 /**
@@ -91,7 +92,7 @@ function formatAnswer(value: unknown, field?: FormFieldBlock): string {
     return value.map((item) => formatAnswer(item, field)).join("\n")
   }
   if (typeof value === "boolean") {
-    return value ? "Yes" : "No"
+    return value ? "是" : "否"
   }
   if (typeof value === "string") {
     const option = field?.options?.find((item) => item.value === value)
@@ -104,10 +105,12 @@ function formatAnswer(value: unknown, field?: FormFieldBlock): string {
       return option.label
     }
     if (day) {
-      return format(new Date(+day[1], +day[2] - 1, +day[3]), "MMM d, yyyy")
+      return format(new Date(+day[1], +day[2] - 1, +day[3]), "yyyy年M月d日", {
+        locale: zhCN,
+      })
     }
     if (field?.widget === "datetime" && !Number.isNaN(time.getTime())) {
-      return format(time, "MMM d, yyyy p")
+      return format(time, "yyyy年M月d日 HH:mm", { locale: zhCN })
     }
     return value
   }
@@ -146,8 +149,8 @@ function Answer({
       await downloadFormFile({ workspaceId, formId, fileId })
     } catch {
       toast({
-        title: "Could not download the file",
-        description: "It may have been deleted. Reload and try again.",
+        title: "无法下载文件",
+        description: "文件可能已被删除，请重新加载后重试。",
         variant: "destructive",
       })
     }
@@ -160,7 +163,7 @@ function Answer({
           <button
             type="button"
             onClick={() => download(file.id)}
-            aria-label={`Download ${file.name}`}
+            aria-label={`下载 ${file.name}`}
             className="flex max-w-full items-center gap-1.5 rounded-sm text-left underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
           >
             <DownloadIcon className="size-3 shrink-0 text-muted-foreground" />
@@ -221,7 +224,7 @@ function SubmissionRow({
           className="flex size-6 flex-none items-center justify-center rounded-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
           aria-expanded={open}
           aria-controls={answersId}
-          aria-label={`${open ? "Hide" : "Show"} answers of ${submission.reference}`}
+          aria-label={`${open ? "隐藏" : "显示"} ${submission.reference}`}
           onClick={() => setOpen((value) => !value)}
         >
           <ChevronRightIcon
@@ -270,10 +273,10 @@ function SubmissionRow({
               href={href}
               className="flex-none font-medium text-primary hover:underline"
             >
-              Run
+              运行
             </Link>
           ) : (
-            <span className="flex-none text-muted-foreground">Run</span>
+            <span className="flex-none text-muted-foreground">运行</span>
           ))}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -284,7 +287,9 @@ function SubmissionRow({
               {shortTimeAgo(submittedAt)}
             </time>
           </TooltipTrigger>
-          <TooltipContent>{format(submittedAt, "PPpp")}</TooltipContent>
+          <TooltipContent>
+            {format(submittedAt, "PPpp", { locale: zhCN })}
+          </TooltipContent>
         </Tooltip>
       </div>
       {open && (
@@ -293,7 +298,7 @@ function SubmissionRow({
           className="grid grid-cols-1 gap-x-6 gap-y-3 bg-muted/30 px-11 py-3 text-xs sm:grid-cols-2"
         >
           {names.length === 0 && (
-            <div className="text-muted-foreground">No answers.</div>
+            <div className="text-muted-foreground">暂无回答。</div>
           )}
           {names.map((key) => (
             <div key={key} className="min-w-0">
@@ -357,9 +362,9 @@ function FormActivityTab({
     return (
       <Empty className="py-12">
         <EmptyHeader>
-          <EmptyTitle>No access to submissions</EmptyTitle>
+          <EmptyTitle>无权访问提交记录</EmptyTitle>
           <EmptyDescription>
-            Your role can edit this form but can't read what people submit.
+            你的角色可以编辑此表单，但无法读取用户提交的内容。
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -372,13 +377,13 @@ function FormActivityTab({
   } else if (submissions.error) {
     list = (
       <div className="flex items-center justify-between gap-3 px-3 py-4 text-xs">
-        <span className="text-destructive">Couldn't load submissions.</span>
+        <span className="text-destructive">无法加载提交记录。</span>
         <Button
           variant="outline"
           className="h-6 px-2.5 text-xs"
           onClick={() => submissions.refetch()}
         >
-          Retry
+          重试
         </Button>
       </div>
     )
@@ -389,9 +394,9 @@ function FormActivityTab({
           <EmptyMedia variant="icon">
             <InboxIcon className="size-5 text-muted-foreground/60" />
           </EmptyMedia>
-          <EmptyTitle>No submissions yet</EmptyTitle>
+          <EmptyTitle>暂无提交记录</EmptyTitle>
           <EmptyDescription>
-            Submissions show up here once someone fills in the form.
+            有人填写表单后，提交记录会显示在此处。
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -418,7 +423,7 @@ function FormActivityTab({
               disabled={submissions.isFetchingNextPage}
               onClick={() => submissions.fetchNextPage()}
             >
-              {submissions.isFetchingNextPage ? "Loading..." : "Load more"}
+              {submissions.isFetchingNextPage ? "加载中…" : "加载更多"}
             </Button>
           </div>
         )}
@@ -434,7 +439,7 @@ function FormActivityTab({
           {(
             [
               [EyeIcon, "Views", counts.views],
-              [InboxIcon, "Submissions", counts.submissions],
+              [InboxIcon, "提交记录", counts.submissions],
             ] as const
           ).map(([Icon, label, value]) => (
             <div key={label} className="flex-1 rounded-md border px-3 py-2">
@@ -443,15 +448,15 @@ function FormActivityTab({
                 {label}
               </dt>
               <dd className="mt-1 text-xl font-semibold tabular-nums">
-                {value.toLocaleString()}
+                {value.toLocaleString("zh-CN")}
               </dd>
             </div>
           ))}
         </dl>
       )}
       <div className="flex h-8 items-center border-y px-3 text-xs">
-        <span className="flex-1 font-medium">Submissions</span>
-        <span className="text-muted-foreground">Newest first</span>
+        <span className="flex-1 font-medium">提交记录</span>
+        <span className="text-muted-foreground">最新优先</span>
       </div>
       {list}
     </div>
@@ -501,14 +506,12 @@ function FormDetailBody({ form }: { form: FormRead }) {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={45} minSize={25}>
-        <section aria-label="Preview" className="flex h-full min-h-0 flex-col">
+        <section aria-label={"预览"} className="flex h-full min-h-0 flex-col">
           <header className="flex h-9 flex-none items-center gap-2 border-b px-3 text-xs font-medium">
-            <span className="flex-1">Preview</span>
+            <span className="flex-1">预览</span>
             {check.preview && isStale && (
               <span className="truncate font-normal text-muted-foreground">
-                {check.checkFailed
-                  ? "Couldn't check the config"
-                  : "Showing the last valid config"}
+                {check.checkFailed ? "无法检查配置" : "正在显示上次有效的配置"}
               </span>
             )}
             {draft.isDirty && (
@@ -516,7 +519,7 @@ function FormDetailBody({ form }: { form: FormRead }) {
                 variant="secondary"
                 className="h-5 flex-none px-2 text-[10px] font-normal"
               >
-                Unsaved changes
+                未保存的更改
               </Badge>
             )}
           </header>
@@ -542,11 +545,11 @@ function FormDetailBody({ form }: { form: FormRead }) {
                     <EmptyMedia variant="icon">
                       <TriangleAlertIcon className="size-5" />
                     </EmptyMedia>
-                    <EmptyTitle>No preview yet</EmptyTitle>
+                    <EmptyTitle>暂无预览</EmptyTitle>
                     <EmptyDescription>
                       {check.checkFailed
-                        ? `The config could not be checked. ${canEdit ? "Edit it" : "Reload the page"} to try again.`
-                        : "Fix the problems in the config to see the form."}
+                        ? `无法检查配置。${canEdit ? "编辑" : "重新加载页面"}以重试。`
+                        : "修复配置问题后即可查看表单。"}
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -581,7 +584,7 @@ export function FormDetail({ formId }: { formId: string }) {
   if (formError && getFormLoadFailure(formError) !== "not_found") {
     return (
       <div className="p-6">
-        <AlertNotification level="error" message="Error loading the form." />
+        <AlertNotification level="error" message={"加载表单出错。"} />
       </div>
     )
   }
@@ -592,14 +595,14 @@ export function FormDetail({ formId }: { formId: string }) {
           <EmptyMedia variant="icon">
             <SearchXIcon className="size-5" />
           </EmptyMedia>
-          <EmptyTitle>Form not found</EmptyTitle>
+          <EmptyTitle>未找到表单</EmptyTitle>
           <EmptyDescription>
-            It may have been deleted, or you may not have access to it.
+            表单可能已被删除，或你没有访问权限。
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button asChild variant="outline" size="sm">
-            <Link href={`/workspaces/${workspaceId}/forms`}>Back to forms</Link>
+            <Link href={`/workspaces/${workspaceId}/forms`}>返回表单列表</Link>
           </Button>
         </EmptyContent>
       </Empty>

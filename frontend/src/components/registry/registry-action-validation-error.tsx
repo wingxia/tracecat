@@ -11,7 +11,7 @@ interface ErrorDisplayProps {
 }
 
 export function ErrorDisplay({
-  title = "Error",
+  title = "错误",
   error,
   variant = "destructive",
   className,
@@ -41,7 +41,7 @@ export function ErrorDisplay({
         </ScrollArea>
       )
     }
-    return "An unknown error occurred"
+    return "发生未知错误"
   }
 
   const Icon = variant === "destructive" ? XCircle : AlertCircle

@@ -27,13 +27,13 @@ export function TableActions({
           e.stopPropagation() // Prevent row click
           navigator.clipboard.writeText(table.id)
           toast({
-            title: "Table ID copied",
+            title: "已复制数据表 ID",
             description: table.id,
           })
         }}
       >
         <Copy className="mr-2 h-3 w-3" />
-        Copy table ID
+        复制数据表 ID
       </DropdownMenuItem>
       <DropdownMenuItem
         className="text-xs text-destructive focus:text-destructive"
@@ -44,7 +44,7 @@ export function TableActions({
         }}
       >
         <Trash2 className="mr-2 h-3 w-3" />
-        Delete
+        删除
       </DropdownMenuItem>
     </DropdownMenuGroup>
   )

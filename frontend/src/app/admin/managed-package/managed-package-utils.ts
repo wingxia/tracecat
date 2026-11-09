@@ -42,13 +42,13 @@ export type StatusTone = "neutral" | "success" | "warning" | "danger"
 
 const ROLLOUT_STATUS_LABELS: Record<ManagedRolloutStatus, string> = {
   previewing: "Previewing",
-  ready: "Ready",
-  no_changes: "No changes",
-  blocked: "Blocked",
-  needs_references: "Needs references",
+  ready: "就绪",
+  no_changes: "无更改",
+  blocked: "受阻",
+  needs_references: "需要引用",
   applying: "Applying",
-  applied: "Applied",
-  failed: "Failed",
+  applied: "已应用",
+  failed: "失败",
   stale: "Stale",
 }
 
@@ -65,11 +65,11 @@ const ROLLOUT_STATUS_TONES: Record<ManagedRolloutStatus, StatusTone> = {
 }
 
 const TARGET_STATUS_LABELS: Record<ManagedTargetStatus, string> = {
-  pending: "Pending",
-  up_to_date: "Up to date",
-  blocked: "Blocked",
-  needs_references: "Needs references",
-  failed: "Failed",
+  pending: "待处理",
+  up_to_date: "已是最新",
+  blocked: "受阻",
+  needs_references: "需要引用",
+  failed: "失败",
 }
 
 const TARGET_STATUS_TONES: Record<ManagedTargetStatus, StatusTone> = {
@@ -103,9 +103,9 @@ export function targetStatusDisplay(status: ManagedTargetStatus): {
 }
 
 const REFERENCE_KIND_LABELS: Record<ManagedReferenceKind, string> = {
-  model: "Model",
-  mcp_integration: "MCP integration",
-  secret_store: "Secret store",
+  model: "模型",
+  mcp_integration: "MCP 集成",
+  secret_store: "密钥存储",
 }
 
 /** Human label for a reference kind. */
@@ -135,7 +135,7 @@ export function formatTimestamp(value: string | null | undefined): string {
   if (!value) {
     return "-"
   }
-  return new Date(value).toLocaleString()
+  return new Date(value).toLocaleString("zh-CN")
 }
 
 /** Show a destructive toast with the API's error detail when there is one. */
@@ -143,7 +143,7 @@ export function toastApiError(title: string, error: unknown): void {
   console.error(title, error)
   toast({
     title,
-    description: getApiErrorDetail(error) ?? "Please try again.",
+    description: getApiErrorDetail(error) ?? "请重试。",
     variant: "destructive",
   })
 }

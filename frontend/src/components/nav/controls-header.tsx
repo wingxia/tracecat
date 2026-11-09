@@ -1,6 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   AlertTriangle,
   Check,
@@ -228,7 +229,7 @@ function WorkflowsActions() {
         tagsHref={tagsHref}
       />
       <WorkspaceResourceSyncActions
-        label="workflows"
+        label={"个工作流"}
         branchSlug="workflows"
         resources={["workflow"]}
       />
@@ -253,7 +254,7 @@ function WorkflowsBreadcrumb({
 }) {
   return (
     <FolderPathBreadcrumb
-      rootLabel="Workflows"
+      rootLabel={"工作流"}
       rootHref={`/workspaces/${workspaceId}/workflows`}
       folderPath={path}
     />
@@ -268,7 +269,7 @@ function TablesActions() {
   return (
     <>
       <WorkspaceResourceSyncActions
-        label="tables"
+        label={"个数据表"}
         branchSlug="tables"
         resources={["table"]}
       />
@@ -276,7 +277,7 @@ function TablesActions() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create
+            创建
             <ChevronDown className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -291,18 +292,16 @@ function TablesActions() {
           <DropdownMenuItem onSelect={() => setActiveDialog("create")}>
             <Plus className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Table</span>
-              <span className="text-xs text-muted-foreground">
-                Define columns manually
-              </span>
+              <span>数据表</span>
+              <span className="text-xs text-muted-foreground">手动定义列</span>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setActiveDialog("import")}>
             <FileUpIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Import from CSV</span>
+              <span>从 CSV 导入</span>
               <span className="text-xs text-muted-foreground">
-                Infer columns and data from a CSV file
+                从 CSV 文件推断列并导入数据
               </span>
             </div>
           </DropdownMenuItem>
@@ -331,7 +330,7 @@ function IntegrationsActions() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Add integration
+            添加集成
             <ChevronDown className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -348,9 +347,9 @@ function IntegrationsActions() {
               <DropdownMenuItem onSelect={() => setCredentialDialogOpen(true)}>
                 <KeyRound className="size-4 text-foreground/80" />
                 <div className="flex flex-col text-xs">
-                  <span>Key-value credentials</span>
+                  <span>键值凭据</span>
                   <span className="text-xs text-muted-foreground">
-                    Store API keys and tokens
+                    保存 API 密钥和令牌
                   </span>
                 </div>
               </DropdownMenuItem>
@@ -358,9 +357,9 @@ function IntegrationsActions() {
             <DropdownMenuItem onSelect={() => setOauthDialogOpen(true)}>
               <LockKeyhole className="size-4 text-foreground/80" />
               <div className="flex flex-col text-xs">
-                <span>Custom OAuth provider</span>
+                <span>自定义 OAuth 提供商</span>
                 <span className="text-xs text-muted-foreground">
-                  Configure OAuth app credentials
+                  配置 OAuth 应用凭据
                 </span>
               </div>
             </DropdownMenuItem>
@@ -444,7 +443,7 @@ function SkillsActions() {
           disabled
         >
           <Plus className="mr-1 h-3.5 w-3.5" />
-          Create
+          创建
           <ChevronDown className="ml-1 h-3.5 w-3.5" />
         </Button>
       )
@@ -460,7 +459,7 @@ function SkillsActions() {
         libraryHref={libraryHref}
       />
       <WorkspaceResourceSyncActions
-        label="skills"
+        label={"个技能"}
         branchSlug="skills"
         resources={["skill"]}
       />
@@ -490,7 +489,7 @@ function AddSkillTag({
         onClick={() => onOpenChange(true)}
       >
         <Plus className="mr-1 h-3.5 w-3.5" />
-        Create tag
+        创建标签
       </Button>
       <CreateTagDialog
         open={open}
@@ -499,8 +498,8 @@ function AddSkillTag({
         onCreateTag={async (params) => {
           await createSkillTag(params)
         }}
-        title="Create tag"
-        description="Enter a name for your new skill tag."
+        title={"创建标签"}
+        description={"输入新技能标签的名称。"}
       />
     </>
   )
@@ -538,7 +537,7 @@ function SkillsBreadcrumb({
       <BreadcrumbList className="relative z-10 flex items-center gap-2 text-sm flex-nowrap overflow-hidden whitespace-nowrap min-w-0 bg-transparent pr-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild className="font-semibold hover:no-underline">
-            <Link href={`/workspaces/${workspaceId}/skills`}>Skills</Link>
+            <Link href={`/workspaces/${workspaceId}/skills`}>技能</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator className="shrink-0">
@@ -595,7 +594,7 @@ function SkillLibraryProviderBreadcrumb({
       <BreadcrumbList className="relative z-10 flex items-center gap-2 text-sm flex-nowrap overflow-hidden whitespace-nowrap min-w-0 bg-transparent pr-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild className="font-semibold hover:no-underline">
-            <Link href={`/workspaces/${workspaceId}/skills`}>Skills</Link>
+            <Link href={`/workspaces/${workspaceId}/skills`}>技能</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator className="shrink-0">
@@ -604,17 +603,17 @@ function SkillLibraryProviderBreadcrumb({
         <BreadcrumbItem className="gap-1.5">
           {providerSlug === undefined ? (
             <BreadcrumbPage className="font-semibold text-muted-foreground">
-              Library
+              资源库
             </BreadcrumbPage>
           ) : (
             <BreadcrumbLink asChild className="text-muted-foreground">
               <Link href={`/workspaces/${workspaceId}/skills/library`}>
-                Library
+                资源库
               </Link>
             </BreadcrumbLink>
           )}
           <span className="shrink-0 rounded-full border px-1.5 py-px text-[10px] font-medium leading-none text-muted-foreground">
-            Beta
+            测试版
           </span>
         </BreadcrumbItem>
         {showProviderCrumb ? (
@@ -678,7 +677,7 @@ function AgentFoldersBreadcrumb({
   const organizationEnabled = hasEntitlement("agent_addons")
   return (
     <FolderPathBreadcrumb
-      rootLabel="Agents"
+      rootLabel={"智能体"}
       rootHref={`/workspaces/${workspaceId}/agents`}
       folderPath={organizationEnabled ? path : "/"}
     />
@@ -696,7 +695,7 @@ function SkillsFoldersBreadcrumb({
   const organizationEnabled = hasEntitlement("agent_addons")
   return (
     <FolderPathBreadcrumb
-      rootLabel="Skills"
+      rootLabel={"技能"}
       rootHref={`/workspaces/${workspaceId}/skills`}
       folderPath={organizationEnabled ? path : "/"}
     />
@@ -745,7 +744,7 @@ function AgentsActions() {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-7 bg-background">
                 <Plus className="mr-1 h-3.5 w-3.5" />
-                Create
+                创建
                 <ChevronDown className="ml-1 h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
@@ -760,9 +759,9 @@ function AgentsActions() {
               <DropdownMenuItem onSelect={() => setCreateDialogOpen(true)}>
                 <MousePointerClickIcon className="size-4 text-foreground/80" />
                 <div className="flex flex-col text-xs">
-                  <span>Agent</span>
+                  <span>智能体</span>
                   <span className="text-xs text-muted-foreground">
-                    Start from scratch
+                    从头开始
                   </span>
                 </div>
               </DropdownMenuItem>
@@ -770,9 +769,9 @@ function AgentsActions() {
                 <DropdownMenuItem onSelect={() => setFolderDialogOpen(true)}>
                   <FolderIcon className="size-4 text-foreground/80" />
                   <div className="flex flex-col text-xs">
-                    <span>Folder</span>
+                    <span>文件夹</span>
                     <span className="text-xs text-muted-foreground">
-                      Group agents
+                      智能体分组
                     </span>
                   </div>
                 </DropdownMenuItem>
@@ -806,7 +805,7 @@ function AgentsActions() {
         />
       ) : null}
       <WorkspaceResourceSyncActions
-        label="agents"
+        label={"个智能体"}
         branchSlug="agents"
         resources={["agent_preset"]}
       />
@@ -836,7 +835,7 @@ function AddAgentTag({
         onClick={() => onOpenChange(true)}
       >
         <Plus className="mr-1 h-3.5 w-3.5" />
-        Create tag
+        创建标签
       </Button>
       <CreateTagDialog
         open={open}
@@ -845,8 +844,8 @@ function AddAgentTag({
         onCreateTag={async (params) => {
           await createAgentTag(params)
         }}
-        title="Create tag"
-        description="Enter a name for your new agent tag."
+        title={"创建标签"}
+        description={"输入新智能体标签的名称。"}
       />
     </>
   )
@@ -889,7 +888,7 @@ function CasesActions() {
   if (view === CasesViewMode.CustomFields) {
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="case custom fields"
+        label={"事件自定义字段"}
         branchSlug="case-fields"
         resources={["case_field"]}
       />
@@ -897,7 +896,7 @@ function CasesActions() {
   } else if (view === CasesViewMode.Durations) {
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="case durations"
+        label={"事件时长指标"}
         branchSlug="case-durations"
         resources={["case_duration"]}
       />
@@ -905,7 +904,7 @@ function CasesActions() {
   } else if (view === CasesViewMode.Tags) {
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="case tags"
+        label={"事件标签"}
         branchSlug="case-tags"
         resources={["case_tag"]}
       />
@@ -913,7 +912,7 @@ function CasesActions() {
   } else if (view === CasesViewMode.Dropdowns) {
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="case dropdowns"
+        label={"事件下拉字段"}
         branchSlug="case-dropdowns"
         resources={["case_dropdown"]}
       />
@@ -923,7 +922,7 @@ function CasesActions() {
     // header doesn't shift when switching tabs.
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="closure requirements"
+        label={"关闭条件"}
         branchSlug="case-closure-requirements"
         resources={["case_field", "case_dropdown"]}
         disabled
@@ -933,7 +932,7 @@ function CasesActions() {
     // Cases themselves aren't synced; keep Push aligned with the settings tabs.
     syncActions = (
       <WorkspaceResourceSyncActions
-        label="cases"
+        label={"个事件"}
         branchSlug="cases"
         resources={["case_tag", "case_field", "case_dropdown", "case_duration"]}
         disabled
@@ -969,7 +968,7 @@ function CasesActions() {
           disabled
         >
           <Plus className="mr-1 h-3.5 w-3.5" />
-          Create
+          创建
         </Button>
       ) : (
         <>
@@ -980,7 +979,7 @@ function CasesActions() {
             onClick={() => setDialogOpen(true)}
           >
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create case
+            创建事件
           </Button>
           <CreateCaseDialog open={dialogOpen} onOpenChange={setDialogOpen} />
         </>
@@ -1079,8 +1078,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
 
       const caseCount = selectedCaseIds.length
       toast({
-        title: "Tags applied",
-        description: `Applied ${selectedTagIds.size} tag${selectedTagIds.size === 1 ? "" : "s"} (${tagNames}) to ${caseCount} case${caseCount === 1 ? "" : "s"}.`,
+        title: "已应用标签",
+        description: `已将 ${selectedTagIds.size} 个标签${selectedTagIds.size === 1 ? "" : ""}（${tagNames}）应用到 ${caseCount} 个事件${caseCount === 1 ? "" : ""}。`,
       })
 
       // Clear selection after applying
@@ -1088,8 +1087,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
     } catch (error) {
       console.error("Failed to apply tags:", error)
       toast({
-        title: "Error",
-        description: "Failed to apply some tags. Please try again.",
+        title: "错误",
+        description: "部分标签应用失败，请重试。",
         variant: "destructive",
       })
     } finally {
@@ -1116,8 +1115,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
 
       const caseCount = selectedCaseIds.length
       toast({
-        title: "Comments added",
-        description: `Added comment to ${caseCount} case${caseCount === 1 ? "" : "s"}.`,
+        title: "已添加评论",
+        description: `已向 ${caseCount} 个事件${caseCount === 1 ? "" : ""}添加评论。`,
       })
 
       setCommentText("")
@@ -1125,8 +1124,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
     } catch (error) {
       console.error("Failed to add comments:", error)
       toast({
-        title: "Error",
-        description: "Failed to add comments to some cases. Please try again.",
+        title: "错误",
+        description: "部分事件添加评论失败，请重试。",
         variant: "destructive",
       })
     } finally {
@@ -1161,8 +1160,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
 
       const caseCount = selectedCaseIds.length
       toast({
-        title: "Descriptions updated",
-        description: `Appended text to ${caseCount} case${caseCount === 1 ? "" : "s"}.`,
+        title: "已更新描述",
+        description: `已向 ${caseCount} 个事件${caseCount === 1 ? "" : ""}追加文本。`,
       })
 
       setAppendText("")
@@ -1170,9 +1169,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
     } catch (error) {
       console.error("Failed to append to descriptions:", error)
       toast({
-        title: "Error",
-        description:
-          "Failed to update some case descriptions. Please try again.",
+        title: "错误",
+        description: "部分事件描述更新失败，请重试。",
         variant: "destructive",
       })
     } finally {
@@ -1186,7 +1184,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
   const assigneeOptions = [
     {
       value: UNASSIGNED,
-      label: "Unassigned",
+      label: "未分配",
     },
     ...(members?.map((member) => ({
       value: member.user_id,
@@ -1207,7 +1205,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
     Boolean(isChangingParent)
   const canUpdate = Boolean(bulkUpdateSelectedCases) && !isBusy
   const canChangeParent = Boolean(setParentForSelectedCases) && !isBusy
-  const pluralisedCases = `${selectedCount} case${selectedCount === 1 ? "" : "s"}`
+  const pluralisedCases = `${selectedCount} 个事件`
   const canApplyTags = !isBusy && caseTags && caseTags.length > 0
 
   const handleClearSelection = () => {
@@ -1230,7 +1228,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
       <ButtonGroup className="max-w-full">
         <ButtonGroupText className="h-7 px-4 text-xs">
           <span className="font-medium">{selectedCount}</span>
-          <span>selected {selectedCount === 1 ? "case" : "cases"}</span>
+          <span>已选择 {selectedCount === 1 ? "事件" : "个事件"}</span>
           {clearSelection && (
             <button
               type="button"
@@ -1240,7 +1238,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                 "ml-1 flex size-5 items-center justify-center rounded-full border border-border text-muted-foreground transition hover:bg-muted",
                 isBusy && "cursor-not-allowed opacity-60 hover:bg-transparent"
               )}
-              aria-label="Clear case selection"
+              aria-label={"清除事件选择"}
             >
               <X className="size-3.5" />
             </button>
@@ -1255,7 +1253,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               disabled={isBusy || !bulkUpdateSelectedCases}
             >
               {isBusy && <Spinner className="mr-2 size-3" />}
-              Actions
+              动作
               <ChevronDown className="ml-1 size-3" />
             </Button>
           </DropdownMenuTrigger>
@@ -1264,7 +1262,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               <DropdownMenuSubTrigger disabled={!canUpdate}>
                 <span className="flex items-center gap-2">
                   <Flag className="size-3 text-muted-foreground" aria-hidden />
-                  <span>Status</span>
+                  <span>状态</span>
                 </span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-48">
@@ -1302,8 +1300,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       await bulkUpdateSelectedCases(
                         { status: status.value },
                         {
-                          successTitle: `Status set to ${status.label}`,
-                          successDescription: `Applied to ${pluralisedCases}.`,
+                          successTitle: `状态已设置为${status.label}`,
+                          successDescription: `已应用到${pluralisedCases}。`,
                         }
                       )
                     }}
@@ -1326,7 +1324,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                     className="size-3 text-muted-foreground"
                     aria-hidden
                   />
-                  <span>Priority</span>
+                  <span>优先级</span>
                 </span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-48">
@@ -1342,8 +1340,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       await bulkUpdateSelectedCases(
                         { priority: priority.value },
                         {
-                          successTitle: `Priority set to ${priority.label}`,
-                          successDescription: `Applied to ${pluralisedCases}.`,
+                          successTitle: `优先级已设置为${priority.label}`,
+                          successDescription: `已应用到${pluralisedCases}。`,
                         }
                       )
                     }}
@@ -1363,7 +1361,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               <DropdownMenuSubTrigger disabled={!canUpdate}>
                 <span className="flex items-center gap-2">
                   <Flame className="size-3 text-muted-foreground" aria-hidden />
-                  <span>Severity</span>
+                  <span>严重程度</span>
                 </span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-48">
@@ -1379,8 +1377,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       await bulkUpdateSelectedCases(
                         { severity: severity.value },
                         {
-                          successTitle: `Severity set to ${severity.label}`,
-                          successDescription: `Applied to ${pluralisedCases}.`,
+                          successTitle: `严重程度已设置为${severity.label}`,
+                          successDescription: `已应用到${pluralisedCases}。`,
                         }
                       )
                     }}
@@ -1398,7 +1396,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
             </DropdownMenuSub>
             {caseAddonsEnabled && dropdownDefinitionsIsLoading && (
               <DropdownMenuItem disabled>
-                <Spinner className="mr-2 size-3" /> Loading dropdowns...
+                <Spinner className="mr-2 size-3" /> 正在加载下拉字段…
               </DropdownMenuItem>
             )}
             {caseAddonsEnabled &&
@@ -1442,12 +1440,12 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                           },
                           {
                             successTitle: `${definition.name} cleared`,
-                            successDescription: `Applied to ${pluralisedCases}.`,
+                            successDescription: `已应用到${pluralisedCases}。`,
                           }
                         )
                       }}
                     >
-                      <span className="text-muted-foreground">None</span>
+                      <span className="text-muted-foreground">无</span>
                     </DropdownMenuItem>
                     {definition.options?.map((opt) => {
                       const optionStyle = opt.color
@@ -1470,8 +1468,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                                 ],
                               },
                               {
-                                successTitle: `${definition.name} set to ${opt.label}`,
-                                successDescription: `Applied to ${pluralisedCases}.`,
+                                successTitle: `${definition.name} 已设置为 ${opt.label}`,
+                                successDescription: `已应用到${pluralisedCases}。`,
                               }
                             )
                           }}
@@ -1505,17 +1503,17 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               <DropdownMenuSubTrigger disabled={!canUpdate}>
                 <span className="flex items-center gap-2">
                   <User className="size-3 text-muted-foreground" aria-hidden />
-                  <span>Assign to</span>
+                  <span>分配给</span>
                 </span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-56">
                 {membersLoading && (
                   <DropdownMenuItem disabled>
-                    <Spinner className="mr-2 size-3" /> Loading assignees...
+                    <Spinner className="mr-2 size-3" /> 正在加载负责人…
                   </DropdownMenuItem>
                 )}
                 {!membersLoading && assigneeOptions.length <= 1 && (
-                  <DropdownMenuItem disabled>No members found</DropdownMenuItem>
+                  <DropdownMenuItem disabled>未找到成员</DropdownMenuItem>
                 )}
                 {!membersLoading &&
                   assigneeOptions.map((assignee) => (
@@ -1531,9 +1529,9 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                           { assignee_id: isUnassigned ? null : assignee.value },
                           {
                             successTitle: isUnassigned
-                              ? "Cases unassigned"
-                              : `Assigned to ${assignee.label}`,
-                            successDescription: `Applied to ${pluralisedCases}.`,
+                              ? "事件已取消分配"
+                              : `已分配给 ${assignee.label}`,
+                            successDescription: `已应用到${pluralisedCases}。`,
                           }
                         )
                       }}
@@ -1550,19 +1548,17 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                     className="size-3 text-muted-foreground"
                     aria-hidden
                   />
-                  <span>Apply tags</span>
+                  <span>应用标签</span>
                 </span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="w-56">
                 {caseTagsIsLoading && (
                   <DropdownMenuItem disabled>
-                    <Spinner className="mr-2 size-3" /> Loading tags...
+                    <Spinner className="mr-2 size-3" /> 正在加载标签…
                   </DropdownMenuItem>
                 )}
                 {!caseTagsIsLoading && (!caseTags || caseTags.length === 0) && (
-                  <DropdownMenuItem disabled>
-                    No tags available
-                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled>暂无可用标签</DropdownMenuItem>
                 )}
                 {!caseTagsIsLoading && caseTags && caseTags.length > 0 && (
                   <>
@@ -1614,11 +1610,11 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       {isApplyingTags ? (
                         <>
                           <Spinner className="mr-2 size-3" />
-                          Applying...
+                          应用中…
                         </>
                       ) : (
                         <>
-                          Apply{" "}
+                          应用{" "}
                           {selectedTagIds.size > 0 &&
                             `(${selectedTagIds.size})`}
                         </>
@@ -1643,7 +1639,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       className="size-3 text-muted-foreground"
                       aria-hidden
                     />
-                    <span>Group case</span>
+                    <span>归入父事件</span>
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -1657,7 +1653,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                       className="size-3 text-muted-foreground"
                       aria-hidden
                     />
-                    <span>Ungroup case</span>
+                    <span>移出父事件</span>
                   </span>
                 </DropdownMenuItem>
               </>
@@ -1675,7 +1671,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                   className="size-3 text-muted-foreground"
                   aria-hidden
                 />
-                <span>Add comment</span>
+                <span>添加评论</span>
               </span>
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -1690,7 +1686,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                   className="size-3 text-muted-foreground"
                   aria-hidden
                 />
-                <span>Append to description</span>
+                <span>追加到描述</span>
               </span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -1706,7 +1702,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
             >
               <span className="flex items-center gap-2">
                 <Trash2 className="size-3" aria-hidden />
-                <span>Delete</span>
+                <span>删除</span>
               </span>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -1716,13 +1712,13 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
         open={Boolean(setParentForSelectedCases) && parentPickerOpen}
         onOpenChange={setParentPickerOpen}
         workspaceId={workspaceId}
-        title="Group under parent case"
-        description={`Make ${pluralisedCases} sub-cases of a top-level case. Sub-cases are hidden from the cases list by default and listed on the parent case.`}
+        title={"归入父事件"}
+        description={`将 ${pluralisedCases} 归入顶层事件作为子事件。子事件默认在事件列表中隐藏，并显示在父事件下方。`}
         // Parents must be top-level cases.
         hierarchy="top_level"
         isCandidate={(item) => !selectedCaseIds.includes(item.id)}
         confirmLabel={([parent]) =>
-          parent ? `Group under ${parent.short_id}` : "Select a case"
+          parent ? `归入 ${parent.short_id}` : "Select a case"
         }
         onConfirm={async ([parent]) => {
           await setParentForSelectedCases?.(parent)
@@ -1732,15 +1728,14 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
       <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm deletion</AlertDialogTitle>
+            <AlertDialogTitle>确认删除</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete {selectedCount} selected
-              {selectedCount === 1 ? " case" : " cases"}? This action cannot be
-              undone.
+              确定要删除 {selectedCount} 已选择
+              {selectedCount === 1 ? " 个事件" : " 个事件"}吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={isDeleting}
@@ -1749,10 +1744,10 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               {isDeleting ? (
                 <span className="flex items-center">
                   <Spinner className="size-4" />
-                  <span className="ml-2">Deleting...</span>
+                  <span className="ml-2">删除中…</span>
                 </span>
               ) : (
-                "Delete"
+                "删除"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1767,17 +1762,17 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
       >
         <DialogContent size="sm" className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Add comment</DialogTitle>
+            <DialogTitle>添加评论</DialogTitle>
             <DialogDescription>
-              Add a comment to {selectedCount} selected
-              {selectedCount === 1 ? " case" : " cases"}.
+              添加评论，目标为 {selectedCount} 已选择
+              {selectedCount === 1 ? " 个事件" : " 个事件"}.
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <SimpleEditor
               value={commentText}
               onChange={setCommentText}
-              placeholder="Enter comment..."
+              placeholder={"输入评论…"}
               className="min-h-[150px]"
             />
           </DialogBody>
@@ -1790,10 +1785,10 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               {isAddingComments ? (
                 <>
                   <Spinner className="mr-2 size-3" />
-                  Adding...
+                  添加中…
                 </>
               ) : (
-                "Add comment"
+                "添加评论"
               )}
             </Button>
           </DialogFooter>
@@ -1808,17 +1803,17 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
       >
         <DialogContent size="sm" className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Append to description</DialogTitle>
+            <DialogTitle>追加到描述</DialogTitle>
             <DialogDescription>
-              Append text to the description of {selectedCount} selected
-              {selectedCount === 1 ? " case" : " cases"}.
+              追加文本到以下事件的描述： {selectedCount} 已选择
+              {selectedCount === 1 ? " 个事件" : " 个事件"}.
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <SimpleEditor
               value={appendText}
               onChange={setAppendText}
-              placeholder="Enter text to append..."
+              placeholder={"输入要追加的文本…"}
               className="min-h-[150px]"
             />
           </DialogBody>
@@ -1831,10 +1826,10 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
               {isAppending ? (
                 <>
                   <Spinner className="mr-2 size-3" />
-                  Appending...
+                  追加中…
                 </>
               ) : (
-                "Append"
+                "追加"
               )}
             </Button>
           </DialogFooter>
@@ -1860,7 +1855,7 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
           onSubmit={async (data) => {
             if (!bulkUpdateSelectedCases) return
             const statusLabel =
-              closureDialog.targetStatus === "closed" ? "Closed" : "Resolved"
+              closureDialog.targetStatus === "closed" ? "已关闭" : "已解决"
             await bulkUpdateSelectedCases(
               {
                 status: closureDialog.targetStatus,
@@ -1871,8 +1866,8 @@ function CasesSelectionActionsBar({ enabled = true }: { enabled?: boolean }) {
                 })),
               },
               {
-                successTitle: `Status set to ${statusLabel}`,
-                successDescription: `Applied to ${pluralisedCases}.`,
+                successTitle: `状态已设置为${statusLabel}`,
+                successDescription: `已应用到${pluralisedCases}。`,
               }
             )
           }}
@@ -1899,7 +1894,7 @@ function CredentialsActions() {
   return (
     <>
       <WorkspaceResourceSyncActions
-        label="credential metadata"
+        label={"凭据元数据"}
         branchSlug="credentials"
         resources={["secret_metadata"]}
       />
@@ -1912,7 +1907,7 @@ function CredentialsActions() {
             onClick={() => setDialogOpen(true)}
           >
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create credential
+            创建凭据
           </Button>
           <CreateCredentialDialog
             open={dialogOpen}
@@ -1950,7 +1945,7 @@ function ServiceAccountsActions() {
       }}
     >
       <Plus className="mr-1 h-3.5 w-3.5" />
-      Create service account
+      创建服务账号
     </Button>
   )
 }
@@ -1979,7 +1974,7 @@ function McpServersActions() {
       }}
     >
       <Plus className="mr-1 h-3.5 w-3.5" />
-      Add MCP server
+      添加 MCP 服务器
     </Button>
   )
 }
@@ -2008,7 +2003,7 @@ function McpAccessActions() {
       }}
     >
       <Plus className="mr-1 h-3.5 w-3.5" />
-      Create token
+      创建令牌
     </Button>
   )
 }
@@ -2017,7 +2012,7 @@ function VariablesActions() {
   return (
     <>
       <WorkspaceResourceSyncActions
-        label="variables"
+        label={"个变量"}
         branchSlug="variables"
         resources={["variable"]}
       />
@@ -2025,7 +2020,7 @@ function VariablesActions() {
         <NewVariableDialogTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create variable
+            创建变量
           </Button>
         </NewVariableDialogTrigger>
       </NewVariableDialog>
@@ -2047,7 +2042,7 @@ function CaseBreadcrumb({
       <BreadcrumbList className="relative z-10 flex items-center gap-2 text-sm flex-nowrap overflow-hidden whitespace-nowrap min-w-0 bg-transparent pr-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild className="font-semibold hover:no-underline">
-            <Link href={`/workspaces/${workspaceId}/cases`}>Cases</Link>
+            <Link href={`/workspaces/${workspaceId}/cases`}>事件</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator className="shrink-0">
@@ -2091,6 +2086,7 @@ function CaseTimestamp({
         <span className="truncate min-w-0">
           {capitalizeFirst(
             formatDistanceToNow(new Date(caseData.created_at), {
+              locale: zhCN,
               addSuffix: true,
             })
           )}
@@ -2102,6 +2098,7 @@ function CaseTimestamp({
         <span className="truncate min-w-0">
           {capitalizeFirst(
             formatDistanceToNow(new Date(caseData.updated_at), {
+              locale: zhCN,
               addSuffix: true,
             })
           )}
@@ -2187,7 +2184,7 @@ function FormsListActions() {
   return (
     <>
       <WorkspaceResourceSyncActions
-        label="workflows and forms"
+        label={"工作流和表单"}
         branchSlug="forms"
         resources={["workflow"]}
       />
@@ -2200,7 +2197,7 @@ function FormsListActions() {
             onClick={() => setCreateOpen(true)}
           >
             <Plus className="mr-1 size-3.5" />
-            Create form
+            创建表单
           </Button>
           <CreateFormDialog open={createOpen} onOpenChange={setCreateOpen} />
         </>
@@ -2230,9 +2227,7 @@ function FormBreadcrumb({
     })
 
   if (!enabled) {
-    return (
-      <h1 className="text-sm font-semibold text-muted-foreground">Forms</h1>
-    )
+    return <h1 className="text-sm font-semibold text-muted-foreground">表单</h1>
   }
 
   async function setOnline(next: boolean) {
@@ -2240,11 +2235,8 @@ function FormBreadcrumb({
       await updateForm({ status: next ? "online" : "offline" })
     } catch (error) {
       toast({
-        title: next
-          ? "Couldn't put the form online"
-          : "Couldn't take the form offline",
-        description:
-          getFormErrorDetail(error)?.message ?? "Something went wrong.",
+        title: next ? "无法上线表单" : "无法下线表单",
+        description: getFormErrorDetail(error)?.message ?? "出现了问题。",
         variant: "destructive",
       })
     }
@@ -2253,7 +2245,7 @@ function FormBreadcrumb({
   const online = form?.status === "online"
   const label = form
     ? form.config.title || form.workflow_title
-    : (!formIsLoading && "Form not found") || null
+    : (!formIsLoading && "未找到表单") || null
   return (
     <div className="flex min-w-0 items-center gap-3">
       <Breadcrumb className="min-w-0">
@@ -2263,7 +2255,7 @@ function FormBreadcrumb({
               asChild
               className="font-semibold hover:no-underline"
             >
-              <Link href={`/workspaces/${workspaceId}/forms`}>Forms</Link>
+              <Link href={`/workspaces/${workspaceId}/forms`}>表单</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator className="shrink-0">
@@ -2279,10 +2271,10 @@ function FormBreadcrumb({
           <Switch
             checked={online}
             disabled={!canEdit || updateFormIsPending}
-            aria-label="Form online"
+            aria-label={"表单已上线"}
             onCheckedChange={setOnline}
           />
-          <span>{online ? "Online" : "Offline"}</span>
+          <span>{online ? "已上线" : "已下线"}</span>
         </div>
       )}
     </div>
@@ -2314,7 +2306,7 @@ function FormDetailActions({
       >
         <a href={`/forms/${form.id}`} target="_blank" rel="noopener noreferrer">
           <ExternalLinkIcon className="size-3.5" />
-          Open
+          打开
         </a>
       </Button>
     </>
@@ -2335,7 +2327,7 @@ function TableBreadcrumb({
       <BreadcrumbList className="relative z-10 flex items-center gap-2 text-sm flex-nowrap overflow-hidden whitespace-nowrap min-w-0 bg-transparent pr-1">
         <BreadcrumbItem>
           <BreadcrumbLink asChild className="font-semibold hover:no-underline">
-            <Link href={`/workspaces/${workspaceId}/tables`}>Tables</Link>
+            <Link href={`/workspaces/${workspaceId}/tables`}>数据表</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator className="shrink-0">
@@ -2367,7 +2359,7 @@ function TableDetailsActions({ tableId }: { tableId: string }) {
         <TableSearchBadge />
       </TableSearchProvider>
       <WorkspaceResourceSyncActions
-        label="tables"
+        label={"个数据表"}
         branchSlug="tables"
         resources={["table"]}
       />
@@ -2450,13 +2442,13 @@ function getPageConfig(
 
   if (pagePath.startsWith("/approvals")) {
     return {
-      title: "Approvals",
+      title: "审批",
     }
   }
 
   if (pagePath.startsWith("/runs")) {
     return {
-      title: "Runs",
+      title: "运行记录",
     }
   }
 
@@ -2464,7 +2456,7 @@ function getPageConfig(
     // Tags page
     if (pagePath === "/agents/tags") {
       return {
-        title: "Agents",
+        title: "智能体",
         actions: <AgentsActions />,
       }
     }
@@ -2484,7 +2476,7 @@ function getPageConfig(
           <AgentPresetDetailHeaderActions
             syncActions={
               <WorkspaceResourceSyncActions
-                label="agents"
+                label={"个智能体"}
                 branchSlug="agents"
                 resources={["agent_preset"]}
               />
@@ -2517,7 +2509,7 @@ function getPageConfig(
       pagePath === "/cases/tags"
     ) {
       return {
-        title: "Cases",
+        title: "事件",
         actions: <CasesActions />,
       }
     }
@@ -2533,7 +2525,7 @@ function getPageConfig(
     }
 
     return {
-      title: "Cases",
+      title: "事件",
       actions: <CasesActions />,
     }
   }
@@ -2551,7 +2543,7 @@ function getPageConfig(
     }
 
     return {
-      title: "Forms",
+      title: "表单",
       actions: <FormsListActions />,
     }
   }
@@ -2568,21 +2560,21 @@ function getPageConfig(
     }
 
     return {
-      title: "Tables",
+      title: "数据表",
       actions: <TablesActions />,
     }
   }
 
   if (pagePath.startsWith("/integrations")) {
     return {
-      title: "Integrations",
+      title: "集成",
       actions: <IntegrationsActions />,
     }
   }
 
   if (pagePath.startsWith("/actions")) {
     return {
-      title: "Actions",
+      title: "动作",
     }
   }
 
@@ -2596,7 +2588,7 @@ function getPageConfig(
 
     if (pagePath === "/skills/tags") {
       return {
-        title: "Skills",
+        title: "技能",
         actions: <SkillsActions />,
       }
     }
@@ -2638,7 +2630,7 @@ function getPageConfig(
         actions: (
           <>
             <WorkspaceResourceSyncActions
-              label="skills"
+              label={"个技能"}
               branchSlug="skills"
               resources={["skill"]}
             />
@@ -2663,56 +2655,56 @@ function getPageConfig(
 
   if (pagePath.startsWith("/credentials")) {
     return {
-      title: "Credentials",
+      title: "凭据",
       actions: <CredentialsActions />,
     }
   }
 
   if (pagePath.startsWith("/mcp-servers")) {
     return {
-      title: "MCP servers",
+      title: "MCP 服务器",
       actions: <McpServersActions />,
     }
   }
 
   if (pagePath.startsWith("/service-accounts")) {
     return {
-      title: "Service accounts",
+      title: "服务账号",
       actions: <ServiceAccountsActions />,
     }
   }
 
   if (pagePath.startsWith("/mcp")) {
     return {
-      title: "MCP access",
+      title: "MCP 访问",
       actions: <McpAccessActions />,
     }
   }
 
   if (pagePath === "/tunnels") {
     return {
-      title: "Tunnels",
+      title: "隧道",
       actions: <CreateTunnelButton />,
     }
   }
 
   if (pagePath.startsWith("/variables")) {
     return {
-      title: "Variables",
+      title: "变量",
       actions: <VariablesActions />,
     }
   }
 
   if (pagePath === "/members") {
     return {
-      title: "Members",
+      title: "成员",
       actions: <MembersActions />,
     }
   }
 
   if (pagePath.startsWith("/inbox")) {
     return {
-      title: "Inbox",
+      title: "收件箱",
     }
   }
 
@@ -2851,7 +2843,7 @@ export function ControlsHeader({ onToggleChat }: ControlsHeaderProps = {}) {
                 onClick={onToggleChat}
               >
                 <PanelRight className="h-4 w-4 text-muted-foreground" />
-                <span className="sr-only">Toggle Chat</span>
+                <span className="sr-only">切换对话</span>
               </Button>
             </TooltipTrigger>
             <TooltipContent
@@ -2865,7 +2857,7 @@ export function ControlsHeader({ onToggleChat }: ControlsHeaderProps = {}) {
               <span className="inline-flex items-center gap-1">
                 <Kbd>C</Kbd>
                 <span className="inline-flex h-5 items-center rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
-                  then
+                  然后
                 </span>
                 <Kbd>C</Kbd>
               </span>

@@ -82,10 +82,10 @@ const SORT_FIELD_OPTIONS: Array<{
   label: string
   icon: ComponentType<{ className?: string }>
 }> = [
-  { value: "updated_at", label: "Updated", icon: Clock3 },
-  { value: "created_at", label: "Created", icon: CalendarIcon },
-  { value: "name", label: "Name", icon: TypeIcon },
-  { value: "version", label: "Version", icon: HistoryIcon },
+  { value: "updated_at", label: "更新时间", icon: Clock3 },
+  { value: "created_at", label: "创建时间", icon: CalendarIcon },
+  { value: "name", label: "名称", icon: TypeIcon },
+  { value: "version", label: "版本", icon: HistoryIcon },
 ]
 
 const LIMIT_OPTIONS = [10, 20, 50]
@@ -98,21 +98,21 @@ type FilterSelectOption<TValue extends string> = {
 const WEBHOOK_FILTER_OPTIONS: Array<
   FilterSelectOption<WorkflowWebhookFilterValue>
 > = [
-  { value: "all", label: "All" },
-  { value: "enabled", label: "Enabled" },
-  { value: "disabled", label: "Disabled" },
+  { value: "all", label: "全部" },
+  { value: "enabled", label: "已启用" },
+  { value: "disabled", label: "已禁用" },
 ]
 
 const SCHEDULE_FILTER_OPTIONS: Array<
   FilterSelectOption<WorkflowScheduleFilterValue>
 > = [
-  { value: "all", label: "All" },
-  { value: "never", label: "Never" },
-  { value: "within_minutes", label: "Within minutes" },
-  { value: "within_hours", label: "Within hours" },
-  { value: "within_days", label: "Within days" },
-  { value: "within_week", label: "Within a week" },
-  { value: "more_than_week", label: "More than a week" },
+  { value: "all", label: "全部" },
+  { value: "never", label: "从未" },
+  { value: "within_minutes", label: "几分钟内" },
+  { value: "within_hours", label: "几小时内" },
+  { value: "within_days", label: "几天内" },
+  { value: "within_week", label: "一周内" },
+  { value: "more_than_week", label: "超过一周" },
 ]
 
 const CASE_TRIGGER_FILTER_OPTIONS: Array<FilterSelectOption<CaseEventType>> = [
@@ -245,7 +245,7 @@ function TagFilterSelect({
           )}
         >
           <TagIcon className="size-3.5 text-muted-foreground" />
-          <span>Tags</span>
+          <span>标签</span>
           {value.length > 0 && (
             <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
               {value.length}
@@ -260,10 +260,10 @@ function TagFilterSelect({
         sideOffset={4}
       >
         <Command>
-          <CommandInput placeholder="Search tags..." className="text-xs" />
+          <CommandInput placeholder={"搜索标签…"} className="text-xs" />
           <CommandList>
             <CommandEmpty>
-              {options.length > 0 ? "No matching tags." : "No tags found."}
+              {options.length > 0 ? "没有匹配的标签。" : "未找到标签。"}
             </CommandEmpty>
             <CommandGroup>
               {options.map((tag) => {
@@ -303,7 +303,7 @@ function TagFilterSelect({
               className="flex h-7 w-full items-center justify-center rounded text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               onClick={() => onChange([])}
             >
-              Clear selection
+              清除选择
             </button>
           </div>
         )}
@@ -336,7 +336,7 @@ function CaseTriggerFilterSelect({
           )}
         >
           <FlagTriangleRight className="size-3.5 text-muted-foreground" />
-          <span>Case triggers</span>
+          <span>事件触发器</span>
           {value.length > 0 && (
             <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
               {value.length}
@@ -351,12 +351,9 @@ function CaseTriggerFilterSelect({
         sideOffset={4}
       >
         <Command>
-          <CommandInput
-            placeholder="Search case events..."
-            className="text-xs"
-          />
+          <CommandInput placeholder={"搜索事件变更…"} className="text-xs" />
           <CommandList>
-            <CommandEmpty>No matching events.</CommandEmpty>
+            <CommandEmpty>没有匹配的事件变更。</CommandEmpty>
             <CommandGroup>
               {CASE_TRIGGER_FILTER_OPTIONS.map((option) => {
                 const isSelected = valueSet.has(option.value)
@@ -388,7 +385,7 @@ function CaseTriggerFilterSelect({
               className="flex h-7 w-full items-center justify-center rounded text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               onClick={() => onChange([])}
             >
-              Clear selection
+              清除选择
             </button>
           </div>
         )}
@@ -405,7 +402,7 @@ interface SortBySelectProps {
 function SortBySelect({ value, onChange }: SortBySelectProps) {
   const selectedLabel =
     SORT_FIELD_OPTIONS.find((option) => option.value === value.field)?.label ??
-    "Updated"
+    "更新时间"
 
   return (
     <div className="inline-flex items-center rounded-md border border-input bg-transparent">
@@ -419,7 +416,7 @@ function SortBySelect({ value, onChange }: SortBySelectProps) {
         }
       >
         <SelectTrigger className="h-6 w-[145px] rounded-r-none border-0 bg-transparent px-2 text-xs font-medium shadow-none focus:ring-0">
-          <span className="text-muted-foreground">Sort by</span>
+          <span className="text-muted-foreground">排序方式</span>
           <span className="text-foreground">{selectedLabel}</span>
         </SelectTrigger>
         <SelectContent align="start">
@@ -445,9 +442,7 @@ function SortBySelect({ value, onChange }: SortBySelectProps) {
             direction: value.direction === "asc" ? "desc" : "asc",
           })
         }
-        aria-label={
-          value.direction === "asc" ? "Sort ascending" : "Sort descending"
-        }
+        aria-label={value.direction === "asc" ? "升序排序" : "降序排序"}
       >
         {value.direction === "asc" ? (
           <ArrowUpIcon className="size-3.5" />
@@ -534,8 +529,8 @@ export function WorkflowsHeader({
   }
 
   const viewLabel: Record<WorkflowsViewMode, string> = {
-    list: "List",
-    folders: "Folders",
+    list: "列表",
+    folders: "文件夹",
   }
 
   const viewIcon: Record<WorkflowsViewMode, ReactNode> = {
@@ -547,7 +542,7 @@ export function WorkflowsHeader({
     <div className="shrink-0 border-b">
       <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
         <ListHeaderSearch
-          placeholder="Search workflows..."
+          placeholder={"搜索工作流…"}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
@@ -566,10 +561,10 @@ export function WorkflowsHeader({
             )}
             onClick={onPreviousPage}
             disabled={!hasPreviousPage || isPaginationLoading}
-            aria-label="Previous page"
+            aria-label={"上一页"}
           >
             <ChevronLeft className="size-3.5" />
-            <span>Prev</span>
+            <span>上一页</span>
           </button>
           <button
             type="button"
@@ -581,9 +576,9 @@ export function WorkflowsHeader({
             )}
             onClick={onNextPage}
             disabled={!hasNextPage || isPaginationLoading}
-            aria-label="Next page"
+            aria-label={"下一页"}
           >
-            <span>Next</span>
+            <span>下一页</span>
             <ChevronRight className="size-3.5" />
           </button>
         </div>
@@ -599,13 +594,13 @@ export function WorkflowsHeader({
           <SelectTrigger className="h-6 w-[138px] rounded-md px-2 text-xs font-medium">
             <div className="flex items-center gap-1.5">
               {viewIcon[view]}
-              <span>View</span>
+              <span>视图</span>
             </div>
             <SelectValue placeholder={viewLabel[view]} />
           </SelectTrigger>
           <SelectContent align="start">
-            <SelectItem value="list">List</SelectItem>
-            <SelectItem value="folders">Folders</SelectItem>
+            <SelectItem value="list">列表</SelectItem>
+            <SelectItem value="folders">文件夹</SelectItem>
           </SelectContent>
         </Select>
 
@@ -626,7 +621,7 @@ export function WorkflowsHeader({
         />
 
         <IconFilterSelect
-          label="Schedules"
+          label={"定时计划"}
           icon={CalendarClockIcon}
           value={scheduleFilter}
           options={SCHEDULE_FILTER_OPTIONS}
@@ -649,7 +644,7 @@ export function WorkflowsHeader({
             onClick={handleReset}
             className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            Reset
+            重置
             <Cross2Icon className="size-3" />
           </button>
         )}
@@ -661,7 +656,7 @@ export function WorkflowsHeader({
             disabled={isPaginationLoading}
           >
             <SelectTrigger className="h-6 w-auto gap-1.5 rounded-md px-2 text-xs font-medium">
-              <span className="text-muted-foreground">Limit</span>
+              <span className="text-muted-foreground">限制</span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent align="end">

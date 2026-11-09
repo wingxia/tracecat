@@ -38,65 +38,65 @@ export const RESOURCE_CATEGORIES: Record<
   { label: string; description: string; resources: string[] }
 > = {
   workflows: {
-    label: "Workflows",
-    description: "Workflow automation and execution",
+    label: "工作流",
+    description: "工作流自动化与执行",
     resources: ["workflow", "schedule"],
   },
   forms: {
-    label: "Forms",
-    description: "Forms, submitting them, and their submissions",
+    label: "表单",
+    description: "表单、填写与提交记录",
     resources: ["form"],
   },
   cases: {
-    label: "Cases",
-    description: "Case management and tracking",
+    label: "事件",
+    description: "事件管理与跟踪",
     resources: ["case"],
   },
   data: {
-    label: "Data",
-    description: "Tables, tags, and variables",
+    label: "数据",
+    description: "数据表、标签和变量",
     resources: ["table", "tag", "variable"],
   },
   agents: {
-    label: "Agents",
-    description: "AI agent configuration and execution",
+    label: "智能体",
+    description: "AI 智能体配置与执行",
     resources: ["agent"],
   },
   secrets: {
-    label: "Secrets",
-    description: "Credential, secret, and network tunnel management",
+    label: "密钥",
+    description: "凭据、密钥及网络隧道管理",
     resources: ["secret", "tunnel"],
   },
   integrations: {
-    label: "Integrations",
-    description: "OAuth and MCP integration management",
+    label: "集成",
+    description: "OAuth 和 MCP 集成管理",
     resources: ["integration"],
   },
   workspace: {
-    label: "Workspace",
-    description: "Workspace settings, members, and access control",
+    label: "工作空间",
+    description: "工作空间设置、成员及访问控制",
     resources: ["workspace", "workspace:member", "workspace:rbac"],
   },
   organization: {
-    label: "Organization",
-    description: "Organization settings, members, and RBAC",
+    label: "组织",
+    description: "组织设置、成员及基于角色的访问控制",
     resources: ["org"],
   },
   actions: {
-    label: "Actions",
-    description: "Registry action execution permissions",
+    label: "动作",
+    description: "注册表动作执行权限",
     resources: ["action"],
   },
 }
 
 // Display labels for permission levels
 export const LEVEL_LABELS: Record<PermissionLevel, string> = {
-  none: "None",
-  read: "Read",
-  write: "Write",
-  execute: "Execute",
-  admin: "Admin",
-  mixed: "Custom",
+  none: "无",
+  read: "读取",
+  write: "写入",
+  execute: "执行",
+  admin: "管理员",
+  mixed: "自定义",
 }
 
 function isActionScopeResource(resource: string): boolean {
@@ -323,13 +323,13 @@ export function abbreviateName(name: string): string {
 /** Map an organization role slug to the tier shown in the members table. */
 export function organizationTier(
   roleSlug: string | null | undefined
-): "Owner" | "Admin" | "Member" {
+): "所有者" | "管理员" | "成员" {
   switch (roleSlug) {
     case "organization-owner":
-      return "Owner"
+      return "所有者"
     case "organization-admin":
-      return "Admin"
+      return "管理员"
     default:
-      return "Member"
+      return "成员"
   }
 }

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
     role="navigation"
-    aria-label="pagination"
+    aria-label={"分页"}
     className={cn("mx-auto flex w-full justify-center", className)}
     {...props}
   />
@@ -67,13 +67,13 @@ const PaginationPrevious = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to previous page"
+    aria-label={"前往上一页"}
     size="default"
     className={cn("gap-1 pl-2.5", className)}
     {...props}
   >
     <ChevronLeftIcon className="size-4" />
-    <span>Previous</span>
+    <span>上一页</span>
   </PaginationLink>
 )
 PaginationPrevious.displayName = "PaginationPrevious"
@@ -83,12 +83,12 @@ const PaginationNext = ({
   ...props
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink
-    aria-label="Go to next page"
+    aria-label={"前往下一页"}
     size="default"
     className={cn("gap-1 pr-2.5", className)}
     {...props}
   >
-    <span>Next</span>
+    <span>下一页</span>
     <ChevronRightIcon className="size-4" />
   </PaginationLink>
 )
@@ -104,7 +104,7 @@ const PaginationEllipsis = ({
     {...props}
   >
     <DotsHorizontalIcon className="size-4" />
-    <span className="sr-only">More pages</span>
+    <span className="sr-only">更多页面</span>
   </span>
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"

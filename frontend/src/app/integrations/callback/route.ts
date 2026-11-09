@@ -101,10 +101,9 @@ export const GET = async (request: NextRequest) => {
   return NextResponse.redirect(redirect_url)
 }
 
-const GENERIC_CALLBACK_FAILURE =
-  "Failed to complete the OAuth connection. Please try again."
+const GENERIC_CALLBACK_FAILURE = "无法完成 OAuth 连接，请重试。"
 const INSUFFICIENT_SCOPE_DESCRIPTION =
-  "You don't have permission to connect integrations in this workspace. Ask a workspace admin for integration create or update access."
+  "你没有在此工作空间连接集成的权限，请联系工作空间管理员申请集成创建或更新权限。"
 
 async function describeCallbackFailure(
   response: Response

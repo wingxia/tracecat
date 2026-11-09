@@ -32,17 +32,15 @@ export function PlatformRegistryReposTable() {
     try {
       await syncRepository({ repositoryId, force })
       toast({
-        title: "Sync complete",
-        description: "Repository sync successful.",
+        title: "同步完成",
+        description: "仓库同步成功。",
       })
       refetch()
     } catch (error) {
       console.error("Failed to sync repository", error)
-      const detail =
-        getApiErrorDetail(error) ??
-        "Failed to sync repository. Please try again."
+      const detail = getApiErrorDetail(error) ?? "同步仓库失败，请重试。"
       toast({
-        title: "Sync failed",
+        title: "同步失败",
         description: detail,
         variant: "destructive",
       })
@@ -52,7 +50,7 @@ export function PlatformRegistryReposTable() {
   }
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading repositories...</div>
+    return <div className="text-muted-foreground">正在加载仓库…</div>
   }
 
   const repositories = status?.repositories ?? []
@@ -68,7 +66,7 @@ export function PlatformRegistryReposTable() {
             <DataTableColumnHeader
               className="text-xs"
               column={column}
-              title="Name"
+              title={"名称"}
             />
           ),
           cell: ({ row }) => (
@@ -85,7 +83,7 @@ export function PlatformRegistryReposTable() {
             <DataTableColumnHeader
               className="text-xs"
               column={column}
-              title="Origin"
+              title={"来源"}
             />
           ),
           cell: ({ row }) => (
@@ -102,7 +100,7 @@ export function PlatformRegistryReposTable() {
             <DataTableColumnHeader
               className="text-xs"
               column={column}
-              title="Version"
+              title={"版本"}
             />
           ),
           cell: ({ row }) => {
@@ -115,7 +113,7 @@ export function PlatformRegistryReposTable() {
                     {commitSha.substring(0, 7)}
                   </Badge>
                 ) : (
-                  <span className="text-muted-foreground">Not synced</span>
+                  <span className="text-muted-foreground">尚未同步</span>
                 )}
               </div>
             )
@@ -129,20 +127,20 @@ export function PlatformRegistryReposTable() {
             <DataTableColumnHeader
               className="text-xs"
               column={column}
-              title="Last synced"
+              title={"上次同步"}
             />
           ),
           cell: ({ row }) => {
             const lastSynced =
               row.getValue<RepositoryStatus["last_synced_at"]>("last_synced_at")
             if (!lastSynced) {
-              return <div className="text-xs text-muted-foreground">Never</div>
+              return <div className="text-xs text-muted-foreground">从未</div>
             }
             const date = new Date(lastSynced)
             const ago = getRelativeTime(date)
             return (
               <div className="text-xs text-muted-foreground">
-                <span>{date.toLocaleDateString()}</span>
+                <span>{date.toLocaleDateString("zh-CN")}</span>
                 <span className="ml-1">({ago})</span>
               </div>
             )
@@ -161,7 +159,7 @@ export function PlatformRegistryReposTable() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="size-8 p-0">
-                    <span className="sr-only">Open menu</span>
+                    <span className="sr-only">打开菜单</span>
                     {isSyncing ? (
                       <ReloadIcon className="size-4 animate-spin" />
                     ) : (
@@ -173,20 +171,20 @@ export function PlatformRegistryReposTable() {
                   <DropdownMenuItem
                     onClick={() => navigator.clipboard.writeText(repo.id)}
                   >
-                    Copy ID
+                    复制 ID
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => handleSync(repo.id, false)}
                     disabled={isSyncing}
                   >
-                    Sync repository
+                    同步仓库
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleSync(repo.id, true)}
                     disabled={isSyncing}
                   >
-                    Force sync (delete existing)
+                    强制同步（删除现有内容）
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -201,7 +199,7 @@ export function PlatformRegistryReposTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<RepositoryStatus> = {
   filterProps: {
-    placeholder: "Filter repositories...",
+    placeholder: "筛选仓库…",
     column: "name",
   },
 }

@@ -22,8 +22,7 @@ export function CreateVariableTooltip() {
         >
           <div className="w-full space-y-4">
             <div className="w-full items-center text-start text-muted-foreground ">
-              Create a variable that can have multiple key-value pairs. You can
-              reference these variables in your workflows through{" "}
+              创建包含多个键值对的变量。在工作流中可通过以下表达式引用：{" "}
             </div>
             <div className="rounded-md border bg-muted-foreground/10 p-2">
               <pre className="text-xs text-foreground/70">
@@ -32,8 +31,8 @@ export function CreateVariableTooltip() {
             </div>
             <div className="w-full items-center text-start text-muted-foreground ">
               <span>
-                For example, if I have a variable called with key API_URL, I can
-                create a variable named `api_config` and reference this as{" "}
+                例如，变量键名为 API_URL 时，可创建名为 `api_config`
+                的变量，并这样引用：{" "}
               </span>
             </div>
             <div className="flex w-full flex-col text-muted-foreground ">
@@ -47,7 +46,7 @@ export function CreateVariableTooltip() {
         </HoverCardContent>
       </HoverCard>
       <span className="text-sm text-muted-foreground">
-        Define a variable with one or more key-value pairs.
+        定义包含一个或多个键值对的变量。
       </span>
     </div>
   )

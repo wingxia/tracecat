@@ -28,14 +28,14 @@ const ENTITY_TYPE_OPTIONS: Array<{
   value: AgentSessionEntity | "all"
   label: string
 }> = [
-  { value: "all", label: "All types" },
-  { value: "case", label: "Case" },
-  { value: "agent_preset", label: "Agent preset" },
-  { value: "agent_preset_builder", label: "Agent preset builder" },
-  { value: "workflow", label: "Workflow" },
-  { value: "copilot", label: "Copilot" },
-  { value: "approval", label: "Approval" },
-  { value: "external_channel", label: "External channel" },
+  { value: "all", label: "所有类型" },
+  { value: "case", label: "事件" },
+  { value: "agent_preset", label: "智能体预设" },
+  { value: "agent_preset_builder", label: "智能体预设编辑器" },
+  { value: "workflow", label: "工作流" },
+  { value: "copilot", label: "助手" },
+  { value: "approval", label: "审批" },
+  { value: "external_channel", label: "外部渠道" },
 ]
 
 const LIMIT_OPTIONS = [
@@ -48,11 +48,11 @@ const DATE_FILTER_OPTIONS: Array<{
   value: DateFilterValue
   label: string
 }> = [
-  { value: null, label: "Any time" },
-  { value: "1d", label: "1 day ago" },
-  { value: "3d", label: "3 days ago" },
-  { value: "1w", label: "1 week ago" },
-  { value: "1m", label: "1 month ago" },
+  { value: null, label: "不限时间" },
+  { value: "1d", label: "1 天前" },
+  { value: "3d", label: "3 天前" },
+  { value: "1w", label: "1 周前" },
+  { value: "1m", label: "1 个月前" },
 ]
 
 interface InboxHeaderProps {
@@ -94,7 +94,7 @@ export function InboxHeader({
   return (
     <header className="flex h-10 shrink-0 items-center gap-3 border-b pl-3 pr-4">
       <ListHeaderSearch
-        placeholder="Search sessions..."
+        placeholder={"搜索会话…"}
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
       >
@@ -103,13 +103,11 @@ export function InboxHeader({
             className="flex h-6 max-w-56 items-center gap-1.5 rounded-md border bg-muted/40 px-2 text-xs"
             title={caseId}
           >
-            <span className="shrink-0 text-muted-foreground">
-              Filtered by case
-            </span>
+            <span className="shrink-0 text-muted-foreground">已按事件筛选</span>
             <span className="truncate font-mono">{caseId.slice(0, 8)}</span>
             <button
               type="button"
-              aria-label="Clear case filter"
+              aria-label={"清除事件筛选"}
               className="ml-0.5 rounded-sm text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
               onClick={onClearCaseFilter}
             >
@@ -131,7 +129,7 @@ export function InboxHeader({
               )}
             >
               <FilterIcon className="size-3.5" />
-              <span>Filter</span>
+              <span>筛选</span>
               {activeFilterCount > 0 && (
                 <span className="ml-0.5 text-[10px] font-medium text-muted-foreground">
                   {activeFilterCount}
@@ -144,7 +142,7 @@ export function InboxHeader({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="flex items-center gap-2">
                 <LayersIcon className="size-4 shrink-0 text-muted-foreground" />
-                <span className="shrink-0">Type</span>
+                <span className="shrink-0">输入</span>
                 {entityType !== "all" && (
                   <span className="ml-auto shrink-0 whitespace-nowrap text-xs text-muted-foreground">
                     {ENTITY_TYPE_OPTIONS.find((o) => o.value === entityType)
@@ -174,7 +172,7 @@ export function InboxHeader({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="flex items-center gap-2">
                 <ClockIcon className="size-4 shrink-0 text-muted-foreground" />
-                <span className="shrink-0">Updated</span>
+                <span className="shrink-0">更新时间</span>
                 {updatedAfter && (
                   <span className="ml-auto shrink-0 whitespace-nowrap text-xs text-muted-foreground">
                     {DATE_FILTER_OPTIONS.find((o) => o.value === updatedAfter)
@@ -204,7 +202,7 @@ export function InboxHeader({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="flex items-center gap-2">
                 <CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
-                <span className="shrink-0">Created</span>
+                <span className="shrink-0">创建时间</span>
                 {createdAfter && (
                   <span className="ml-auto shrink-0 whitespace-nowrap text-xs text-muted-foreground">
                     {DATE_FILTER_OPTIONS.find((o) => o.value === createdAfter)
@@ -234,7 +232,7 @@ export function InboxHeader({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="flex items-center gap-2">
                 <HashIcon className="size-4 shrink-0 text-muted-foreground" />
-                <span className="shrink-0">Limit</span>
+                <span className="shrink-0">限制</span>
                 <span className="ml-auto shrink-0 whitespace-nowrap text-xs text-muted-foreground">
                   {limit}
                 </span>

@@ -88,18 +88,18 @@ type EditText = (change: (text: string) => string) => void
 const DEFAULT_WIDGET = "__default"
 
 const WIDGET_LABELS: Record<FormWidget, string> = {
-  text: "Text",
-  long_text: "Long text",
-  number: "Number",
-  toggle: "Toggle",
-  select: "Select",
-  multi_select: "Multi-select",
+  text: "文本",
+  long_text: "长文本",
+  number: "数字",
+  toggle: "切换",
+  select: "选择",
+  multi_select: "多选",
   cards: "Cards",
-  tags: "Tags",
-  date: "Date",
-  datetime: "Date and time",
-  user: "User",
-  file: "File",
+  tags: "标签",
+  date: "日期",
+  datetime: "日期与时间",
+  user: "用户",
+  file: "文件",
 }
 
 const OPTION_WIDGETS: string[] = ["select", "multi_select", "cards"]
@@ -125,26 +125,26 @@ const NEW_BLOCKS: {
 }[] = [
   {
     kind: "heading",
-    label: "Heading",
+    label: "标题",
     detail: "Section title",
     value: { heading: "Section title" },
   },
   {
     kind: "text",
-    label: "Text",
+    label: "文本",
     detail: "Markdown",
-    value: { text: "Write some text" },
+    value: { text: "填写文本" },
   },
   {
     kind: "notice",
-    label: "Notice",
-    detail: "Callout box",
+    label: "提示",
+    detail: "提示框",
     value: { notice: "Something to know", tone: "info" },
   },
   {
     kind: "divider",
-    label: "Divider",
-    detail: "Horizontal rule",
+    label: "分隔线",
+    detail: "水平分隔线",
     value: { divider: true },
   },
 ]
@@ -156,17 +156,17 @@ function asText(value: unknown): string {
 function blockTitle(item: FormLayoutItem, kind: FormBlockKind | null): string {
   switch (kind) {
     case "field":
-      return asText(item.label) || asText(item.field) || "Field"
+      return asText(item.label) || asText(item.field) || "字段"
     case "heading":
-      return asText(item.heading) || "Heading"
+      return asText(item.heading) || "标题"
     case "text":
-      return asText(item.text).split("\n")[0] || "Text"
+      return asText(item.text).split("\n")[0] || "文本"
     case "notice":
-      return asText(item.notice) || "Notice"
+      return asText(item.notice) || "提示"
     case "divider":
-      return "Divider"
+      return "分隔线"
     default:
-      return "Unknown block"
+      return "未知内容块"
   }
 }
 
@@ -209,9 +209,9 @@ export function FormVisualEditor({
   if (!config) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
-        <p className="text-sm font-medium">The YAML has errors</p>
+        <p className="text-sm font-medium">YAML 存在错误</p>
         <p className="text-xs text-muted-foreground">
-          Fix them in YAML to edit this form visually.
+          请先在 YAML 中修复错误，再使用可视化编辑。
         </p>
         <Button
           variant="outline"
@@ -219,7 +219,7 @@ export function FormVisualEditor({
           className="mt-1 h-7 text-xs"
           onClick={onEditYaml}
         >
-          Edit YAML
+          编辑 YAML
         </Button>
       </div>
     )
@@ -252,7 +252,7 @@ export function FormVisualEditor({
       <div className="mx-auto flex max-w-2xl flex-col gap-6 p-4">
         {problems.length > 0 && (
           <ul
-            aria-label="Problems"
+            aria-label={"问题"}
             className="flex flex-col gap-1 rounded-md border px-3 py-2 text-xs"
           >
             {problems.map((problem) => (
@@ -273,7 +273,7 @@ export function FormVisualEditor({
         )}
         <fieldset disabled={readOnly} className="flex flex-col gap-3">
           <TextSetting
-            label="Title"
+            label={"标题"}
             value={config.title}
             placeholder={defaultTitle}
             onChange={(value) =>
@@ -281,10 +281,10 @@ export function FormVisualEditor({
             }
           />
           <TextSetting
-            label="Description"
+            label={"描述"}
             multiline
             value={config.description}
-            placeholder="Defaults to the workflow's description"
+            placeholder={"默认使用工作流描述"}
             onChange={(value) =>
               edit((current) =>
                 setFormConfigValue(current, ["description"], value)
@@ -292,10 +292,10 @@ export function FormVisualEditor({
             }
           />
           <TextSetting
-            label="Success message"
+            label={"成功提示"}
             multiline
             value={config.successMessage}
-            placeholder="Shown after a submission"
+            placeholder={"提交后显示"}
             onChange={(value) =>
               edit((current) =>
                 setFormConfigValue(current, ["success_message"], value)
@@ -304,9 +304,9 @@ export function FormVisualEditor({
           />
         </fieldset>
 
-        <section className="flex flex-col gap-2" aria-label="Blocks">
+        <section className="flex flex-col gap-2" aria-label={"内容块"}>
           <div className="flex h-7 items-center justify-between">
-            <h3 className="text-xs font-medium">Blocks</h3>
+            <h3 className="text-xs font-medium">内容块</h3>
             {!readOnly && (
               <AddBlockMenu
                 fields={fields}
@@ -317,7 +317,7 @@ export function FormVisualEditor({
           </div>
           {layout.length === 0 ? (
             <p className="rounded-md border border-dashed p-4 text-center text-xs text-muted-foreground">
-              No blocks yet. Add one to lay out the form.
+              暂无内容块，添加一个以构建表单布局。
             </p>
           ) : (
             <DndContext
@@ -382,19 +382,19 @@ function AddBlockMenu({
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="h-7 gap-1 px-2 text-xs">
           <PlusIcon className="size-3.5" />
-          Add block
+          添加内容块
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuSub>
           <DropdownMenuSubTrigger className="text-xs">
             <TextCursorInputIcon className="mr-2 size-3.5" />
-            Field
+            字段
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent className="max-h-72 overflow-auto">
             {fields.length === 0 ? (
               <DropdownMenuItem disabled className="text-xs">
-                No workflow inputs
+                工作流没有输入
               </DropdownMenuItem>
             ) : (
               fields.map((name) => (
@@ -406,7 +406,7 @@ function AddBlockMenu({
                   <span className="font-mono">{name}</span>
                   {usedFields.has(name) && (
                     <span className="ml-auto text-muted-foreground">
-                      In use
+                      使用中
                     </span>
                   )}
                 </DropdownMenuItem>
@@ -472,7 +472,7 @@ function BlockRow({
         {!readOnly && (
           <button
             type="button"
-            aria-label="Drag to reorder"
+            aria-label={"拖动以调整顺序"}
             className="flex-none cursor-grab touch-none text-muted-foreground hover:text-foreground"
             {...attributes}
             {...listeners}
@@ -501,7 +501,7 @@ function BlockRow({
           )}
           {item.hidden === true && (
             <span className="flex-none text-[11px] text-muted-foreground">
-              Hidden
+              已隐藏
             </span>
           )}
         </button>
@@ -510,7 +510,7 @@ function BlockRow({
             variant="ghost"
             size="icon"
             className="size-6 flex-none text-muted-foreground"
-            aria-label="Remove block"
+            aria-label={"移除内容块"}
             onClick={onRemove}
           >
             <Trash2Icon className="size-3.5" />
@@ -554,7 +554,7 @@ function BlockEditor({
     case "heading":
       return (
         <TextSetting
-          label="Heading"
+          label={"内容块标题"}
           value={asText(item.heading)}
           onChange={(value) => set("heading", value, true)}
         />
@@ -562,7 +562,7 @@ function BlockEditor({
     case "text":
       return (
         <TextSetting
-          label="Text"
+          label={"文本"}
           hint="Markdown"
           multiline
           value={asText(item.text)}
@@ -573,12 +573,12 @@ function BlockEditor({
       return (
         <>
           <TextSetting
-            label="Notice"
+            label={"提示"}
             multiline
             value={asText(item.notice)}
             onChange={(value) => set("notice", value, true)}
           />
-          <Setting label="Tone">
+          <Setting label={"样式"}>
             {(id) => (
               <Select
                 value={asText(item.tone) || "info"}
@@ -601,14 +601,12 @@ function BlockEditor({
       )
     case "divider":
       return (
-        <p className="text-xs text-muted-foreground">
-          A horizontal rule. Nothing to set.
-        </p>
+        <p className="text-xs text-muted-foreground">水平分隔线，无需配置。</p>
       )
     default:
       return (
         <p className="text-xs text-muted-foreground">
-          Edit this block in YAML.
+          在 YAML 中编辑此内容块。
         </p>
       )
   }
@@ -636,11 +634,11 @@ function FieldBlockEditor({
 
   return (
     <>
-      <Setting label="Input">
+      <Setting label={"输入"}>
         {(id) => (
           <Select value={name} onValueChange={(value) => set("field", value)}>
             <SelectTrigger id={id} className="h-8 text-xs">
-              <SelectValue placeholder="Pick a workflow input" />
+              <SelectValue placeholder={"选择工作流输入"} />
             </SelectTrigger>
             <SelectContent>
               {names.map((option) => (
@@ -658,24 +656,24 @@ function FieldBlockEditor({
       </Setting>
       <div className="grid gap-3 sm:grid-cols-2">
         <TextSetting
-          label="Label"
+          label={"标签"}
           value={asText(item.label)}
           placeholder={name}
           onChange={(value) => set("label", value)}
         />
         <TextSetting
-          label="Placeholder"
+          label={"占位文字"}
           value={asText(item.placeholder)}
           onChange={(value) => set("placeholder", value)}
         />
       </div>
       <TextSetting
-        label="Help"
+        label={"帮助"}
         value={asText(item.help)}
         onChange={(value) => set("help", value)}
       />
       <div className="grid items-end gap-3 sm:grid-cols-2">
-        <Setting label="Widget">
+        <Setting label={"控件"}>
           {(id) => (
             <Select
               value={widget || DEFAULT_WIDGET}
@@ -688,7 +686,7 @@ function FieldBlockEditor({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={DEFAULT_WIDGET} className="text-xs">
-                  Default for the input
+                  输入的默认控件
                 </SelectItem>
                 {Object.entries(WIDGET_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value} className="text-xs">
@@ -700,7 +698,7 @@ function FieldBlockEditor({
           )}
         </Setting>
         <SwitchSetting
-          label="Hidden"
+          label={"已隐藏"}
           checked={item.hidden === true}
           onChange={(checked) => set("hidden", checked)}
         />
@@ -715,7 +713,7 @@ function FieldBlockEditor({
       )}
       {yamlOnly.length > 0 && (
         <p className="text-[11px] text-muted-foreground">
-          Also set in YAML: {yamlOnly.join(", ")}
+          YAML 中还设置了： {yamlOnly.join(", ")}
         </p>
       )}
     </>
@@ -744,9 +742,9 @@ function OptionsEditor({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium">Options</span>
+        <span className="text-xs font-medium">选项</span>
         <span className="text-[11px] text-muted-foreground">
-          Leave empty to use the input's choices
+          留空以使用输入定义中的选项
         </span>
       </div>
       {list.map((raw, index) => {
@@ -765,8 +763,8 @@ function OptionsEditor({
             )}
             <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
               <Input
-                aria-label="Option value"
-                placeholder="Value"
+                aria-label={"选项值"}
+                placeholder={"值"}
                 className="h-8 font-mono text-xs"
                 value={asText(option.value)}
                 onChange={(event) =>
@@ -774,16 +772,16 @@ function OptionsEditor({
                 }
               />
               <Input
-                aria-label="Option label"
-                placeholder="Label"
+                aria-label={"选项标签"}
+                placeholder={"标签"}
                 className="h-8 text-xs"
                 value={asText(option.label)}
                 onChange={(event) => set(index, "label", event.target.value)}
               />
               {withImages && (
                 <Input
-                  aria-label="Option description"
-                  placeholder="Description"
+                  aria-label={"选项描述"}
+                  placeholder={"描述"}
                   className="h-8 text-xs sm:col-span-2"
                   value={asText(option.description)}
                   onChange={(event) =>
@@ -796,7 +794,7 @@ function OptionsEditor({
               variant="ghost"
               size="icon"
               className="size-8 flex-none text-muted-foreground"
-              aria-label="Remove option"
+              aria-label={"移除选项"}
               onClick={() =>
                 edit((current) =>
                   removeFormConfigItem(current, path, index, {
@@ -823,7 +821,7 @@ function OptionsEditor({
         }
       >
         <PlusIcon className="size-3.5" />
-        Add option
+        添加选项
       </Button>
     </div>
   )
@@ -855,11 +853,11 @@ function OptionImagePicker({
       onChange(await prepareFormImage(file))
     } catch (error) {
       toast({
-        title: "Couldn't add the image",
+        title: "无法添加图片",
         description:
           error instanceof FormImageError
             ? error.message
-            : "Something went wrong. Try another image.",
+            : "出现了问题，请尝试其他图片。",
         variant: "destructive",
       })
     } finally {
@@ -874,14 +872,14 @@ function OptionImagePicker({
         type="file"
         accept={FORM_IMAGE_TYPES.join(",")}
         className="hidden"
-        aria-label="Option image file"
+        aria-label={"选项图片文件"}
         onChange={handleFile}
       />
       {image ? (
         <>
           <button
             type="button"
-            aria-label="Replace image"
+            aria-label={"替换图片"}
             className="size-8 overflow-hidden rounded-md border"
             onClick={() => inputRef.current?.click()}
           >
@@ -890,7 +888,7 @@ function OptionImagePicker({
           </button>
           <button
             type="button"
-            aria-label="Remove image"
+            aria-label={"移除图片"}
             className="absolute -right-1.5 -top-1.5 rounded-full border bg-background p-0.5 text-muted-foreground hover:text-foreground"
             onClick={() => onChange("")}
           >
@@ -902,7 +900,7 @@ function OptionImagePicker({
           variant="outline"
           size="icon"
           className="size-8 text-muted-foreground"
-          aria-label="Add image"
+          aria-label={"添加图片"}
           disabled={isWorking}
           onClick={() => inputRef.current?.click()}
         >

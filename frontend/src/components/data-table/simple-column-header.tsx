@@ -39,10 +39,10 @@ export function SimpleColumnHeader<TData, TValue>({
       onClick={column.getToggleSortingHandler()}
       aria-label={
         column.getIsSorted() === "desc"
-          ? `Sorted descending. Click to sort ascending.`
+          ? "当前为降序，点击切换为升序。"
           : column.getIsSorted() === "asc"
-            ? `Sorted ascending. Click to remove sorting.`
-            : `Click to sort ascending.`
+            ? "当前为升序，点击取消排序。"
+            : "点击按升序排序。"
       }
     >
       {icon && <span className="mr-2">{icon}</span>}

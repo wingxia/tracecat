@@ -22,28 +22,28 @@ function OAuthErrorContent() {
   // Clean up URL-encoded error descriptions
   const cleanDescription = errorDescription
     ? decodeURIComponent(errorDescription.replace(/\+/g, " "))
-    : "An error occurred during OAuth authentication."
+    : "OAuth 身份验证过程中发生错误。"
 
   return (
     <div className="container mx-auto flex min-h-screen items-center justify-center p-6">
       <Card className="w-full max-w-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardTitle>OAuth connection failed</CardTitle>
+            <CardTitle>OAuth 连接失败</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <Alert variant="destructive">
             <AlertCircle className="size-4" />
             <AlertDescription className="space-y-2">
-              <p className="font-medium">Error: {error}</p>
+              <p className="font-medium">错误： {error}</p>
               <p className="text-sm">{cleanDescription}</p>
             </AlertDescription>
           </Alert>
 
           <Button onClick={handleBackToIntegrations} className="w-full">
             <ChevronLeft className="mr-2 size-4" />
-            Back to home
+            返回首页
           </Button>
         </CardContent>
       </Card>

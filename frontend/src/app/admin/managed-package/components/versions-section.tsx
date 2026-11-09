@@ -65,9 +65,9 @@ export function VersionsSection({
     <section className="space-y-4">
       <div className="flex items-end justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold">Versions</h3>
+          <h3 className="text-lg font-semibold">版本</h3>
           <p className="text-sm text-muted-foreground">
-            Release tags in the source repository, newest first.
+            源仓库中的发布标签，按时间从新到旧排列。
           </p>
         </div>
         <Button
@@ -77,7 +77,7 @@ export function VersionsSection({
           disabled={!hasSource}
         >
           <PlusIcon className="mr-1 size-3" />
-          Cut release
+          创建发布版本
         </Button>
       </div>
 
@@ -119,24 +119,24 @@ function VersionsTable({
   if (!hasSource) {
     return (
       <div className="text-sm text-muted-foreground">
-        Configure a source to see its versions.
+        配置来源后即可查看版本。
       </div>
     )
   }
   if (isLoading) {
-    return <div className="text-sm text-muted-foreground">Loading tags...</div>
+    return <div className="text-sm text-muted-foreground">正在加载标签…</div>
   }
   if (error) {
     return (
       <div className="text-sm text-destructive">
-        {getApiErrorDetail(error) ?? "Failed to load tags."}
+        {getApiErrorDetail(error) ?? "加载标签失败。"}
       </div>
     )
   }
   if (tags.length === 0) {
     return (
       <div className="text-sm text-muted-foreground">
-        No tags yet. Cut a release to create the first one.
+        暂无标签，请创建首个发布版本。
       </div>
     )
   }
@@ -145,10 +145,12 @@ function VersionsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="text-xs">Tag</TableHead>
-            <TableHead className="text-xs">Commit</TableHead>
-            <TableHead className="text-xs">Date</TableHead>
-            <TableHead className="text-right text-xs">Pinned targets</TableHead>
+            <TableHead className="text-xs">标签</TableHead>
+            <TableHead className="text-xs">提交</TableHead>
+            <TableHead className="text-xs">日期</TableHead>
+            <TableHead className="text-right text-xs">
+              固定到此版本的目标
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -192,7 +194,7 @@ function CutReleaseForm({
     event.preventDefault()
     const value = tag.trim()
     if (!RELEASE_TAG_PATTERN.test(value)) {
-      setFormError("Use the form vX.Y.Z, for example v1.4.0.")
+      setFormError("请使用 vX.Y.Z 格式，例如 v1.4.0。")
       return
     }
     // A release needs a published package to deploy.
@@ -207,22 +209,21 @@ function CutReleaseForm({
         commitSha: candidate.commit_sha,
       })
       toast({
-        title: "Release cut",
-        description: `Tagged ${created.name} at ${created.commit_sha.substring(0, 7)}.`,
+        title: "已创建发布版本",
+        description: `已在 ${created.commit_sha.substring(0, 7)} 上创建标签 ${created.name}。`,
       })
       onDone()
     } catch (err) {
-      setFormError(getApiErrorDetail(err) ?? "Failed to cut the release.")
+      setFormError(getApiErrorDetail(err) ?? "创建发布版本失败。")
     }
   }
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Cut release</DialogTitle>
+        <DialogTitle>创建发布版本</DialogTitle>
         <DialogDescription>
-          Tags the latest commit on the source repository&apos;s base branch. No
-          customer changes until you deploy the tag.
+          为源仓库基准分支的最新提交打标签。部署标签后才会更新客户工作空间。
         </DialogDescription>
       </DialogHeader>
       <DialogBody>
@@ -235,7 +236,7 @@ function CutReleaseForm({
           onSubmit={handleSubmit}
           className="space-y-2"
         >
-          <Label htmlFor="managed-release-tag">Tag name</Label>
+          <Label htmlFor="managed-release-tag">标签名称</Label>
           <Input
             id="managed-release-tag"
             value={tag}
@@ -246,7 +247,7 @@ function CutReleaseForm({
           />
           {latestTag && (
             <p className="text-xs text-muted-foreground">
-              Latest tag: <span className="font-mono">{latestTag}</span>
+              最新标签： <span className="font-mono">{latestTag}</span>
             </p>
           )}
           {formError && (
@@ -265,7 +266,7 @@ function CutReleaseForm({
             cutRelease.isPending || tag.trim() === "" || !candidate?.package
           }
         >
-          {cutRelease.isPending ? "Tagging..." : "Cut release"}
+          {cutRelease.isPending ? "正在创建标签…" : "创建发布版本"}
         </Button>
       </DialogFooter>
     </>
@@ -284,16 +285,12 @@ function ReleaseCandidateSummary({
   isLoading: boolean
 }) {
   if (isLoading) {
-    return (
-      <p className="mb-4 text-xs text-muted-foreground">
-        Reading the source repository...
-      </p>
-    )
+    return <p className="mb-4 text-xs text-muted-foreground">正在读取源仓库…</p>
   }
   if (!candidate) {
     return (
       <p className="mb-4 text-xs text-destructive">
-        Could not read the source repository&apos;s base branch.
+        无法读取源仓库的基准分支。
       </p>
     )
   }
@@ -305,29 +302,27 @@ function ReleaseCandidateSummary({
   return (
     <div className="mb-4 space-y-2 rounded-md border px-3 py-2 text-xs">
       <p>
-        <span className="text-muted-foreground">Commit </span>
+        <span className="text-muted-foreground">提交 </span>
         <code>{candidate.commit_sha.substring(0, 7)}</code>
-        <span className="text-muted-foreground"> on </span>
+        <span className="text-muted-foreground"> 于 </span>
         <span className="font-medium">{candidate.branch}</span>
         <span className="text-muted-foreground">
           {" "}
-          by {candidate.commit_author}, {formatTimestamp(candidate.commit_date)}
+          由 {candidate.commit_author}, {formatTimestamp(candidate.commit_date)}
         </span>
       </p>
       <p className="text-muted-foreground">{candidate.commit_message}</p>
       {existingTags.length > 0 && (
         <p className="text-amber-700 dark:text-amber-400">
-          This commit is already released as {existingTags.join(", ")}. A new
-          tag would ship the same package.
+          此提交已发布为 {existingTags.join(", ")}。新标签将发布相同的软件包。
         </p>
       )}
       {pkg ? (
         <div className="space-y-1">
           <p>
-            Package: {explicit.length} selected, {implied.length} included as
-            dependencies
-            {registry.length > 0 &&
-              `, ${registry.length} custom registry ${registry.length === 1 ? "repository" : "repositories"}`}
+            软件包： {explicit.length} 个已选择， {implied.length}{" "}
+            个作为依赖包含
+            {registry.length > 0 && `，${registry.length} 个自定义注册表仓库`}
           </p>
           <ul className="flex flex-wrap gap-1.5">
             {explicit.map((entry) => (
@@ -342,8 +337,7 @@ function ReleaseCandidateSummary({
         </div>
       ) : (
         <p className="text-destructive">
-          No package is published on this commit. Publish one from the source
-          workspace&apos;s Git sync page first.
+          此提交尚未发布软件包。请先从源工作空间的 Git 同步页面发布。
         </p>
       )}
     </div>

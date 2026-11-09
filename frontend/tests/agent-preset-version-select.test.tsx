@@ -10,7 +10,7 @@ describe("agent preset version select labels", () => {
         currentVersionId: "current-version",
         selectedVersionId: "pinned-version",
       })
-    ).toBe("Pinned version")
+    ).toBe("固定版本")
   })
 
   it("keeps the aria label non-current for pinned versions when the version number is missing", () => {
@@ -20,7 +20,7 @@ describe("agent preset version select labels", () => {
         selectedVersionId: "pinned-version",
         selectedVersionNumber: null,
       })
-    ).toBe("Version")
+    ).toBe("版本")
   })
 
   it("keeps current fallback labels for the current version paths", () => {
@@ -29,13 +29,13 @@ describe("agent preset version select labels", () => {
         currentVersionId: "current-version",
         selectedVersionId: null,
       })
-    ).toBe("Current")
+    ).toBe("当前")
 
     expect(
       getAgentPresetVersionFallbackLabel({
         currentVersionId: "current-version",
         selectedVersionId: "current-version",
       })
-    ).toBe("Current version")
+    ).toBe("当前版本")
   })
 })

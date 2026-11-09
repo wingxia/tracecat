@@ -291,7 +291,7 @@ function AgentChatMessage({ message }: { message: ModelResponse }) {
         {toolCalls.map((part, index) => (
           <AgentToolInteraction
             key={`tool-call-${part.tool_call_id ?? index}`}
-            label="Tool call"
+            label={"工具调用"}
             toolName={part.tool_name}
             payload={part.args}
           />
@@ -300,7 +300,7 @@ function AgentChatMessage({ message }: { message: ModelResponse }) {
         {builtinToolCalls.map((part, index) => (
           <AgentToolInteraction
             key={`builtin-call-${part.tool_call_id ?? index}`}
-            label="Built-in tool call"
+            label={"内置工具调用"}
             toolName={part.tool_name}
             payload={part.args}
             providerName={part.provider_name}
@@ -310,7 +310,7 @@ function AgentChatMessage({ message }: { message: ModelResponse }) {
         {builtinToolReturns.map((part, index) => (
           <AgentToolInteraction
             key={`builtin-return-${part.tool_call_id ?? index}`}
-            label="Tool result"
+            label={"工具结果"}
             toolName={part.tool_name}
             payload={part.content}
             providerName={part.provider_name}
@@ -376,7 +376,7 @@ function AgentToolInteraction({
       )}
       {!formattedPayload && (
         <div className="mt-2 text-[11px] italic text-muted-foreground">
-          No structured data returned.
+          未返回结构化数据。
         </div>
       )}
     </div>
@@ -524,11 +524,9 @@ export function NoMessages() {
     <div className="flex h-full items-center justify-center text-center">
       <div className="max-w-sm">
         <MessageSquare className="mx-auto h-8 w-8 text-muted-foreground mb-3" />
-        <h4 className="text-sm font-medium text-foreground mb-1">
-          Start a conversation
-        </h4>
+        <h4 className="text-sm font-medium text-foreground mb-1">开始对话</h4>
         <p className="text-xs text-muted-foreground">
-          Ask me anything or get help with your tasks.
+          可以向我提问，或让我帮助你完成任务。
         </p>
       </div>
     </div>

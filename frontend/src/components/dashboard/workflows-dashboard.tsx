@@ -157,7 +157,7 @@ function WorkflowMetadataBadges({ item }: { item: WorkflowDirectoryItem }) {
       {!item.latest_definition && (
         <Badge variant="secondary" className="h-5 px-2 text-[10px] font-normal">
           <CircleDot className="mr-1 size-3" />
-          Unpublished
+          未发布
         </Badge>
       )}
 
@@ -625,7 +625,7 @@ function FolderMetadataBadges({ item }: { item: FolderDirectoryItem }) {
     <div className="flex shrink-0 items-center gap-1">
       <Badge variant="secondary" className="h-5 px-2 text-[10px] font-normal">
         <WorkflowIcon className="mr-1 size-3" />
-        {item.num_items} {item.num_items === 1 ? "item" : "items"}
+        {item.num_items} {item.num_items === 1 ? "项" : "项"}
       </Badge>
     </div>
   )
@@ -1023,8 +1023,8 @@ export function WorkflowsDashboard() {
       } catch (error) {
         console.error("Failed to duplicate workflow:", error)
         toast({
-          title: "Duplicate failed",
-          description: "Could not duplicate workflow. Please try again.",
+          title: "复制失败",
+          description: "无法复制工作流，请重试。",
           variant: "destructive",
         })
       }
@@ -1298,7 +1298,7 @@ export function WorkflowsDashboard() {
             ) : error ? (
               <div className="flex h-full items-center justify-center px-6">
                 <span className="text-sm text-destructive">
-                  Failed to load workflows.
+                  加载工作流失败。
                 </span>
               </div>
             ) : visibleItems.length === 0 ? (
@@ -1308,7 +1308,7 @@ export function WorkflowsDashboard() {
                     <EmptyMedia variant="icon">
                       <WorkflowIcon className="size-5 text-muted-foreground/60" />
                     </EmptyMedia>
-                    <EmptyTitle>No workflows found in this folder</EmptyTitle>
+                    <EmptyTitle>此文件夹中没有工作流</EmptyTitle>
                   </EmptyHeader>
                 </Empty>
               </div>

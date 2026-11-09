@@ -21,7 +21,7 @@ function CaseCommentAgentAvatar({ presetName }: { presetName: string }) {
   return (
     <Avatar
       role="img"
-      aria-label={`Agent avatar for ${presetName}`}
+      aria-label={`${presetName} 的智能体头像`}
       className="size-5"
     >
       <AvatarFallback className="text-muted-foreground">
@@ -46,10 +46,10 @@ function ViewAgentSession({
       variant="ghost"
       size="sm"
       className="h-6 shrink-0 px-1.5 text-xs text-muted-foreground"
-      aria-label={`View ${presetName} session`}
+      aria-label={`查看 ${presetName} 会话`}
       onClick={() => openChatSession(sessionId)}
     >
-      View session
+      查看会话
     </Button>
   )
 }
@@ -70,7 +70,7 @@ export function CaseCommentAgentAttribution({
         variant="secondary"
         className="h-5 shrink-0 rounded-full px-1.5 text-[10px] leading-none"
       >
-        Agent
+        智能体
       </Badge>
       {attribution.session_id ? (
         <ViewAgentSession
@@ -109,7 +109,7 @@ function ActiveInvocationStatus({
         <span className="font-medium text-foreground">
           {invocation.preset_name}
         </span>{" "}
-        {running ? "is thinking..." : "is preparing..."}
+        {running ? "正在思考…" : "正在准备…"}
       </span>
       {running && invocation.session_id ? (
         <ViewAgentSession
@@ -135,14 +135,13 @@ function FailedInvocationStatus({
       />
       <div className="min-w-0 flex-1 space-y-0.5">
         <p className="font-medium text-destructive">
-          {invocation.preset_name} could not finish.
+          {invocation.preset_name} 未能完成。
         </p>
         <p className="whitespace-pre-wrap break-words text-muted-foreground">
-          {invocation.error?.message ??
-            "The agent could not complete the request."}
+          {invocation.error?.message ?? "智能体无法完成请求。"}
         </p>
         <p className="text-xs text-muted-foreground">
-          Mention {invocation.preset_name} again to retry.
+          再次提及 {invocation.preset_name} 以重试。
         </p>
       </div>
       {invocation.session_id ? (
@@ -189,7 +188,7 @@ export function CaseCommentAgentInvocationList({
   }
 
   return (
-    <div aria-label="Agent activity" className="space-y-2 pt-1">
+    <div aria-label={"智能体活动"} className="space-y-2 pt-1">
       {visibleInvocations.map((invocation) => (
         <InvocationStatus key={invocation.id} invocation={invocation} />
       ))}

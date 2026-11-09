@@ -158,7 +158,7 @@ function GitSyncConnectedView({
                 className={DIRECTION_TAB_CLASS_NAME}
               >
                 <ArrowUpIcon className="size-3.5" />
-                Push
+                推送
               </TabsTrigger>
               <TabsTrigger
                 value="pull"
@@ -166,7 +166,7 @@ function GitSyncConnectedView({
                 className={cn(DIRECTION_TAB_CLASS_NAME, "border-l")}
               >
                 <ArrowDownIcon className="size-3.5" />
-                Pull
+                拉取
               </TabsTrigger>
             </TabsList>
           </div>
@@ -263,7 +263,7 @@ export function GitSyncHeader({
             <span className="text-muted-foreground/60">/</span>
           </>
         )}
-        <h1 className="font-medium">Git sync</h1>
+        <h1 className="font-medium">Git 同步</h1>
       </div>
       {children}
     </header>
@@ -277,10 +277,9 @@ function GitSyncConnectionEmptyState() {
         <EmptyMedia variant="icon">
           <GitBranchIcon className="size-6" />
         </EmptyMedia>
-        <EmptyTitle>No repository connected</EmptyTitle>
+        <EmptyTitle>尚未连接仓库</EmptyTitle>
         <EmptyDescription>
-          Ask a workspace admin to connect one. Once it&apos;s connected, you
-          can push and pull here.
+          请联系工作空间管理员连接仓库，连接后即可在此推送和拉取。
         </EmptyDescription>
       </EmptyHeader>
     </Empty>

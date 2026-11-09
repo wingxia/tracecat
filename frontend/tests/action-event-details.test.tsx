@@ -162,8 +162,8 @@ function renderInput(events: WorkflowExecutionEventCompact[]) {
 
 describe("ActionEventDetails input payloads", () => {
   it.each([
-    ["STARTED", "Action is running..."],
-    ["SCHEDULED", "Action is scheduled..."],
+    ["STARTED", "动作正在运行…"],
+    ["SCHEDULED", "动作已调度…"],
   ] as const)(
     "renders the input for a %s event instead of the result placeholder",
     (status, placeholder) => {
@@ -198,10 +198,10 @@ describe("ActionEventDetails input payloads", () => {
 
     renderInput([latest, first])
 
-    expect(screen.getByText("Stream 2 of 2")).toBeInTheDocument()
+    expect(screen.getByText("数据流 2 / 2")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent("latest")
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous stream" }))
+    fireEvent.click(screen.getByRole("button", { name: "上一个数据流" }))
     expect(screen.getByTestId("json-view")).toHaveTextContent("first")
   })
 
@@ -223,7 +223,7 @@ describe("ActionEventDetails input payloads", () => {
 
     // Even when inputs match, each stream stays individually navigable so the
     // input tab can pin the same stream the result tab is showing.
-    expect(screen.getByText("Stream 2 of 2")).toBeInTheDocument()
+    expect(screen.getByText("数据流 2 / 2")).toBeInTheDocument()
     expect(screen.getAllByTestId("json-view")).toHaveLength(1)
     expect(screen.getByTestId("json-view")).toHaveTextContent("shared")
   })
@@ -237,9 +237,9 @@ describe("ActionEventDetails input payloads", () => {
       }),
     ])
 
-    expect(screen.queryByText(/Stream \d+ of \d+/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/数据流 \d+ \/ \d+/)).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Previous stream" })
+      screen.queryByRole("button", { name: "上一个数据流" })
     ).not.toBeInTheDocument()
     expect(screen.getAllByTestId("json-view")).toHaveLength(1)
     expect(screen.getByTestId("json-view")).toHaveTextContent("solo")
@@ -272,15 +272,15 @@ describe("ActionEventDetails single presentation", () => {
 
     renderSingle([latest, first, failed])
 
-    expect(screen.getByText("Stream 3 of 3")).toBeInTheDocument()
+    expect(screen.getByText("数据流 3 / 3")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent("latest")
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous stream" }))
+    fireEvent.click(screen.getByRole("button", { name: "上一个数据流" }))
     expect(screen.getByTestId("code-block")).toHaveTextContent("branch failed")
     expect(screen.getByText("scatter")).toBeInTheDocument()
     expect(screen.getByText("1")).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous stream" }))
+    fireEvent.click(screen.getByRole("button", { name: "上一个数据流" }))
     expect(screen.getByTestId("json-view")).toHaveTextContent("first")
   })
 
@@ -319,7 +319,7 @@ describe("ActionEventDetails single presentation", () => {
     )
     expect(screen.getByTestId("json-view")).toHaveTextContent("third")
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous stream" }))
+    fireEvent.click(screen.getByRole("button", { name: "上一个数据流" }))
     expect(screen.getByTestId("json-view")).toHaveTextContent("second")
 
     view.rerender(
@@ -355,7 +355,7 @@ describe("ActionEventDetails single presentation", () => {
       "2"
     )
 
-    fireEvent.click(screen.getByRole("button", { name: "Previous stream" }))
+    fireEvent.click(screen.getByRole("button", { name: "上一个数据流" }))
     expect(screen.getAllByTestId("collection-result")).toHaveLength(1)
     expect(screen.getByTestId("collection-result")).toHaveAttribute(
       "data-event-id",
@@ -367,9 +367,7 @@ describe("ActionEventDetails single presentation", () => {
     const nullView = renderSingle([
       createEvent({ action_result: null, stream_id: "outer:0/inner:2" }),
     ])
-    expect(
-      screen.getByText("This action returned no result (null).")
-    ).toBeInTheDocument()
+    expect(screen.getByText("此动作未返回结果（null）。")).toBeInTheDocument()
     expect(screen.getByText("outer")).toBeInTheDocument()
     expect(screen.getByText("inner")).toBeInTheDocument()
     nullView.unmount()
@@ -377,11 +375,11 @@ describe("ActionEventDetails single presentation", () => {
     const scheduledView = renderSingle([
       createEvent({ status: "SCHEDULED", action_result: null }),
     ])
-    expect(screen.getByText("Action is scheduled...")).toBeInTheDocument()
+    expect(screen.getByText("动作已调度…")).toBeInTheDocument()
     scheduledView.unmount()
 
     renderSingle([createEvent({ status: "STARTED", action_result: null })])
-    expect(screen.getByText("Action is running...")).toBeInTheDocument()
+    expect(screen.getByText("动作正在运行…")).toBeInTheDocument()
   })
 
   it("passes the selected source event id to external results", () => {
@@ -407,12 +405,12 @@ describe("ActionEventDetails single presentation", () => {
       }),
     ])
 
-    expect(screen.getByRole("tab", { name: "Session" })).toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: "会话" })).toBeInTheDocument()
     await waitFor(() => {
       expect(screen.getByTestId("session-stream")).toBeInTheDocument()
     })
 
-    await user.click(screen.getByRole("tab", { name: "Result" }))
+    await user.click(screen.getByRole("tab", { name: "结果" }))
     expect(screen.getByTestId("json-view")).toHaveTextContent("final")
   })
 })
@@ -447,7 +445,7 @@ describe("ActionEventDetails stack presentation", () => {
       '{"stream":"beta"}',
       '{"stream":"gamma"}',
     ])
-    expect(screen.queryByText(/Stream \d+ of \d+/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/数据流 \d+ \/ \d+/)).not.toBeInTheDocument()
     view.unmount()
 
     renderStack(events, "stack")
@@ -459,7 +457,7 @@ describe("ActionEventDetails stack presentation", () => {
       '{"stream":"beta"}',
       '{"stream":"gamma"}',
     ])
-    expect(screen.queryByText(/Stream \d+ of \d+/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/数据流 \d+ \/ \d+/)).not.toBeInTheDocument()
   })
 
   it("collapses multiple session streams into one carousel beside plain results", () => {
@@ -487,8 +485,8 @@ describe("ActionEventDetails stack presentation", () => {
     renderStack([firstSession, plain, secondSession])
 
     // Exactly one carousel nav is rendered for the grouped session streams.
-    expect(screen.getByText("Stream 1 of 2")).toBeInTheDocument()
-    expect(screen.getAllByText(/Stream \d+ of \d+/)).toHaveLength(1)
+    expect(screen.getByText("数据流 1 / 2")).toBeInTheDocument()
+    expect(screen.getAllByText(/数据流 \d+ \/ \d+/)).toHaveLength(1)
 
     // Both session streams live inside the carousel (session tab is default).
     expect(screen.getAllByTestId("session-stream")).toHaveLength(2)
@@ -534,6 +532,6 @@ describe("ActionEventDetails stack presentation", () => {
       '{"stream":"gamma"}',
     ])
     // Stacked path shows every stream at once, never the single-stream nav.
-    expect(screen.queryByText(/Stream \d+ of \d+/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/数据流 \d+ \/ \d+/)).not.toBeInTheDocument()
   })
 })

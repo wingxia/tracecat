@@ -27,7 +27,7 @@ export function CopyButton({
       <TooltipTrigger asChild>
         <Button
           type="button"
-          aria-label={tooltipMessage || "Copy"}
+          aria-label={tooltipMessage || "复制"}
           variant="ghost"
           className={cn("group m-0 size-4 p-0", className)}
           onClick={(e) => {
@@ -51,7 +51,7 @@ export function CopyButton({
           )}
         </Button>
       </TooltipTrigger>
-      <TooltipContent>{tooltipMessage || "Copy"}</TooltipContent>
+      <TooltipContent>{tooltipMessage || "复制"}</TooltipContent>
     </Tooltip>
   )
 }

@@ -136,8 +136,8 @@ export function EditVariableDialog({
   const onValidationFailed = (errors: unknown) => {
     console.error("Form validation failed", errors)
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while editing the variable.",
+      title: "表单校验失败",
+      description: "编辑变量时发生校验错误。",
     })
   }
 
@@ -151,12 +151,12 @@ export function EditVariableDialog({
       {children}
       <DialogContent size="lg" className={className}>
         <DialogHeader>
-          <DialogTitle>Edit variable</DialogTitle>
+          <DialogTitle>编辑变量</DialogTitle>
           <DialogDescription className="flex flex-col">
             <span>
               {valuesOnly
-                ? "Managed by Tracecat. Only values can be changed."
-                : "Leave a field blank to keep its existing value. You must update all values at once."}
+                ? "由 Tracecat 托管，仅可修改值。"
+                : "字段留空可保留现有值，更新时必须一次提交所有值。"}
             </span>
           </DialogDescription>
         </DialogHeader>
@@ -172,19 +172,19 @@ export function EditVariableDialog({
                 name="name"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
 
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={selectedVariable?.name || "Name"}
+                        placeholder={selectedVariable?.name || "名称"}
                         disabled={valuesOnly}
                         {...register("name")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("name") && "Name will be left unchanged."}
+                      {!methods.watch("name") && "名称保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -195,21 +195,18 @@ export function EditVariableDialog({
                 name="description"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedVariable?.description || "Description"
-                        }
+                        placeholder={selectedVariable?.description || "描述"}
                         disabled={valuesOnly}
                         {...register("description")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("description") &&
-                        "Description will be left unchanged."}
+                      {!methods.watch("description") && "描述保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -220,27 +217,24 @@ export function EditVariableDialog({
                 name="environment"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Environment</FormLabel>
+                    <FormLabel className="text-sm">环境</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedVariable?.environment || "Environment"
-                        }
+                        placeholder={selectedVariable?.environment || "环境"}
                         disabled={valuesOnly}
                         {...register("environment")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("environment") &&
-                        "Environment will be left unchanged."}
+                      {!methods.watch("environment") && "环境保持不变。"}
                     </span>
                   </FormItem>
                 )}
               />
               <FormItem>
-                <FormLabel className="text-sm">Values</FormLabel>
+                <FormLabel className="text-sm">值</FormLabel>
 
                 {fields.length > 0 &&
                   fields.map((valuesItem, index) => (
@@ -258,7 +252,7 @@ export function EditVariableDialog({
                               <Input
                                 id={`key-${index}`}
                                 className="text-sm"
-                                placeholder={"Key"}
+                                placeholder={"键"}
                                 readOnly={valuesOnly}
                                 {...field}
                               />
@@ -279,7 +273,7 @@ export function EditVariableDialog({
                                 <Input
                                   id={`value-${index}`}
                                   className="text-sm"
-                                  placeholder="Value"
+                                  placeholder={"值"}
                                   type="text"
                                   {...field}
                                 />
@@ -308,11 +302,11 @@ export function EditVariableDialog({
                 className="w-full space-x-2 text-xs text-foreground/80"
               >
                 <PlusCircle className="mr-2 size-4" />
-                Add item
+                添加条目
               </Button>
               {fields.length === 0 && (
                 <span className="text-xs text-foreground/50">
-                  Values will be left unchanged.
+                  值将保持不变。
                 </span>
               )}
             </DialogBody>
@@ -321,7 +315,7 @@ export function EditVariableDialog({
                 {/* Wait for the managed lookup so locked fields are known. */}
                 <Button size="sm" type="submit" disabled={managedLoading}>
                   <SaveIcon className="mr-2 size-4" />
-                  Save
+                  保存
                 </Button>
               </DialogClose>
             </DialogFooter>

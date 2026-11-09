@@ -38,7 +38,7 @@ export function DynamicInput({
       return (
         <Input
           type="text"
-          placeholder="true, false, 1, or 0"
+          placeholder={"true、false、1 或 0"}
           value={field.value as string}
           onChange={(e) => field.onChange(e.target.value)}
         />
@@ -48,7 +48,7 @@ export function DynamicInput({
         <Input
           type="text"
           inputMode="numeric"
-          placeholder="Enter an integer"
+          placeholder={"输入整数"}
           value={
             field.value === null || field.value === undefined
               ? ""
@@ -62,7 +62,7 @@ export function DynamicInput({
         <Input
           type="text"
           inputMode="decimal"
-          placeholder="Enter a number"
+          placeholder={"输入数字"}
           value={
             field.value === null || field.value === undefined
               ? ""
@@ -103,7 +103,7 @@ export function DynamicInput({
             onValueChange={(value) => field.onChange(value)}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Choose a value" />
+              <SelectValue placeholder={"选择值"} />
             </SelectTrigger>
             <SelectContent>
               {options.map((option) => (
@@ -118,7 +118,7 @@ export function DynamicInput({
       return (
         <Input
           type="text"
-          placeholder="Enter a value"
+          placeholder={"输入值"}
           value={field.value as string}
           onChange={(e) => field.onChange(e.target.value)}
         />
@@ -142,7 +142,7 @@ export function DynamicInput({
           value={currentValue}
           onChange={(values) => field.onChange(values)}
           suggestions={suggestions}
-          placeholder="Select values..."
+          placeholder={"选择值…"}
           allowCustomTags={!options || options.length === 0}
           searchKeys={["label", "value"]}
           className="w-full"
@@ -167,7 +167,7 @@ export function DynamicInput({
       return (
         <Input
           type="text"
-          placeholder="Enter text"
+          placeholder={"输入文本"}
           value={field.value as string}
           onChange={(e) => field.onChange(e.target.value)}
         />

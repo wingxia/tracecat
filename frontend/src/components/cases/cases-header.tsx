@@ -2,6 +2,7 @@
 
 import { Cross2Icon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   ArrowDownIcon,
   ArrowUpIcon,
@@ -85,11 +86,11 @@ const DATE_PRESET_OPTIONS: Array<{
   value: CaseDatePreset
   label: string
 }> = [
-  { value: null, label: "Any time" },
-  { value: "1d", label: "1 day ago" },
-  { value: "3d", label: "3 days ago" },
-  { value: "1w", label: "1 week ago" },
-  { value: "1m", label: "1 month ago" },
+  { value: null, label: "不限时间" },
+  { value: "1d", label: "1 天前" },
+  { value: "3d", label: "3 天前" },
+  { value: "1w", label: "1 周前" },
+  { value: "1m", label: "1 个月前" },
 ]
 
 function getDateFilterLabel(filter: CaseDateFilterValue): string | null {
@@ -102,9 +103,9 @@ function getDateFilterLabel(filter: CaseDateFilterValue): string | null {
   // Custom range
   if (filter.value.from) {
     if (filter.value.to) {
-      return `${format(filter.value.from, "MMM d")} - ${format(filter.value.to, "MMM d")}`
+      return `${format(filter.value.from, "M月d日", { locale: zhCN })} - ${format(filter.value.to, "M月d日", { locale: zhCN })}`
     }
-    return `From ${format(filter.value.from, "MMM d")}`
+    return `从 ${format(filter.value.from, "M月d日", { locale: zhCN })}`
   }
   return null
 }
@@ -200,13 +201,13 @@ function DateFilterSelect({
         {showCalendar ? (
           <div className="p-0">
             <div className="flex items-center justify-between border-b px-3 py-2">
-              <span className="text-xs font-medium">Select date range</span>
+              <span className="text-xs font-medium">选择日期范围</span>
               <button
                 type="button"
                 className="text-xs text-muted-foreground hover:text-foreground"
                 onClick={() => setShowCalendar(false)}
               >
-                Back
+                返回
               </button>
             </div>
             <Calendar
@@ -223,7 +224,7 @@ function DateFilterSelect({
                   className="w-full rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
                   onClick={() => setOpen(false)}
                 >
-                  Apply
+                  应用
                 </button>
               </div>
             )}
@@ -262,7 +263,7 @@ function DateFilterSelect({
               onClick={() => setShowCalendar(true)}
             >
               <CalendarIcon className="size-3.5" />
-              <span>Custom range...</span>
+              <span>自定义范围…</span>
               {value.type === "range" && <Check className="ml-auto size-3.5" />}
             </button>
           </div>
@@ -278,23 +279,23 @@ const CASE_SORT_OPTIONS: Array<{
   icon: ComponentType<{ className?: string }>
   description?: string
 }> = [
-  { value: "updated_at", label: "Updated", icon: ClockIcon },
-  { value: "created_at", label: "Created", icon: CalendarIcon },
-  { value: "priority", label: "Priority", icon: SignalHighIcon },
-  { value: "severity", label: "Severity", icon: ShieldAlertIcon },
-  { value: "status", label: "Status", icon: SignalIcon },
-  { value: "tasks", label: "Tasks", icon: ListIcon },
+  { value: "updated_at", label: "更新时间", icon: ClockIcon },
+  { value: "created_at", label: "创建时间", icon: CalendarIcon },
+  { value: "priority", label: "优先级", icon: SignalHighIcon },
+  { value: "severity", label: "严重程度", icon: ShieldAlertIcon },
+  { value: "status", label: "状态", icon: SignalIcon },
+  { value: "tasks", label: "任务", icon: ListIcon },
   {
     value: "assignee",
-    label: "Assignee",
+    label: "负责人",
     icon: UserIcon,
-    description: "By email; unassigned cases last.",
+    description: "按邮箱排序，未分配的事件排在最后。",
   },
   {
     value: "tags",
-    label: "Tags",
+    label: "标签",
     icon: TagIcon,
-    description: "First alphabetical tag; untagged cases last.",
+    description: "按首个标签的字母顺序排序，无标签事件排在最后。",
   },
 ]
 
@@ -318,12 +319,12 @@ function CaseSortSelect({
 }: CaseSortSelectProps) {
   const options: typeof CASE_SORT_OPTIONS = allowRelevance
     ? [
-        { value: "relevance" as const, label: "Relevance", icon: SearchIcon },
+        { value: "relevance" as const, label: "相关度", icon: SearchIcon },
         ...CASE_SORT_OPTIONS,
       ]
     : CASE_SORT_OPTIONS
   const selectedLabel =
-    options.find((option) => option.value === value.field)?.label ?? "Updated"
+    options.find((option) => option.value === value.field)?.label ?? "更新时间"
 
   return (
     <div className="inline-flex items-center rounded-md border border-input bg-transparent">
@@ -337,10 +338,10 @@ function CaseSortSelect({
         }
       >
         <SelectTrigger
-          aria-label="Case sort field"
+          aria-label={"事件排序字段"}
           className="h-6 w-[140px] rounded-r-none border-0 bg-transparent px-2 text-xs font-medium shadow-none focus:ring-1 focus:ring-inset focus:ring-ring"
         >
-          <span className="text-muted-foreground">Sort by</span>
+          <span className="text-muted-foreground">排序方式</span>
           <span className="text-foreground">{selectedLabel}</span>
         </SelectTrigger>
         <SelectContent align="start">
@@ -378,9 +379,7 @@ function CaseSortSelect({
             direction: value.direction === "asc" ? "desc" : "asc",
           })
         }
-        aria-label={
-          value.direction === "asc" ? "Sort ascending" : "Sort descending"
-        }
+        aria-label={value.direction === "asc" ? "升序排序" : "降序排序"}
       >
         {value.direction === "asc" ? (
           <ArrowUpIcon className="size-3.5" />
@@ -570,7 +569,7 @@ export function CasesHeader({
     return [
       {
         value: UNASSIGNED,
-        label: "Unassigned",
+        label: "未分配",
         renderIcon: () => (
           <div className="flex size-5 items-center justify-center">
             <CircleSlashIcon className="size-3 text-muted-foreground/50" />
@@ -603,7 +602,7 @@ export function CasesHeader({
     createdAfter.type === "preset" &&
     createdAfter.value === DEFAULT_CREATED_PRESET
 
-  const countNoun = displayCaseCount === 1 ? "case" : "cases"
+  const countNoun = "个事件"
   const includesSubCases = effectiveHierarchy === "all"
 
   const hasFilters =
@@ -666,12 +665,12 @@ export function CasesHeader({
       {/* Row 1: Search */}
       <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
         <ListHeaderSearch
-          aria-label="Search cases"
+          aria-label={"搜索事件"}
           aria-describedby="case-search-scope"
           placeholder={
             searchMode === "literal"
-              ? "Search exact characters..."
-              : 'Search words, "phrases", or ID...'
+              ? "搜索精确字符…"
+              : "搜索关键词、“短语”或 ID…"
           }
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -679,16 +678,16 @@ export function CasesHeader({
           {onSearchModeChange && (
             <Select value={searchMode} onValueChange={onSearchModeChange}>
               <SelectTrigger
-                aria-label="Case search mode"
+                aria-label={"事件搜索模式"}
                 className="h-7 w-[100px] shrink-0 px-2 text-xs shadow-none"
               >
                 <span>
-                  {searchMode === "full_text" ? "Full-text" : "Substring"}
+                  {searchMode === "full_text" ? "全文搜索" : "子串匹配"}
                 </span>
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="full_text">Full-text</SelectItem>
-                <SelectItem value="literal">Substring</SelectItem>
+                <SelectItem value="full_text">全文搜索</SelectItem>
+                <SelectItem value="literal">子串匹配</SelectItem>
               </SelectContent>
             </Select>
           )}
@@ -706,15 +705,15 @@ export function CasesHeader({
           )}
           <span className="min-w-20 text-right text-xs tabular-nums text-muted-foreground">
             {displayCaseCount ?? totalCaseCount}{" "}
-            {displayCaseCount === null ? "loaded" : countNoun}
+            {displayCaseCount === null ? "已加载" : countNoun}
           </span>
         </div>
       </header>
 
       <p id="case-search-scope" role="status" className="sr-only">
         {[
-          isSearchPending && "Updating search…",
-          isCountsError && "Case count unavailable",
+          isSearchPending && "正在更新搜索…",
+          isCountsError && "无法获取事件数量",
         ]
           .filter(Boolean)
           .join(" · ")}
@@ -730,12 +729,8 @@ export function CasesHeader({
               selectedCount === totalCaseCount ? onDeselectAll : onSelectAll
             }
             className="flex h-7 w-7 shrink-0 items-center justify-center"
-            aria-label={
-              selectedCount === totalCaseCount ? "Deselect all" : "Select all"
-            }
-            title={
-              selectedCount === totalCaseCount ? "Deselect all" : "Select all"
-            }
+            aria-label={selectedCount === totalCaseCount ? "取消全选" : "全选"}
+            title={selectedCount === totalCaseCount ? "取消全选" : "全选"}
           >
             <div
               className={cn(
@@ -753,9 +748,9 @@ export function CasesHeader({
         )}
 
         <fieldset className={cn("flex min-w-0 flex-wrap items-center gap-2")}>
-          <legend className="sr-only">Current view filters</legend>
+          <legend className="sr-only">当前视图筛选条件</legend>
           <FilterMultiSelect
-            placeholder="Status"
+            placeholder={"状态"}
             icon={SignalIcon}
             value={statusFilter}
             onChange={onStatusChange}
@@ -765,7 +760,7 @@ export function CasesHeader({
           />
 
           <FilterMultiSelect
-            placeholder="Priority"
+            placeholder={"优先级"}
             icon={SignalHighIcon}
             value={priorityFilter}
             onChange={onPriorityChange}
@@ -778,7 +773,7 @@ export function CasesHeader({
           />
 
           <FilterMultiSelect
-            placeholder="Severity"
+            placeholder={"严重程度"}
             icon={ShieldAlertIcon}
             value={severityFilter}
             onChange={onSeverityChange}
@@ -791,7 +786,7 @@ export function CasesHeader({
           />
 
           <FilterMultiSelect
-            placeholder="Assignee"
+            placeholder={"负责人"}
             icon={UserIcon}
             value={assigneeFilter}
             onChange={onAssigneeChange}
@@ -801,17 +796,17 @@ export function CasesHeader({
             allowExclude={false}
             showSort
             sortDirection={assigneeSortDirection}
-            sortDescription="By assignee email, ignoring case. Unassigned cases appear last."
+            sortDescription="按负责人的邮箱排序，不区分大小写。未分配的事件排在最后。"
             onSortDirectionChange={onAssigneeSortDirectionChange}
             emptyMessage={
               members && members.length > 0
-                ? "No matching assignees."
-                : "No assignees found."
+                ? "没有匹配的负责人。"
+                : "未找到负责人。"
             }
           />
 
           <FilterMultiSelect
-            placeholder="Tags"
+            placeholder={"标签"}
             icon={TagIcon}
             value={tagFilter}
             onChange={onTagChange}
@@ -821,10 +816,10 @@ export function CasesHeader({
             allowExclude={false}
             showSort
             sortDirection={tagSortDirection}
-            sortDescription="By the first tag alphabetically, ignoring case. Untagged cases appear last."
+            sortDescription="按第一个标签的字母顺序排序，不区分大小写。无标签事件排在最后。"
             onSortDirectionChange={onTagSortDirectionChange}
             emptyMessage={
-              tags && tags.length > 0 ? "No matching tags." : "No tags found."
+              tags && tags.length > 0 ? "没有匹配的标签。" : "未找到标签。"
             }
           />
 
@@ -915,7 +910,7 @@ export function CasesHeader({
                   className="h-6 text-xs"
                   onClick={() => onDropdownFilterChange(ref, [])}
                 >
-                  Unavailable dropdown {ref}: {state.values.join(", ")} ×
+                  下拉字段不可用 {ref}: {state.values.join(", ")} ×
                 </Button>
               ))}
 
@@ -930,14 +925,14 @@ export function CasesHeader({
           )}
 
           <DateFilterSelect
-            placeholder="Updated"
+            placeholder={"更新时间"}
             icon={ClockIcon}
             value={updatedAfter}
             onChange={onUpdatedAfterChange}
           />
 
           <DateFilterSelect
-            placeholder="Created"
+            placeholder={"创建时间"}
             icon={CalendarIcon}
             value={createdAfter}
             onChange={onCreatedAfterChange}
@@ -957,7 +952,7 @@ export function CasesHeader({
               )}
             >
               <ListTreeIcon className="size-3.5 text-muted-foreground" />
-              {includesSubCases ? "All cases" : "Parents only"}
+              {includesSubCases ? "所有事件" : "仅父事件"}
             </button>
           )}
         </fieldset>
@@ -976,7 +971,7 @@ export function CasesHeader({
             onClick={handleReset}
             className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            Reset
+            重置
             <Cross2Icon className="size-3" />
           </button>
         )}

@@ -66,15 +66,15 @@ export function AdminOrgTierDialog({
     try {
       await updateOrgTier({ tier_id: selectedTierId })
       toast({
-        title: "Tier assigned",
-        description: "Organization tier has been updated.",
+        title: "已分配套餐",
+        description: "已更新组织套餐。",
       })
       setDialogOpen(false)
     } catch (error) {
       console.error("Failed to assign tier", error)
       toast({
-        title: "Failed to assign tier",
-        description: "Please try again.",
+        title: "分配套餐失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -92,21 +92,21 @@ export function AdminOrgTierDialog({
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent size="md" className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Tier assignment</DialogTitle>
+          <DialogTitle>套餐分配</DialogTitle>
           <DialogDescription>
-            Manage tier assignment for {organization?.name ?? "organization"}.
+            管理套餐分配，所属组织： {organization?.name ?? "组织"}.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           {isLoading ? (
             <div className="py-8 text-center text-muted-foreground">
-              Loading...
+              加载中…
             </div>
           ) : (
             <div className="space-y-6">
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-sm font-medium">Current tier</h4>
+                  <h4 className="text-sm font-medium">当前套餐</h4>
                 </div>
                 {currentTier ? (
                   <div className="flex items-center gap-2">
@@ -114,20 +114,20 @@ export function AdminOrgTierDialog({
                       {currentTier.display_name}
                     </span>
                     {currentTier.is_default && (
-                      <Badge variant="secondary">Platform default</Badge>
+                      <Badge variant="secondary">平台默认</Badge>
                     )}
                   </div>
                 ) : (
                   <div className="text-sm text-muted-foreground">
-                    No tier assigned. Using default limits.
+                    未分配套餐，使用默认限制。
                   </div>
                 )}
               </div>
               <div className="space-y-3">
                 <div>
-                  <h4 className="text-sm font-medium">Assign tier</h4>
+                  <h4 className="text-sm font-medium">分配套餐</h4>
                   <p className="text-xs text-muted-foreground">
-                    Select a tier to apply to this organization.
+                    选择要应用于此组织的套餐。
                   </p>
                 </div>
                 <Select
@@ -135,7 +135,7 @@ export function AdminOrgTierDialog({
                   onValueChange={setSelectedTierId}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a tier" />
+                    <SelectValue placeholder={"选择套餐"} />
                   </SelectTrigger>
                   <SelectContent>
                     {tiers?.map((tier: TierRead) => (
@@ -144,7 +144,7 @@ export function AdminOrgTierDialog({
                           <span>{tier.display_name}</span>
                           {tier.is_default && (
                             <span className="text-xs text-muted-foreground">
-                              (Platform default)
+                              （平台默认）
                             </span>
                           )}
                         </div>
@@ -157,9 +157,9 @@ export function AdminOrgTierDialog({
                 <>
                   <div className="space-y-3">
                     <div>
-                      <h4 className="text-sm font-medium">Overrides</h4>
+                      <h4 className="text-sm font-medium">覆盖设置</h4>
                       <p className="text-xs text-muted-foreground">
-                        Custom limits that override base tier settings.
+                        覆盖基础套餐设置的自定义限制。
                       </p>
                     </div>
                     {hasOverrides ? (
@@ -167,7 +167,7 @@ export function AdminOrgTierDialog({
                         {orgTier.max_concurrent_workflows != null && (
                           <div>
                             <span className="text-muted-foreground">
-                              Max concurrent workflows:
+                              最大并发工作流数：
                             </span>
                             <span className="ml-2">
                               {orgTier.max_concurrent_workflows}
@@ -177,7 +177,7 @@ export function AdminOrgTierDialog({
                         {orgTier.max_action_executions_per_workflow != null && (
                           <div>
                             <span className="text-muted-foreground">
-                              Max actions per workflow:
+                              每个工作流的最大动作数：
                             </span>
                             <span className="ml-2">
                               {orgTier.max_action_executions_per_workflow}
@@ -187,7 +187,7 @@ export function AdminOrgTierDialog({
                         {orgTier.max_concurrent_actions != null && (
                           <div>
                             <span className="text-muted-foreground">
-                              Max concurrent actions:
+                              最大并发动作数：
                             </span>
                             <span className="ml-2">
                               {orgTier.max_concurrent_actions}
@@ -197,7 +197,7 @@ export function AdminOrgTierDialog({
                         {orgTier.api_rate_limit != null && (
                           <div>
                             <span className="text-muted-foreground">
-                              API rate limit:
+                              API 速率限制：
                             </span>
                             <span className="ml-2">
                               {orgTier.api_rate_limit}
@@ -207,7 +207,7 @@ export function AdminOrgTierDialog({
                       </div>
                     ) : (
                       <div className="text-sm text-muted-foreground">
-                        No overrides configured.
+                        未配置覆盖设置。
                       </div>
                     )}
                   </div>
@@ -226,7 +226,7 @@ export function AdminOrgTierDialog({
               selectedTierId === orgTier?.tier_id
             }
           >
-            {updatePending ? "Saving..." : "Save changes"}
+            {updatePending ? "保存中…" : "保存更改"}
           </Button>
         </DialogFooter>
       </DialogContent>

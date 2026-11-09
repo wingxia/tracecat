@@ -28,7 +28,7 @@ function DetailSection({
         {title} <span className="text-muted-foreground">({count})</span>
       </h4>
       {count === 0 ? (
-        <p className="text-xs text-muted-foreground">None</p>
+        <p className="text-xs text-muted-foreground">无</p>
       ) : (
         children
       )}
@@ -61,10 +61,9 @@ function ConflictList({ conflicts }: { conflicts: RolloutConflict[] }) {
   return (
     <div className="space-y-2">
       <Alert variant="warning">
-        <AlertTitle>Name conflicts block this rollout</AlertTitle>
+        <AlertTitle>名称冲突阻止了此次部署</AlertTitle>
         <AlertDescription className="text-xs">
-          The customer must rename or delete this resource; it can&apos;t be
-          resolved from here.
+          客户必须重命名或删除此资源，无法在这里解决冲突。
         </AlertDescription>
       </Alert>
       <ul className="divide-y rounded-md border text-xs">
@@ -80,7 +79,7 @@ function ConflictList({ conflicts }: { conflicts: RolloutConflict[] }) {
               <span className="font-medium">{conflict.name}</span>
             </div>
             <div className="text-muted-foreground">
-              Incoming resource clashes with existing customer resource{" "}
+              传入资源与客户现有资源冲突{" "}
               <span className="font-mono">{conflict.existing_local_id}</span>
             </div>
           </li>
@@ -122,10 +121,10 @@ export function DeleteWarningList({
       {warnings.map((warning) => {
         const facts: string[] = []
         if (warning.table_rows != null) {
-          facts.push(`${warning.table_rows} table rows`)
+          facts.push(`${warning.table_rows} 行数据`)
         }
         if (warning.cases_using != null) {
-          facts.push(`${warning.cases_using} cases affected`)
+          facts.push(`${warning.cases_using} 个事件受影响`)
         }
         if (warning.has_customer_values) {
           facts.push("has customer-set values")
@@ -147,7 +146,7 @@ export function DeleteWarningList({
             )}
             {referencedBy.length > 0 && (
               <div className="text-muted-foreground">
-                Referenced by: {referencedBy.join(", ")}
+                引用来源： {referencedBy.join(", ")}
               </div>
             )}
           </li>
@@ -187,9 +186,8 @@ function DroppedSkillList({ skills }: { skills: RolloutDroppedSkill[] }) {
     <ul className="divide-y rounded-md border text-xs">
       {skills.map((skill) => (
         <li key={`${skill.preset}:${skill.skill}`} className="px-3 py-2">
-          Customer skill <span className="font-medium">{skill.skill}</span> is
-          removed from preset{" "}
-          <span className="font-medium">{skill.preset}</span>
+          客户技能 <span className="font-medium">{skill.skill}</span>{" "}
+          已从预设中移除 <span className="font-medium">{skill.preset}</span>
         </li>
       ))}
     </ul>
@@ -213,30 +211,27 @@ export function RolloutPreviewDetails({
   return (
     <div className="space-y-6">
       {conflicts.length > 0 && (
-        <DetailSection title="Conflicts" count={conflicts.length}>
+        <DetailSection title={"冲突"} count={conflicts.length}>
           <ConflictList conflicts={conflicts} />
         </DetailSection>
       )}
-      <DetailSection title="Changes" count={changes.length}>
+      <DetailSection title={"变更"} count={changes.length}>
         <ChangeList changes={changes} />
       </DetailSection>
-      <DetailSection title="Unresolved references" count={references.length}>
+      <DetailSection title={"未解析的引用"} count={references.length}>
         <ReferenceList references={references} />
       </DetailSection>
-      <DetailSection title="Delete warnings" count={deleteWarnings.length}>
+      <DetailSection title={"删除警告"} count={deleteWarnings.length}>
         <DeleteWarningList warnings={deleteWarnings} />
       </DetailSection>
-      <DetailSection title="Registry plan" count={registry.length}>
+      <DetailSection title={"注册表计划"} count={registry.length}>
         <RegistryList plans={registry} />
       </DetailSection>
-      <DetailSection
-        title="Dropped customer skills"
-        count={droppedSkills.length}
-      >
+      <DetailSection title={"移除的客户技能"} count={droppedSkills.length}>
         <DroppedSkillList skills={droppedSkills} />
       </DetailSection>
       {diagnostics.length > 0 && (
-        <DetailSection title="Diagnostics" count={diagnostics.length}>
+        <DetailSection title={"诊断信息"} count={diagnostics.length}>
           <ul className="list-disc space-y-1 pl-5 text-xs text-muted-foreground">
             {diagnostics.map((diagnostic) => (
               <li key={diagnostic}>{diagnostic}</li>

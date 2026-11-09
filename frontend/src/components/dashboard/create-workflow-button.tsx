@@ -49,7 +49,7 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 
 const importFormSchema = z.object({
   file: z.instanceof(File).refine((file) => file.size <= 5000000, {
-    message: "File size must be less than 5MB.",
+    message: "文件大小必须小于 5MB。",
   }),
   use_workflow_id: z.boolean().default(false),
 })
@@ -97,7 +97,7 @@ function ImportWorkflowDialog({
           case 400:
             console.error("Bad request:", apiError)
             form.setError("file", {
-              message: "The uploaded workflow YAML / JSON is invalid.",
+              message: "上传的工作流 YAML / JSON 无效。",
             })
 
             setValidationErrors(
@@ -107,8 +107,8 @@ function ImportWorkflowDialog({
           case 409:
             console.error("Conflict:", apiError)
             form.setError("file", {
-              message: `A workflow with this workflow ID already exists.
-              Please either uncheck "Use workflow ID from file", delete the existing workflow, remove the ID from the file, or upload a file with a different ID.`,
+              message:
+                "已存在相同 ID 的工作流。请取消勾选“使用文件中的工作流 ID”、删除现有工作流、移除文件中的 ID，或上传使用其他 ID 的文件。",
             })
             break
           default:
@@ -124,9 +124,9 @@ function ImportWorkflowDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Import workflow from file</DialogTitle>
+          <DialogTitle>从文件导入工作流</DialogTitle>
           <DialogDescription>
-            Import a workflow from a YAML or JSON file.
+            从 YAML 或 JSON 文件导入工作流。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -154,7 +154,7 @@ function ImportWorkflowDialog({
                         }}
                       />
                     </FormControl>
-                    <FormDescription>Upload file (max 5MB)</FormDescription>
+                    <FormDescription>上传文件（最大 5MB）</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -172,11 +172,10 @@ function ImportWorkflowDialog({
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>Use workflow ID from file</FormLabel>
+                      <FormLabel>使用文件中的工作流 ID</FormLabel>
                       <FormDescription>
-                        When checked, the system will use the workflow ID
-                        provided in the YAML/JSON file. If not checked, a new ID
-                        will be generated.
+                        勾选后使用 YAML/JSON 文件提供的工作流 ID，否则生成新
+                        ID。
                       </FormDescription>
                     </div>
                   </FormItem>
@@ -186,7 +185,7 @@ function ImportWorkflowDialog({
           </Form>
           {validationErrors && (
             <div className="flex h-36 flex-col space-y-2 overflow-auto rounded-md border border-rose-500 bg-rose-100 p-2 font-mono text-xs text-rose-600">
-              <span className="font-semibold">Validation errors</span>
+              <span className="font-semibold">校验错误</span>
               <Separator className="bg-rose-400" />
               <pre>{validationErrors}</pre>
             </div>
@@ -194,7 +193,7 @@ function ImportWorkflowDialog({
         </DialogBody>
         <DialogFooter>
           <Button size="sm" type="submit" form={IMPORT_WORKFLOW_FORM_ID}>
-            Upload
+            上传
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -203,7 +202,7 @@ function ImportWorkflowDialog({
 }
 
 const folderFormSchema = z.object({
-  name: z.string().min(1, "Folder name is required"),
+  name: z.string().min(1, "文件夹名称不能为空"),
 })
 
 type FolderFormValues = z.infer<typeof folderFormSchema>
@@ -240,7 +239,7 @@ function CreateFolderDialog({
       console.log("Error creating folder:", error)
       const detail = getApiErrorDetail(error)
       form.setError("name", {
-        message: detail ?? "Folder already exists or another error occurred.",
+        message: detail ?? "文件夹已存在或发生其他错误。",
       })
     }
   }
@@ -249,10 +248,8 @@ function CreateFolderDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm" className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create folder</DialogTitle>
-          <DialogDescription>
-            Create a folder to organize your workflows.
-          </DialogDescription>
+          <DialogTitle>创建文件夹</DialogTitle>
+          <DialogDescription>创建文件夹来整理工作流。</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -266,10 +263,10 @@ function CreateFolderDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Folder name</FormLabel>
+                    <FormLabel>文件夹名称</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter folder name"
+                        placeholder={"输入文件夹名称"}
                         {...field}
                         autoFocus
                       />
@@ -281,7 +278,7 @@ function CreateFolderDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit">
-                Create folder
+                创建文件夹
               </Button>
             </DialogFooter>
           </form>
@@ -337,7 +334,7 @@ export function CreateWorkflowButton({
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Create
+            创建
             <ChevronDownIcon className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -352,18 +349,16 @@ export function CreateWorkflowButton({
           <DropdownMenuItem onSelect={handleCreateWorkflow}>
             <PlusCircleIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Workflow</span>
-              <span className="text-xs text-muted-foreground">
-                Start from scratch
-              </span>
+              <span>工作流</span>
+              <span className="text-xs text-muted-foreground">从头开始</span>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setImportDialogOpen(true)}>
             <BracesIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>From YAML / JSON</span>
+              <span>从 YAML / JSON 导入</span>
               <span className="text-xs text-muted-foreground">
-                Import a workflow file
+                导入工作流文件
               </span>
             </div>
           </DropdownMenuItem>
@@ -371,9 +366,9 @@ export function CreateWorkflowButton({
             <DropdownMenuItem onSelect={() => setFolderDialogOpen(true)}>
               <FolderIcon className="size-4 text-foreground/80" />
               <div className="flex flex-col text-xs">
-                <span>Folder</span>
+                <span>文件夹</span>
                 <span className="text-xs text-muted-foreground">
-                  Group workflows
+                  工作流分组
                 </span>
               </div>
             </DropdownMenuItem>

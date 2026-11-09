@@ -135,20 +135,20 @@ export function RoleFormDialog({
           <div className="flex-1 min-h-0 space-y-4 overflow-hidden">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="role-name">Role name</Label>
+                <Label htmlFor="role-name">角色名称</Label>
                 <Input
                   id="role-name"
-                  placeholder="e.g., Security Analyst"
+                  placeholder={"例如：安全分析师"}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="role-description">Description</Label>
+                <Label htmlFor="role-description">描述</Label>
                 <Input
                   id="role-description"
-                  placeholder="Optional description"
+                  placeholder={"可选描述"}
                   value={roleDescription}
                   onChange={(e) => setRoleDescription(e.target.value)}
                 />
@@ -157,11 +157,10 @@ export function RoleFormDialog({
 
             <div className="flex-1 min-h-0 space-y-2">
               <div className="flex items-center justify-between">
-                <Label>Permissions ({scopeCounts} scopes selected)</Label>
+                <Label>权限（{scopeCounts} 项权限范围已选择）</Label>
               </div>
               <div className="text-xs text-muted-foreground mb-2">
-                Set permission levels by category, or expand to select
-                individual scopes.
+                按类别设置权限级别，或展开后选择各项权限范围。
               </div>
               <div className="h-[400px] overflow-y-auto rounded-md border">
                 <div className="divide-y divide-border/50">
@@ -185,11 +184,11 @@ export function RoleFormDialog({
           <Button size="sm" type="submit" disabled={!name.trim() || isPending}>
             {isPending
               ? initialData
-                ? "Saving..."
-                : "Creating..."
+                ? "保存中…"
+                : "创建中…"
               : initialData
-                ? "Save changes"
-                : "Create role"}
+                ? "保存更改"
+                : "创建角色"}
           </Button>
         </DialogFooter>
       </form>

@@ -104,7 +104,7 @@ describe("SkillLibrarySkillView", () => {
     })
     render(<SkillLibrarySkillView slug="security-alert-triage" />)
     expect(screen.getByText("AWS")).toBeInTheDocument()
-    expect(screen.getByText("Maintained by Tracecat")).toBeInTheDocument()
+    expect(screen.getByText("维护者 Tracecat")).toBeInTheDocument()
     expect(
       screen.queryByRole("link", { name: /elastic\/agent-skills/ })
     ).not.toBeInTheDocument()
@@ -129,16 +129,14 @@ describe("SkillLibrarySkillView", () => {
     })
     render(<SkillLibrarySkillView slug="security-alert-triage" />)
     expect(screen.getByText("Tracecat")).toBeInTheDocument()
-    expect(screen.queryByText(/maintained by/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/维护者/i)).not.toBeInTheDocument()
   })
 
   it("shows other files as read-only text", () => {
     render(<SkillLibrarySkillView slug="security-alert-triage" />)
 
     fireEvent.click(screen.getByText("logo.bin"))
-    expect(
-      screen.getByText("Binary file; no preview available.")
-    ).toBeInTheDocument()
+    expect(screen.getByText("二进制文件，无法预览。")).toBeInTheDocument()
   })
 
   it("reports a skill missing from the library", () => {
@@ -150,8 +148,6 @@ describe("SkillLibrarySkillView", () => {
 
     render(<SkillLibrarySkillView slug="missing" />)
 
-    expect(
-      screen.getByText("This skill is not in the skill library.")
-    ).toBeInTheDocument()
+    expect(screen.getByText("此技能不在技能库中。")).toBeInTheDocument()
   })
 })

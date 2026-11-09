@@ -34,22 +34,20 @@ export function NoOrganizationAccess() {
       <Card className="w-full">
         <CardHeader className="items-center text-center">
           <AlertCircle className="mb-2 size-10 text-muted-foreground" />
-          <CardTitle>No organization access yet</CardTitle>
+          <CardTitle>尚无组织访问权限</CardTitle>
           <CardDescription>
-            Your account is authenticated, but it has not joined an
-            organization.
+            账号已通过身份验证，但尚未加入组织。
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 text-center">
           {pendingInvitationsError ? (
             <p className="text-sm text-muted-foreground">
-              Could not load pending invitations. If you have an invitation
-              link, open it directly.
+              无法加载待处理邀请。如果你有邀请链接，请直接打开。
             </p>
           ) : invitations.length > 0 ? (
             <>
               <p className="text-sm text-muted-foreground">
-                We found pending invitations for your account.
+                找到了此账号的待处理邀请。
               </p>
               <div className="space-y-2">
                 {invitations.map((invitation) => (
@@ -62,15 +60,17 @@ export function NoOrganizationAccess() {
                         {invitation.organization_name}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        Expires:{" "}
-                        {new Date(invitation.expires_at).toLocaleDateString()}
+                        到期时间：{" "}
+                        {new Date(invitation.expires_at).toLocaleDateString(
+                          "zh-CN"
+                        )}
                       </p>
                     </div>
                     <Button asChild size="sm" variant="outline">
                       <Link
                         href={`/invitations/accept?token=${encodeURIComponent(invitation.token)}`}
                       >
-                        Review
+                        审核
                       </Link>
                     </Button>
                   </div>
@@ -79,8 +79,7 @@ export function NoOrganizationAccess() {
             </>
           ) : (
             <p className="text-sm text-muted-foreground">
-              No pending invitations were found for this account. Ask your
-              organization administrator to invite this email address.
+              未找到此账号的待处理邀请。请联系组织管理员邀请此邮箱。
             </p>
           )}
         </CardContent>
@@ -91,7 +90,7 @@ export function NoOrganizationAccess() {
             onClick={() => logout("/sign-in")}
           >
             <LogOut className="mr-2 size-4" />
-            Sign out
+            退出登录
           </Button>
         </CardFooter>
       </Card>

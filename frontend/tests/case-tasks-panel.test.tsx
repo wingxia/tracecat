@@ -136,7 +136,7 @@ async function openEditMode(
   title = "Task one"
 ) {
   fireEvent.contextMenu(screen.getByText(title))
-  await user.click(await screen.findByRole("menuitem", { name: /edit task/i }))
+  await user.click(await screen.findByRole("menuitem", { name: /编辑任务/i }))
 }
 
 describe("CaseTasksPanel", () => {
@@ -200,7 +200,7 @@ describe("CaseTasksPanel", () => {
       screen.queryByRole("button", { name: "Plain task" })
     ).not.toBeInTheDocument()
     fireEvent.click(screen.getByText("Plain task"))
-    expect(screen.queryByLabelText("Task title")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("任务标题")).not.toBeInTheDocument()
   })
 
   it("lists tasks alphabetically by title, whatever order the server sent", () => {
@@ -231,7 +231,7 @@ describe("CaseTasksPanel", () => {
     expect(
       screen.queryByTestId("task-description-viewer")
     ).not.toBeInTheDocument()
-    const chevron = screen.getByRole("button", { name: "Show description" })
+    const chevron = screen.getByRole("button", { name: "显示描述" })
     expect(chevron).toHaveAttribute("aria-expanded", "false")
 
     fireEvent.click(chevron)
@@ -239,7 +239,7 @@ describe("CaseTasksPanel", () => {
       "- a"
     )
 
-    fireEvent.click(screen.getByRole("button", { name: "Hide description" }))
+    fireEvent.click(screen.getByRole("button", { name: "隐藏描述" }))
     expect(
       screen.queryByTestId("task-description-viewer")
     ).not.toBeInTheDocument()
@@ -254,7 +254,7 @@ describe("CaseTasksPanel", () => {
       screen.queryByTestId("task-description-viewer")
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Show description" })
+      screen.queryByRole("button", { name: "显示描述" })
     ).not.toBeInTheDocument()
   })
 
@@ -280,11 +280,11 @@ describe("CaseTasksPanel", () => {
     // Status glyph leads the line, the title follows it, and the metadata
     // cluster trails right-aligned — Linear's sub-issue row.
     const sequence = [
-      screen.getByRole("button", { name: /change status/i }),
+      screen.getByRole("button", { name: /更改状态/i }),
       screen.getByText("Ordered task"),
-      screen.getByRole("button", { name: /set priority/i }),
-      screen.getByRole("button", { name: /assign to/i }),
-      screen.getByRole("button", { name: /run workflow/i }),
+      screen.getByRole("button", { name: /设置优先级/i }),
+      screen.getByRole("button", { name: /分配给/i }),
+      screen.getByRole("button", { name: /运行工作流/i }),
     ]
     for (let i = 0; i < sequence.length - 1; i++) {
       // DOCUMENT_POSITION_FOLLOWING: the next element comes after this one.
@@ -317,15 +317,13 @@ describe("CaseTasksPanel", () => {
     // Assigned: the row carries the avatar only — no name text at this
     // density — so the email rides on the accessible name instead.
     const assigned = screen.getByRole("button", {
-      name: /currently analyst@example\.com/i,
+      name: /当前为 analyst@example\.com/i,
     })
     expect(assigned).toBeInTheDocument()
     expect(assigned).not.toHaveTextContent("analyst@example.com")
     // Unassigned: the slot stays occupied by a muted placeholder, so the
     // picker is still reachable and the cluster never reflows.
-    expect(
-      screen.getByRole("button", { name: "Assign to" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "分配给" })).toBeInTheDocument()
   })
 
   it("never nests buttons, even with a run pill on the card", () => {
@@ -356,8 +354,8 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /change status/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /completed/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /已完成/i }))
 
     expect(updateTask).toHaveBeenCalledTimes(1)
     const payload = updateTask.mock.calls[0][0]
@@ -371,30 +369,28 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /change status/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
 
     // Four fixed options: a plain dropdown like the properties rail's, with
     // no search box to filter them and no checkbox to multi-select them.
     const items = await screen.findAllByRole("menuitem")
     expect(items).toHaveLength(4)
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument()
-    expect(
-      screen.queryByPlaceholderText(/change status/i)
-    ).not.toBeInTheDocument()
+    expect(screen.queryByPlaceholderText(/更改状态/i)).not.toBeInTheDocument()
     // The task's own status is the one row marked current.
     const current = items.filter((item) =>
-      /, current/.test(item.textContent ?? "")
+      /，当前/.test(item.textContent ?? "")
     )
     expect(current).toHaveLength(1)
-    expect(current[0]).toHaveTextContent(/^To do/)
+    expect(current[0]).toHaveTextContent(/^待办/)
   })
 
   it("leaves digits to the palette search instead of treating them as shortcuts", async () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    fireEvent.click(screen.getByRole("button", { name: /assign to/i }))
-    const search = await screen.findByPlaceholderText("Assign to…")
+    fireEvent.click(screen.getByRole("button", { name: /分配给/i }))
+    const search = await screen.findByPlaceholderText("分配给…")
     fireEvent.keyDown(search, { key: "3" })
 
     // Digit shortcuts were removed from the task palettes: a digit only ever
@@ -406,8 +402,8 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ priority: "unknown" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /set priority/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /^high/i }))
+    openMenu(screen.getByRole("button", { name: /设置优先级/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /^高/i }))
 
     expect(updateTask).toHaveBeenCalledTimes(1)
     expect(updateTask.mock.calls[0][0]).toEqual({ priority: "high" })
@@ -428,8 +424,8 @@ describe("CaseTasksPanel", () => {
     ])
 
     renderPanel()
-    fireEvent.click(screen.getByRole("button", { name: /assign to/i }))
-    fireEvent.click(await screen.findByRole("option", { name: /no assignee/i }))
+    fireEvent.click(screen.getByRole("button", { name: /分配给/i }))
+    fireEvent.click(await screen.findByRole("option", { name: /无负责人/i }))
 
     expect(updateTask).toHaveBeenCalledTimes(1)
     expect(updateTask.mock.calls[0][0]).toEqual({ assignee_id: null })
@@ -445,11 +441,11 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: "Change status: To do" }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /completed/i }))
+    openMenu(screen.getByRole("button", { name: "更改状态：待办" }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /已完成/i }))
 
     expect(
-      screen.getByRole("button", { name: "Change status: Completed" })
+      screen.getByRole("button", { name: "更改状态：已完成" })
     ).toBeInTheDocument()
   })
 
@@ -457,13 +453,13 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /change status/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /completed/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /已完成/i }))
     // Second thoughts while the first patch is still in flight: the stale
     // task prop still says "todo", but the row must compare against what it
     // shows, not what the server last said, or this click is discarded.
-    openMenu(screen.getByRole("button", { name: /change status/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /to do/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /待办/i }))
 
     expect(updateTask).toHaveBeenCalledTimes(2)
     expect(updateTask.mock.calls[0][0]).toEqual({ status: "completed" })
@@ -474,8 +470,8 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /change status/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /to do/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /待办/i }))
 
     expect(updateTask).not.toHaveBeenCalled()
   })
@@ -487,12 +483,12 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ status: "todo" })])
 
     renderPanel()
-    openMenu(screen.getByRole("button", { name: /change status/i }))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /completed/i }))
+    openMenu(screen.getByRole("button", { name: /更改状态/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /已完成/i }))
 
     expect(updateTask).toHaveBeenCalledTimes(1)
     expect(
-      screen.getByRole("button", { name: "Change status: To do" })
+      screen.getByRole("button", { name: "更改状态：待办" })
     ).toBeInTheDocument()
   })
 
@@ -500,7 +496,7 @@ describe("CaseTasksPanel", () => {
     setTasks([makeTask({ assignee: null })])
 
     renderPanel()
-    fireEvent.click(screen.getByRole("button", { name: "Assign to" }))
+    fireEvent.click(screen.getByRole("button", { name: "分配给" }))
     fireEvent.click(
       await screen.findByRole("option", { name: /analyst@example.com/i })
     )
@@ -511,7 +507,7 @@ describe("CaseTasksPanel", () => {
     // from the workspace member with the pending id.
     expect(
       screen.getByRole("button", {
-        name: "Assign to: currently analyst@example.com",
+        name: "分配给：当前为 analyst@example.com",
       })
     ).toBeInTheDocument()
   })
@@ -524,7 +520,7 @@ describe("CaseTasksPanel", () => {
     renderPanel()
 
     const runPill = screen.getByRole("button", {
-      name: /run workflow: containment workflow/i,
+      name: /运行工作流：containment workflow/i,
     })
     expect(screen.getByTestId("workflow-trigger-dialog")).toHaveAttribute(
       "data-open",
@@ -543,7 +539,7 @@ describe("CaseTasksPanel", () => {
     renderPanel()
 
     expect(
-      screen.queryByRole("button", { name: /run workflow/i })
+      screen.queryByRole("button", { name: /运行工作流/i })
     ).not.toBeInTheDocument()
     expect(
       screen.queryByTestId("workflow-trigger-dialog")
@@ -559,10 +555,8 @@ describe("CaseTasksPanel", () => {
     renderPanel()
     await openEditMode(user)
 
-    expect(screen.getByLabelText("Task title")).toHaveValue("Task one")
-    expect(screen.getByLabelText("Task description")).toHaveValue(
-      "Existing notes"
-    )
+    expect(screen.getByLabelText("任务标题")).toHaveValue("Task one")
+    expect(screen.getByLabelText("任务描述")).toHaveValue("Existing notes")
   })
 
   it("saves an edit with exactly the six form keys, then returns to read", async () => {
@@ -572,9 +566,9 @@ describe("CaseTasksPanel", () => {
     renderPanel()
     await openEditMode(user)
 
-    const input = screen.getByLabelText("Task title")
+    const input = screen.getByLabelText("任务标题")
     fireEvent.change(input, { target: { value: "Task renamed" } })
-    fireEvent.click(screen.getByRole("button", { name: "Save task" }))
+    fireEvent.click(screen.getByRole("button", { name: "保存任务" }))
 
     await waitFor(() => expect(updateTask).toHaveBeenCalledTimes(1))
     const payload = updateTask.mock.calls[0][0]
@@ -592,7 +586,7 @@ describe("CaseTasksPanel", () => {
 
     // The successful save closes edit mode.
     await waitFor(() =>
-      expect(screen.queryByLabelText("Task title")).not.toBeInTheDocument()
+      expect(screen.queryByLabelText("任务标题")).not.toBeInTheDocument()
     )
   })
 
@@ -603,7 +597,7 @@ describe("CaseTasksPanel", () => {
     renderPanel()
     await openEditMode(user)
 
-    const textarea = screen.getByLabelText("Task description")
+    const textarea = screen.getByLabelText("任务描述")
     fireEvent.change(textarea, { target: { value: "- a\n**bold**" } })
     fireEvent.keyDown(textarea, { key: "Enter", metaKey: true })
 
@@ -620,11 +614,11 @@ describe("CaseTasksPanel", () => {
     renderPanel()
     await openEditMode(user)
 
-    const textarea = screen.getByLabelText("Task description")
+    const textarea = screen.getByLabelText("任务描述")
     fireEvent.keyDown(textarea, { key: "Enter" })
 
     // The form stays open and nothing is saved: Enter belongs to the text.
-    expect(screen.getByLabelText("Task description")).toBeInTheDocument()
+    expect(screen.getByLabelText("任务描述")).toBeInTheDocument()
     expect(updateTask).not.toHaveBeenCalled()
   })
 
@@ -637,7 +631,7 @@ describe("CaseTasksPanel", () => {
 
     // maxLength is the whole enforcement: the browser stops typing and
     // truncates pastes, and no validation copy exists to find.
-    expect(screen.getByLabelText("Task description")).toHaveAttribute(
+    expect(screen.getByLabelText("任务描述")).toHaveAttribute(
       "maxlength",
       "1000"
     )
@@ -652,12 +646,12 @@ describe("CaseTasksPanel", () => {
     await openEditMode(user)
     outerKeyDown.mockClear()
 
-    const input = screen.getByLabelText("Task title")
+    const input = screen.getByLabelText("任务标题")
     fireEvent.change(input, { target: { value: "Discarded" } })
     fireEvent.keyDown(input, { key: "Escape" })
 
     expect(updateTask).not.toHaveBeenCalled()
-    expect(screen.queryByLabelText("Task title")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("任务标题")).not.toBeInTheDocument()
     expect(screen.getByText("Task one")).toBeInTheDocument()
     // stopPropagation: a propagated Escape would close the whole case panel
     // in slideover/embedded mode instead of just the edit.
@@ -675,12 +669,12 @@ describe("CaseTasksPanel", () => {
 
     // Edit the first row…
     await openEditMode(user, "First task")
-    expect(screen.getByLabelText("Task title")).toHaveValue("First task")
+    expect(screen.getByLabelText("任务标题")).toHaveValue("First task")
 
     // …then the second: the first must fall back to read mode.
     await openEditMode(user, "Second task")
 
-    const titleInputs = screen.getAllByLabelText("Task title")
+    const titleInputs = screen.getAllByLabelText("任务标题")
     expect(titleInputs).toHaveLength(1)
     expect(titleInputs[0]).toHaveValue("Second task")
     expect(screen.getByText("First task")).toBeInTheDocument()
@@ -705,23 +699,21 @@ describe("CaseTasksPanel", () => {
     fireEvent.contextMenu(screen.getByText("Task one"))
 
     expect(
-      await screen.findByRole("menuitem", { name: /change status/i })
+      await screen.findByRole("menuitem", { name: /更改状态/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("menuitem", { name: /assign to/i })
+      screen.getByRole("menuitem", { name: /分配给/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("menuitem", { name: /set priority/i })
+      screen.getByRole("menuitem", { name: /设置优先级/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("menuitem", { name: /set workflow/i })
+      screen.getByRole("menuitem", { name: /设置工作流/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("menuitem", { name: /edit task/i })
+      screen.getByRole("menuitem", { name: /编辑任务/i })
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole("menuitem", { name: /delete/i })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("menuitem", { name: /删除/i })).toBeInTheDocument()
   })
 
   it("deletes through the context menu behind the retained confirm", async () => {
@@ -729,11 +721,11 @@ describe("CaseTasksPanel", () => {
 
     renderPanel()
     fireEvent.contextMenu(screen.getByText("Task one"))
-    fireEvent.click(await screen.findByRole("menuitem", { name: /delete/i }))
+    fireEvent.click(await screen.findByRole("menuitem", { name: /删除/i }))
 
     const confirm = await screen.findByRole("alertdialog")
     expect(confirm).toHaveTextContent("Task one")
-    fireEvent.click(screen.getByRole("button", { name: "Delete" }))
+    fireEvent.click(screen.getByRole("button", { name: "删除" }))
     expect(deleteTask).toHaveBeenCalledTimes(1)
   })
 
@@ -742,29 +734,25 @@ describe("CaseTasksPanel", () => {
   it("shows the add-task ghost row as the only empty state", () => {
     renderPanel()
 
-    expect(
-      screen.getByRole("button", { name: "Create task" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "创建任务" })).toBeInTheDocument()
     expect(screen.queryByText("No tasks")).not.toBeInTheDocument()
   })
 
   it("swaps the ghost row for the new-task card and focuses the title", () => {
     renderPanel()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
 
-    const title = screen.getByPlaceholderText("Task title")
+    const title = screen.getByPlaceholderText("任务标题")
     expect(title).toHaveFocus()
-    expect(screen.getAllByRole("button", { name: "Create task" })).toHaveLength(
-      1
-    )
+    expect(screen.getAllByRole("button", { name: "创建任务" })).toHaveLength(1)
   })
 
   it("creates on Enter with exactly the six form keys, then resets for rapid entry", async () => {
     const user = userEvent.setup()
     renderPanel()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
     await user.keyboard("Triage the alert{Enter}")
 
     await waitFor(() => expect(createTask).toHaveBeenCalledTimes(1))
@@ -782,7 +770,7 @@ describe("CaseTasksPanel", () => {
     expect("default_trigger_values" in payload).toBe(false)
 
     // The card stays open, reset, with focus back in the title.
-    const title = screen.getByPlaceholderText("Task title")
+    const title = screen.getByPlaceholderText("任务标题")
     await waitFor(() => expect(title).toHaveValue(""))
     expect(title).toHaveFocus()
   })
@@ -791,13 +779,13 @@ describe("CaseTasksPanel", () => {
     const user = userEvent.setup()
     renderPanel()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
     await user.keyboard("Run containment")
-    fireEvent.click(screen.getByRole("button", { name: "Workflow" }))
+    fireEvent.click(screen.getByRole("button", { name: "工作流" }))
     fireEvent.click(
       await screen.findByRole("option", { name: /containment workflow/i })
     )
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
 
     await waitFor(() => expect(createTask).toHaveBeenCalledTimes(1))
     expect(createTask.mock.calls[0][0]).toMatchObject({
@@ -809,9 +797,9 @@ describe("CaseTasksPanel", () => {
   it("keeps the new-task card open when a palette consumes its Escape", async () => {
     renderPanel()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
-    fireEvent.click(screen.getByRole("button", { name: "Workflow" }))
-    const search = await screen.findByPlaceholderText("Search workflows…")
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
+    fireEvent.click(screen.getByRole("button", { name: "工作流" }))
+    const search = await screen.findByPlaceholderText("搜索工作流…")
     fireEvent.keyDown(search, { key: "Escape" })
 
     // Radix portals the palette, but React synthetic events still bubble
@@ -819,24 +807,22 @@ describe("CaseTasksPanel", () => {
     // instead of letting it cancel the card underneath.
     await waitFor(() =>
       expect(
-        screen.queryByPlaceholderText("Search workflows…")
+        screen.queryByPlaceholderText("搜索工作流…")
       ).not.toBeInTheDocument()
     )
-    expect(screen.getByPlaceholderText("Task title")).toBeInTheDocument()
+    expect(screen.getByPlaceholderText("任务标题")).toBeInTheDocument()
   })
 
   it("cancels the new-task card on Escape without reaching the case panel", () => {
     const outerKeyDown = jest.fn()
     renderPanel(outerKeyDown)
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
-    fireEvent.keyDown(screen.getByPlaceholderText("Task title"), {
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
+    fireEvent.keyDown(screen.getByPlaceholderText("任务标题"), {
       key: "Escape",
     })
 
-    expect(
-      screen.getByRole("button", { name: "Create task" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "创建任务" })).toBeInTheDocument()
     // stopPropagation: in slideover/embedded mode a propagated Escape would
     // close the whole case panel, not just the card.
     expect(outerKeyDown).not.toHaveBeenCalled()
@@ -846,11 +832,11 @@ describe("CaseTasksPanel", () => {
     const user = userEvent.setup()
     renderPanel()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create task" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建任务" }))
     await user.keyboard("Draft in progress")
-    fireEvent.blur(screen.getByPlaceholderText("Task title"))
+    fireEvent.blur(screen.getByPlaceholderText("任务标题"))
 
-    expect(screen.getByPlaceholderText("Task title")).toHaveValue(
+    expect(screen.getByPlaceholderText("任务标题")).toHaveValue(
       "Draft in progress"
     )
   })

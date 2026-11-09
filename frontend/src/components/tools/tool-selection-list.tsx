@@ -252,7 +252,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
     visibleUnknown.length > 0 ||
     visibleOtherRules.length > 0 ||
     visibleSkillKeys.length > 0
-  const blockedNotice = `${blocked.length} listed ${blocked.length === 1 ? "tool" : "tools"} blocked by the stored namespace filter`
+  const blockedNotice = `列表中有 ${blocked.length} 个工具被已存储的命名空间筛选条件阻止`
 
   function writeRules(next: typeof rules) {
     if (next !== rules) onChange({ ...value, toolApprovals: next })
@@ -304,12 +304,12 @@ export const ToolSelectionList = memo(function ToolSelectionList({
           TOOL_LIST_INSET
         )}
       >
-        {!hideTitle && <h3 className="text-xs font-medium">Tools</h3>}
+        {!hideTitle && <h3 className="text-xs font-medium">工具</h3>}
         {/* Nothing can be counted until the catalogue has loaded. */}
         {ready && (
           <span className="text-xs text-muted-foreground">
             {selectedCount}
-            {hideTitle && " selected"}
+            {hideTitle && " 项已选择"}
           </span>
         )}
         <Button
@@ -317,7 +317,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
           variant="ghost"
           size="icon"
           className={cn("ml-auto size-7", FOCUS)}
-          aria-label="Search allowed tools"
+          aria-label={"搜索允许的工具"}
           aria-expanded={searchOpen}
           onClick={() => {
             setSearchOpen(!searchOpen)
@@ -335,7 +335,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
           onClick={() => setOpen(true)}
         >
           <Plus className="size-3.5" />
-          Add tools
+          添加工具
         </Button>
       </div>
       {searchOpen && (
@@ -349,8 +349,8 @@ export const ToolSelectionList = memo(function ToolSelectionList({
           <Search className="size-4 text-muted-foreground" />
           <Input
             autoFocus
-            aria-label="Filter allowed tools"
-            placeholder="Search allowed tools"
+            aria-label={"筛选允许的工具"}
+            placeholder={"搜索允许的工具"}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             className="h-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
@@ -375,7 +375,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
             disabled={isSaving}
             onClick={() => onChange({ ...value, namespaces: [] })}
           >
-            Clear
+            清除
           </Button>
         </div>
       )}
@@ -385,17 +385,15 @@ export const ToolSelectionList = memo(function ToolSelectionList({
         integrations.length === 0 &&
         skillKeys.size === 0 &&
         otherRules.length === 0 && (
-          <p className="py-3 text-xs text-muted-foreground">
-            No tools selected.
-          </p>
+          <p className="py-3 text-xs text-muted-foreground">尚未选择工具。</p>
         )}
       {!ready && (
         <p className="py-3 text-xs text-muted-foreground">
-          {toolsLoadError ? "Tools could not be loaded." : "Loading tools..."}
+          {toolsLoadError ? "无法加载工具。" : "正在加载工具…"}
         </p>
       )}
       {ready && search && !hasMatches && (
-        <p className="py-3 text-xs text-muted-foreground">No matching tools</p>
+        <p className="py-3 text-xs text-muted-foreground">没有匹配的工具</p>
       )}
       {ready && (
         <div
@@ -463,7 +461,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                               APPROVAL_COLOR
                             )}
                           >
-                            {approvalCount} need approval
+                            {approvalCount} 项需要审批
                           </span>
                         )}
                         <span
@@ -473,7 +471,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                           )}
                         >
                           {granted
-                            ? "All tools"
+                            ? "所有工具"
                             : `${allowed.length} of ${total}`}
                         </span>
                       </span>
@@ -487,14 +485,14 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                           disabled={isSaving}
                           onSelect={() => groupApproval(keys, true)}
                         >
-                          Require approval for all
+                          全部要求审批
                         </ContextMenuItem>
                         <ContextMenuItem
                           className="text-xs"
                           disabled={isSaving}
                           onSelect={() => groupApproval(keys, false)}
                         >
-                          Run all automatically
+                          全部自动运行
                         </ContextMenuItem>
                       </>
                     )}
@@ -503,7 +501,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                       disabled={isSaving}
                       onSelect={() => remove(keys)}
                     >
-                      Remove all
+                      全部移除
                     </ContextMenuItem>
                   </ContextMenuContent>
                 </ContextMenu>
@@ -573,11 +571,11 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                     variant="secondary"
                     className={cn(COUNT_BADGE, APPROVAL_COLOR)}
                   >
-                    {approvalCount} need approval
+                    {approvalCount} 项需要审批
                   </Badge>
                 )}
                 <span className="shrink-0 text-[10px] text-muted-foreground">
-                  All tools
+                  所有工具
                 </span>
               </Item>
             )
@@ -590,7 +588,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                   TOOL_LIST_INSET
                 )}
               >
-                From skills
+                来自技能
               </h4>
               {visibleSkillKeys.map((key) => (
                 <ToolSelectionRow
@@ -637,7 +635,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                   TOOL_LIST_INSET
                 )}
               >
-                Unavailable
+                不可用
               </h4>
               {visibleUnavailable.map((key) => (
                 <ToolSelectionRow
@@ -657,7 +655,7 @@ export const ToolSelectionList = memo(function ToolSelectionList({
                   TOOL_LIST_INSET
                 )}
               >
-                Other approval rules
+                其他审批规则
               </h4>
               {visibleOtherRules.map((rule) => (
                 <ToolSelectionRow
@@ -734,7 +732,7 @@ export function ToolSelectionRow({
               type="button"
               variant="ghost"
               size="sm"
-              aria-label={`Require approval for ${tool}`}
+              aria-label={`要求 ${tool} 进行审批`}
               aria-pressed={ask}
               disabled={disabled}
               onClick={onApproval}
@@ -744,7 +742,7 @@ export function ToolSelectionRow({
                 ask && APPROVAL_COLOR
               )}
             >
-              {ask ? "Ask" : "Auto"}
+              {ask ? "询问" : "自动"}
             </Button>
           </HoverCardTrigger>
           <HoverCardContent
@@ -753,8 +751,8 @@ export function ToolSelectionRow({
             className="w-64 p-3 text-xs"
           >
             {ask
-              ? "This tool call needs human-in-the-loop approval. Click to run it automatically."
-              : "Click to require human-in-the-loop approval for this tool call."}
+              ? "此工具调用需要人工审批，点击可改为自动运行。"
+              : "点击为此工具调用启用人工审批。"}
           </HoverCardContent>
         </HoverCard>
       )}
@@ -777,7 +775,7 @@ function RemoveButton({
       variant="ghost"
       size="icon"
       className={cn("size-6 shrink-0 text-muted-foreground", REVEAL, FOCUS)}
-      aria-label={`Remove ${label}`}
+      aria-label={`移除 ${label}`}
       disabled={disabled}
       onClick={onClick}
     >

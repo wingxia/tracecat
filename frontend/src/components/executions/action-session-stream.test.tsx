@@ -71,7 +71,7 @@ describe("ActionSessionStream", () => {
       screen.queryByText("Ran core.table.list_tables")
     ).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByText("Worked for 12s"))
+    fireEvent.click(screen.getByText("已工作 12s"))
 
     expect(screen.getByText("Ran core.table.list_tables")).toBeInTheDocument()
   })

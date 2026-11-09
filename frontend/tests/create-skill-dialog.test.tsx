@@ -5,8 +5,8 @@ import {
   type CreateSkillDialogValues,
 } from "@/components/skills/create-skill-dialog"
 
-const SKILL_NAME_REQUIRED_ERROR = "Name is required."
-const SKILL_NAME_TRAILING_HYPHEN_ERROR = "Name cannot end with a hyphen."
+const SKILL_NAME_REQUIRED_ERROR = "名称不能为空。"
+const SKILL_NAME_TRAILING_HYPHEN_ERROR = "名称不能以连字符结尾。"
 
 jest.mock("@/components/ui/dialog", () => ({
   Dialog: ({ open, children }: { open: boolean; children: ReactNode }) =>
@@ -43,9 +43,7 @@ function renderCreateSkillDialog(
 }
 
 function getCreateSkillForm(): HTMLFormElement {
-  const form = screen
-    .getByRole("button", { name: "Create skill" })
-    .closest("form")
+  const form = screen.getByRole("button", { name: "创建技能" }).closest("form")
 
   if (!(form instanceof HTMLFormElement)) {
     throw new Error("Create skill form not found")
@@ -58,27 +56,27 @@ describe("CreateSkillDialog", () => {
   it("preserves accented Latin letters when sanitizing skill names", () => {
     renderCreateSkillDialog()
 
-    fireEvent.change(screen.getByLabelText("Name"), {
+    fireEvent.change(screen.getByLabelText("名称"), {
       target: { value: "Café Tools" },
     })
 
-    expect(screen.getByLabelText("Name")).toHaveValue("cafe-tools")
+    expect(screen.getByLabelText("名称")).toHaveValue("cafe-tools")
   })
 
   it("preserves a trailing hyphen while the user composes a name", () => {
     renderCreateSkillDialog()
 
-    fireEvent.change(screen.getByLabelText("Name"), {
+    fireEvent.change(screen.getByLabelText("名称"), {
       target: { value: "threat-" },
     })
 
-    expect(screen.getByLabelText("Name")).toHaveValue("threat-")
+    expect(screen.getByLabelText("名称")).toHaveValue("threat-")
   })
 
   it("defers skill name validation until create is attempted", async () => {
     const { onCreate } = renderCreateSkillDialog()
 
-    const nameInput = screen.getByLabelText("Name")
+    const nameInput = screen.getByLabelText("名称")
     fireEvent.change(nameInput, {
       target: { value: "threat-" },
     })
@@ -88,7 +86,7 @@ describe("CreateSkillDialog", () => {
       screen.queryByText(SKILL_NAME_TRAILING_HYPHEN_ERROR)
     ).not.toBeInTheDocument()
 
-    const createButton = screen.getByRole("button", { name: "Create skill" })
+    const createButton = screen.getByRole("button", { name: "创建技能" })
     expect(createButton).toBeEnabled()
 
     fireEvent.click(createButton)
@@ -105,13 +103,13 @@ describe("CreateSkillDialog", () => {
   it("shows required name validation only after create is attempted", async () => {
     const { onCreate } = renderCreateSkillDialog()
 
-    const nameInput = screen.getByLabelText("Name")
+    const nameInput = screen.getByLabelText("名称")
     expect(nameInput).not.toHaveAttribute("aria-invalid", "true")
     expect(
       screen.queryByText(SKILL_NAME_REQUIRED_ERROR)
     ).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create skill" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建技能" }))
 
     await waitFor(() => {
       expect(onCreate).not.toHaveBeenCalled()
@@ -123,11 +121,11 @@ describe("CreateSkillDialog", () => {
   it("clears a submitted skill name validation error when editing resumes", async () => {
     renderCreateSkillDialog()
 
-    const nameInput = screen.getByLabelText("Name")
+    const nameInput = screen.getByLabelText("名称")
     fireEvent.change(nameInput, {
       target: { value: "threat-" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Create skill" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建技能" }))
 
     await waitFor(() => {
       expect(nameInput).toHaveAttribute("aria-invalid", "true")
@@ -147,13 +145,13 @@ describe("CreateSkillDialog", () => {
   it("submits when the skill name is valid", async () => {
     const { onCreate } = renderCreateSkillDialog()
 
-    fireEvent.change(screen.getByLabelText("Name"), {
+    fireEvent.change(screen.getByLabelText("名称"), {
       target: { value: "threat-intel" },
     })
-    fireEvent.change(screen.getByLabelText("Description"), {
+    fireEvent.change(screen.getByLabelText("描述"), {
       target: { value: "Optional details" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Create skill" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建技能" }))
 
     await waitFor(() => {
       expect(onCreate).toHaveBeenCalledTimes(1)
@@ -167,7 +165,7 @@ describe("CreateSkillDialog", () => {
   it("does not submit while creation is pending", async () => {
     const { onCreate } = renderCreateSkillDialog({ pending: true })
 
-    fireEvent.change(screen.getByLabelText("Name"), {
+    fireEvent.change(screen.getByLabelText("名称"), {
       target: { value: "threat-intel" },
     })
     fireEvent.submit(getCreateSkillForm())

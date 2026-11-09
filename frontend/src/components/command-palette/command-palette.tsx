@@ -127,7 +127,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
   const workspaceLinks: CommandPaletteLink[] = basePath
     ? [
         {
-          title: "Chat",
+          title: "对话",
           href: `${basePath}/chat`,
           icon: SendIcon,
           keywords: ["mission control"],
@@ -137,32 +137,32 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
             hasEntitlement("workspace_chat"),
         },
         {
-          title: "Workflows",
+          title: "工作流",
           href: `${basePath}/workflows`,
           icon: WorkflowIcon,
           visible: canViewWorkflows,
         },
         {
-          title: "Cases",
+          title: "事件",
           href: `${basePath}/cases`,
           icon: LayersIcon,
           visible: can("case:read"),
         },
         {
-          title: "Agents",
+          title: "智能体",
           href: `${basePath}/agents`,
           icon: MousePointerClickIcon,
           keywords: ["presets"],
           visible: can("agent:read"),
         },
         {
-          title: "Skills",
+          title: "技能",
           href: `${basePath}/skills`,
           icon: Pyramid,
           visible: can("agent:read"),
         },
         {
-          title: "Forms",
+          title: "表单",
           href: `${basePath}/forms`,
           icon: ClipboardListIcon,
           visible:
@@ -172,67 +172,67 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
             hasAnyScope(["form:update", "form:submission:read"]),
         },
         {
-          title: "Tables",
+          title: "数据表",
           href: `${basePath}/tables`,
           icon: Table2Icon,
           visible: can("table:read"),
         },
         {
-          title: "Variables",
+          title: "变量",
           href: `${basePath}/variables`,
           icon: VariableIcon,
           visible: can("variable:read"),
         },
         {
-          title: "Credentials",
+          title: "凭据",
           href: `${basePath}/credentials`,
           icon: KeyRound,
           keywords: ["secrets"],
           visible: can("secret:read"),
         },
         {
-          title: "Integrations",
+          title: "集成",
           href: `${basePath}/integrations`,
           icon: BlocksIcon,
           keywords: ["oauth", "providers"],
           visible: can("integration:read"),
         },
         {
-          title: "MCP servers",
+          title: "MCP 服务器",
           href: `${basePath}/mcp-servers`,
           icon: Sparkles,
           visible: can("integration:read"),
         },
         {
-          title: "Actions",
+          title: "动作",
           href: `${basePath}/actions`,
           icon: BoxIcon,
           keywords: ["registry"],
           visible: can("org:registry:read"),
         },
         {
-          title: "Runs",
+          title: "运行记录",
           href: `${basePath}/runs`,
           icon: ListVideoIcon,
           keywords: ["executions"],
           visible: canViewWorkflows,
         },
         {
-          title: "Inbox",
+          title: "收件箱",
           href: `${basePath}/inbox`,
           icon: ListChecksIcon,
           keywords: ["approvals"],
           visible: can("inbox:read"),
         },
         {
-          title: "Members",
+          title: "成员",
           href: `${basePath}/members`,
           icon: UsersIcon,
           keywords: ["workspace members"],
           visible: can("workspace:member:read"),
         },
         {
-          title: "Service accounts",
+          title: "服务账号",
           href: `${basePath}/service-accounts`,
           icon: BotIcon,
           keywords: ["workspace service accounts"],
@@ -241,7 +241,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
             hasEntitlement("service_accounts"),
         },
         {
-          title: "Git sync",
+          title: "Git 同步",
           href: `${basePath}/git-sync`,
           icon: GitBranchIcon,
           visible:
@@ -249,13 +249,13 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
             hasAnyScope(["workspace_sync:sync", "workspace:update"]),
         },
         {
-          title: "Tunnels",
+          title: "隧道",
           href: `${basePath}/tunnels`,
           icon: NetworkIcon,
           visible: can("tunnel:read"),
         },
         {
-          title: "MCP access",
+          title: "MCP 访问",
           href: `${basePath}/mcp`,
           icon: TerminalIcon,
           visible: can("workspace:read"),
@@ -266,33 +266,33 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
   const canViewOrgSettings = can("org:settings:read")
   const organizationLinks: CommandPaletteLink[] = [
     {
-      title: "Organization members",
+      title: "组织成员",
       href: "/organization/members",
       icon: UsersIcon,
       visible: can("org:member:read"),
     },
     {
-      title: "Organization sessions",
+      title: "组织会话",
       href: "/organization/sessions",
       icon: LogInIcon,
       visible: can("org:member:read"),
     },
     {
-      title: "Organization service accounts",
+      title: "组织服务账号",
       href: "/organization/settings/service-accounts",
       icon: KeyRound,
       visible:
         can("org:service_account:read") && hasEntitlement("service_accounts"),
     },
     {
-      title: "SAML (SSO)",
+      title: "SAML（单点登录）",
       href: "/organization/settings/sso",
       icon: LockIcon,
       keywords: ["single sign-on"],
       visible: canViewOrgSettings,
     },
     {
-      title: "Domains",
+      title: "域名",
       href: "/organization/settings/domains",
       icon: GlobeIcon,
       visible: canViewOrgSettings,
@@ -305,52 +305,52 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
       visible: can("org:scim:manage"),
     },
     {
-      title: "Secret stores",
+      title: "密钥存储",
       href: "/organization/settings/secret-stores",
       icon: VaultIcon,
       visible: can("org:secret:read"),
     },
     {
-      title: "Application settings",
+      title: "应用设置",
       href: "/organization/settings/app",
       icon: Settings2,
       visible: canViewOrgSettings,
     },
     {
-      title: "Audit logs",
+      title: "审计日志",
       href: "/organization/settings/audit",
       icon: LogsIcon,
       visible: canViewOrgSettings,
     },
     {
-      title: "IP allowlist",
+      title: "IP 白名单",
       href: "/organization/settings/security",
       icon: ShieldCheckIcon,
       keywords: ["security"],
       visible: canViewOrgSettings,
     },
     {
-      title: "Git providers",
+      title: "Git 提供商",
       href: "/organization/vcs",
       icon: GitBranchIcon,
       keywords: ["vcs", "github"],
       visible: canViewOrgSettings,
     },
     {
-      title: "Custom registry",
+      title: "自定义注册表",
       href: "/organization/settings/custom-registry",
       icon: BoxIcon,
       visible: canViewOrgSettings,
     },
     {
-      title: "Agent configuration",
+      title: "智能体配置",
       href: "/organization/settings/agent",
       icon: MousePointerClickIcon,
       keywords: ["models", "providers"],
       visible: canViewOrgSettings,
     },
     {
-      title: "Agent telemetry",
+      title: "智能体遥测",
       href: "/organization/settings/agent/telemetry",
       icon: RadioTowerIcon,
       visible: canViewOrgSettings,
@@ -364,9 +364,9 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      <CommandInput placeholder="Search pages, workflows and workspaces..." />
+      <CommandInput placeholder={"搜索页面、工作流和工作空间…"} />
       <CommandList className="max-h-[400px]">
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>未找到结果。</CommandEmpty>
         {visibleWorkspaceLinks.length > 0 ? (
           <CommandGroup heading="Go to">
             {visibleWorkspaceLinks.map((link) => (
@@ -387,7 +387,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
         {workspaces && workspaces.length > 0 ? (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Workspaces">
+            <CommandGroup heading={"工作空间"}>
               {workspaces.map((workspace) => (
                 <CommandItem
                   key={workspace.id}
@@ -400,7 +400,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
                   <span className="truncate">{workspace.name}</span>
                   {workspace.id === workspaceId ? (
                     <CommandShortcut className="tracking-normal">
-                      Current
+                      当前
                     </CommandShortcut>
                   ) : null}
                 </CommandItem>
@@ -411,7 +411,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
         {visibleOrganizationLinks.length > 0 ? (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Organization">
+            <CommandGroup heading={"组织"}>
               {visibleOrganizationLinks.map((link) => (
                 <CommandPaletteLinkItem
                   key={link.href}
@@ -423,7 +423,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
           </>
         ) : null}
         <CommandSeparator />
-        <CommandGroup heading="General">
+        <CommandGroup heading={"常规"}>
           <CommandItem
             value="Open settings"
             keywords={["profile", "appearance", "theme", "preferences"]}
@@ -433,7 +433,7 @@ function CommandPaletteContent({ onClose }: { onClose: () => void }) {
             }}
           >
             <Settings />
-            <span>Open settings</span>
+            <span>打开设置</span>
           </CommandItem>
         </CommandGroup>
       </CommandList>
@@ -477,7 +477,7 @@ function CommandPaletteWorkflows({
   return (
     <>
       <CommandSeparator />
-      <CommandGroup heading="Workflows">
+      <CommandGroup heading={"工作流"}>
         {workflows.map((workflow, index) => (
           <CommandItem
             key={workflow.id}

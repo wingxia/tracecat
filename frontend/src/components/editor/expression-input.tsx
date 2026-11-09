@@ -58,7 +58,7 @@ function expressionLinter(view: EditorView): Diagnostic[] {
         from: start,
         to: end,
         severity: "error",
-        message: "Invalid expression syntax",
+        message: "表达式语法无效",
         source: "expression",
       })
     }
@@ -108,7 +108,7 @@ function SimpleFallbackInput({
 function ExpressionInputCore({
   value = "",
   onChange,
-  placeholder: placeholderText = "Type @ to begin an expression...",
+  placeholder: placeholderText = "输入 @ 开始编写表达式…",
   className,
   disabled = false,
   defaultHeight = "input",

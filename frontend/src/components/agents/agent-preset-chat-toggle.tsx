@@ -39,22 +39,21 @@ export function AgentPresetChatToggle({
           <TooltipTrigger asChild>
             <button
               type="button"
-              aria-label="About Use in chat"
+              aria-label={"关于“在对话中使用”"}
               className="rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring"
             >
               <Info className="size-3.5" />
             </button>
           </TooltipTrigger>
           <TooltipContent className="max-w-60">
-            When on, people in this workspace can pick this agent with @ in
-            Chat.
+            启用后，工作空间成员可以在对话中通过 @ 选择此智能体。
           </TooltipContent>
         </Tooltip>
         <Label
           htmlFor={id}
           className="whitespace-nowrap text-xs font-normal [@container_agent-preset-bar_(max-width:35rem)]:sr-only"
         >
-          Use in chat
+          在对话中使用
         </Label>
       </div>
       <Switch

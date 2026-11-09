@@ -85,7 +85,7 @@ async function confirmAction(user: {
   const dialog = await screen.findByRole("alertdialog")
   const action = within(dialog)
     .getAllByRole("button")
-    .find((button) => button.textContent !== "Cancel")
+    .find((button) => button.textContent !== "取消")
   if (!action) throw new Error("Confirmation dialog has no action")
   await user.click(action)
 }
@@ -138,7 +138,7 @@ describe("GitSyncPullTab failures", () => {
       )
     )
 
-    await userEvent.click(screen.getByRole("button", { name: "Preview" }))
+    await userEvent.click(screen.getByRole("button", { name: "预览" }))
 
     expect(await screen.findByText(message)).toBeInTheDocument()
     expect(screen.getByText("Example enrich")).toBeInTheDocument()
@@ -165,9 +165,9 @@ describe("GitSyncPullTab failures", () => {
         )
     )
 
-    await userEvent.click(screen.getByRole("button", { name: "Preview" }))
+    await userEvent.click(screen.getByRole("button", { name: "预览" }))
     await userEvent.click(
-      await screen.findByRole("button", { name: "Pull into Example workspace" })
+      await screen.findByRole("button", { name: "拉取到 Example workspace" })
     )
     await confirmAction(userEvent)
 
@@ -183,7 +183,7 @@ it("does not toast a failed preview when its local waiter detaches", async () =>
   jest.mocked(toast).mockClear()
   const pull = jest.fn().mockRejectedValueOnce(new SyncOperationWaitCancelled())
   renderPullTab(pull)
-  await userEvent.click(screen.getByRole("button", { name: "Preview" }))
+  await userEvent.click(screen.getByRole("button", { name: "预览" }))
   expect(pull).toHaveBeenCalledTimes(1)
   expect(toast).not.toHaveBeenCalled()
 })
@@ -207,7 +207,7 @@ it.each([0, 1])(
       ),
       { id: "failed-pull", status: "failed", diff_count: count }
     )
-    await userEvent.click(screen.getByRole("button", { name: "Preview" }))
+    await userEvent.click(screen.getByRole("button", { name: "预览" }))
     expect(
       await screen.findByText("Synthetic validation failure")
     ).toBeVisible()
@@ -222,7 +222,7 @@ it.each([0, 1])(
       expect(screen.queryByText("Already matches")).not.toBeInTheDocument()
     }
     expect(
-      screen.getByRole("button", { name: /into Example workspace/ })
+      screen.getByRole("button", { name: /拉取到 Example workspace/ })
     ).toBeDisabled()
   }
 )

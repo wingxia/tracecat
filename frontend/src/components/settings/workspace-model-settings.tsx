@@ -44,7 +44,7 @@ const workspaceModelSettingsSchema = z
 
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Select at least one model or inherit the organization catalog.",
+      message: "至少选择一个模型，或继承组织模型目录。",
       path: ["catalog_ids"],
     })
   })
@@ -91,7 +91,7 @@ function getProviderDisplayLabel(provider: string): string {
     case "vertex_ai":
       return "Google Vertex AI"
     case "custom-model-provider":
-      return "Custom"
+      return "自定义"
     default:
       return provider
         .split(/[_\s-]+/)
@@ -103,7 +103,7 @@ function getProviderDisplayLabel(provider: string): string {
 
 function getModelSourceLabel(entry: WorkspaceAgentModelCandidate): string {
   if (entry.custom_provider_id) {
-    return entry.custom_provider_name ?? "Custom"
+    return entry.custom_provider_name ?? "自定义"
   }
   return getProviderDisplayLabel(entry.model_provider)
 }
@@ -245,16 +245,15 @@ export function WorkspaceModelSettings({
         queryKey: ["workspace", workspace.id, "agent-models"],
       })
       toast({
-        title: "Workspace models updated",
-        description: `Saved the AI model settings for ${workspace.name}.`,
+        title: "已更新工作空间模型",
+        description: `已保存 ${workspace.name} 的 AI 模型设置。`,
       })
     },
     onError: (error: ApiError) => {
       toast({
-        title: "Save failed",
+        title: "保存失败",
         description:
-          getApiErrorDetail(error) ??
-          "Unable to update workspace AI model access.",
+          getApiErrorDetail(error) ?? "无法更新工作空间 AI 模型访问权限。",
         variant: "destructive",
       })
     },
@@ -275,9 +274,9 @@ export function WorkspaceModelSettings({
   if (modelAccessError) {
     return (
       <Alert variant="destructive">
-        <AlertTitle>Unable to load workspace model access</AlertTitle>
+        <AlertTitle>无法加载工作空间模型访问权限</AlertTitle>
         <AlertDescription>
-          {getApiErrorDetail(modelAccessError) ?? "Something went wrong."}
+          {getApiErrorDetail(modelAccessError) ?? "出现了问题。"}
         </AlertDescription>
       </Alert>
     )
@@ -287,10 +286,9 @@ export function WorkspaceModelSettings({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-1">
-          <h3 className="text-lg font-medium">Enabled AI models</h3>
+          <h3 className="text-lg font-medium">已启用的 AI 模型</h3>
           <p className="text-sm text-muted-foreground">
-            Organization settings define the shared enabled catalog. This
-            workspace can inherit all of it or use a narrower subset.
+            组织设置定义共享的启用模型目录。此工作空间可以全部继承，也可以选择其中一部分。
           </p>
         </div>
 
@@ -300,10 +298,9 @@ export function WorkspaceModelSettings({
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Inherit organization-enabled models</FormLabel>
+                <FormLabel>继承组织已启用的模型</FormLabel>
                 <FormDescription>
-                  When enabled, this workspace can use every model the
-                  organization has enabled.
+                  启用后，此工作空间可使用组织启用的所有模型。
                 </FormDescription>
               </div>
               <FormControl>
@@ -322,10 +319,9 @@ export function WorkspaceModelSettings({
           render={({ field, fieldState }) => (
             <FormItem className="space-y-3 rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Workspace model subset</FormLabel>
+                <FormLabel>工作空间模型子集</FormLabel>
                 <FormDescription>
-                  Choose which organization-enabled models remain available in
-                  this workspace.
+                  选择组织已启用模型中可在此工作空间使用的模型。
                 </FormDescription>
               </div>
 
@@ -336,7 +332,7 @@ export function WorkspaceModelSettings({
                     onChange={(event) => {
                       setModelQuery(event.target.value)
                     }}
-                    placeholder="Search organization-enabled models"
+                    placeholder={"搜索组织已启用的模型"}
                     value={modelQuery}
                   />
                   <ScrollArea className="h-80 rounded-lg border">
@@ -397,8 +393,7 @@ export function WorkspaceModelSettings({
                         })
                       ) : (
                         <div className="px-4 py-6 text-sm text-muted-foreground">
-                          No organization-enabled models matched the current
-                          search.
+                          没有匹配的组织已启用模型。
                         </div>
                       )}
                     </div>
@@ -410,13 +405,13 @@ export function WorkspaceModelSettings({
                   ) : null}
                   <p className="text-xs text-muted-foreground">
                     {inheritAll
-                      ? "This workspace currently inherits every organization-enabled model."
-                      : `${field.value?.length ?? 0} models selected for this workspace.`}
+                      ? "此工作空间当前继承组织启用的所有模型。"
+                      : `已为此工作空间选择 ${field.value?.length ?? 0} 个模型。`}
                   </p>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No organization-enabled models are available yet.
+                  组织尚无已启用的模型。
                 </p>
               )}
             </FormItem>
@@ -428,7 +423,7 @@ export function WorkspaceModelSettings({
           disabled={updateWorkspaceModelSubset.isPending}
           size="sm"
         >
-          {updateWorkspaceModelSubset.isPending ? "Saving..." : "Save"}
+          {updateWorkspaceModelSubset.isPending ? "保存中…" : "保存"}
         </Button>
       </form>
     </Form>

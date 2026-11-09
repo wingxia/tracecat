@@ -90,7 +90,7 @@ export function CaseLinkedRowsSection({
     return (
       <div className={CASE_PANEL_BOX_CLASS}>
         <p className="px-3 py-2 text-sm text-muted-foreground">
-          Failed to load linked rows
+          加载关联行失败
         </p>
       </div>
     )
@@ -131,7 +131,7 @@ export function CaseLinkedRowsSection({
                 "flex items-center text-sm text-muted-foreground"
               )}
             >
-              No linked rows
+              暂无关联行
             </p>
           </div>
         )}
@@ -194,7 +194,7 @@ function LinkTableRow({ onClick }: LinkTableRowProps) {
       <span className="flex size-6 shrink-0 items-center justify-center">
         <Link2 className="size-4" />
       </span>
-      Link table
+      关联数据表
     </button>
   )
 }

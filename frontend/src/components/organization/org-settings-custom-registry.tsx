@@ -25,7 +25,7 @@ export const gitFormSchema = z.object({
   git_allowed_domains: z.array(
     z.object({
       id: z.string(),
-      text: z.string().min(1, "Cannot be empty"),
+      text: z.string().min(1, "不能为空"),
     })
   ),
   git_repo_url: z
@@ -98,7 +98,7 @@ export function OrgSettingsCustomRegistryForm() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading Git settings: ${gitSettingsError?.message || "Unknown error"}`}
+        message={`加载 Git 设置出错：${gitSettingsError?.message || "未知错误"}`}
       />
     )
   }
@@ -116,7 +116,7 @@ export function OrgSettingsCustomRegistryForm() {
             name="git_repo_url"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Remote repository URL</FormLabel>
+                <FormLabel>远程仓库 URL</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="git+ssh://someuser@git.example.com:2222/org/team/repo.git"
@@ -126,12 +126,12 @@ export function OrgSettingsCustomRegistryForm() {
                 </FormControl>
                 <FormDescription className="flex flex-col gap-2">
                   <span>
-                    The pip git URL of the remote repository, which uses the{" "}
+                    远程仓库的 pip Git URL，使用{" "}
                     <span className="font-mono tracking-tighter">git+ssh</span>{" "}
-                    scheme. Supports nested groups and custom ports.
+                    协议，支持嵌套用户组和自定义端口。
                   </span>
                   <span>
-                    Format:{" "}
+                    格式：{" "}
                     <span className="font-mono tracking-tight">
                       {"git+ssh://<user>@<hostname>[:<port>]/<org>/<repo>.git"}
                     </span>
@@ -146,7 +146,7 @@ export function OrgSettingsCustomRegistryForm() {
             name="git_repo_package_name"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Repository package name</FormLabel>
+                <FormLabel>仓库包名称</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="package_name"
@@ -155,8 +155,7 @@ export function OrgSettingsCustomRegistryForm() {
                   />
                 </FormControl>
                 <FormDescription>
-                  Name of the python package in the repository. If not provided,
-                  the repository name from the Git URL will be used.
+                  仓库中的 Python 包名称。留空时使用 Git URL 中的仓库名称。
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -168,18 +167,18 @@ export function OrgSettingsCustomRegistryForm() {
             name="git_allowed_domains"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Allowed Git domains</FormLabel>
+                <FormLabel>允许的 Git 域名</FormLabel>
                 <FormControl>
                   <CustomTagInput
                     {...field}
-                    placeholder="Enter a domain..."
+                    placeholder={"输入域名…"}
                     tags={field.value}
                     setTags={field.onChange}
                   />
                 </FormControl>
                 <FormDescription>
-                  Add domains that are allowed for Git operations (e.g.,
-                  github.com, gitlab.com, or gitlab.example.com:2222 with port)
+                  添加允许进行 Git 操作的域名（如
+                  github.com、gitlab.com，或带端口的 gitlab.example.com:2222）
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -193,7 +192,7 @@ export function OrgSettingsCustomRegistryForm() {
         form={GIT_SETTINGS_FORM_ID}
         disabled={updateGitSettingsIsPending}
       >
-        Save repository settings
+        保存仓库设置
       </Button>
     </div>
   )

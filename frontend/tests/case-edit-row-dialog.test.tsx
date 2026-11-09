@@ -98,7 +98,7 @@ describe("CaseEditRowDialog", () => {
   it("fills the form with the row's values", () => {
     renderDialog()
 
-    expect(screen.getByText("Edit row")).toBeInTheDocument()
+    expect(screen.getByText("编辑行")).toBeInTheDocument()
     expect(field("title")).toHaveValue("Phishing")
     expect(field("note")).toHaveValue("Reported by user")
     expect(field("score")).toHaveValue("7")
@@ -111,7 +111,7 @@ describe("CaseEditRowDialog", () => {
     await user.clear(field("title"))
     await user.type(field("title"), "Malware")
     await user.clear(field("note"))
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "保存" }))
 
     await waitFor(() =>
       expect(mockUpdateCaseRow).toHaveBeenCalledWith({
@@ -127,7 +127,7 @@ describe("CaseEditRowDialog", () => {
     const user = userEvent.setup()
     const { onOpenChange } = renderDialog()
 
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "保存" }))
 
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
     expect(mockUpdateCaseRow).not.toHaveBeenCalled()

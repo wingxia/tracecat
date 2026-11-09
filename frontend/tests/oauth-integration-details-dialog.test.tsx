@@ -195,19 +195,19 @@ describe("OAuthIntegrationDetailsDialog", () => {
     renderDialog("authorization_code")
 
     expect(
-      screen.queryByRole("button", { name: /test/i })
+      screen.queryByRole("button", { name: /测试/i })
     ).not.toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: /reauthorize/i })
+      screen.getByRole("button", { name: /重新授权/i })
     ).toBeInTheDocument()
   })
 
   it("shows the Test action for client-credentials providers", () => {
     renderDialog("client_credentials")
 
-    expect(screen.getByRole("button", { name: /test/i })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /测试/i })).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /reauthorize/i })
+      screen.queryByRole("button", { name: /重新授权/i })
     ).not.toBeInTheDocument()
   })
 
@@ -220,9 +220,7 @@ describe("OAuthIntegrationDetailsDialog", () => {
       })
 
       expect(
-        screen.getByText(
-          "The access token expired. Reconnect to restore this integration."
-        )
+        screen.getByText("访问令牌已过期，请重新连接以恢复此集成。")
       ).toBeInTheDocument()
       expect(
         screen.queryByText(
@@ -240,7 +238,7 @@ describe("OAuthIntegrationDetailsDialog", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: /delete provider/i })
+      screen.getByRole("button", { name: /删除提供商/i })
     ).toBeInTheDocument()
   })
 
@@ -252,7 +250,7 @@ describe("OAuthIntegrationDetailsDialog", () => {
     )
 
     expect(
-      screen.queryByRole("button", { name: /delete provider/i })
+      screen.queryByRole("button", { name: /删除提供商/i })
     ).not.toBeInTheDocument()
   })
 
@@ -264,7 +262,7 @@ describe("OAuthIntegrationDetailsDialog", () => {
     )
 
     expect(
-      screen.queryByRole("button", { name: /delete provider/i })
+      screen.queryByRole("button", { name: /删除提供商/i })
     ).not.toBeInTheDocument()
   })
 })

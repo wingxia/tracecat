@@ -162,7 +162,8 @@ function WorkspaceSyncResourceManifest({
     if (errorMessage) {
       return (
         <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-xs text-destructive">
-          Unable to preview this {direction}: {errorMessage}
+          无法预览此次操作： {direction === "push" ? "推送" : "拉取"}:{" "}
+          {errorMessage}
         </div>
       )
     }
@@ -182,7 +183,7 @@ function WorkspaceSyncResourceManifest({
   if (groups.length === 0) {
     return (
       <div className="rounded-lg border bg-muted/30 p-3 text-xs text-muted-foreground">
-        No resources to {direction}.
+        没有可操作的资源： {direction === "push" ? "推送" : "拉取"}.
       </div>
     )
   }
@@ -208,11 +209,11 @@ function WorkspaceSyncResourceManifest({
     <div className="overflow-hidden rounded-lg border">
       <div className="flex items-center justify-between border-b bg-muted/40 px-3 py-2">
         <span className="text-xs font-semibold">
-          Included in this {direction}
+          包含在此次操作中： {direction === "push" ? "推送" : "拉取"}
         </span>
         {fileCount > 0 && (
           <span className="font-mono text-xs text-muted-foreground">
-            {fileCount} {fileCount === 1 ? "file" : "files"}
+            {fileCount} {fileCount === 1 ? "文件" : "个文件"}
           </span>
         )}
       </div>
@@ -298,10 +299,7 @@ function WorkspaceSyncResourceManifest({
       {hasSensitive ? (
         <div className="flex items-start gap-2 border-t bg-muted/20 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
           <LockIcon className="mt-0.5 size-3 shrink-0" />
-          <span>
-            Secret and variable values are never synced through Git; only key
-            names and metadata are included.
-          </span>
+          <span>密钥和变量的值不会通过 Git 同步，仅包含键名和元数据。</span>
         </div>
       ) : null}
     </div>

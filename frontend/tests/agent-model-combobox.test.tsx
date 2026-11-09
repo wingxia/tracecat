@@ -66,11 +66,11 @@ it("shows an unavailable saved value", () => {
       options={options}
       value={{ modelName: "removed", modelProvider: "openai" }}
       onChange={jest.fn()}
-      unavailableLabel="Unavailable in this workspace"
+      unavailableLabel="此工作空间不可用"
     />
   )
   expect(screen.getByRole("combobox")).toHaveTextContent(
-    "openai / removedUnavailable in this workspace"
+    "openai / removed此工作空间不可用"
   )
 })
 
@@ -81,7 +81,7 @@ it("searches and emits the selected model option", async () => {
     <AgentModelCombobox options={options} value={{}} onChange={onChange} />
   )
   await user.click(screen.getByRole("combobox"))
-  await user.type(screen.getByPlaceholderText("Search models..."), "Synthetic")
+  await user.type(screen.getByPlaceholderText("搜索模型…"), "Synthetic")
   await user.click(screen.getByRole("option", { name: /Model two/ }))
   expect(onChange).toHaveBeenCalledWith(options[1])
 })
@@ -147,7 +147,7 @@ it("shows the placeholder, not the unavailable state, until options load", () =>
   )
 })
 
-it.each(["Loading models...", "Failed to load models"])(
+it.each(["正在加载模型…", "加载模型失败"])(
   "keeps a saved value visible beside '%s' when options are missing",
   (unverifiedLabel) => {
     const onChange = jest.fn()
@@ -163,13 +163,13 @@ it.each(["Loading models...", "Failed to load models"])(
         loaded={false}
         unverifiedLabel={unverifiedLabel}
         placeholder="Select a model"
-        unavailableLabel="Unavailable in this workspace"
+        unavailableLabel="此工作空间不可用"
       />
     )
     const trigger = screen.getByRole("combobox")
     expect(trigger).toHaveTextContent(`openai / model-one${unverifiedLabel}`)
     expect(trigger).not.toHaveTextContent("Select a model")
-    expect(trigger).not.toHaveTextContent("Unavailable in this workspace")
+    expect(trigger).not.toHaveTextContent("此工作空间不可用")
     expect(trigger).not.toHaveTextContent("Legacy")
     expect(onChange).not.toHaveBeenCalled()
   }
@@ -181,7 +181,7 @@ it("ignores the unverified label once options have loaded", () => {
       options={options}
       value={{ modelName: "removed", modelProvider: "openai" }}
       onChange={jest.fn()}
-      unverifiedLabel="Failed to load models"
+      unverifiedLabel="加载模型失败"
     />
   )
   expect(screen.getByRole("combobox")).toHaveTextContent(
@@ -237,11 +237,11 @@ it("does not match a stale catalog id by name in any source", () => {
       }}
       onChange={jest.fn()}
       matchAnySource
-      unavailableLabel="Unavailable in this workspace"
+      unavailableLabel="此工作空间不可用"
     />
   )
   expect(screen.getByRole("combobox")).toHaveTextContent(
-    "openai / model-oneUnavailable in this workspace"
+    "openai / model-one此工作空间不可用"
   )
 })
 

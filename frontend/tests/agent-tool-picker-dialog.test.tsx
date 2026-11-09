@@ -120,7 +120,7 @@ it("virtualizes 1,500 actions with fewer than 40 mounted options", async () => {
   await screen.findAllByRole("option")
   expect(screen.getAllByRole("option").length).toBeGreaterThan(0)
   expect(screen.getAllByRole("option").length).toBeLessThan(40)
-  expect(screen.getByRole("combobox", { name: "Search tools" })).toHaveFocus()
+  expect(screen.getByRole("combobox", { name: "搜索工具" })).toHaveFocus()
 })
 
 it("keeps locked tools unselected and skips them in group selection", async () => {
@@ -154,9 +154,9 @@ it("keeps locked tools unselected and skips them in group selection", async () =
   )
   await user.click(screen.getByRole("button", { name: "Locked tools 2" }))
   await user.click(
-    screen.getByRole("checkbox", { name: "Select all in Locked tools" })
+    screen.getByRole("checkbox", { name: "全选 Locked tools 中的项目" })
   )
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onChange).toHaveBeenCalledWith({
     ...defaults,
     actions: ["tools.locked.available"],
@@ -174,7 +174,7 @@ it("hides MCP sources when the controlled picker disables MCP", () => {
       mcpEnabled={false}
     />
   )
-  expect(screen.queryByText("MCP servers")).not.toBeInTheDocument()
+  expect(screen.queryByText("MCP 服务器")).not.toBeInTheDocument()
   expect(
     screen.queryByRole("option", { name: /Test MCP/ })
   ).not.toBeInTheDocument()
@@ -184,14 +184,11 @@ it("searches across namespaces even while viewing one source", async () => {
   const user = userEvent.setup()
   render(<TestForm />)
   await user.click(screen.getByRole("button", { name: "Alpha 2" }))
-  await user.type(
-    screen.getByRole("combobox", { name: "Search tools" }),
-    "third"
-  )
+  await user.type(screen.getByRole("combobox", { name: "搜索工具" }), "third")
   expect(
     await screen.findByRole("option", { name: /third/ })
   ).toBeInTheDocument()
-  expect(screen.getByText("1 result")).toBeInTheDocument()
+  expect(screen.getByText("1 个结果")).toBeInTheDocument()
 })
 
 it("uses a tri-state namespace checkbox and applies changes only on Done", async () => {
@@ -204,12 +201,12 @@ it("uses a tri-state namespace checkbox and applies changes only on Done", async
     />
   )
   await user.click(screen.getByRole("button", { name: "Alpha 1/2" }))
-  const checkbox = screen.getByRole("checkbox", { name: "Select all in Alpha" })
+  const checkbox = screen.getByRole("checkbox", { name: "全选 Alpha 中的项目" })
   expect(checkbox).toHaveAttribute("aria-checked", "mixed")
   await user.click(checkbox)
   expect(checkbox).toBeChecked()
   expect(onWrite).not.toHaveBeenCalled()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onWrite).toHaveBeenCalledTimes(1)
   expect(onWrite).toHaveBeenCalledWith(
     "actions",
@@ -222,7 +219,7 @@ it("handles arrows, Enter, paging and Space in the list without eating query spa
   const user = userEvent.setup()
   render(<TestForm />)
   await user.click(screen.getByRole("button", { name: "Alpha 2" }))
-  const search = screen.getByRole("combobox", { name: "Search tools" })
+  const search = screen.getByRole("combobox", { name: "搜索工具" })
   expect(search).toHaveFocus()
   await user.keyboard("{ArrowDown}{Enter}")
   expect(screen.getByRole("option", { name: /second/ })).toHaveAttribute(
@@ -231,7 +228,7 @@ it("handles arrows, Enter, paging and Space in the list without eating query spa
   )
   await user.type(search, " ")
   expect(search).toHaveValue(" ")
-  expect(screen.getByText("1 of 128 tools")).toBeInTheDocument()
+  expect(screen.getByText("1/128 个工具")).toBeInTheDocument()
   const list = screen.getByRole("listbox")
   list.focus()
   fireEvent.keyDown(list, { key: "Home" })
@@ -265,13 +262,13 @@ it("preserves unknown keys and ordering and leaves the form clean on no-change D
     toolApprovals: [{ tool: "untouched", allow: false }],
   }
   render(<TestForm values={initial} onWrite={onWrite} />)
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onWrite).not.toHaveBeenCalled()
   expect(screen.getByTestId("dirty")).toHaveTextContent("false")
   expect(values()).toEqual(initial)
   await user.click(screen.getByRole("button", { name: "Open" }))
   await user.click(await screen.findByRole("option", { name: /second/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values().actions).toEqual([...initial.actions, "tools.alpha.second"])
 })
 
@@ -293,7 +290,7 @@ it("removes active approvals for deselected actions once, preserving false and o
     />
   )
   await user.click(await screen.findByRole("option", { name: /first/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onWrite.mock.calls.map(([name]) => name)).toEqual([
     "actions",
     "toolApprovals",
@@ -314,9 +311,9 @@ it("selects an entire MCP integration and shows its tools read-only", async () =
   ).not.toBeInTheDocument()
   expect(screen.getAllByRole("option")).toHaveLength(1)
   await user.click(screen.getByRole("option", { name: /Test MCP/ }))
-  await user.click(screen.getByRole("button", { name: "Selected 1" }))
+  await user.click(screen.getByRole("button", { name: "已选择 1" }))
   expect(screen.getAllByRole("option")).toHaveLength(1)
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values().mcpIntegrations).toEqual(["mcp-test"])
 })
 
@@ -325,7 +322,7 @@ it("discards local edits on Cancel and Escape", async () => {
   const onWrite = jest.fn()
   render(<TestForm onWrite={onWrite} />)
   await user.click(await screen.findByRole("option", { name: /first/ }))
-  await user.click(screen.getByRole("button", { name: "Cancel" }))
+  await user.click(screen.getByRole("button", { name: "取消" }))
   expect(onWrite).not.toHaveBeenCalled()
   expect(values()).toEqual(defaults)
   await user.click(screen.getByRole("button", { name: "Open" }))
@@ -343,13 +340,13 @@ it("discards local edits on Cancel and Escape", async () => {
 it("virtualizes the source rail and omits empty section labels", async () => {
   const catalog = buildToolIndex(largeToolCatalog())
   render(<TestForm catalog={catalog} />)
-  const rail = screen.getByRole("navigation", { name: "Tool sources" })
+  const rail = screen.getByRole("navigation", { name: "工具来源" })
   const buttons = await within(rail).findAllByRole("button")
   expect(catalog.groups).toHaveLength(125)
   expect(buttons.length).toBeGreaterThan(2)
   expect(buttons.length).toBeLessThan(30)
-  expect(within(rail).queryByText("MCP servers")).not.toBeInTheDocument()
-  expect(within(rail).queryByText("Custom registry")).not.toBeInTheDocument()
+  expect(within(rail).queryByText("MCP 服务器")).not.toBeInTheDocument()
+  expect(within(rail).queryByText("自定义注册表")).not.toBeInTheDocument()
 })
 
 it("skips headers and keeps the active option mounted across a large catalog", async () => {
@@ -402,7 +399,7 @@ it("retains the numeric position after removing the active Selected row", async 
       values={{ ...defaults, actions: actions.map((action) => action.action) }}
     />
   )
-  await user.click(screen.getByRole("button", { name: "Selected 3" }))
+  await user.click(screen.getByRole("button", { name: "已选择 3" }))
   const search = screen.getByRole("combobox")
   await user.keyboard("{ArrowDown}{Enter}")
   expect(
@@ -430,10 +427,10 @@ it("counts indexed Selected rows but retains unknown selections in the footer", 
       }}
     />
   )
-  expect(screen.getByText(/2 of 128 tools/)).toHaveTextContent(
-    "2 of 128 tools · 1 MCP integration"
+  expect(screen.getByText(/2\/128 个工具/)).toHaveTextContent(
+    "2/128 个工具 · 1 个 MCP 集成"
   )
-  await user.click(screen.getByRole("button", { name: "Selected 1" }))
+  await user.click(screen.getByRole("button", { name: "已选择 1" }))
   expect(screen.getAllByRole("option")).toHaveLength(1)
 })
 
@@ -449,7 +446,7 @@ it("deselects a whole MCP integration on Done", async () => {
   await user.click(screen.getByRole("button", { name: "Test MCP 1/1" }))
   await user.click(screen.getByRole("option", { name: /Test MCP/ }))
   expect(onWrite).not.toHaveBeenCalled()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onWrite).toHaveBeenCalledTimes(1)
   expect(onWrite).toHaveBeenCalledWith("mcpIntegrations", [], {
     shouldDirty: true,
@@ -458,11 +455,11 @@ it("deselects a whole MCP integration on Done", async () => {
 })
 
 it.each([
-  { actions: ["first"], mcp: [], expected: "1 tool selected" },
+  { actions: ["first"], mcp: [], expected: "已选择 1 个工具" },
   {
     actions: ["first", "second"],
     mcp: ["one", "two"],
-    expected: "2 tools selected · 2 MCP integrations",
+    expected: "已选择 2 个工具 · 2 个 MCP 集成",
   },
 ])(
   "formats the footer without a limit: $expected",
@@ -480,7 +477,7 @@ it.each([
 
 it("keeps divs out of buttons in tool option rows and the source rail", () => {
   render(<TestForm />)
-  const rail = screen.getByRole("navigation", { name: "Tool sources" })
+  const rail = screen.getByRole("navigation", { name: "工具来源" })
   const rows = [
     ...screen.getAllByRole("option"),
     ...within(rail).getAllByRole("button"),
@@ -505,19 +502,19 @@ it("leaves actions blocked by the namespace filter out of the limit", () => {
       }}
     />
   )
-  expect(screen.getByText("1 of 1 tools")).not.toHaveClass("text-rose-500")
-  expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
+  expect(screen.getByText("1/1 个工具")).not.toHaveClass("text-rose-500")
+  expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
 })
 
 it.each([
   {
     skillActions: ["tools.alpha.first", "tools.beta.third"],
-    expected: "3 of 3 tools (1 from skills)",
+    expected: "3/3 个工具（1 个来自技能）",
     overLimit: false,
   },
   {
     skillActions: ["tools.beta.third", "tools.skill.extra"],
-    expected: "4 of 3 tools (2 from skills) · remove 1 to continue",
+    expected: "4/3 个工具（2 个来自技能） · 请移除 1 个后继续",
     overLimit: true,
   },
 ])(
@@ -534,7 +531,7 @@ it.each([
       />
     )
     const footer = screen.getByText(expected)
-    const done = screen.getByRole("button", { name: "Done" })
+    const done = screen.getByRole("button", { name: "完成" })
     if (overLimit) {
       expect(footer).toHaveClass("text-rose-500")
       expect(done).toBeDisabled()
@@ -548,13 +545,13 @@ it.each([
 it("allows group selection over the limit but requires deselection before Done", async () => {
   const user = userEvent.setup()
   render(<TestForm maxTools={1} />)
-  const done = screen.getByRole("button", { name: "Done" })
+  const done = screen.getByRole("button", { name: "完成" })
   expect(done).toBeEnabled()
   await user.click(screen.getByRole("button", { name: "Alpha 2" }))
   await user.click(
-    screen.getByRole("checkbox", { name: "Select all in Alpha" })
+    screen.getByRole("checkbox", { name: "全选 Alpha 中的项目" })
   )
-  expect(screen.getByText("2 of 1 tools · remove 1 to continue")).toHaveClass(
+  expect(screen.getByText("2/1 个工具 · 请移除 1 个后继续")).toHaveClass(
     "text-rose-500"
   )
   expect(done).toBeDisabled()
@@ -562,7 +559,7 @@ it("allows group selection over the limit but requires deselection before Done",
   expect(screen.getByRole("dialog")).toBeInTheDocument()
   expect(values().actions).toEqual([])
   await user.click(screen.getByRole("option", { name: /tools.alpha.second/ }))
-  expect(screen.getByText("1 of 1 tools")).not.toHaveClass("text-rose-500")
+  expect(screen.getByText("1/1 个工具")).not.toHaveClass("text-rose-500")
   expect(done).toBeEnabled()
   await user.click(done)
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
@@ -582,7 +579,7 @@ it("removes an Auto override when deselecting a default-ask action", async () =>
     />
   )
   await user.click(screen.getByRole("option", { name: /tools.alpha.first/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values().toolApprovals).toEqual([])
 })
 
@@ -600,16 +597,16 @@ it("keeps the limit count and approval when deselecting a skill-granted action",
       }}
     />
   )
-  expect(screen.getByText("1 of 1 tools")).toBeInTheDocument()
+  expect(screen.getByText("1/1 个工具")).toBeInTheDocument()
   await user.click(screen.getByRole("option", { name: /tools.alpha.first/ }))
-  expect(screen.getByText("1 of 1 tools (1 from skills)")).toBeInTheDocument()
+  expect(screen.getByText("1/1 个工具（1 个来自技能）")).toBeInTheDocument()
   await user.click(screen.getByRole("option", { name: /tools.alpha.second/ }))
   expect(
-    screen.getByText("2 of 1 tools (1 from skills) · remove 1 to continue")
+    screen.getByText("2/1 个工具（1 个来自技能） · 请移除 1 个后继续")
   ).toBeInTheDocument()
-  expect(screen.getByRole("button", { name: "Done" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "完成" })).toBeDisabled()
   await user.click(screen.getByRole("option", { name: /tools.alpha.second/ }))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(values().actions).toEqual([])
   expect(values().toolApprovals).toEqual([rule])
 })
@@ -641,7 +638,7 @@ it("lets a selected locked tool be removed and gates selecting it again", async 
   await user.click(option)
   expect(onLockedSelect).toHaveBeenCalledTimes(1)
   expect(option).toHaveAttribute("aria-selected", "false")
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onChange).toHaveBeenCalledWith({ ...defaults, actions: [] })
 })
 
@@ -658,11 +655,11 @@ it("writes MCP-section entries to the field named by their target", async () => 
       approvalsEnabled={false}
     />
   )
-  expect(screen.getByText("MCP servers")).toBeInTheDocument()
+  expect(screen.getByText("MCP 服务器")).toBeInTheDocument()
   await user.click(
     await screen.findByRole("option", { name: /mcp\.test-mcp\.read/ })
   )
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onChange).toHaveBeenCalledWith({
     actions: ["mcp.test-mcp.read"],
     mcpIntegrations: [],
@@ -683,13 +680,13 @@ it("offers select-all for an MCP group of individually selectable tools", async 
     />
   )
   await user.click(screen.getByRole("button", { name: "Test MCP 3" }))
-  expect(screen.queryByRole("list", { name: "MCP tools" })).toBeNull()
+  expect(screen.queryByRole("list", { name: "MCP 工具" })).toBeNull()
   expect(screen.getAllByRole("option")).toHaveLength(3)
   await user.click(
-    screen.getByRole("checkbox", { name: "Select all in Test MCP" })
+    screen.getByRole("checkbox", { name: "全选 Test MCP 中的项目" })
   )
-  expect(screen.getByText("3 of 3 selected")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  expect(screen.getByText("已选择 3/3 项")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onChange).toHaveBeenCalledWith({
     actions: [
       "tools.test.first",
@@ -713,9 +710,9 @@ it("groups digits in the source rail counts like the search placeholder", () => 
     />
   )
   const total = (1500).toLocaleString()
-  expect(screen.getByPlaceholderText(`Search ${total} tools`)).toBeVisible()
+  expect(screen.getByPlaceholderText(`搜索 ${total} 个工具`)).toBeVisible()
   expect(
-    screen.getByRole("button", { name: `All tools ${total}` })
+    screen.getByRole("button", { name: `所有工具 ${total}` })
   ).toBeInTheDocument()
 })
 
@@ -741,7 +738,7 @@ it("returns focus to the element that opened the picker", async () => {
   render(<Opener />)
   const opener = screen.getByRole("button", { name: "Open picker" })
   await user.click(opener)
-  expect(screen.getByRole("combobox", { name: "Search tools" })).toHaveFocus()
+  expect(screen.getByRole("combobox", { name: "搜索工具" })).toHaveFocus()
   await user.keyboard("{Escape}")
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
   await waitFor(() => expect(opener).toHaveFocus())

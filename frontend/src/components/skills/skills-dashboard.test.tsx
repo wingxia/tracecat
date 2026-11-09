@@ -150,7 +150,7 @@ describe("SkillsDashboard entitlement split", () => {
     expect(lastOptions(mockUseSkillTagCatalog)?.enabled).toBe(false)
     expect(screen.getByText("Example skill")).toBeInTheDocument()
     expect(screen.queryByText("important")).not.toBeInTheDocument()
-    expect(screen.queryByText("Folders")).not.toBeInTheDocument()
+    expect(screen.queryByText("文件夹")).not.toBeInTheDocument()
   })
 
   it("uses the folder directory and skill tags when entitled", () => {
@@ -212,7 +212,7 @@ describe("SkillsDashboard entitlement split", () => {
     renderDashboard()
 
     expect(screen.queryByText("Example skill")).not.toBeInTheDocument()
-    expect(screen.getByText("No skills match your filters")).toBeInTheDocument()
+    expect(screen.getByText("没有符合筛选条件的技能")).toBeInTheDocument()
   })
 
   it("searches the flat catalog in folder view so nested skills match", () => {

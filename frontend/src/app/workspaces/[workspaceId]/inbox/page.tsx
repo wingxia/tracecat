@@ -62,7 +62,7 @@ export default function InboxPage() {
   }
 
   useEffect(() => {
-    document.title = "Inbox"
+    document.title = "收件箱"
   }, [])
 
   if (!canReadInbox) {

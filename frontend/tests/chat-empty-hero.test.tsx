@@ -12,7 +12,7 @@ describe("ChatEmptyHero", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "What should we get done, Daryl?",
+        name: "Daryl，你想完成什么任务？",
       })
     ).toBeInTheDocument()
   })

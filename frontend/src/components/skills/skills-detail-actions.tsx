@@ -181,29 +181,29 @@ function SkillsDetailActionsContent() {
             <DropdownMenuTrigger asChild>
               <Button size="icon" variant="ghost" className="size-7">
                 <History className="size-4" />
-                <span className="sr-only">Versions</span>
+                <span className="sr-only">版本</span>
               </Button>
             </DropdownMenuTrigger>
           </TooltipTrigger>
-          <TooltipContent>Versions</TooltipContent>
+          <TooltipContent>版本</TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end" className="w-80 p-0">
           <div className="flex flex-col">
             <DropdownMenuLabel className="flex flex-col gap-1 px-3 py-2">
-              <div className="text-xs font-medium">Published versions</div>
+              <div className="text-xs font-medium">已发布版本</div>
               <div className="text-xs text-muted-foreground">
-                Select which published version is currently active.
+                选择当前生效的已发布版本。
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="mx-0 my-0" />
             {versionsLoading ? (
               <div className="flex items-center gap-2 px-3 py-3 text-sm text-muted-foreground">
                 <Loader2 className="size-4 animate-spin" />
-                Loading versions…
+                正在加载版本…
               </div>
             ) : !versions || versions.length === 0 ? (
               <div className="px-3 py-3 text-sm text-muted-foreground">
-                No published versions yet.
+                暂无已发布版本。
               </div>
             ) : (
               <ScrollArea className="max-h-80">
@@ -220,7 +220,7 @@ function SkillsDetailActionsContent() {
                           {describeVersion(version)}
                         </div>
                         <div className="text-muted-foreground">
-                          {new Date(version.created_at).toLocaleString()}
+                          {new Date(version.created_at).toLocaleString("zh-CN")}
                         </div>
                       </div>
                     </DropdownMenuItem>
@@ -245,10 +245,10 @@ function SkillsDetailActionsContent() {
             ) : (
               <Save className="size-4" />
             )}
-            <span className="sr-only">Save</span>
+            <span className="sr-only">保存</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Save</TooltipContent>
+        <TooltipContent>保存</TooltipContent>
       </Tooltip>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -264,10 +264,10 @@ function SkillsDetailActionsContent() {
             ) : (
               <LayersPlus className="size-4" />
             )}
-            <span className="sr-only">Publish version</span>
+            <span className="sr-only">发布版本</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Publish version</TooltipContent>
+        <TooltipContent>发布版本</TooltipContent>
       </Tooltip>
 
       <AlertDialog
@@ -280,22 +280,22 @@ function SkillsDetailActionsContent() {
       >
         <AlertDialogContent className="max-h-[85vh] max-w-5xl grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden">
           <AlertDialogHeader>
-            <AlertDialogTitle>Select active version</AlertDialogTitle>
+            <AlertDialogTitle>选择生效版本</AlertDialogTitle>
             <AlertDialogDescription>
               {versionToRestore
-                ? `Set ${describeVersion(versionToRestore)} as the active published version for this skill?`
-                : "Set the selected published version as the active version for this skill?"}
+                ? `将 ${describeVersion(versionToRestore)} 设为此技能当前生效的已发布版本吗？`
+                : "将所选已发布版本设为此技能当前生效的版本吗？"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           {versionLoading ? (
             <div className="flex min-h-0 items-center gap-2 rounded-md border px-3 py-3 text-sm text-muted-foreground">
               <Loader2 className="size-4 animate-spin" />
-              Loading files…
+              正在加载文件…
             </div>
           ) : selectedVersionDetail?.files?.length ? (
             <div className="min-h-0 overflow-hidden space-y-2">
               <div className="text-xs font-medium text-muted-foreground">
-                Files in this version
+                此版本中的文件
               </div>
               <div className="grid min-h-0 gap-3 md:h-[min(32rem,50vh)] md:grid-cols-[minmax(0,240px)_minmax(0,1fr)]">
                 <ScrollArea className="min-h-0 rounded-md border p-2">
@@ -309,18 +309,18 @@ function SkillsDetailActionsContent() {
                   <div className="flex min-h-0 min-w-0 flex-1 flex-col">
                     <div className="border-b px-3 py-2">
                       <div className="truncate text-xs font-medium">
-                        {selectedVersionPath ?? "Select a file"}
+                        {selectedVersionPath ?? "选择文件"}
                       </div>
                     </div>
                     <div className="min-h-0 min-w-0 flex-1 overflow-auto">
                       {!selectedVersionPath ? (
                         <div className="flex h-full items-center justify-center px-4 text-sm text-muted-foreground">
-                          Select a file to preview.
+                          选择文件以预览。
                         </div>
                       ) : versionFileLoading ? (
                         <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
                           <Loader2 className="size-4 animate-spin" />
-                          Loading preview…
+                          正在加载预览…
                         </div>
                       ) : versionFile?.kind === "inline" &&
                         isMarkdownPath(versionFile.path) &&
@@ -328,11 +328,9 @@ function SkillsDetailActionsContent() {
                         <div className="flex min-h-0 min-w-0 h-full flex-col gap-4 overflow-auto p-3">
                           <div className="flex min-w-0 flex-col gap-2">
                             <div>
-                              <div className="text-sm font-medium">
-                                Frontmatter
-                              </div>
+                              <div className="text-sm font-medium">元数据</div>
                               <div className="text-xs text-muted-foreground">
-                                Read-only skill metadata for this version.
+                                此版本的只读技能元数据。
                               </div>
                             </div>
                             <div className="overflow-hidden rounded-md border">
@@ -349,11 +347,9 @@ function SkillsDetailActionsContent() {
                           </div>
                           <div className="flex min-w-0 flex-col gap-2">
                             <div>
-                              <div className="text-sm font-medium">
-                                Instructions
-                              </div>
+                              <div className="text-sm font-medium">指令</div>
                               <div className="text-xs text-muted-foreground">
-                                Read-only markdown preview for this version.
+                                此版本的只读 Markdown 预览。
                               </div>
                             </div>
                             <div className="overflow-hidden rounded-md border">
@@ -391,7 +387,7 @@ function SkillsDetailActionsContent() {
                       ) : versionFile?.download_url ? (
                         <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
                           <p className="text-sm text-muted-foreground">
-                            This file is not previewable inline.
+                            此文件无法在线预览。
                           </p>
                           <Button asChild size="sm" variant="outline">
                             <Link
@@ -399,13 +395,13 @@ function SkillsDetailActionsContent() {
                               target="_blank"
                               rel="noreferrer"
                             >
-                              Open file
+                              打开文件
                             </Link>
                           </Button>
                         </div>
                       ) : (
                         <div className="flex h-full items-center justify-center px-4 text-sm text-muted-foreground">
-                          Preview unavailable.
+                          无法预览。
                         </div>
                       )}
                     </div>
@@ -416,7 +412,7 @@ function SkillsDetailActionsContent() {
           ) : null}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={restoreSkillVersionPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={(event) => {
@@ -428,10 +424,10 @@ function SkillsDetailActionsContent() {
               {restoreSkillVersionPending ? (
                 <>
                   <Loader2 className="mr-2 size-4 animate-spin" />
-                  Updating...
+                  更新中…
                 </>
               ) : (
-                "Restore version"
+                "恢复版本"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -136,10 +136,8 @@ describe("WorkflowExecutionEventDetailView", () => {
       />
     )
 
-    expect(screen.getByRole("tab", { name: "Input" })).toBeInTheDocument()
-    expect(
-      screen.queryByRole("tab", { name: "Result" })
-    ).not.toBeInTheDocument()
+    expect(screen.getByRole("tab", { name: "输入" })).toBeInTheDocument()
+    expect(screen.queryByRole("tab", { name: "结果" })).not.toBeInTheDocument()
     expect(screen.getByTestId("action-input")).toHaveAttribute(
       "data-presentation",
       "single"
@@ -156,7 +154,7 @@ describe("WorkflowExecutionEventDetailView", () => {
       />
     )
 
-    expect(screen.getByRole("tab", { name: "Result" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "结果" })).toHaveAttribute(
       "data-state",
       "active"
     )
@@ -186,7 +184,7 @@ describe("WorkflowExecutionEventDetailView", () => {
       "data-event-count",
       "2"
     )
-    await user.click(screen.getByRole("tab", { name: "Input" }))
+    await user.click(screen.getByRole("tab", { name: "输入" }))
     expect(screen.getByTestId("action-input")).toHaveAttribute(
       "data-status",
       "RUNNING"
@@ -232,26 +230,26 @@ describe("WorkflowExecutionEventDetailView", () => {
     )
 
     // (a) Result tab is default and starts on the latest stream.
-    expect(screen.getByText("Stream 3 of 3")).toBeInTheDocument()
+    expect(screen.getByText("数据流 3 / 3")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent(
       '{"result":"three"}'
     )
 
     // Navigate back to stream 2 on the Result tab.
-    await user.click(screen.getByRole("button", { name: "Previous stream" }))
-    expect(screen.getByText("Stream 2 of 3")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "上一个数据流" }))
+    expect(screen.getByText("数据流 2 / 3")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent(
       '{"result":"two"}'
     )
 
     // (b) Switching to the Input tab shows stream 2's input, not the latest.
-    await user.click(screen.getByRole("tab", { name: "Input" }))
-    expect(screen.getByText("Stream 2 of 3")).toBeInTheDocument()
+    await user.click(screen.getByRole("tab", { name: "输入" }))
+    expect(screen.getByText("数据流 2 / 3")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent('{"input":"two"}')
 
     // (c) Switching back to Result still shows stream 2's result.
-    await user.click(screen.getByRole("tab", { name: "Result" }))
-    expect(screen.getByText("Stream 2 of 3")).toBeInTheDocument()
+    await user.click(screen.getByRole("tab", { name: "结果" }))
+    expect(screen.getByText("数据流 2 / 3")).toBeInTheDocument()
     expect(screen.getByTestId("json-view")).toHaveTextContent(
       '{"result":"two"}'
     )

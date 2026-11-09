@@ -91,7 +91,7 @@ async function resizeImageToDataUri(file: File): Promise<string> {
     canvas.height = Math.max(1, Math.round(bitmap.height * scale))
     const context = canvas.getContext("2d")
     if (!context) {
-      throw new FormImageError("This browser can't resize images.")
+      throw new FormImageError("此浏览器无法调整图片大小。")
     }
     context.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
     const encoded = canvas.toDataURL("image/webp", ENCODE_QUALITY)
@@ -117,7 +117,7 @@ async function resizeImageToDataUri(file: File): Promise<string> {
  */
 export async function prepareFormImage(file: File): Promise<string> {
   if (!FORM_IMAGE_TYPES.includes(file.type)) {
-    throw new FormImageError("Use a PNG, JPEG or WebP image.")
+    throw new FormImageError("请使用 PNG、JPEG 或 WebP 图片。")
   }
   let dataUri: string
   try {
@@ -126,7 +126,7 @@ export async function prepareFormImage(file: File): Promise<string> {
     if (error instanceof FormImageError) {
       throw error
     }
-    throw new FormImageError("This file could not be read as an image.")
+    throw new FormImageError("无法将此文件读取为图片。")
   }
   const bytes = getDataUriByteSize(dataUri)
   if (bytes > MAX_FORM_IMAGE_BYTES) {
@@ -136,7 +136,7 @@ export async function prepareFormImage(file: File): Promise<string> {
     )
   }
   if (!isAllowedImageDataUri(dataUri)) {
-    throw new FormImageError("This file could not be read as an image.")
+    throw new FormImageError("无法将此文件读取为图片。")
   }
   return dataUri
 }

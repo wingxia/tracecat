@@ -76,7 +76,7 @@ export function OrgSessionsTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Email"
+                  title={"邮箱"}
                 />
               ),
               cell: ({ row }) => (
@@ -90,7 +90,7 @@ export function OrgSessionsTable() {
             {
               accessorKey: "created_at",
               header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Created at" />
+                <DataTableColumnHeader column={column} title={"创建时间"} />
               ),
               cell: ({ row }) => {
                 const createdAt =
@@ -99,7 +99,7 @@ export function OrgSessionsTable() {
                 const ago = getRelativeTime(date)
                 return (
                   <div className="space-x-2 text-xs">
-                    <span>{date.toLocaleString()}</span>
+                    <span>{date.toLocaleString("zh-CN")}</span>
                     <span className="text-muted-foreground">({ago})</span>
                   </div>
                 )
@@ -110,7 +110,7 @@ export function OrgSessionsTable() {
             {
               accessorKey: "last_seen_at",
               header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Last seen" />
+                <DataTableColumnHeader column={column} title={"最近出现"} />
               ),
               cell: ({ row }) => {
                 const lastSeenAt =
@@ -121,7 +121,7 @@ export function OrgSessionsTable() {
                 const date = new Date(lastSeenAt)
                 return (
                   <div className="space-x-2 text-xs">
-                    <span>{date.toLocaleString()}</span>
+                    <span>{date.toLocaleString("zh-CN")}</span>
                     <span className="text-muted-foreground">
                       ({getRelativeTime(date)})
                     </span>
@@ -134,7 +134,7 @@ export function OrgSessionsTable() {
             {
               accessorKey: "ip_address",
               header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="IP address" />
+                <DataTableColumnHeader column={column} title={"IP 地址"} />
               ),
               cell: ({ row }) => (
                 <div className="font-mono text-xs">
@@ -147,7 +147,7 @@ export function OrgSessionsTable() {
             {
               accessorKey: "user_agent",
               header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="User agent" />
+                <DataTableColumnHeader column={column} title={"用户代理"} />
               ),
               cell: ({ row }) => {
                 const userAgent =
@@ -179,7 +179,7 @@ export function OrgSessionsTable() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">打开菜单</span>
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -189,7 +189,7 @@ export function OrgSessionsTable() {
                           navigator.clipboard.writeText(row.original.user_id)
                         }
                       >
-                        Copy user ID
+                        复制用户 ID
                       </DropdownMenuItem>
                       {canRemoveSession === true && (
                         <DropdownMenuGroup>
@@ -198,7 +198,7 @@ export function OrgSessionsTable() {
                               className="text-rose-500 focus:text-rose-600"
                               onClick={() => setSelectedSession(row.original)}
                             >
-                              Revoke session
+                              撤销会话
                             </DropdownMenuItem>
                           </AlertDialogTrigger>
                         </DropdownMenuGroup>
@@ -213,27 +213,27 @@ export function OrgSessionsTable() {
         />
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke session</AlertDialogTitle>
+            <AlertDialogTitle>撤销会话</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to revoke the session for{" "}
+              确定要撤销以下用户的会话：{" "}
               <span className="font-semibold">
                 {selectedSession?.user_email}
               </span>{" "}
-              created at{" "}
+              ，创建于{" "}
               <span className="font-semibold">
                 {selectedSession &&
-                  new Date(selectedSession.created_at).toLocaleString()}
+                  new Date(selectedSession.created_at).toLocaleString("zh-CN")}
               </span>
-              . This action cannot be undone.
+              。此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleRevokeSession}
             >
-              Confirm
+              确认
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -244,7 +244,7 @@ export function OrgSessionsTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<SessionRead> = {
   filterProps: {
-    placeholder: "Filter sessions by user email...",
+    placeholder: "按用户邮箱筛选会话…",
     column: "user_email",
   },
 }

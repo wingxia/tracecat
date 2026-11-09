@@ -89,7 +89,7 @@ it("shows the unavailable state for an unmatched saved model", () => {
     <TestField value={{ model_name: "removed", model_provider: "openai" }} />
   )
   expect(screen.getByRole("combobox")).toHaveTextContent(
-    "openai / removedUnavailable in this workspace"
+    "openai / removed此工作空间不可用"
   )
 })
 
@@ -136,11 +136,9 @@ it("keeps the saved model visible, not unavailable, while models load", () => {
   const value = { model_name: "model-one", model_provider: "openai" }
   render(<TestField value={value} />)
   expect(screen.getByRole("combobox")).toHaveTextContent(
-    "openai / model-oneLoading models..."
+    "openai / model-one正在加载模型…"
   )
-  expect(
-    screen.queryByText("Unavailable in this workspace")
-  ).not.toBeInTheDocument()
+  expect(screen.queryByText("此工作空间不可用")).not.toBeInTheDocument()
   expect(JSON.parse(screen.getByTestId("value").textContent ?? "{}")).toEqual(
     value
   )
@@ -173,11 +171,9 @@ it("keeps the saved model visible when the catalog fails to load", () => {
   }
   render(<TestField value={value} />)
   expect(screen.getByRole("combobox")).toHaveTextContent(
-    "openai / model-oneFailed to load models"
+    "openai / model-one加载模型失败"
   )
-  expect(
-    screen.queryByText("Unavailable in this workspace")
-  ).not.toBeInTheDocument()
+  expect(screen.queryByText("此工作空间不可用")).not.toBeInTheDocument()
   expect(JSON.parse(screen.getByTestId("value").textContent ?? "{}")).toEqual(
     value
   )
@@ -203,7 +199,5 @@ it("shows only the load failure when no model is saved", () => {
     ),
   })
   render(<TestField value={{}} />)
-  expect(screen.getByRole("combobox")).toHaveTextContent(
-    /^Failed to load models$/
-  )
+  expect(screen.getByRole("combobox")).toHaveTextContent(/^加载模型失败$/)
 })

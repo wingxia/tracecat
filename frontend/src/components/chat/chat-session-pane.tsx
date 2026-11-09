@@ -298,7 +298,7 @@ export function ChatSessionPane({
   entityType,
   entityId,
   className,
-  placeholder = "Ask your question...",
+  placeholder = "输入问题…",
   onMessagesChange,
   onData,
   onStatusChange,
@@ -381,12 +381,9 @@ export function ChatSessionPane({
   // scopes are still loading, which must not disable anything.
   const cannotExecuteAgents = useScopeCheck("agent:execute") === false
   let readonlyDescription =
-    chat && "user_id" in chat
-      ? "This legacy conversation is read-only."
-      : "This conversation is read-only."
+    chat && "user_id" in chat ? "此旧版对话为只读。" : "此对话为只读。"
   if (chat && "spawned_by_session_id" in chat && chat.spawned_by_session_id) {
-    readonlyDescription =
-      "This subagent conversation is read-only. Message the parent conversation instead."
+    readonlyDescription = "此子智能体对话为只读，请在上级对话中发送消息。"
   }
 
   const uiMessages = useMemo(
@@ -623,7 +620,7 @@ export function ChatSessionPane({
     } catch (error) {
       setCancelRequested(false)
       toast({
-        title: "Failed to stop run",
+        title: "停止运行失败",
         description: parseChatError(error),
       })
     }
@@ -733,9 +730,8 @@ export function ChatSessionPane({
         : decisionPayload
       if (decisions.length === 0) {
         toast({
-          title: "Already decided",
-          description:
-            "This approval was decided elsewhere. The chat now shows the outcome.",
+          title: "已处理",
+          description: "此审批已在其他位置处理，对话中已显示结果。",
         })
         throw new ApprovalsAlreadyDecidedError()
       }
@@ -748,9 +744,8 @@ export function ChatSessionPane({
         console.error("Failed to submit approvals", error)
         toast({
           variant: "destructive",
-          title: "Approval submission failed",
-          description:
-            error instanceof Error ? error.message : "Please try again.",
+          title: "提交审批失败",
+          description: error instanceof Error ? error.message : "请重试。",
         })
         throw error
       }
@@ -861,7 +856,7 @@ export function ChatSessionPane({
               pendingPersistedToolsRef.current = null
             }
             toast({
-              title: "Failed to update tools",
+              title: "更新工具失败",
               description: parseChatError(error),
               variant: "destructive",
             })
@@ -971,7 +966,7 @@ export function ChatSessionPane({
               pendingPersistedMcpIntegrationsRef.current = null
             }
             toast({
-              title: "Failed to update MCP integrations",
+              title: "更新 MCP 集成失败",
               description: parseChatError(error),
               variant: "destructive",
             })
@@ -1160,8 +1155,8 @@ export function ChatSessionPane({
       await retryTurn(retryMessageId)
     } catch {
       toast({
-        title: "Couldn't reach Tracecat",
-        description: "Retry once the connection is back.",
+        title: "无法连接 Tracecat",
+        description: "请在连接恢复后重试。",
       })
     } finally {
       retryingRef.current = false
@@ -1260,8 +1255,8 @@ export function ChatSessionPane({
     if (message.files.length > 0) {
       // The running turn takes text only; keep the draft and its files.
       toast({
-        title: "Attachments wait for the next message",
-        description: "Send them once the agent has finished.",
+        title: "附件将随下一条消息发送",
+        description: "请在智能体完成后发送附件。",
       })
       throw new SubmitAbandonedError("A running turn takes text only")
     }
@@ -1302,9 +1297,8 @@ export function ChatSessionPane({
         // range survives in the composer. Nothing here can apply the mention,
         // and nothing else would tell the user, so say so before abandoning.
         toast({
-          title: "Could not route to the mentioned agent",
-          description:
-            "Agent presets are unavailable right now. Reload and try again.",
+          title: "无法转交给提及的智能体",
+          description: "智能体预设暂不可用，请重新加载后重试。",
         })
         throw new SubmitAbandonedError("Preset selector is unavailable")
       }
@@ -1430,7 +1424,7 @@ export function ChatSessionPane({
       {isReadonly ? (
         <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
           <Badge variant="outline" className="px-1.5 py-0 font-normal">
-            Read only
+            只读
           </Badge>
           {readonlyDescription}
         </div>
@@ -1733,7 +1727,7 @@ function SelectedToolChip({
         <button
           type="button"
           className="inline-flex items-center text-muted-foreground hover:text-foreground"
-          aria-label={`Remove ${tool.label}`}
+          aria-label={`移除 ${tool.label}`}
           onClick={() => onRemove?.(tool.value)}
           disabled={removeDisabled}
         >
@@ -1827,7 +1821,7 @@ function OptimisticPendingMessage({ text }: { text: string }) {
           <Response>{text}</Response>
         </MessageContent>
       </Message>
-      <ThinkingLine label="Thinking..." />
+      <ThinkingLine label={"思考中…"} />
     </>
   )
 }
@@ -1877,7 +1871,7 @@ function ActivePresetBadge({
           type="button"
           onClick={onClear}
           disabled={disabled}
-          aria-label="Clear agent"
+          aria-label={"清除智能体"}
           className="shrink-0 text-muted-foreground/70 hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
         >
           <XIcon className="size-3" />

@@ -23,7 +23,7 @@ export function PlatformAuditSettings() {
       updateAuditSettingsIsPending={updateAuditSettingsIsPending}
       testAuditWebhook={testAuditWebhook}
       testAuditWebhookIsPending={testAuditWebhookIsPending}
-      decryptFailureTitle="Unable to decrypt platform settings"
+      decryptFailureTitle="无法解密平台设置"
     />
   )
 }

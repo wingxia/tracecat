@@ -86,19 +86,15 @@ describe("InlineDiffView", () => {
           downloadUrl="https://example.com/files/logo.png"
         />
       )
-      expect(
-        screen.getByText("This file is not previewable inline.")
-      ).toBeInTheDocument()
-      const link = screen.getByRole("link", { name: "Open file" })
+      expect(screen.getByText("此文件无法在线预览。")).toBeInTheDocument()
+      const link = screen.getByRole("link", { name: "打开文件" })
       expect(link).toHaveAttribute("href", "https://example.com/files/logo.png")
     })
 
     it("shows the both-sides-absent copy when there is nothing to open", () => {
       render(<InlineDiffView path="ghost.md" oldValue={null} newValue={null} />)
       expect(
-        screen.getByText(
-          "This file does not exist in the draft or in this version."
-        )
+        screen.getByText("此文件在草稿和所选版本中均不存在。")
       ).toBeInTheDocument()
     })
 
@@ -110,9 +106,7 @@ describe("InlineDiffView", () => {
           newValue="Fresh content"
         />
       )
-      expect(
-        screen.getByText("Restoring this version adds this file.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("恢复此版本将添加此文件。")).toBeInTheDocument()
       const added = container.querySelector('ins[data-diff="added"]')
       expect(added?.textContent).toContain("Fresh content")
     })
@@ -125,9 +119,7 @@ describe("InlineDiffView", () => {
           newValue={null}
         />
       )
-      expect(
-        screen.getByText("Restoring this version removes this file.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("恢复此版本将移除此文件。")).toBeInTheDocument()
       const removed = container.querySelector('del[data-diff="removed"]')
       expect(removed?.textContent).toContain("Old content")
     })
@@ -141,9 +133,7 @@ describe("InlineDiffView", () => {
         />
       )
       expect(
-        screen.getByText(
-          "No changes. Restoring this version leaves this file unchanged."
-        )
+        screen.getByText("没有更改，恢复此版本时此文件保持不变。")
       ).toBeInTheDocument()
       expect(screen.queryByTestId("prose-diff")).not.toBeInTheDocument()
     })
@@ -156,9 +146,7 @@ describe("InlineDiffView", () => {
           newValue="y"
         />
       )
-      expect(
-        screen.getByText("This file is too large to compare.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("此文件过大，无法比较。")).toBeInTheDocument()
       expect(screen.queryByTestId("prose-diff")).not.toBeInTheDocument()
       expect(screen.queryByTestId("unified-diff")).not.toBeInTheDocument()
     })
@@ -173,7 +161,7 @@ describe("InlineDiffView", () => {
           newValue={"---\ntitle: New title\n---\n\nBody two."}
         />
       )
-      expect(screen.getByText("Frontmatter")).toBeInTheDocument()
+      expect(screen.getByText("元数据")).toBeInTheDocument()
       expect(screen.getByTestId("unified-diff")).toHaveTextContent("title:")
       expect(screen.getByTestId("prose-diff")).toHaveTextContent("Body")
     })
@@ -186,7 +174,7 @@ describe("InlineDiffView", () => {
           newValue={"---\ntitle: New title\n---\n\nBody two."}
         />
       )
-      expect(screen.queryByText("Frontmatter")).not.toBeInTheDocument()
+      expect(screen.queryByText("元数据")).not.toBeInTheDocument()
       expect(screen.queryByTestId("unified-diff")).not.toBeInTheDocument()
       expect(screen.getByTestId("prose-diff")).toBeInTheDocument()
     })
@@ -202,7 +190,7 @@ describe("InlineDiffView", () => {
           newValue={["first: new", ...shared].join("\n")}
         />
       )
-      expect(screen.getByText("4 unchanged lines hidden")).toBeInTheDocument()
+      expect(screen.getByText("已隐藏 4 行未更改内容")).toBeInTheDocument()
     })
   })
 

@@ -39,10 +39,9 @@ export function EditAwsSecretReferenceDialog({
     >
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle>Edit secret</DialogTitle>
+          <DialogTitle>编辑密钥</DialogTitle>
           <DialogDescription>
-            Update the AWS secret reference and key mapping. Values stay in AWS
-            Secrets Manager.
+            更新 AWS 密钥引用和键映射，密钥值仍保留在 AWS Secrets Manager 中。
           </DialogDescription>
         </DialogHeader>
         {(isLoading || error) && (
@@ -50,9 +49,9 @@ export function EditAwsSecretReferenceDialog({
             {isLoading && <CenteredSpinner />}
             {error && (
               <Alert variant="destructive">
-                <AlertTitle>Could not load secret reference</AlertTitle>
+                <AlertTitle>无法加载密钥引用</AlertTitle>
                 <AlertDescription>
-                  Close and reopen this dialog to try again.
+                  请关闭后重新打开对话框以重试。
                 </AlertDescription>
               </Alert>
             )}

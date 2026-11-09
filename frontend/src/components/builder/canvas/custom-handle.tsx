@@ -226,7 +226,7 @@ export function ActionTargetHandle({
               >
                 <span className="flex items-center space-x-1">
                   <Merge className="size-3 rotate-180" strokeWidth={2.5} />
-                  <span>{joinStrategy?.toLocaleUpperCase() || "ALL"}</span>
+                  <span>{joinStrategy?.toLocaleUpperCase() || "全部"}</span>
                 </span>
               </Badge>
             )}
@@ -265,7 +265,7 @@ export function ActionSoruceSuccessHandle({
             <div className="pointer-events-none absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400 shadow-sm transition-all duration-150 group-hover:size-4 group-hover:bg-emerald-400 group-hover:shadow-lg" />
           </Handle>
         </TooltipTrigger>
-        <TooltipContent>Success</TooltipContent>
+        <TooltipContent>成功</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )
@@ -291,7 +291,7 @@ export function ActionSourceErrorHandle({
             <div className="pointer-events-none absolute left-1/2 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-rose-400 shadow-sm transition-all duration-150 group-hover:size-4 group-hover:bg-rose-400 group-hover:shadow-lg" />
           </Handle>
         </TooltipTrigger>
-        <TooltipContent>Error</TooltipContent>
+        <TooltipContent>错误</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

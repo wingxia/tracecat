@@ -16,9 +16,9 @@ import {
 import { cn } from "@/lib/utils"
 
 const LOCKED_FEATURE_BULLETS = [
-  "Get production-ready automations with enterprise agents, reusable skills, metrics, and premium workflow tools.",
-  "Author, version, and publish skills to share agent behavior across your workspace.",
-  "Access RBAC, SLAs, governance, and features built for production environments.",
+  "通过企业级智能体、可复用技能、指标和高级工作流工具，构建可用于生产环境的自动化。",
+  "编写、管理版本并发布技能，在工作空间内共享智能体行为。",
+  "使用 RBAC、SLA、治理及面向生产环境的功能。",
 ]
 
 interface LockedFeatureModalProps {
@@ -36,8 +36,8 @@ export function LockedFeatureModal({
   children,
   open,
   onOpenChange,
-  title = "Upgrade to unlock this feature",
-  description = "Upgrade for enterprise agents, skills, metrics, and other advanced features.",
+  title = "升级以解锁此功能",
+  description = "升级以使用企业级智能体、技能、指标和其他高级功能。",
   bullets = LOCKED_FEATURE_BULLETS,
   footer,
   hideFooter = false,
@@ -89,7 +89,7 @@ export function LockedFeatureModal({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Learn more <ArrowUpRight className="size-4" />
+                  了解更多 <ArrowUpRight className="size-4" />
                 </a>
               </Button>
             )}

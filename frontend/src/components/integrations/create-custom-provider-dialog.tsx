@@ -43,39 +43,39 @@ const formSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(3, { message: "Name must be at least 3 characters long" })
-    .max(120, { message: "Name must be 120 characters or fewer" }),
+    .min(3, { message: "名称至少需要 3 个字符" })
+    .max(120, { message: "名称不能超过 120 个字符" }),
   description: z
     .string()
     .trim()
-    .max(512, { message: "Description must be 512 characters or fewer" })
+    .max(512, { message: "描述不能超过 512 个字符" })
     .optional()
     .or(z.literal("")),
   grant_type: z.enum(["authorization_code", "client_credentials"]),
   client_id: z
     .string()
     .trim()
-    .min(1, { message: "Client ID is required" })
-    .max(512, { message: "Client ID must be 512 characters or fewer" }),
+    .min(1, { message: "客户端 ID 不能为空" })
+    .max(512, { message: "客户端 ID 不能超过 512 个字符" }),
   client_secret: z
     .string()
     .trim()
-    .max(16384, { message: "Client secret is unexpectedly long" })
+    .max(16384, { message: "客户端密钥过长" })
     .optional()
     .or(z.literal("")),
   authorization_endpoint: z
     .string()
     .trim()
-    .url({ message: "Enter a valid HTTPS URL" })
+    .url({ message: "请输入有效的 HTTPS URL" })
     .refine((value) => value.toLowerCase().startsWith("https://"), {
-      message: "Authorization endpoint must use HTTPS",
+      message: "授权端点必须使用 HTTPS",
     }),
   token_endpoint: z
     .string()
     .trim()
-    .url({ message: "Enter a valid HTTPS URL" })
+    .url({ message: "请输入有效的 HTTPS URL" })
     .refine((value) => value.toLowerCase().startsWith("https://"), {
-      message: "Token endpoint must use HTTPS",
+      message: "令牌端点必须使用 HTTPS",
     }),
   scopes: z.array(z.string().trim().min(1)).optional(),
 })
@@ -96,13 +96,13 @@ const DEFAULT_VALUES: CustomProviderFormValues = {
 const GRANT_OPTIONS = [
   {
     value: "authorization_code" as const,
-    title: "Delegated access",
-    description: "Users authorize access via OAuth login.",
+    title: "委托访问",
+    description: "用户通过 OAuth 登录授权访问。",
   },
   {
     value: "client_credentials" as const,
-    title: "Client credentials",
-    description: "Server-to-server access with tokens.",
+    title: "客户端凭据",
+    description: "使用令牌进行服务器间访问。",
   },
 ]
 
@@ -171,16 +171,15 @@ export function CreateCustomProviderDialog({
             {...restTriggerProps}
           >
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Add custom OAuth provider
+            添加自定义 OAuth 提供商
           </Button>
         </DialogTrigger>
       )}
       <DialogContent size="lg" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Add custom OAuth provider</DialogTitle>
+          <DialogTitle>添加自定义 OAuth 提供商</DialogTitle>
           <DialogDescription>
-            Configure a custom OAuth provider using client credentials or
-            delegated authorization.
+            使用客户端凭据或委托授权配置自定义 OAuth 提供商。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -195,9 +194,9 @@ export function CreateCustomProviderDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provider name</FormLabel>
+                    <FormLabel>提供商名称</FormLabel>
                     <FormControl>
-                      <Input placeholder="My Security Platform" {...field} />
+                      <Input placeholder={"我的安全平台"} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -208,15 +207,12 @@ export function CreateCustomProviderDialog({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>描述</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Optional description for this provider"
-                        {...field}
-                      />
+                      <Textarea placeholder={"此提供商的可选描述"} {...field} />
                     </FormControl>
                     <FormDescription className="text-xs">
-                      Appears in the integrations list for this workspace.
+                      显示在此工作空间的集成列表中。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -227,14 +223,14 @@ export function CreateCustomProviderDialog({
                 name="grant_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Grant type</FormLabel>
+                    <FormLabel>授权类型</FormLabel>
                     <FormControl>
                       <Select
                         value={field.value}
                         onValueChange={field.onChange}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Select grant type">
+                          <SelectValue placeholder={"选择授权类型"}>
                             {field.value
                               ? GRANT_OPTIONS.find(
                                   (opt) => opt.value === field.value
@@ -263,7 +259,7 @@ export function CreateCustomProviderDialog({
                       </Select>
                     </FormControl>
                     <FormDescription className="text-xs">
-                      Choose how Tracecat authenticates with this provider.
+                      选择 Tracecat 向此提供商进行身份验证的方式。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -275,9 +271,9 @@ export function CreateCustomProviderDialog({
                   name="client_id"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Client ID</FormLabel>
+                      <FormLabel>客户端 ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="Client ID" {...field} />
+                        <Input placeholder={"客户端 ID"} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -289,16 +285,16 @@ export function CreateCustomProviderDialog({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Client secret{" "}
+                        客户端密钥{" "}
                         {grantType === "authorization_code" && (
                           <span className="text-xs text-muted-foreground">
-                            (optional)
+                            （可选）
                           </span>
                         )}
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Client secret"
+                          placeholder={"客户端密钥"}
                           type="password"
                           autoComplete="new-password"
                           {...field}
@@ -314,7 +310,7 @@ export function CreateCustomProviderDialog({
                 name="authorization_endpoint"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Authorization endpoint</FormLabel>
+                    <FormLabel>授权端点</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://example.com/oauth2/authorize"
@@ -330,7 +326,7 @@ export function CreateCustomProviderDialog({
                 name="token_endpoint"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Token endpoint</FormLabel>
+                    <FormLabel>令牌端点</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://example.com/oauth2/token"
@@ -346,7 +342,7 @@ export function CreateCustomProviderDialog({
                 name="scopes"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Scopes</FormLabel>
+                    <FormLabel>权限范围</FormLabel>
                     <FormControl>
                       <MultiTagCommandInput
                         value={field.value ?? []}
@@ -354,11 +350,11 @@ export function CreateCustomProviderDialog({
                         suggestions={[]}
                         searchKeys={["label", "value"]}
                         allowCustomTags
-                        placeholder="Add scopes"
+                        placeholder={"添加权限范围"}
                       />
                     </FormControl>
                     <FormDescription className="text-xs">
-                      Provide the OAuth scopes to request by default.
+                      提供默认请求的 OAuth 权限范围。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -375,7 +371,7 @@ export function CreateCustomProviderDialog({
                 {createCustomProviderIsPending && (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 )}
-                Save provider
+                保存提供商
               </Button>
             </DialogFooter>
           </form>

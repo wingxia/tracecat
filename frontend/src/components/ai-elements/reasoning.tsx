@@ -97,12 +97,12 @@ export type ReasoningTriggerProps = ComponentProps<
 function getThoughtTitle(isStreaming: boolean, duration?: number): string {
   if (isStreaming) {
     // Matches the chat's running line, which this line replaces.
-    return "Thinking..."
+    return "思考中…"
   }
   if (!duration) {
-    return "Thought"
+    return "思考"
   }
-  return `Thought for ${duration} ${duration === 1 ? "second" : "seconds"}`
+  return `思考了 ${duration} 秒`
 }
 
 export const ReasoningTrigger = memo(

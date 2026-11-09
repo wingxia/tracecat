@@ -43,12 +43,12 @@ export function UnassignTargetDialog({
     <Dialog open={rolloutId !== null} onOpenChange={onOpenChange}>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle>Unassign target</DialogTitle>
+          <DialogTitle>取消分配目标</DialogTitle>
           <DialogDescription>
             {target
               ? `${target.organization_name} / ${target.workspace_name}. `
               : ""}
-            Unassigning deletes every managed resource from the workspace.
+            取消分配会删除工作空间中的所有托管资源。
           </DialogDescription>
         </DialogHeader>
         {rolloutId && <UnassignContent rolloutId={rolloutId} />}
@@ -67,7 +67,7 @@ function UnassignContent({ rolloutId }: { rolloutId: string }) {
       await applyRollouts.mutateAsync([rolloutId])
       await refetch()
     } catch (err) {
-      toastApiError("Failed to unassign target", err)
+      toastApiError("取消分配目标失败", err)
     }
   }
 
@@ -81,17 +81,17 @@ function UnassignContent({ rolloutId }: { rolloutId: string }) {
         {!rollout && error && (
           <div className="space-y-2 text-sm">
             <p className="text-destructive">
-              {getApiErrorDetail(error) ?? "Could not load the preview."}
+              {getApiErrorDetail(error) ?? "无法加载预览。"}
             </p>
             <Button size="sm" variant="outline" onClick={() => void refetch()}>
-              Try again
+              重试
             </Button>
           </div>
         )}
         {!rollout && !error && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Spinner className="size-3" />
-            Loading preview...
+            正在加载预览…
           </div>
         )}
       </DialogBody>
@@ -102,7 +102,7 @@ function UnassignContent({ rolloutId }: { rolloutId: string }) {
           onClick={handleApply}
           disabled={!canApply || applyRollouts.isPending}
         >
-          {applyRollouts.isPending ? "Unassigning..." : "Unassign and delete"}
+          {applyRollouts.isPending ? "正在取消分配…" : "取消分配并删除"}
         </Button>
       </DialogFooter>
     </>
@@ -120,13 +120,11 @@ function UnassignPreview({ rollout }: { rollout: ManagedRolloutRead }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm">
-        <span className="text-muted-foreground">Status</span>
+        <span className="text-muted-foreground">状态</span>
         <RolloutStatusBadge status={rollout.status} />
       </div>
       {rollout.status === "applied" && (
-        <p className="text-sm">
-          The target is unassigned and its managed resources were removed.
-        </p>
+        <p className="text-sm">已取消分配目标并移除其托管资源。</p>
       )}
       {rollout.error && (
         <p className="whitespace-pre-wrap text-xs text-destructive">
@@ -137,13 +135,13 @@ function UnassignPreview({ rollout }: { rollout: ManagedRolloutRead }) {
         <>
           <div className="space-y-2">
             <h4 className="text-sm font-medium">
-              Resources to delete{" "}
+              待删除资源{" "}
               <span className="text-muted-foreground">
                 ({deletions.length})
               </span>
             </h4>
             {deletions.length === 0 ? (
-              <p className="text-xs text-muted-foreground">None</p>
+              <p className="text-xs text-muted-foreground">无</p>
             ) : (
               <ul className="divide-y rounded-md border text-xs">
                 {deletions.map((change) => (
@@ -162,11 +160,11 @@ function UnassignPreview({ rollout }: { rollout: ManagedRolloutRead }) {
           </div>
           <div className="space-y-2">
             <h4 className="text-sm font-medium">
-              Delete warnings{" "}
+              删除警告{" "}
               <span className="text-muted-foreground">({warnings.length})</span>
             </h4>
             {warnings.length === 0 ? (
-              <p className="text-xs text-muted-foreground">None</p>
+              <p className="text-xs text-muted-foreground">无</p>
             ) : (
               <DeleteWarningList warnings={warnings} />
             )}

@@ -73,12 +73,12 @@ export function ResetWorkflowRunDialog({
 
   const helperText = useMemo(() => {
     if (useResetPointSelect) {
-      return "Select start or a specific reset point from workflow history."
+      return "从工作流历史中选择起点或指定的重置位置。"
     }
     if (!eventIdText.trim()) {
-      return "Leave empty to reset from start."
+      return "留空则从起点重置。"
     }
-    return "The reset will use the nearest resettable point at or before this event."
+    return "将使用此执行事件之前或当时最近的可重置位置。"
   }, [eventIdText, useResetPointSelect])
 
   const handleSubmit = async () => {
@@ -114,18 +114,18 @@ export function ResetWorkflowRunDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Reset workflow run</DialogTitle>
+          <DialogTitle>重置工作流运行</DialogTitle>
           <DialogDescription>
             {executionCount === 1
-              ? "Reset the selected workflow run from start or a specific event."
-              : `Reset ${executionCount} selected workflow runs from start or a specific event.`}
+              ? "从起点或指定执行事件重置所选工作流运行。"
+              : `从起点或指定执行事件重置所选的 ${executionCount} 次工作流运行。`}
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="event-id">
-                {useResetPointSelect ? "Reset point" : "Event ID"}
+                {useResetPointSelect ? "重置位置" : "执行事件 ID"}
               </Label>
               {useResetPointSelect ? (
                 <Select value={selectedPoint} onValueChange={setSelectedPoint}>
@@ -133,13 +133,13 @@ export function ResetWorkflowRunDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="start">Start</SelectItem>
+                    <SelectItem value="start">开始</SelectItem>
                     {resettablePoints.map((point) => (
                       <SelectItem
                         key={point.event_id}
                         value={String(point.event_id)}
                       >
-                        Event {point.event_id} -{" "}
+                        执行事件 {point.event_id} -{" "}
                         {point.event_type.replaceAll("_", " ").toLowerCase()}
                       </SelectItem>
                     ))}
@@ -150,7 +150,7 @@ export function ResetWorkflowRunDialog({
                   id="event-id"
                   type="number"
                   min={1}
-                  placeholder="Start"
+                  placeholder={"开始"}
                   value={eventIdText}
                   onChange={(event) => setEventIdText(event.target.value)}
                 />
@@ -158,12 +158,12 @@ export function ResetWorkflowRunDialog({
               <p className="text-xs text-muted-foreground">{helperText}</p>
               {resetPointsLoading ? (
                 <p className="text-xs text-muted-foreground">
-                  Loading reset points...
+                  正在加载重置位置…
                 </p>
               ) : null}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="reapply-type">Reapply type</Label>
+              <Label htmlFor="reapply-type">重新应用类型</Label>
               <Select
                 value={reapplyType}
                 onValueChange={(value: WorkflowExecutionResetReapplyType) =>
@@ -174,17 +174,19 @@ export function ResetWorkflowRunDialog({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all_eligible">All eligible</SelectItem>
-                  <SelectItem value="signal_only">Signals only</SelectItem>
-                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="all_eligible">
+                    所有符合条件的事件
+                  </SelectItem>
+                  <SelectItem value="signal_only">仅信号</SelectItem>
+                  <SelectItem value="none">无</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="reason">Reason</Label>
+              <Label htmlFor="reason">原因</Label>
               <Input
                 id="reason"
-                placeholder="Optional reason"
+                placeholder={"原因（可选）"}
                 value={reason}
                 onChange={(event) => setReason(event.target.value)}
               />
@@ -193,7 +195,7 @@ export function ResetWorkflowRunDialog({
         </DialogBody>
         <DialogFooter>
           <Button size="sm" onClick={handleSubmit} disabled={isSubmitting}>
-            Reset
+            重置
           </Button>
         </DialogFooter>
       </DialogContent>

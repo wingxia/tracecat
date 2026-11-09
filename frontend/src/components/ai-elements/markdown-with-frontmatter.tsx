@@ -79,7 +79,7 @@ export const MarkdownWithFrontmatter = memo(
 
           <details className="border-t border-border/70 px-4 py-3">
             <summary className="cursor-pointer text-xs font-medium text-muted-foreground">
-              Raw frontmatter
+              原始元数据
             </summary>
             <pre className="mt-3 overflow-x-auto rounded-md border border-border/70 bg-background/80 p-3 text-xs leading-5 text-muted-foreground">
               {parsed.raw}

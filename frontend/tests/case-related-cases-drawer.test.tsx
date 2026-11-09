@@ -124,10 +124,8 @@ describe("CaseRelatedCasesDrawer", () => {
   it("shows the row's contents above its related cases", () => {
     renderDrawer()
 
-    expect(
-      screen.getByText("Cases related to selected linked row")
-    ).toBeInTheDocument()
-    expect(screen.getByText("Linked row in investigation_assets")).toBeVisible()
+    expect(screen.getByText("与所选关联行相关的事件")).toBeInTheDocument()
+    expect(screen.getByText("关联行，位于 investigation_assets")).toBeVisible()
     expect(screen.getByTestId("row-json")).toHaveTextContent(
       JSON.stringify({ hostname: "gateway-01", owner: null })
     )
@@ -139,13 +137,13 @@ describe("CaseRelatedCasesDrawer", () => {
 
     await user.click(screen.getByText("Unexpected administrator login"))
 
-    const link = await screen.findByRole("link", { name: /Open case/ })
+    const link = await screen.findByRole("link", { name: /打开事件/ })
     expect(link).toHaveAttribute("href", "/workspaces/ws-1/cases/case-2")
     expect(link).toHaveAttribute("target", "_blank")
     expect(window.open).not.toHaveBeenCalled()
 
     await user.keyboard("{Escape}")
-    expect(screen.queryByRole("link", { name: /Open case/ })).toBeNull()
+    expect(screen.queryByRole("link", { name: /打开事件/ })).toBeNull()
   })
 
   it("opens the case in a new tab on Ctrl-click instead of pinning", async () => {
@@ -161,7 +159,7 @@ describe("CaseRelatedCasesDrawer", () => {
       "_blank",
       "noopener,noreferrer"
     )
-    expect(screen.queryByRole("link", { name: /Open case/ })).toBeNull()
+    expect(screen.queryByRole("link", { name: /打开事件/ })).toBeNull()
     // A focused row would reopen its card when the tab comes back.
     expect(screen.getByText("Unexpected administrator login")).not.toHaveFocus()
   })
@@ -199,7 +197,7 @@ describe("CaseRelatedCasesDrawer", () => {
       "_blank",
       "noopener,noreferrer"
     )
-    expect(screen.getByRole("link", { name: /Open case/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /打开事件/ })).toHaveAttribute(
       "href",
       "/workspaces/ws-1/cases/case-2"
     )
@@ -211,12 +209,12 @@ describe("CaseRelatedCasesDrawer", () => {
 
     await user.hover(screen.getByText("Unexpected administrator login"))
     expect(
-      await screen.findByRole("link", { name: /Open case/ })
+      await screen.findByRole("link", { name: /打开事件/ })
     ).toBeInTheDocument()
 
     act(() => {
       window.dispatchEvent(new Event("blur"))
     })
-    expect(screen.queryByRole("link", { name: /Open case/ })).toBeNull()
+    expect(screen.queryByRole("link", { name: /打开事件/ })).toBeNull()
   })
 })

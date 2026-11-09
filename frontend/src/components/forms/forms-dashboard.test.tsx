@@ -96,17 +96,17 @@ it("lists every form with its workflow, status and usage, and deletes after conf
   expect(
     within(row).getByRole("link", { name: "Offboard employee" })
   ).toHaveAttribute("href", "/workspaces/workspace-1/workflows/wf_other")
-  expect(within(row).getByText("Offline")).toBeInTheDocument()
-  expect(within(row).getByText("1 submission")).toBeInTheDocument()
+  expect(within(row).getByText("已下线")).toBeInTheDocument()
+  expect(within(row).getByText("1 次提交")).toBeInTheDocument()
 
-  await user.type(screen.getByPlaceholderText("Search forms..."), "laptop")
+  await user.type(screen.getByPlaceholderText("搜索表单…"), "laptop")
   expect(screen.queryByText("Offboarding")).not.toBeInTheDocument()
 
   await user.click(
-    screen.getByRole("button", { name: "Open menu for Laptop request" })
+    screen.getByRole("button", { name: "打开菜单： Laptop request" })
   )
-  await user.click(await screen.findByRole("menuitem", { name: "Delete" }))
-  await user.click(screen.getByRole("button", { name: "Delete" }))
+  await user.click(await screen.findByRole("menuitem", { name: "删除" }))
+  await user.click(screen.getByRole("button", { name: "删除" }))
   await waitFor(() =>
     expect(formsDeleteForm).toHaveBeenCalledWith({
       workspaceId: "workspace-1",
@@ -133,16 +133,16 @@ it("confirms a copied form link only once the clipboard write lands", async () =
   async function copyLink() {
     await user.click(
       await screen.findByRole("button", {
-        name: "Open menu for Laptop request",
+        name: "打开菜单： Laptop request",
       })
     )
-    await user.click(await screen.findByRole("menuitem", { name: "Copy link" }))
+    await user.click(await screen.findByRole("menuitem", { name: "复制链接" }))
   }
 
   await copyLink()
   await waitFor(() =>
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Couldn't copy the link",
+      title: "无法复制链接",
       description: url,
       variant: "destructive",
     })
@@ -152,7 +152,7 @@ it("confirms a copied form link only once the clipboard write lands", async () =
   await copyLink()
   await waitFor(() =>
     expect(mockToast).toHaveBeenLastCalledWith({
-      title: "Form link copied",
+      title: "已复制表单链接",
       description: url,
     })
   )
@@ -167,8 +167,6 @@ it("says so when the workflows to pick from can't be loaded", async () => {
   }
   renderWithClient(<CreateFormDialog open onOpenChange={jest.fn()} />)
 
-  expect(
-    await screen.findByText("Couldn't load workflows.")
-  ).toBeInTheDocument()
-  expect(screen.queryByText("No workflows found.")).toBeNull()
+  expect(await screen.findByText("无法加载工作流。")).toBeInTheDocument()
+  expect(screen.queryByText("未找到工作流。")).toBeNull()
 })

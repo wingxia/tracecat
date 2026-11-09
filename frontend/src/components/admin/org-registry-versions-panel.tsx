@@ -55,14 +55,14 @@ export function OrgRegistryVersionsPanel({
       })
       setCurrentVersionId(result.current_version_id ?? null)
       toast({
-        title: "Version promoted",
-        description: `Version ${version.version} is now the current version.`,
+        title: "已提升版本",
+        description: `版本 ${version.version} 已设为当前版本。`,
       })
     } catch (error) {
       console.error("Failed to promote version", error)
       toast({
-        title: "Failed to promote version",
-        description: "Please try again.",
+        title: "提升版本失败",
+        description: "请重试。",
         variant: "destructive",
       })
     } finally {
@@ -73,7 +73,7 @@ export function OrgRegistryVersionsPanel({
   if (isLoading) {
     return (
       <div className="py-8 text-center text-muted-foreground">
-        Loading versions...
+        正在加载版本…
       </div>
     )
   }
@@ -81,7 +81,7 @@ export function OrgRegistryVersionsPanel({
   if (!versions || versions.length === 0) {
     return (
       <div className="py-8 text-center text-muted-foreground">
-        No versions found. Sync the repository to create a version.
+        未找到版本，请同步仓库以创建版本。
       </div>
     )
   }
@@ -90,10 +90,10 @@ export function OrgRegistryVersionsPanel({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Version</TableHead>
-          <TableHead>Commit</TableHead>
-          <TableHead>Created</TableHead>
-          <TableHead className="w-[100px]">Actions</TableHead>
+          <TableHead>版本</TableHead>
+          <TableHead>提交</TableHead>
+          <TableHead>创建时间</TableHead>
+          <TableHead className="w-[100px]">动作</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -111,7 +111,7 @@ export function OrgRegistryVersionsPanel({
                       variant="default"
                       className="bg-green-500 hover:bg-green-600"
                     >
-                      Current
+                      当前
                     </Badge>
                   )}
                 </div>
@@ -135,11 +135,11 @@ export function OrgRegistryVersionsPanel({
                     disabled={isPromoting}
                   >
                     {isPromoting ? (
-                      "Promoting..."
+                      "提升中…"
                     ) : (
                       <>
                         <CheckIcon className="mr-1 size-3" />
-                        Promote
+                        提升
                       </>
                     )}
                   </Button>

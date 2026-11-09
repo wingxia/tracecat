@@ -76,14 +76,14 @@ export function AdminOrgRegistryDialog({
                   <BreadcrumbItem>
                     <BreadcrumbLink asChild className="font-semibold">
                       <button type="button" onClick={handleBackToRepositories}>
-                        Repositories
+                        仓库
                       </button>
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="shrink-0" />
                   <BreadcrumbItem>
                     <BreadcrumbPage className="font-semibold">
-                      Versions
+                      版本
                     </BreadcrumbPage>
                   </BreadcrumbItem>
                   <BreadcrumbItem>
@@ -101,10 +101,9 @@ export function AdminOrgRegistryDialog({
             </div>
           ) : (
             <>
-              <DialogTitle>Registry repositories</DialogTitle>
+              <DialogTitle>注册表仓库</DialogTitle>
               <DialogDescription>
-                Manage registry repositories for{" "}
-                {organization?.name ?? "organization"}.
+                管理注册表仓库，所属组织： {organization?.name ?? "组织"}.
               </DialogDescription>
             </>
           )}

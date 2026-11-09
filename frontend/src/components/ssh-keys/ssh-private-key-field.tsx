@@ -19,8 +19,7 @@ interface SshPrivateKeyFieldProps<T extends FieldValues> {
   name: FieldPath<T>
 }
 
-const sshPrivateKeyPlaceholder =
-  "Starts with '-----BEGIN OPENSSH PRIVATE KEY-----"
+const sshPrivateKeyPlaceholder = "以“-----BEGIN OPENSSH PRIVATE KEY-----”开头"
 
 export function SshPrivateKeyField<T extends FieldValues>({
   control,
@@ -33,7 +32,7 @@ export function SshPrivateKeyField<T extends FieldValues>({
       name={name}
       render={() => (
         <FormItem>
-          <FormLabel className="text-sm">Key</FormLabel>
+          <FormLabel className="text-sm">键</FormLabel>
           <FormControl>
             <Textarea
               className="h-36 text-sm"

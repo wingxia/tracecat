@@ -1,6 +1,7 @@
 "use client"
 
 import { formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { Check, ChevronDown, Loader2 } from "lucide-react"
 import { useState } from "react"
 
@@ -27,7 +28,7 @@ import { getDisplayName } from "@/lib/auth"
 
 export type ChatHistoryScope = "team" | "mine"
 
-const COMMENT_AGENT_SESSION_BADGE = "From comment"
+const COMMENT_AGENT_SESSION_BADGE = "来自评论"
 
 function isCommentAgentSession(
   chat: AgentSessionsListSessionsResponse[number]
@@ -67,7 +68,7 @@ export function ChatHistoryDropdown({
 
   function creatorLabel(createdBy: string | null): string {
     if (!createdBy) {
-      return "System"
+      return "跟随系统"
     }
     const member = members?.find((candidate) => candidate.user_id === createdBy)
     return member ? getDisplayName(member) : "Teammate"
@@ -95,13 +96,13 @@ export function ChatHistoryDropdown({
           role="combobox"
           aria-expanded={open}
         >
-          Chats
+          对话
           <ChevronDown className="ml-1 size-3" />
         </Button>
       </PopoverTrigger>
       <PopoverContent align={align} className="w-64 p-0">
         <div className="flex items-center justify-between border-b px-3 py-2">
-          <span className="text-xs text-muted-foreground">Show chats</span>
+          <span className="text-xs text-muted-foreground">显示对话</span>
           <ToggleTabs<ChatHistoryScope>
             value={scope}
             onValueChange={onScopeChange}
@@ -116,10 +117,10 @@ export function ChatHistoryDropdown({
         {isLoading ? (
           <div className="flex items-center gap-2 p-3 text-sm text-muted-foreground">
             <Loader2 className="h-4 w-4 animate-spin" />
-            Loading chats…
+            正在加载对话…
           </div>
         ) : error ? (
-          <div className="p-3 text-sm text-red-600">Failed to load chats</div>
+          <div className="p-3 text-sm text-red-600">加载对话失败</div>
         ) : (
           <Command
             filter={(value, search) => {
@@ -145,13 +146,10 @@ export function ChatHistoryDropdown({
                 : 0
             }}
           >
-            <CommandInput
-              placeholder="Search chats..."
-              className="h-8 text-xs"
-            />
+            <CommandInput placeholder={"搜索对话…"} className="h-8 text-xs" />
             <CommandList className="max-h-64 overflow-y-auto">
               <CommandEmpty className="m-1 rounded-sm bg-muted/40 px-3 py-4 text-center text-xs text-muted-foreground">
-                No chats found.
+                未找到对话。
               </CommandEmpty>
               <CommandGroup>
                 {chats?.map((chat) => (
@@ -180,7 +178,7 @@ export function ChatHistoryDropdown({
                             variant="outline"
                             className="shrink-0 px-1.5 py-0 text-[10px] font-normal text-muted-foreground"
                           >
-                            Read only
+                            只读
                           </Badge>
                         ) : null}
                       </div>
@@ -190,6 +188,7 @@ export function ChatHistoryDropdown({
                         )}{" "}
                         ·{" "}
                         {formatDistanceToNow(new Date(chat.created_at), {
+                          locale: zhCN,
                           addSuffix: true,
                         })}
                       </span>

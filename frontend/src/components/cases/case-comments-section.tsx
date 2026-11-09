@@ -76,13 +76,13 @@ import { cn, INSET_SURFACE } from "@/lib/utils"
  * receives, which can be longer than the display text.
  */
 const commentFormSchema = z.object({
-  content: z.string().min(1, { message: "Comment cannot be empty" }),
+  content: z.string().min(1, { message: "评论不能为空" }),
 })
 
 /** Validates the wire value sent to the API after mentions are serialized. */
 const commentWireSchema = z
   .string()
-  .max(25000, { message: "Comment cannot be longer than 25000 characters" })
+  .max(25000, { message: "评论不能超过 25000 个字符" })
 
 /** Inline edits have no mentions, so display and wire text are the same. */
 const commentEditFormSchema = z.object({
@@ -111,34 +111,34 @@ function getWorkflowStatusBadge(status: WorkflowCommentStatus) {
     case "succeeded":
       return (
         <span
-          aria-label="Completed"
+          aria-label={"已完成"}
           className="inline-flex items-center"
           role="img"
         >
           <CircleCheckIcon className="size-4 fill-emerald-500 stroke-background" />
-          <span className="sr-only">Completed</span>
+          <span className="sr-only">已完成</span>
         </span>
       )
     case "failed":
       return (
         <span
-          aria-label="Error"
+          aria-label={"错误"}
           className="inline-flex items-center"
           role="img"
         >
           <XCircleIcon className="size-4 fill-rose-500 stroke-background" />
-          <span className="sr-only">Error</span>
+          <span className="sr-only">错误</span>
         </span>
       )
     default:
       return (
         <span
-          aria-label="In progress"
+          aria-label={"处理中"}
           className="inline-flex items-center"
           role="img"
         >
           <ClockIcon className="size-3.5 animate-pulse text-amber-500" />
-          <span className="sr-only">In progress</span>
+          <span className="sr-only">处理中</span>
         </span>
       )
   }
@@ -204,7 +204,7 @@ export function CommentSection({
       <div className="flex items-center justify-center p-8">
         <div className="flex items-center gap-2 text-red-600">
           <AlertCircle className="h-4 w-4" />
-          <span className="text-sm">Failed to load comments</span>
+          <span className="text-sm">加载评论失败</span>
         </div>
       </div>
     )
@@ -314,7 +314,7 @@ function CommentThread({
                   <ChevronUp className="size-4" />
                 )}
                 <span className="sr-only">
-                  {repliesHidden ? "Show replies" : "Hide replies"}
+                  {repliesHidden ? "显示回复" : "隐藏回复"}
                 </span>
               </Button>
             ) : null
@@ -353,7 +353,7 @@ function CommentThread({
             caseId={caseId}
             workspaceId={workspaceId}
             parentId={comment.id}
-            placeholder="Leave a reply..."
+            placeholder={"回复…"}
             mode="inline"
           />
         </div>
@@ -419,9 +419,7 @@ function CommentRow({
       )
     }
     if (comment.is_deleted) {
-      return (
-        <p className="text-sm italic text-muted-foreground">Comment deleted</p>
-      )
+      return <p className="text-sm italic text-muted-foreground">已删除评论</p>
     }
     if (!hasBody) {
       return null
@@ -468,7 +466,7 @@ function CommentRow({
                 >
                   <Link href={workflowRunPath}>
                     <LinkIcon className="size-3.5" />
-                    <span className="sr-only">Open workflow run</span>
+                    <span className="sr-only">打开工作流运行记录</span>
                   </Link>
                 </Button>
               ) : null}
@@ -727,7 +725,7 @@ function CommentComposer({
             <div className="ml-auto flex items-center gap-2">
               {imageUploading ? (
                 <span className="text-xs text-muted-foreground">
-                  Uploading image…
+                  正在上传图片…
                 </span>
               ) : null}
               <Button
@@ -738,10 +736,10 @@ function CommentComposer({
                 disabled={
                   createCommentIsPending || imageUploading || !trimmedContent
                 }
-                aria-label="Send"
+                aria-label={"发送"}
               >
                 <ArrowUpIcon className="size-3.5" />
-                <span className="sr-only">Send</span>
+                <span className="sr-only">发送</span>
               </Button>
             </div>
           </div>
@@ -785,8 +783,8 @@ function InlineCommentEdit({
         })
         onStopEditing()
         toast({
-          title: "Comment updated",
-          description: "Your comment has been updated successfully.",
+          title: "已更新评论",
+          description: "已成功更新评论。",
         })
       } catch (error) {
         console.error("Error updating comment:", error)
@@ -834,7 +832,7 @@ function InlineCommentEdit({
                 onChange={field.onChange}
                 caseId={caseId}
                 workspaceId={workspaceId}
-                placeholder="Edit comment..."
+                placeholder={"编辑评论…"}
                 autoFocus
                 onBlur={field.onBlur}
                 onUploadingChange={setImageUploading}
@@ -848,7 +846,7 @@ function InlineCommentEdit({
         <div className="flex items-center justify-end gap-2">
           {imageUploading ? (
             <span className="mr-auto text-xs text-muted-foreground">
-              Uploading image…
+              正在上传图片…
             </span>
           ) : null}
           <Button
@@ -858,7 +856,7 @@ function InlineCommentEdit({
             className="h-7 px-2 text-xs"
             onClick={onStopEditing}
           >
-            Cancel
+            取消
           </Button>
           <Button
             type="submit"
@@ -868,7 +866,7 @@ function InlineCommentEdit({
               updateCommentIsPending || imageUploading || !content.trim()
             }
           >
-            Save
+            保存
           </Button>
         </div>
       </form>
@@ -900,8 +898,8 @@ function CommentActionsWithEditing({
     try {
       await deleteComment()
       toast({
-        title: "Comment deleted",
-        description: "Your comment has been deleted successfully.",
+        title: "已删除评论",
+        description: "已成功删除评论。",
       })
     } catch (error) {
       console.error("Error deleting comment:", error)
@@ -918,7 +916,7 @@ function CommentActionsWithEditing({
             className="size-6 rounded-md text-muted-foreground hover:text-foreground"
           >
             <MoreHorizontal className="size-4" />
-            <span className="sr-only">More options</span>
+            <span className="sr-only">更多选项</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -928,7 +926,7 @@ function CommentActionsWithEditing({
               onClick={onEdit}
             >
               <PencilIcon className="size-3" />
-              Edit
+              编辑
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem
@@ -936,7 +934,7 @@ function CommentActionsWithEditing({
             onClick={() => setShowDeleteConfirm(true)}
           >
             <Trash2Icon className="size-3" />
-            Delete
+            删除
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -944,13 +942,11 @@ function CommentActionsWithEditing({
       <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this comment?</AlertDialogTitle>
-            <AlertDialogDescription>
-              You cannot undo this action.
-            </AlertDialogDescription>
+            <AlertDialogTitle>删除此评论？</AlertDialogTitle>
+            <AlertDialogDescription>此操作无法撤销。</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
@@ -958,7 +954,7 @@ function CommentActionsWithEditing({
                 setShowDeleteConfirm(false)
               }}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

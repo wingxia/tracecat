@@ -138,7 +138,7 @@ describe("InboxDetail", () => {
     const pane = screen.getByTestId("chat-session-pane")
     expect(pane).toHaveAttribute("data-input-disabled", "true")
     expect(pane.getAttribute("data-placeholder")).toMatch(
-      /default model is not enabled for this workspace/
+      /此工作空间未启用组织默认模型/
     )
   })
 

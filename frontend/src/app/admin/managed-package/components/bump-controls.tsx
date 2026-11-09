@@ -47,8 +47,8 @@ export function BumpControls({
     <div className="space-y-2 rounded-md border p-3">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm">
-          {selectedTargets.length} target
-          {selectedTargets.length === 1 ? "" : "s"} selected
+          {selectedTargets.length} 个目标
+          {selectedTargets.length === 1 ? "" : ""} 已选择
         </span>
         <div className="ml-auto flex items-center gap-2">
           <Select
@@ -57,14 +57,14 @@ export function BumpControls({
             disabled={tags.length === 0}
           >
             <SelectTrigger className="h-8 w-40 text-xs">
-              <SelectValue placeholder="Select a tag" />
+              <SelectValue placeholder={"选择标签"} />
             </SelectTrigger>
             <SelectContent>
               {tags.map((option, index) => (
                 <SelectItem key={option.name} value={option.name}>
                   <span className="font-mono">{option.name}</span>
                   {index === 0 && (
-                    <span className="ml-2 text-muted-foreground">latest</span>
+                    <span className="ml-2 text-muted-foreground">最新</span>
                   )}
                 </SelectItem>
               ))}
@@ -75,18 +75,18 @@ export function BumpControls({
             onClick={() => chosenTag && onPreview(chosenTag)}
             disabled={!chosenTag || isPending}
           >
-            {isPending ? "Starting..." : "Preview"}
+            {isPending ? "启动中…" : "预览"}
           </Button>
           <Button size="sm" variant="ghost" onClick={onClearSelection}>
-            Clear
+            清除
           </Button>
         </div>
       </div>
       {rollbackCount > 0 && (
         <p className="text-xs text-amber-600 dark:text-amber-400">
-          {chosenTag} is older than what {rollbackCount} of the selected target
-          {rollbackCount === 1 ? " has" : "s have"} applied. Applying it rolls
-          {rollbackCount === 1 ? " that target" : " those targets"} back.
+          {chosenTag} 版本早于 {rollbackCount} 个已选目标中
+          {rollbackCount === 1 ? " 已" : " 已"} 应用的版本。应用后将回滚
+          {rollbackCount === 1 ? " 该目标" : " 这些目标"} 。
         </p>
       )}
     </div>

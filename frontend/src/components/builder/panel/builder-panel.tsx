@@ -26,7 +26,7 @@ export const BuilderPanel = React.forwardRef<ActionPanelRef, object>(() => {
 
   useEffect(() => {
     if (workflow) {
-      document.title = `Workflow | ${workflow.title}`
+      document.title = `工作流 | ${workflow.title}`
     }
   }, [workflow])
 
@@ -66,14 +66,13 @@ export const BuilderPanel = React.forwardRef<ActionPanelRef, object>(() => {
           </div>
           <div className="flex flex-col space-y-3">
             <h4 className="text-base font-semibold tracking-tight">
-              Action not found
+              未找到动作
             </h4>
             <code className="rounded bg-muted px-0 py-1 font-mono text-sm tracking-tighter text-muted-foreground">
               {selectedNodeId}
             </code>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              This can happen if you&apos;ve deleted the action or renamed it
-              without saving the workflow.
+              可能是动作已被删除，或重命名后未保存工作流。
             </p>
           </div>
         </div>
@@ -110,6 +109,6 @@ function NodePanel({ node, workflow }: { node: Node; workflow: WorkflowRead }) {
       // XXX: Unreachable, as we never select the selector node
       return <></>
     default:
-      return <AlertNotification level="error" message="Unknown node type" />
+      return <AlertNotification level="error" message={"未知节点类型"} />
   }
 }

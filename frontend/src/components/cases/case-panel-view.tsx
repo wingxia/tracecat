@@ -295,7 +295,7 @@ export function CasePanelView({
     return (
       <AlertNotification
         level="error"
-        message={caseDataError?.message ?? "Error occurred loading case data"}
+        message={caseDataError?.message ?? "加载事件数据时出错"}
       />
     )
   }
@@ -421,7 +421,7 @@ export function CasePanelView({
     <>
       <SidebarGroup>
         <SidebarGroupLabel className={CASE_PANEL_GROUP_LABEL_CLASS}>
-          Properties
+          属性
         </SidebarGroupLabel>
         <SidebarGroupContent className="px-2">
           {/* gap-1, not gap-2: grouping is read from the ratio of
@@ -434,7 +434,7 @@ export function CasePanelView({
               className={panelFieldRowClassName}
               onClick={handlePanelFieldRowClick}
             >
-              <span className={panelLabelClassName}>Status</span>
+              <span className={panelLabelClassName}>状态</span>
               <div className={panelControlClassName}>
                 <StatusSelect
                   status={caseData.status}
@@ -449,7 +449,7 @@ export function CasePanelView({
               className={panelFieldRowClassName}
               onClick={handlePanelFieldRowClick}
             >
-              <span className={panelLabelClassName}>Priority</span>
+              <span className={panelLabelClassName}>优先级</span>
               <div className={panelControlClassName}>
                 <PrioritySelect
                   priority={caseData.priority || "unknown"}
@@ -464,7 +464,7 @@ export function CasePanelView({
               className={panelFieldRowClassName}
               onClick={handlePanelFieldRowClick}
             >
-              <span className={panelLabelClassName}>Severity</span>
+              <span className={panelLabelClassName}>严重程度</span>
               <div className={panelControlClassName}>
                 <SeveritySelect
                   severity={caseData.severity || "unknown"}
@@ -479,7 +479,7 @@ export function CasePanelView({
               className={panelFieldRowClassName}
               onClick={handlePanelFieldRowClick}
             >
-              <span className={panelLabelClassName}>Assignee</span>
+              <span className={panelLabelClassName}>负责人</span>
               <div className={panelControlClassName}>
                 <AssigneeSelect
                   assignee={caseData.assignee}
@@ -693,7 +693,7 @@ export function CasePanelView({
                         ))
                       ) : (
                         <span className="text-xs text-muted-foreground">
-                          No tags
+                          暂无标签
                         </span>
                       )}
                     </div>
@@ -753,7 +753,7 @@ export function CasePanelView({
                   of the scroll viewport anymore, so anchored scrolls need no
                   offset. */}
                 <section
-                  aria-label="Comments"
+                  aria-label={"评论"}
                   className={embedded ? "mt-10" : "mt-16"}
                 >
                   <CommentSection caseId={caseId} workspaceId={workspaceId} />
@@ -792,11 +792,11 @@ export function CasePanelView({
       <LockedFeatureModal
         open={lockedFeatureDialogOpen}
         onOpenChange={setLockedFeatureDialogOpen}
-        title="Enterprise only"
+        title={"仅限企业版"}
         description={
           lockedPanel === "sub-cases"
-            ? "Sub-cases are only available on enterprise plans."
-            : "Case tasks are only available on enterprise plans."
+            ? "子事件功能仅适用于企业版套餐。"
+            : "事件任务仅适用于企业版套餐。"
         }
         bullets={[]}
       />

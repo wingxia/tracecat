@@ -203,17 +203,16 @@ export function useRestoreCaseVersion({
         exact: false,
       })
 
-      const fieldLabel = response.field === "summary" ? "Title" : "Description"
+      const fieldLabel = response.field === "summary" ? "标题" : "描述"
       toast({
-        title: `${fieldLabel} restored`,
-        description: `The selected ${fieldLabel.toLowerCase()} version is now current.`,
+        title: `已恢复 ${fieldLabel}`,
+        description: `所选 ${fieldLabel.toLowerCase()} 版本现为当前版本。`,
       })
     },
     onError: (error) => {
       toast({
-        title: "Restore failed",
-        description:
-          getApiErrorDetail(error) ?? "Failed to restore the case version.",
+        title: "恢复失败",
+        description: getApiErrorDetail(error) ?? "恢复事件版本失败。",
         variant: "destructive",
       })
     },

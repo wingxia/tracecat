@@ -37,7 +37,7 @@ export function TableInsertButton() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm" className="h-7 bg-background">
             <Plus className="mr-1 h-3.5 w-3.5" />
-            Insert
+            插入
             <ChevronDownIcon className="ml-1 h-3.5 w-3.5" />
           </Button>
         </DropdownMenuTrigger>
@@ -51,9 +51,9 @@ export function TableInsertButton() {
           <DropdownMenuItem onSelect={() => setActiveDialog("row")}>
             <BetweenHorizonalStartIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Insert row</span>
+              <span>插入行</span>
               <span className="text-xs text-muted-foreground">
-                Insert a new row into the table
+                向数据表插入新行
               </span>
             </div>
           </DropdownMenuItem>
@@ -63,18 +63,18 @@ export function TableInsertButton() {
           >
             <BetweenVerticalStartIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Create column</span>
+              <span>创建列</span>
               <span className="text-xs text-muted-foreground">
-                Create a new column in the table
+                在数据表中创建新列
               </span>
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setActiveDialog("csv")}>
             <FileUpIcon className="size-4 text-foreground/80" />
             <div className="flex flex-col text-xs">
-              <span>Insert rows from CSV</span>
+              <span>从 CSV 插入行</span>
               <span className="text-xs text-muted-foreground">
-                Insert rows from a CSV file
+                从 CSV 文件插入行
               </span>
             </div>
           </DropdownMenuItem>

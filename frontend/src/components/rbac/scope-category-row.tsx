@@ -219,12 +219,12 @@ export const ScopeCategoryRow = memo(function ScopeCategoryRow({
             onValueChange={handleActionNamespaceChange}
           >
             <SelectTrigger className="w-[140px] h-8 text-xs">
-              <SelectValue placeholder="Namespace" />
+              <SelectValue placeholder={"命名空间"} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value={toControlValue("none")}>None</SelectItem>
+              <SelectItem value={toControlValue("none")}>无</SelectItem>
               <SelectItem value={toControlValue("all")}>
-                All namespaces
+                所有命名空间
               </SelectItem>
               {actionNamespaces.map((namespace) => (
                 <SelectItem key={namespace} value={toNamespaceValue(namespace)}>
@@ -232,7 +232,7 @@ export const ScopeCategoryRow = memo(function ScopeCategoryRow({
                 </SelectItem>
               ))}
               <SelectItem value={toControlValue("custom")} disabled>
-                Custom
+                自定义
               </SelectItem>
             </SelectContent>
           </Select>
@@ -242,19 +242,19 @@ export const ScopeCategoryRow = memo(function ScopeCategoryRow({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">None</SelectItem>
-              <SelectItem value="read">Read</SelectItem>
+              <SelectItem value="none">无</SelectItem>
+              <SelectItem value="read">读取</SelectItem>
               {(categoryKey !== "organization" || currentLevel === "write") && (
-                <SelectItem value="write">Write</SelectItem>
+                <SelectItem value="write">写入</SelectItem>
               )}
               {(categoryKey === "workflows" ||
                 categoryKey === "agents" ||
                 categoryKey === "forms") && (
-                <SelectItem value="execute">Execute</SelectItem>
+                <SelectItem value="execute">执行</SelectItem>
               )}
-              <SelectItem value="admin">Admin</SelectItem>
+              <SelectItem value="admin">管理员</SelectItem>
               <SelectItem value="mixed" disabled>
-                Custom
+                自定义
               </SelectItem>
             </SelectContent>
           </Select>

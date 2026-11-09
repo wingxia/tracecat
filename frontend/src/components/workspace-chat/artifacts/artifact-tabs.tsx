@@ -94,12 +94,12 @@ export function ArtifactTabs({
               variant="ghost"
               className="size-7 p-0"
               onClick={onCollapse}
-              aria-label="Hide artifacts"
+              aria-label={"隐藏产物"}
             >
               <PanelLeftIcon className="size-3.5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">Hide artifacts</TooltipContent>
+          <TooltipContent side="bottom">隐藏产物</TooltipContent>
         </Tooltip>
       ) : null}
       <div
@@ -158,7 +158,7 @@ function ArtifactTab({
       <button
         type="button"
         className="mr-1 inline-flex rounded-sm p-0.5 text-muted-foreground opacity-0 hover:bg-background group-hover:opacity-100"
-        aria-label={`Close ${artifact.title}`}
+        aria-label={`关闭 ${artifact.title}`}
         onClick={() => closeArtifact(artifact.type, artifact.id)}
       >
         <X className="size-3" />
@@ -198,7 +198,7 @@ function ArtifactOpenButton({
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <span aria-label="No full view" className="inline-flex" tabIndex={0}>
+          <span aria-label={"无完整视图"} className="inline-flex" tabIndex={0}>
             <Button
               aria-hidden="true"
               size="sm"
@@ -210,7 +210,7 @@ function ArtifactOpenButton({
             </Button>
           </span>
         </TooltipTrigger>
-        <TooltipContent side="bottom">No full view</TooltipContent>
+        <TooltipContent side="bottom">无完整视图</TooltipContent>
       </Tooltip>
     )
   }
@@ -219,12 +219,12 @@ function ArtifactOpenButton({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button size="sm" variant="ghost" className="size-7 p-0" asChild>
-          <Link href={href} aria-label={`Open ${artifact.title}`}>
+          <Link href={href} aria-label={`打开 ${artifact.title}`}>
             <ExternalLink className="size-3.5" />
           </Link>
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="bottom">Open full view</TooltipContent>
+      <TooltipContent side="bottom">打开完整视图</TooltipContent>
     </Tooltip>
   )
 }

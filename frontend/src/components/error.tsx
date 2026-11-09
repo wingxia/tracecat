@@ -62,7 +62,7 @@ function GoHome() {
   const router = useRouter()
   return (
     <Button variant="outline" onClick={() => router.replace("/")}>
-      Return to the home page
+      返回首页
     </Button>
   )
 }
@@ -70,7 +70,7 @@ function GoHome() {
 function unexpectedError(error: ErrorProps | AxiosError): CustomError {
   console.log("HANDLING ERROR", error)
   return {
-    headline: "Oh no! An error occurred :(",
+    headline: "发生错误，请稍后重试",
     level: "error",
     message: error.message,
     action: <GoHome />,
@@ -118,11 +118,11 @@ function PermissionDeniedPage({ body }: { body: unknown }) {
         <Image src={TracecatIcon} alt="Tracecat" className="mb-6 size-12" />
 
         <h1 className="mb-2 text-xl font-semibold tracking-tight">
-          Access denied
+          访问被拒绝
         </h1>
 
         <p className="mb-6 text-sm text-muted-foreground">
-          You don&apos;t have permission to access this resource.
+          你没有访问此资源的权限。
           {missingScopes.length > 0 &&
             " Contact your administrator to request access."}
         </p>
@@ -130,7 +130,7 @@ function PermissionDeniedPage({ body }: { body: unknown }) {
         {missingScopes.length > 0 && (
           <Collapsible className="mb-6 w-full">
             <CollapsibleTrigger className="group flex w-full items-center justify-center gap-1 text-xs text-muted-foreground hover:text-foreground">
-              <span>Missing permissions</span>
+              <span>缺少权限</span>
               <ChevronDownIcon className="size-3 transition-transform group-data-[state=open]:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent>
@@ -149,7 +149,7 @@ function PermissionDeniedPage({ body }: { body: unknown }) {
         )}
 
         <Button variant="outline" size="sm" onClick={() => router.replace("/")}>
-          Go to home
+          前往首页
         </Button>
       </div>
     </main>
@@ -161,14 +161,14 @@ function apiErrorHandler(error: ApiError): CustomError {
   switch (error.status) {
     case 401:
       return {
-        headline: "Your session has expired",
+        headline: "会话已过期",
         level,
-        message: "Please log in again.",
+        message: "请重新登录。",
         action: <GoHome />,
       }
     case 403:
       return {
-        headline: "Access denied",
+        headline: "访问被拒绝",
         level,
         message: "",
         action: null,
@@ -176,29 +176,28 @@ function apiErrorHandler(error: ApiError): CustomError {
       }
     case 404:
       return {
-        headline: "Resource not found",
+        headline: "未找到资源",
         level,
-        message: "The resource you are looking for does not exist.",
+        message: "你要查找的资源不存在。",
         action: <GoHome />,
       }
     case 428:
       return {
-        headline: "Organization required",
+        headline: "需要组织",
         level: "info",
-        message: "This flow requires an organization-specific link.",
+        message: "此流程需要组织专属链接。",
         action: <GoHome />,
       }
     case 503:
       return {
-        headline: "Service unavailable",
+        headline: "服务不可用",
         level,
-        message:
-          "The service is temporarily unavailable. Please try again later.",
+        message: "服务暂不可用，请稍后重试。",
         action: <GoHome />,
       }
     default:
       return {
-        headline: "An unexpected error occurred.",
+        headline: "发生意外错误。",
         level,
         message: (
           <div className="space-y-4">

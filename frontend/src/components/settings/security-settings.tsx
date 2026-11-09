@@ -18,7 +18,7 @@ import {
 } from "@/lib/webauthn"
 
 function formatDate(value: string | null) {
-  return value ? new Date(value).toLocaleDateString() : "Never"
+  return value ? new Date(value).toLocaleDateString("zh-CN") : "从未"
 }
 
 export function SecuritySettings() {
@@ -42,19 +42,19 @@ export function SecuritySettings() {
   const addKey = async () => {
     setRegistering(true)
     try {
-      const result = await registerSecurityKey(name.trim() || "Security key")
+      const result = await registerSecurityKey(name.trim() || "安全密钥")
       setName("")
       if (result.recovery_codes?.length) {
         setRecoveryCodes(result.recovery_codes)
       }
       await refresh()
-      toast({ title: "Security key added" })
+      toast({ title: "已添加安全密钥" })
     } catch (error) {
       toast({
-        title: "Failed to add security key",
+        title: "添加安全密钥失败",
         description:
           getApiErrorDetail(error) ??
-          (error instanceof Error ? error.message : "Please try again."),
+          (error instanceof Error ? error.message : "请重试。"),
         variant: "destructive",
       })
     } finally {
@@ -70,11 +70,10 @@ export function SecuritySettings() {
   return (
     <div className="space-y-8">
       <div className="space-y-1">
-        <h3 className="text-lg font-semibold">Security keys and passkeys</h3>
+        <h3 className="text-lg font-semibold">安全密钥与通行密钥</h3>
         <p className="text-sm text-muted-foreground">
-          Sign in with a hardware security key (such as a YubiKey) or a passkey
-          from your browser or password manager. Once added, you&apos;ll need it
-          every time you sign in.
+          使用硬件安全密钥（如
+          YubiKey）或浏览器、密码管理器中的通行密钥登录。添加后，每次登录都需要验证。
           {status?.required_by_policy &&
             " Your organization requires at least one."}
         </p>
@@ -101,12 +100,12 @@ export function SecuritySettings() {
                     </span>
                     <Badge variant="secondary">
                       {credential.backup_eligible
-                        ? "Synced passkey"
-                        : "Security key"}
+                        ? "已同步的通行密钥"
+                        : "安全密钥"}
                     </Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Added {formatDate(credential.created_at)} · Last used{" "}
+                    已添加 {formatDate(credential.created_at)} · 上次使用{" "}
                     {formatDate(credential.last_used_at)}
                   </p>
                 </div>
@@ -114,7 +113,7 @@ export function SecuritySettings() {
               <Button
                 variant="ghost"
                 size="icon"
-                aria-label={`Remove ${credential.name}`}
+                aria-label={`移除 ${credential.name}`}
                 disabled={deletePending}
                 onClick={() =>
                   void deleteCredential(credential.id).catch(() => undefined)
@@ -125,16 +124,14 @@ export function SecuritySettings() {
             </div>
           ))
         ) : (
-          <p className="p-3 text-sm text-muted-foreground">
-            No security keys yet.
-          </p>
+          <p className="p-3 text-sm text-muted-foreground">暂无安全密钥。</p>
         )}
       </div>
 
       <div className="flex gap-2">
         <Input
-          aria-label="New security key name"
-          placeholder="Name, e.g. YubiKey 5C"
+          aria-label={"新安全密钥名称"}
+          placeholder={"名称，例如 YubiKey 5C"}
           value={name}
           maxLength={100}
           onChange={(e) => setName(e.target.value)}
@@ -143,17 +140,17 @@ export function SecuritySettings() {
           onClick={addKey}
           disabled={registering || status?.webauthn_available === false}
         >
-          {registering ? "Waiting for key..." : "Add security key"}
+          {registering ? "正在等待密钥…" : "添加安全密钥"}
         </Button>
       </div>
 
       {hasKeys && (
         <div className="space-y-3">
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold">Recovery codes</h3>
+            <h3 className="text-lg font-semibold">恢复码</h3>
             <p className="text-sm text-muted-foreground">
-              {status?.recovery_codes_remaining ?? 0} unused. Generating new
-              codes invalidates the old ones.
+              {status?.recovery_codes_remaining ?? 0}{" "}
+              个未使用。生成新恢复码后，旧恢复码会失效。
             </p>
           </div>
           {recoveryCodes && <RecoveryCodes codes={recoveryCodes} />}
@@ -168,7 +165,7 @@ export function SecuritySettings() {
               }
             }}
           >
-            Generate new recovery codes
+            生成新恢复码
           </Button>
         </div>
       )}

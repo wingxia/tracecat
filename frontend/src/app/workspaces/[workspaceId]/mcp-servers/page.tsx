@@ -49,7 +49,7 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 
 const CREATE_MCP_SERVER_PARAM = "createMcpServer"
 const MCP_VERIFY_ERROR_PARAM = "mcp_verify_error"
-const ALL_CATEGORY = "All"
+const ALL_CATEGORY = "全部"
 const ALL_STATUSES = "all"
 const CONNECTED_STATUS = "connected"
 const NOT_CONNECTED_STATUS = "not_connected"
@@ -61,15 +61,15 @@ const MCP_STATUS_FILTER_OPTIONS: Array<{
   value: McpStatusFilter
   label: string
 }> = [
-  { value: ALL_STATUSES, label: "All statuses" },
-  { value: CONNECTED_STATUS, label: "Connected" },
-  { value: NOT_CONNECTED_STATUS, label: "Not connected" },
+  { value: ALL_STATUSES, label: "所有状态" },
+  { value: CONNECTED_STATUS, label: "已连接" },
+  { value: NOT_CONNECTED_STATUS, label: "未连接" },
 ]
-const CUSTOM_CATEGORY = "Custom"
+const CUSTOM_CATEGORY = "自定义"
 const MCP_CATEGORIES = [
   "SIEM / Datalake",
   "Endpoint",
-  "Threat Intelligence",
+  "威胁情报",
   "Identity",
   "Cloud",
   "Network",
@@ -80,7 +80,7 @@ const MCP_CATEGORIES = [
   "AppSec",
   "Compliance",
   "Observability",
-  "Source Control",
+  "源代码管理",
   "IaC",
   "Productivity",
   CUSTOM_CATEGORY,
@@ -165,8 +165,8 @@ function workspaceIntegrationToCatalogEntry(
     description:
       integration.description ||
       (integration.server_type === "stdio"
-        ? "Custom stdio MCP server"
-        : integration.server_uri || "Custom MCP server"),
+        ? "自定义 stdio MCP 服务器"
+        : integration.server_uri || "自定义 MCP 服务器"),
     category: CUSTOM_CATEGORY,
     status: "available",
     icon_url: null,
@@ -383,18 +383,16 @@ export default function McpServersPage() {
         )
       }
       toast({
-        title: verifying
-          ? "MCP server verification started"
-          : "MCP server connected",
+        title: verifying ? "已开始验证 MCP 服务器" : "MCP 服务器已连接",
         description: verifying
-          ? `Added ${result.mcp_integration.name}; tools will appear after verification succeeds.`
-          : `Added ${result.mcp_integration.name}`,
+          ? `已添加 ${result.mcp_integration.name}；验证成功后将显示工具。`
+          : `已添加 ${result.mcp_integration.name}`,
       })
     },
     onError: (error) => {
       const apiError = error as TracecatApiError
       toast({
-        title: "Failed to connect MCP server",
+        title: "连接 MCP 服务器失败",
         description: getMcpOAuthConnectErrorDetail(apiError),
         variant: "destructive",
       })
@@ -418,14 +416,14 @@ export default function McpServersPage() {
       })
       queryClient.invalidateQueries({ queryKey: workspaceMcpQueryKey })
       toast({
-        title: "MCP server disconnected",
-        description: `Disconnected ${entry.name}`,
+        title: "MCP 服务器已断开",
+        description: `已断开 ${entry.name}`,
       })
     },
     onError: (error) => {
       const apiError = error as TracecatApiError
       toast({
-        title: "Failed to disconnect MCP server",
+        title: "断开 MCP 服务器失败",
         description: String(apiError.body?.detail ?? apiError.message),
         variant: "destructive",
       })
@@ -459,7 +457,7 @@ export default function McpServersPage() {
     // Not `destructive`: a verification failure is a remote/config issue
     // (unreachable server, bad credentials), not a platform fault.
     toast({
-      title: "Connection failed",
+      title: "连接失败",
       description: verifyErrorSignal,
     })
     const params = new URLSearchParams(searchParams?.toString() ?? "")
@@ -537,10 +535,8 @@ export default function McpServersPage() {
     return (
       <div className="flex h-full items-center justify-center p-6">
         <Alert className="max-w-md">
-          <AlertTitle>Access denied</AlertTitle>
-          <AlertDescription>
-            You do not have permission to view MCP servers.
-          </AlertDescription>
+          <AlertTitle>访问被拒绝</AlertTitle>
+          <AlertDescription>你没有查看 MCP 服务器的权限。</AlertDescription>
         </Alert>
       </div>
     )
@@ -569,8 +565,8 @@ export default function McpServersPage() {
 
     if (!connectable) {
       toast({
-        title: `${entry.name} is coming soon`,
-        description: "This MCP server isn't connectable yet.",
+        title: `${entry.name} 即将推出`,
+        description: "此 MCP 服务器暂时无法连接。",
       })
       return
     }
@@ -640,7 +636,7 @@ export default function McpServersPage() {
       <CatalogHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search MCP servers..."
+        searchPlaceholder={"搜索 MCP 服务器…"}
         pillFilters={categories.map((category) => ({
           value: category,
           label: category,
@@ -653,19 +649,19 @@ export default function McpServersPage() {
             value: statusFilter,
             onValueChange: (value) => setStatusFilter(value as McpStatusFilter),
             options: MCP_STATUS_FILTER_OPTIONS,
-            placeholder: "Status",
+            placeholder: "状态",
             allValue: ALL_STATUSES,
             widthClassName: "w-[140px]",
           },
         ]}
         displayCount={totalCount}
-        countLabel={`server${totalCount === 1 ? "" : "s"}`}
+        countLabel={`个服务器`}
       />
 
       <div className="flex-1 overflow-y-auto px-6 py-4">
         {catalogError ? (
           <Alert variant="destructive" className="mb-4">
-            <AlertTitle>Failed to load MCP catalog</AlertTitle>
+            <AlertTitle>加载 MCP 目录失败</AlertTitle>
             <AlertDescription>
               {String(catalogError.body?.detail ?? catalogError.message)}
             </AlertDescription>
@@ -673,7 +669,7 @@ export default function McpServersPage() {
         ) : null}
         {workspaceMcpError ? (
           <Alert variant="destructive" className="mb-4">
-            <AlertTitle>Failed to load workspace MCP servers</AlertTitle>
+            <AlertTitle>加载工作空间 MCP 服务器失败</AlertTitle>
             <AlertDescription>
               {String(
                 workspaceMcpError.body?.detail ?? workspaceMcpError.message
@@ -690,9 +686,9 @@ export default function McpServersPage() {
           <div className="flex flex-col items-center gap-3 py-16 text-center">
             <Sparkles className="size-8 text-muted-foreground" />
             <div>
-              <h2 className="text-sm font-semibold">No MCP servers found</h2>
+              <h2 className="text-sm font-semibold">未找到 MCP 服务器</h2>
               <p className="mt-1 text-xs text-muted-foreground">
-                Try a different search, category, or status.
+                请尝试其他搜索词、分类或状态。
               </p>
             </div>
           </div>
@@ -827,11 +823,11 @@ function McpCatalogCard({
         : []
   const docsUrl = entry.docs_url
   const disconnectable = connected && hasMcpRow
-  let actionLabel = "Connect"
+  let actionLabel = "连接"
   if (disconnectable) {
-    actionLabel = "Disconnect"
+    actionLabel = "断开连接"
   } else if (configured) {
-    actionLabel = "Reconnect"
+    actionLabel = "重新连接"
   }
   const canManage = entry.mcp_integration_id ? canUpdate : false
   let canAct = false
@@ -848,7 +844,7 @@ function McpCatalogCard({
   } else if (isCatalogEntryConnectable(entry)) {
     canConfigure = canCreate
   }
-  const configureLabel = "Configure"
+  const configureLabel = "配置"
   const totalToolCount = entry.tools?.length ?? null
   const activeToolCount =
     entry.tools?.filter(
@@ -857,7 +853,7 @@ function McpCatalogCard({
   const verificationStatus = verification?.status
   const verificationError =
     verification?.status === "failed" ? verification.error : null
-  let statusLabel = "Not connected"
+  let statusLabel = "未连接"
   let statusTone: McpStatusTone = "neutral"
   if (isActionPending) {
     statusLabel = isDisconnecting ? "Disconnecting" : "Connecting"
@@ -866,11 +862,11 @@ function McpCatalogCard({
     statusLabel = "Verifying"
     statusTone = "info"
   } else if (verificationStatus === "failed") {
-    statusLabel = "Verification failed"
+    statusLabel = "验证失败"
     statusTone = "danger"
   } else if (entry.state === "reauth_required") {
     // OAuth token expired with no refresh token: only re-auth revives it.
-    statusLabel = "Reconnect required"
+    statusLabel = "需要重新连接"
     statusTone = "warning"
   } else if (connected) {
     if (activeToolCount !== null && totalToolCount !== null) {
@@ -878,21 +874,21 @@ function McpCatalogCard({
         activeToolCount === totalToolCount
           ? `${activeToolCount}`
           : `${activeToolCount}/${totalToolCount}`
-      statusLabel = `Connected · ${toolCountLabel} ${activeToolCount === 1 ? "tool" : "tools"}`
+      statusLabel = `已连接 · ${toolCountLabel} 个工具`
     } else {
-      statusLabel = "Connected"
+      statusLabel = "已连接"
     }
     statusTone = "success"
   } else if (configured) {
-    statusLabel = "Configured"
+    statusLabel = "已配置"
     statusTone = "info"
   } else if (comingSoon) {
-    statusLabel = "Coming soon"
+    statusLabel = "即将推出"
     statusTone = "neutral"
   }
   let buttonLabel = actionLabel
   if (comingSoon) {
-    buttonLabel = "Coming soon"
+    buttonLabel = "即将推出"
   }
   if (isActionPending) {
     buttonLabel = statusLabel
@@ -960,7 +956,7 @@ function McpCatalogCard({
             <Tooltip>
               <TooltipTrigger asChild>{statusBadge}</TooltipTrigger>
               <TooltipContent className="max-w-sm">
-                <p className="text-xs font-medium">Verification failed</p>
+                <p className="text-xs font-medium">验证失败</p>
                 <p className="mt-1 max-h-48 overflow-y-auto whitespace-pre-wrap break-words text-xs text-muted-foreground">
                   {verificationError}
                 </p>
@@ -982,7 +978,7 @@ function McpCatalogCard({
             onKeyDown={(event) => event.stopPropagation()}
             className="mt-0.5 inline-flex w-fit items-center gap-1 text-xs text-blue-600 hover:underline"
           >
-            View docs
+            查看文档
             <ExternalLink className="size-3" />
           </a>
         ) : null}

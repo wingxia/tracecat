@@ -88,8 +88,8 @@ export function CreateOrgSecretDialog({
   const onValidationFailed = () => {
     console.error("Form validation failed")
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while adding the new secret.",
+      title: "表单校验失败",
+      description: "添加新密钥时发生校验错误。",
     })
   }
   const inputKey = "keys"
@@ -104,7 +104,7 @@ export function CreateOrgSecretDialog({
       {children}
       <DialogContent size="md" className={className}>
         <DialogHeader>
-          <DialogTitle>Create secret</DialogTitle>
+          <DialogTitle>创建密钥</DialogTitle>
         </DialogHeader>
         <CreateSecretTooltip />
         <Form {...methods}>
@@ -119,11 +119,11 @@ export function CreateOrgSecretDialog({
                 name="name"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder="Name (snake case)"
+                        placeholder={"名称（蛇形命名）"}
                         {...register("name")}
                       />
                     </FormControl>
@@ -137,14 +137,14 @@ export function CreateOrgSecretDialog({
                 name="description"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormDescription className="text-sm">
-                      A description for this secret.
+                      此密钥的描述。
                     </FormDescription>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder="Description"
+                        placeholder={"描述"}
                         {...register("description")}
                       />
                     </FormControl>
@@ -158,14 +158,14 @@ export function CreateOrgSecretDialog({
                 name="environment"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Environment</FormLabel>
+                    <FormLabel className="text-sm">环境</FormLabel>
                     <FormDescription className="text-sm">
-                      The workflow&apos;s target execution environment.
+                      工作流的目标执行环境。
                     </FormDescription>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder='Default environment: "default"'
+                        placeholder={"默认环境：“default”"}
                         {...register("environment")}
                       />
                     </FormControl>
@@ -179,7 +179,7 @@ export function CreateOrgSecretDialog({
                 name={typedKey}
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Keys</FormLabel>
+                    <FormLabel className="text-sm">键</FormLabel>
                     <div className="flex flex-col space-y-2">
                       {fields.map((field, index) => {
                         return (
@@ -197,7 +197,7 @@ export function CreateOrgSecretDialog({
                                     required: true,
                                   }
                                 )}
-                                placeholder="Key"
+                                placeholder={"键"}
                               />
                             </FormControl>
                             <FormControl>
@@ -210,7 +210,7 @@ export function CreateOrgSecretDialog({
                                     required: true,
                                   }
                                 )}
-                                placeholder="Value"
+                                placeholder={"值"}
                                 type="password"
                               />
                             </FormControl>
@@ -233,7 +233,7 @@ export function CreateOrgSecretDialog({
                         className="space-x-2 text-xs"
                       >
                         <PlusCircle className="mr-2 size-4" />
-                        Add item
+                        添加条目
                       </Button>
                     </div>
                     <FormMessage />
@@ -245,7 +245,7 @@ export function CreateOrgSecretDialog({
               <DialogClose asChild>
                 <Button size="sm" type="submit">
                   <KeyRoundIcon className="mr-2 size-4" />
-                  Create secret
+                  创建密钥
                 </Button>
               </DialogClose>
             </DialogFooter>

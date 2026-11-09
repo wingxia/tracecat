@@ -153,10 +153,9 @@ describe("ChatToolsPicker", () => {
         />
       )
 
-      fireEvent.change(
-        screen.getByPlaceholderText("Search capabilities & tools..."),
-        { target: { value: "Aggregate results" } }
-      )
+      fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+        target: { value: "Aggregate results" },
+      })
 
       expect(screen.queryByText("Aggregate results")).not.toBeInTheDocument()
     }
@@ -183,10 +182,9 @@ describe("ChatToolsPicker", () => {
       />
     )
 
-    fireEvent.change(
-      screen.getByPlaceholderText("Search capabilities & tools..."),
-      { target: { value: "request" } }
-    )
+    fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+      target: { value: "request" },
+    })
 
     // Excluded action is not offered, but ordinary core.* actions still are.
     expect(screen.queryByText("Run Python script")).not.toBeInTheDocument()
@@ -216,12 +214,11 @@ describe("ChatToolsPicker", () => {
     )
 
     // Footer shows a limit message (no persistent counter).
-    expect(screen.getByText(/reached the 50-tool limit/i)).toBeInTheDocument()
+    expect(screen.getByText(/已达到 50 个工具的上限/i)).toBeInTheDocument()
 
-    fireEvent.change(
-      screen.getByPlaceholderText("Search capabilities & tools..."),
-      { target: { value: "brand new" } }
-    )
+    fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+      target: { value: "brand new" },
+    })
 
     // The unselected tool's toggle is disabled, so it can't be added past 50.
     const addSwitch = screen.getByRole("switch")
@@ -262,7 +259,7 @@ describe("ChatToolsPicker", () => {
 
     expect(onToolsChange).not.toHaveBeenCalled()
     expect(mockToast).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Tool limit reached" })
+      expect.objectContaining({ title: "已达到工具数量上限" })
     )
   })
 
@@ -289,10 +286,9 @@ describe("ChatToolsPicker", () => {
       />
     )
 
-    fireEvent.change(
-      screen.getByPlaceholderText("Search capabilities & tools..."),
-      { target: { value: "removable" } }
-    )
+    fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+      target: { value: "removable" },
+    })
     fireEvent.click(screen.getByText("Removable tool"))
 
     expect(onToolsChange).toHaveBeenCalledWith(
@@ -314,8 +310,8 @@ describe("ChatToolsPicker", () => {
       />
     )
 
-    expect(screen.getByRole("button", { name: "Tools" })).toBeInTheDocument()
-    expect(screen.queryByText("MCP integrations")).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "工具" })).toBeInTheDocument()
+    expect(screen.queryByText("MCP 集成")).not.toBeInTheDocument()
     expect(screen.queryByText("RunReveal")).not.toBeInTheDocument()
   })
 
@@ -333,9 +329,9 @@ describe("ChatToolsPicker", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Tools (1)" })
+      screen.getByRole("button", { name: "工具（1）" })
     ).toBeInTheDocument()
-    expect(screen.getByText("MCP integrations")).toBeInTheDocument()
+    expect(screen.getByText("MCP 集成")).toBeInTheDocument()
     expect(screen.getByText("RunReveal")).toBeInTheDocument()
   })
 
@@ -355,12 +351,10 @@ describe("ChatToolsPicker", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Tools (1)" })
+      screen.getByRole("button", { name: "工具（1）" })
     ).toBeInTheDocument()
     expect(screen.getByText("missing-mcp")).toBeInTheDocument()
-    expect(
-      screen.getByText("This MCP integration is no longer available.")
-    ).toBeInTheDocument()
+    expect(screen.getByText("此 MCP 集成已不可用。")).toBeInTheDocument()
 
     fireEvent.click(screen.getByText("missing-mcp"))
 
@@ -382,10 +376,10 @@ describe("ChatToolsPicker", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Tools (1)" })
+      screen.getByRole("button", { name: "工具（1）" })
     ).toBeInTheDocument()
     expect(screen.getByText("tools.deleted.action")).toBeInTheDocument()
-    expect(screen.getByText("No longer available")).toBeInTheDocument()
+    expect(screen.getByText("不再可用")).toBeInTheDocument()
 
     fireEvent.click(screen.getByText("tools.deleted.action"))
 
@@ -412,15 +406,12 @@ describe("ChatToolsPicker", () => {
       />
     )
 
-    fireEvent.change(
-      screen.getByPlaceholderText("Search capabilities & tools..."),
-      {
-        target: { value: "search rows" },
-      }
-    )
+    fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+      target: { value: "search rows" },
+    })
 
     expect(screen.getByText("Search rows")).toBeInTheDocument()
-    expect(screen.queryByText("Included by default")).not.toBeInTheDocument()
+    expect(screen.queryByText("默认包含")).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByText("Search rows"))
 
@@ -435,7 +426,7 @@ describe("ChatToolsPicker", () => {
         registryActions={[
           registryAction("core.cases.list_cases", {
             default_title: "List cases",
-            display_group: "Cases",
+            display_group: "事件",
           }),
         ]}
         selectedTools={["core.cases.list_cases"]}
@@ -448,18 +439,15 @@ describe("ChatToolsPicker", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Tools (1)" })
+      screen.getByRole("button", { name: "工具（1）" })
     ).toBeInTheDocument()
 
-    fireEvent.change(
-      screen.getByPlaceholderText("Search capabilities & tools..."),
-      {
-        target: { value: "list cases" },
-      }
-    )
+    fireEvent.change(screen.getByPlaceholderText("搜索能力和工具…"), {
+      target: { value: "list cases" },
+    })
 
     expect(screen.getByText("List cases")).toBeInTheDocument()
-    expect(screen.getByText("Included by default")).toBeInTheDocument()
+    expect(screen.getByText("默认包含")).toBeInTheDocument()
 
     fireEvent.click(screen.getByText("List cases"))
 
@@ -479,8 +467,8 @@ describe("ChatToolsPicker", () => {
       />
     )
 
-    expect(screen.getByText("Cases")).toBeInTheDocument()
-    expect(screen.getByText("Agent presets")).toBeInTheDocument()
+    expect(screen.getByText("事件")).toBeInTheDocument()
+    expect(screen.getByText("智能体预设")).toBeInTheDocument()
   })
 
   it.each([
@@ -508,7 +496,7 @@ describe("ChatToolsPicker", () => {
         />
       )
 
-      expect(Boolean(screen.queryByText("Forms"))).toBe(alwaysOn)
+      expect(Boolean(screen.queryByText("表单"))).toBe(alwaysOn)
       // A tool that is already on is not offered as an extra, and without
       // Forms the backend rejects a turn that names one.
       expect(Boolean(screen.queryByText("Forms actions"))).toBe(addable)

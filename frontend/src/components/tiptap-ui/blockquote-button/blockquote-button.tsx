@@ -99,7 +99,7 @@ export const BlockquoteButton = React.forwardRef<
         data-disabled={!canToggle}
         aria-label={label}
         aria-pressed={isActive}
-        tooltip="Blockquote"
+        tooltip={"引用"}
         onClick={handleClick}
         {...buttonProps}
         ref={ref}

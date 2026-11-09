@@ -42,47 +42,47 @@ export function FolderDeleteAlertDialog({
         }
         onOpenChange(isOpen)
       }}
-      title="Delete folder and contents"
+      title={"删除文件夹及内容"}
       description={
         <>
           <p>
-            Permanently delete{" "}
+            永久删除{" "}
             <span className="font-medium text-foreground">
               {selectedFolder?.name}
             </span>
-            , its subfolders, and{" "}
+            、其子文件夹和{" "}
             <span className="font-medium text-foreground">{workflowCount}</span>{" "}
-            inside it? Their schedules are deleted too. This cannot be undone.
+            吗？其中工作流的定时计划也会被删除，此操作无法撤销。
           </p>
-          <p>To keep the workflows, move them out of the folder first.</p>
+          <p>如需保留工作流，请先将其移出文件夹。</p>
         </>
       }
-      identifier={{ label: "Folder ID", value: folderId }}
+      identifier={{ label: "文件夹 ID", value: folderId }}
       confirmPhrase={getFolderDeleteConfirmPhrase(folderId)}
       confirmPrompt={
         <>
-          Type{" "}
+          输入{" "}
           <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs font-medium">
             delete folder
           </code>{" "}
-          followed by the folder ID to confirm
+          并在后面输入文件夹 ID 以确认
         </>
       }
-      confirmLabel="Continue"
+      confirmLabel={"继续"}
       finalStep={{
-        title: "Are you sure?",
+        title: "确定吗？",
         description: (
           <>
-            You will be deleting{" "}
+            即将删除{" "}
             <span className="font-medium text-foreground">{workflowCount}</span>{" "}
-            and every subfolder in{" "}
+            及其中的所有子文件夹，位置为{" "}
             <span className="font-medium text-foreground">
               {selectedFolder?.name}
             </span>
-            . This cannot be undone.
+            。此操作无法撤销。
           </>
         ),
-        confirmLabel: numWorkflows > 0 ? `Delete ${workflowCount}` : "Delete",
+        confirmLabel: numWorkflows > 0 ? `删除 ${workflowCount}` : "删除",
       }}
       isPending={deleteFolderIsPending}
       onConfirm={async () => {

@@ -91,7 +91,7 @@ export function SkillToolsPanel({
     () =>
       canReadIntegrations === false
         ? {
-            title: "MCP tools",
+            title: "MCP 工具",
             keys: toolsState.tools.filter((tool) => tool.startsWith("mcp.")),
           }
         : undefined,
@@ -126,7 +126,7 @@ export function SkillToolsPanel({
       {!toolsState.valid && (
         <div className="space-y-2 pt-4">
           {/* The list has its own "Tools N" header; without it, show no count. */}
-          {!editable && <h3 className="text-xs font-medium">Tools</h3>}
+          {!editable && <h3 className="text-xs font-medium">工具</h3>}
           <p className="text-xs text-destructive">{toolsState.message}</p>
         </div>
       )}
@@ -155,7 +155,7 @@ export function SkillToolsPanel({
               TOOL_LIST_INSET
             )}
           >
-            Existing tool IDs are preserved.
+            现有工具 ID 保持不变。
           </h4>
           {toolsState.tools.map((tool) => (
             <ToolSelectionRow

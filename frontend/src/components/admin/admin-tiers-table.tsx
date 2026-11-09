@@ -46,15 +46,14 @@ export function AdminTiersTable() {
       try {
         await deleteTier(selectedTier.id)
         toast({
-          title: "Tier deleted",
-          description: `${selectedTier.display_name} has been deleted.`,
+          title: "已删除套餐",
+          description: `已删除 ${selectedTier.display_name}。`,
         })
       } catch (error) {
         console.error("Failed to delete tier", error)
         toast({
-          title: "Failed to delete tier",
-          description:
-            "The tier may have organizations assigned to it. Remove all assignments first.",
+          title: "删除套餐失败",
+          description: "此套餐可能仍分配给某些组织，请先移除所有分配关系。",
           variant: "destructive",
         })
       } finally {
@@ -81,7 +80,7 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Name"
+                  title={"名称"}
                 />
               ),
               cell: ({ row }) => (
@@ -102,13 +101,13 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Default"
+                  title={"默认"}
                 />
               ),
               cell: ({ row }) =>
                 row.getValue<TierRead["is_default"]>("is_default") ? (
                   <div className="flex items-center text-xs font-medium">
-                    <CheckIcon aria-label="Default tier" className="size-4" />
+                    <CheckIcon aria-label={"默认套餐"} className="size-4" />
                   </div>
                 ) : (
                   <div className="text-xs text-muted-foreground">-</div>
@@ -122,7 +121,7 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Active"
+                  title={"已启用"}
                 />
               ),
               cell: ({ row }) => {
@@ -131,10 +130,10 @@ export function AdminTiersTable() {
                 return (
                   <div className="flex items-center text-xs">
                     {isActive ? (
-                      <CheckIcon aria-label="Active tier" className="size-4" />
+                      <CheckIcon aria-label={"启用的套餐"} className="size-4" />
                     ) : (
                       <Cross2Icon
-                        aria-label="Inactive tier"
+                        aria-label={"停用的套餐"}
                         className="size-4 text-muted-foreground"
                       />
                     )}
@@ -154,7 +153,7 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Entitlements"
+                  title={"功能权益"}
                 />
               ),
               cell: ({ row }) => {
@@ -168,7 +167,7 @@ export function AdminTiersTable() {
                         ))}
                       </div>
                     ) : (
-                      "None"
+                      "无"
                     )}
                   </div>
                 )
@@ -182,14 +181,14 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Max workflows"
+                  title={"最大工作流数"}
                 />
               ),
               cell: ({ row }) => (
                 <div className="text-xs text-muted-foreground">
                   {row.getValue<TierRead["max_concurrent_workflows"]>(
                     "max_concurrent_workflows"
-                  ) ?? "Unlimited"}
+                  ) ?? "不限制"}
                 </div>
               ),
               enableSorting: true,
@@ -201,14 +200,14 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Max actions/workflow"
+                  title={"每个工作流的最大动作数"}
                 />
               ),
               cell: ({ row }) => (
                 <div className="text-xs text-muted-foreground">
                   {row.getValue<TierRead["max_action_executions_per_workflow"]>(
                     "max_action_executions_per_workflow"
-                  ) ?? "Unlimited"}
+                  ) ?? "不限制"}
                 </div>
               ),
               enableSorting: true,
@@ -220,13 +219,13 @@ export function AdminTiersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="API rate limit"
+                  title={"API 速率限制"}
                 />
               ),
               cell: ({ row }) => (
                 <div className="text-xs text-muted-foreground">
                   {row.getValue<TierRead["api_rate_limit"]>("api_rate_limit") ??
-                    "Unlimited"}
+                    "不限制"}
                 </div>
               ),
               enableSorting: true,
@@ -242,7 +241,7 @@ export function AdminTiersTable() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">打开菜单</span>
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -250,10 +249,10 @@ export function AdminTiersTable() {
                       <DropdownMenuItem
                         onClick={() => navigator.clipboard.writeText(tier.id)}
                       >
-                        Copy ID
+                        复制 ID
                       </DropdownMenuItem>
                       <DropdownMenuItem onSelect={() => setEditTierId(tier.id)}>
-                        Edit tier
+                        编辑套餐
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <AlertDialogTrigger asChild>
@@ -262,9 +261,7 @@ export function AdminTiersTable() {
                           disabled={tier.is_default}
                           onClick={() => setSelectedTier(tier)}
                         >
-                          {tier.is_default
-                            ? "Cannot delete default tier"
-                            : "Delete"}
+                          {tier.is_default ? "无法删除默认套餐" : "删除"}
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     </DropdownMenuContent>
@@ -277,17 +274,17 @@ export function AdminTiersTable() {
         />
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete tier</AlertDialogTitle>
+            <AlertDialogTitle>删除套餐</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the tier &quot;
-              {selectedTier?.display_name}&quot;? This action cannot be undone.
-              Organizations assigned to this tier will need to be reassigned.
+              确定要删除套餐“
+              {selectedTier?.display_name}
+              ”吗？此操作无法撤销。使用此套餐的组织需要重新分配套餐。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={handleDeleteTier}>
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -309,7 +306,7 @@ export function AdminTiersTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<TierRead> = {
   filterProps: {
-    placeholder: "Filter tiers...",
+    placeholder: "筛选套餐…",
     column: "display_name",
   },
 }

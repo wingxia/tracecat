@@ -69,7 +69,7 @@ describe("WorkspacePage", () => {
     render(<WorkspacePage />)
 
     expect(mockRouterReplace).not.toHaveBeenCalled()
-    expect(screen.getByText("No accessible pages")).toBeInTheDocument()
+    expect(screen.getByText("没有可访问的页面")).toBeInTheDocument()
   })
 
   it("redirects workspace-readable service-account users to service accounts", async () => {

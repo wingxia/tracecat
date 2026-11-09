@@ -76,19 +76,17 @@ beforeEach(() => {
 async function openPicker() {
   const user = userEvent.setup()
   render(<OrgSettingsSecretStores />)
-  screen.getByRole("button", { name: "Workspaces: Default Workspace" }).focus()
+  screen.getByRole("button", { name: "工作空间：Default Workspace" }).focus()
   await user.keyboard("{Enter}")
   return user
 }
 
 test("the picker changes access scope without closing or losing existing grants", async () => {
   const user = await openPicker()
-  await user.click(
-    screen.getByRole("menuitemradio", { name: "All workspaces" })
-  )
+  await user.click(screen.getByRole("menuitemradio", { name: "所有工作空间" }))
   await waitFor(() => {
     expect(
-      screen.getByRole("menuitemradio", { name: "All workspaces" })
+      screen.getByRole("menuitemradio", { name: "所有工作空间" })
     ).toHaveAttribute("aria-checked", "true")
   })
   expect(mockUpdateStore).toHaveBeenLastCalledWith({
@@ -97,9 +95,7 @@ test("the picker changes access scope without closing or losing existing grants"
   })
   expect(screen.queryByRole("menuitemcheckbox")).not.toBeInTheDocument()
 
-  await user.click(
-    screen.getByRole("menuitemradio", { name: "Selected workspaces" })
-  )
+  await user.click(screen.getByRole("menuitemradio", { name: "所选工作空间" }))
   await waitFor(() => {
     expect(
       screen.getByRole("menuitemcheckbox", { name: "Default Workspace" })
@@ -109,10 +105,10 @@ test("the picker changes access scope without closing or losing existing grants"
     storeId: "example-store",
     params: { all_workspaces: false },
   })
-  await user.click(screen.getByRole("menuitem", { name: "Done" }))
+  await user.click(screen.getByRole("menuitem", { name: "完成" }))
   expect(screen.queryByRole("menu")).not.toBeInTheDocument()
   expect(
-    screen.getByRole("button", { name: "Workspaces: Default Workspace" })
+    screen.getByRole("button", { name: "工作空间：Default Workspace" })
   ).toHaveFocus()
 })
 
@@ -147,7 +143,7 @@ test("individual grants update the summary and failed revocation retains access"
   ).toHaveAttribute("aria-checked", "true")
   await user.keyboard("{Escape}")
   expect(
-    screen.getByRole("button", { name: "Workspaces: 2 workspaces" })
+    screen.getByRole("button", { name: "工作空间：2 个工作空间" })
   ).toBeInTheDocument()
 })
 
@@ -169,14 +165,14 @@ test("read-only users can inspect workspace access but cannot change it", async 
 test("the overflow menu blocks deleting a store with references", async () => {
   const user = userEvent.setup()
   render(<OrgSettingsSecretStores />)
-  screen.getByRole("button", { name: "Actions for example-production" }).focus()
+  screen.getByRole("button", { name: "example-production 的操作" }).focus()
   await user.keyboard("{Enter}")
-  expect(screen.getByRole("menuitem", { name: "Delete" })).toHaveAttribute(
+  expect(screen.getByRole("menuitem", { name: "删除" })).toHaveAttribute(
     "aria-disabled",
     "true"
   )
   expect(
-    screen.getByText("In use by 3 secrets. Remove them first.")
+    screen.getByText("正在使用此存储的资源： 3 个密钥。请先移除这些资源。")
   ).toBeInTheDocument()
   expect(mockDeleteStore).not.toHaveBeenCalled()
 })
@@ -185,27 +181,27 @@ test("update-only users can edit a store from its menu without changing its exte
   mockCanDelete = false
   const user = userEvent.setup()
   render(<OrgSettingsSecretStores />)
-  screen.getByRole("button", { name: "Actions for example-production" }).focus()
+  screen.getByRole("button", { name: "example-production 的操作" }).focus()
   await user.keyboard("{Enter}")
   expect(
-    screen.queryByRole("menuitem", { name: "Delete" })
+    screen.queryByRole("menuitem", { name: "删除" })
   ).not.toBeInTheDocument()
-  await user.click(screen.getByRole("menuitem", { name: "Edit store" }))
-  expect(screen.getByLabelText("Name")).toHaveValue("example-production")
-  expect(screen.getByLabelText("Role ARN")).toHaveValue(
+  await user.click(screen.getByRole("menuitem", { name: "编辑存储" }))
+  expect(screen.getByLabelText("名称")).toHaveValue("example-production")
+  expect(screen.getByLabelText("角色 ARN")).toHaveValue(
     mockStore.config.role_arn
   )
-  expect(screen.getByLabelText("Region")).toHaveValue("us-east-1")
-  await user.clear(screen.getByLabelText("Name"))
-  await user.type(screen.getByLabelText("Name"), "example-renamed")
-  await user.clear(screen.getByLabelText("Role ARN"))
+  expect(screen.getByLabelText("区域")).toHaveValue("us-east-1")
+  await user.clear(screen.getByLabelText("名称"))
+  await user.type(screen.getByLabelText("名称"), "example-renamed")
+  await user.clear(screen.getByLabelText("角色 ARN"))
   await user.type(
-    screen.getByLabelText("Role ARN"),
+    screen.getByLabelText("角色 ARN"),
     "arn:aws:iam::123456789012:role/example-replacement"
   )
-  await user.clear(screen.getByLabelText("Region"))
-  await user.type(screen.getByLabelText("Region"), "us-west-2")
-  await user.click(screen.getByRole("button", { name: "Save changes" }))
+  await user.clear(screen.getByLabelText("区域"))
+  await user.type(screen.getByLabelText("区域"), "us-west-2")
+  await user.click(screen.getByRole("button", { name: "保存更改" }))
   await waitFor(() =>
     expect(mockUpdateStore).toHaveBeenCalledWith({
       storeId: "example-store",
@@ -225,24 +221,24 @@ test("failed store edits retain their draft and delete-only users cannot edit", 
   mockUpdateStore.mockRejectedValueOnce(new Error("Update failed"))
   const user = userEvent.setup()
   const view = render(<OrgSettingsSecretStores />)
-  screen.getByRole("button", { name: "Actions for example-production" }).focus()
+  screen.getByRole("button", { name: "example-production 的操作" }).focus()
   await user.keyboard("{Enter}")
-  await user.click(screen.getByRole("menuitem", { name: "Edit store" }))
-  await user.clear(screen.getByLabelText("Name"))
-  await user.type(screen.getByLabelText("Name"), "example-renamed")
-  await user.click(screen.getByRole("button", { name: "Save changes" }))
+  await user.click(screen.getByRole("menuitem", { name: "编辑存储" }))
+  await user.clear(screen.getByLabelText("名称"))
+  await user.type(screen.getByLabelText("名称"), "example-renamed")
+  await user.click(screen.getByRole("button", { name: "保存更改" }))
   await waitFor(() =>
-    expect(screen.getByRole("button", { name: "Save changes" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "保存更改" })).toBeEnabled()
   )
   expect(mockUpdateStore).toHaveBeenCalledTimes(1)
-  expect(screen.getByLabelText("Name")).toHaveValue("example-renamed")
-  await user.click(screen.getByRole("button", { name: "Close" }))
+  expect(screen.getByLabelText("名称")).toHaveValue("example-renamed")
+  await user.click(screen.getByRole("button", { name: "关闭" }))
   mockCanUpdate = false
   view.rerender(<OrgSettingsSecretStores />)
-  screen.getByRole("button", { name: "Actions for example-production" }).focus()
+  screen.getByRole("button", { name: "example-production 的操作" }).focus()
   await user.keyboard("{Enter}")
   expect(
-    screen.queryByRole("menuitem", { name: "Edit store" })
+    screen.queryByRole("menuitem", { name: "编辑存储" })
   ).not.toBeInTheDocument()
-  expect(screen.getByRole("menuitem", { name: "Delete" })).toBeInTheDocument()
+  expect(screen.getByRole("menuitem", { name: "删除" })).toBeInTheDocument()
 })

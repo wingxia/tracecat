@@ -21,9 +21,9 @@ export default function VCSSettingsPage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">Git sync</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">Git 同步</h2>
             <p className="text-md text-muted-foreground">
-              Sync workflows to and from your private Git repository.
+              与私有 Git 仓库双向同步工作流。
             </p>
           </div>
         </div>
@@ -33,8 +33,8 @@ export default function VCSSettingsPage() {
         ) : (
           <div className="flex flex-1 items-center justify-center pb-8">
             <EntitlementRequiredEmptyState
-              title="Upgrade required"
-              description="Git sync is unavailable on your current plan."
+              title={"需要升级"}
+              description={"当前套餐不支持 Git 同步。"}
             >
               <Button
                 variant="link"
@@ -47,7 +47,7 @@ export default function VCSSettingsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Learn more <ArrowUpRight className="size-4" />
+                  了解更多 <ArrowUpRight className="size-4" />
                 </a>
               </Button>
             </EntitlementRequiredEmptyState>

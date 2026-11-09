@@ -107,7 +107,7 @@ function formatTooltipTimestamp(timestamp?: string | null): string | null {
     return null
   }
 
-  return date.toLocaleString()
+  return date.toLocaleString("zh-CN")
 }
 
 function buildDurationTooltipContent(
@@ -122,9 +122,9 @@ function buildDurationTooltipContent(
   return (
     <div className="space-y-1">
       <div className="font-medium">{name}</div>
-      <div>Duration: {durationToHumanReadable(duration)}</div>
-      {startedLabel && <div>Started: {startedLabel}</div>}
-      {endedLabel && <div>Ended: {endedLabel}</div>}
+      <div>时长： {durationToHumanReadable(duration)}</div>
+      {startedLabel && <div>开始： {startedLabel}</div>}
+      {endedLabel && <div>结束： {endedLabel}</div>}
     </div>
   )
 }
@@ -267,7 +267,7 @@ export function CaseItem({
         continue
       }
 
-      const durationName = durationNamesById?.get(defId) ?? "Duration"
+      const durationName = durationNamesById?.get(defId) ?? "时长"
       const tooltipContent = buildDurationTooltipContent(
         durationName,
         dur.duration,
@@ -302,22 +302,22 @@ export function CaseItem({
     try {
       await navigator.clipboard.writeText(caseData.id)
       toast({
-        title: "Case ID copied",
+        title: "已复制事件 ID",
         description: (
           <div className="flex flex-col space-y-2">
             <span>
-              Case ID copied for{" "}
+              已复制事件 ID：{" "}
               <b className="inline-block">{caseData.short_id}</b>
             </span>
-            <span className="text-muted-foreground">ID: {caseData.id}</span>
+            <span className="text-muted-foreground">ID： {caseData.id}</span>
           </div>
         ),
       })
     } catch (error) {
       console.error("Failed to copy to clipboard:", error)
       toast({
-        title: "Failed to copy",
-        description: "Could not copy case ID to clipboard",
+        title: "复制失败",
+        description: "无法将事件 ID 复制到剪贴板",
         variant: "destructive",
       })
     }
@@ -344,8 +344,8 @@ export function CaseItem({
         })
         const tag = tags?.find((t) => t.id === tagId)
         toast({
-          title: "Tag removed",
-          description: `Successfully removed tag "${tag?.name}" from case`,
+          title: "已移除标签",
+          description: `已从事件移除标签“${tag?.name}”`,
         })
       } else {
         await casesAddTag({
@@ -357,8 +357,8 @@ export function CaseItem({
         })
         const tag = tags?.find((t) => t.id === tagId)
         toast({
-          title: "Tag added",
-          description: `Successfully added tag "${tag?.name}" to case`,
+          title: "已添加标签",
+          description: `已为事件添加标签“${tag?.name}”`,
         })
       }
       // Invalidate to refetch - optimistic state will be reset by useEffect when new data arrives
@@ -368,8 +368,8 @@ export function CaseItem({
       setOptimisticTags(null)
       console.error("Failed to modify tag:", error)
       toast({
-        title: "Error",
-        description: `Failed to ${hasTag ? "remove" : "add"} tag ${hasTag ? "from" : "to"} case`,
+        title: "错误",
+        description: `${hasTag ? "移除" : "添加"}事件标签失败（${hasTag ? "来自" : "更改为"}）`,
         variant: "destructive",
       })
     }
@@ -384,15 +384,15 @@ export function CaseItem({
         requestBody: { status },
       })
       toast({
-        title: "Status updated",
-        description: `Case status changed to ${STATUSES[status].label}`,
+        title: "已更新状态",
+        description: `事件状态已更改为 ${STATUSES[status].label}`,
       })
       await queryClient.invalidateQueries({ queryKey: ["cases"] })
     } catch (error) {
       console.error("Failed to update status:", error)
       toast({
-        title: "Error",
-        description: "Failed to update case status",
+        title: "错误",
+        description: "更新事件状态失败",
         variant: "destructive",
       })
     }
@@ -407,15 +407,15 @@ export function CaseItem({
         requestBody: { priority },
       })
       toast({
-        title: "Priority updated",
-        description: `Case priority changed to ${PRIORITIES[priority].label}`,
+        title: "已更新优先级",
+        description: `事件优先级已更改为 ${PRIORITIES[priority].label}`,
       })
       await queryClient.invalidateQueries({ queryKey: ["cases"] })
     } catch (error) {
       console.error("Failed to update priority:", error)
       toast({
-        title: "Error",
-        description: "Failed to update case priority",
+        title: "错误",
+        description: "更新事件优先级失败",
         variant: "destructive",
       })
     }
@@ -430,15 +430,15 @@ export function CaseItem({
         requestBody: { severity },
       })
       toast({
-        title: "Severity updated",
-        description: `Case severity changed to ${SEVERITIES[severity].label}`,
+        title: "已更新严重程度",
+        description: `事件严重程度已更改为 ${SEVERITIES[severity].label}`,
       })
       await queryClient.invalidateQueries({ queryKey: ["cases"] })
     } catch (error) {
       console.error("Failed to update severity:", error)
       toast({
-        title: "Error",
-        description: "Failed to update case severity",
+        title: "错误",
+        description: "更新事件严重程度失败",
         variant: "destructive",
       })
     }
@@ -458,17 +458,17 @@ export function CaseItem({
         ? (members?.find((m) => m.user_id === newAssigneeId)?.email ?? "user")
         : "unassigned"
       toast({
-        title: "Assignee updated",
+        title: "已更新负责人",
         description: newAssigneeId
-          ? `Case assigned to ${assigneeName}`
-          : "Case unassigned",
+          ? `事件已分配给 ${assigneeName}`
+          : "已取消分配事件",
       })
       await queryClient.invalidateQueries({ queryKey: ["cases"] })
     } catch (error) {
       console.error("Failed to update assignee:", error)
       toast({
-        title: "Error",
-        description: "Failed to update case assignee",
+        title: "错误",
+        description: "更新事件负责人失败",
         variant: "destructive",
       })
     }
@@ -486,17 +486,15 @@ export function CaseItem({
         requestBody: { option_id: optionId },
       })
       toast({
-        title: "Dropdown updated",
-        description: optionId
-          ? "Dropdown value updated"
-          : "Dropdown value cleared",
+        title: "已更新下拉字段",
+        description: optionId ? "已更新下拉选项值" : "已清除下拉选项值",
       })
       await queryClient.invalidateQueries({ queryKey: ["cases"] })
     } catch (error) {
       console.error("Failed to update dropdown:", error)
       toast({
-        title: "Error",
-        description: "Failed to update dropdown value",
+        title: "错误",
+        description: "更新下拉选项值失败",
         variant: "destructive",
       })
     }
@@ -529,7 +527,7 @@ export function CaseItem({
               onClick={handleCheckboxClick}
               role="checkbox"
               aria-checked={isChecked}
-              aria-label={`Select case ${caseData.short_id}`}
+              aria-label={`选择事件 ${caseData.short_id}`}
             >
               <span
                 className={cn(
@@ -563,7 +561,7 @@ export function CaseItem({
                   {caseData.parent && (
                     <span
                       className="shrink-0 text-[10px] text-muted-foreground"
-                      title={`Sub-case of ${caseData.parent.short_id}: ${caseData.parent.summary}`}
+                      title={`${caseData.parent.short_id} 的子事件：${caseData.parent.summary}`}
                     >
                       ↳ {caseData.parent.short_id}
                     </span>
@@ -571,7 +569,7 @@ export function CaseItem({
                   {caseData.num_sub_cases > 0 && (
                     <span
                       className="inline-flex h-5 shrink-0 items-center gap-1 rounded-full bg-muted px-1.5 text-[10px] text-muted-foreground"
-                      title={`${caseData.num_sub_cases} sub-case${caseData.num_sub_cases === 1 ? "" : "s"}`}
+                      title={`${caseData.num_sub_cases} 个子事件`}
                     >
                       <ListTreeIcon className="size-3" aria-hidden />
                       {caseData.num_sub_cases}
@@ -602,8 +600,7 @@ export function CaseItem({
                 {caseData.search_match && (
                   <div className="mt-1 truncate text-[11px] text-muted-foreground">
                     <span className="font-medium">
-                      Matched{" "}
-                      {caseData.search_match.matched_columns?.join(", ")}
+                      已匹配 {caseData.search_match.matched_columns?.join(", ")}
                     </span>
                     {(caseData.search_match.excerpts?.length ?? 0) > 0 && (
                       <span>
@@ -682,7 +679,7 @@ export function CaseItem({
             rel="noopener noreferrer"
           >
             <ExternalLink className="mr-2 size-3.5" />
-            Open in new tab
+            在新标签页中打开
           </Link>
         </ContextMenuItem>
 
@@ -692,13 +689,13 @@ export function CaseItem({
             onClick={() => onOpenInSidePanel(caseData)}
           >
             <PanelRight className="mr-2 size-3.5" />
-            Open in side panel
+            在侧边面板中打开
           </ContextMenuItem>
         )}
 
         <ContextMenuItem className="text-xs" onClick={handleCopyId}>
           <Copy className="mr-2 size-3.5" />
-          Copy case ID
+          复制事件 ID
         </ContextMenuItem>
 
         <ContextMenuSeparator />
@@ -707,7 +704,7 @@ export function CaseItem({
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-xs">
             <SignalIcon className="mr-2 size-3.5" />
-            Status
+            状态
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-40">
             <ContextMenuRadioGroup value={caseData.status}>
@@ -733,7 +730,7 @@ export function CaseItem({
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-xs">
             <SignalHighIcon className="mr-2 size-3.5" />
-            Priority
+            优先级
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-40">
             <ContextMenuRadioGroup value={caseData.priority}>
@@ -759,7 +756,7 @@ export function CaseItem({
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-xs">
             <ShieldAlertIcon className="mr-2 size-3.5" />
-            Severity
+            严重程度
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-40">
             <ContextMenuRadioGroup value={caseData.severity}>
@@ -785,7 +782,7 @@ export function CaseItem({
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-xs">
             <UserIcon className="mr-2 size-3.5" />
-            Assignee
+            负责人
           </ContextMenuSubTrigger>
           <ContextMenuSubContent className="w-56">
             <ContextMenuRadioGroup value={caseData.assignee?.id ?? UNASSIGNED}>
@@ -795,7 +792,7 @@ export function CaseItem({
                 onClick={() => handleAssigneeChange(UNASSIGNED)}
               >
                 <CircleSlashIcon className="mr-2 size-3 text-muted-foreground/50" />
-                Unassigned
+                未分配
               </ContextMenuRadioItem>
               {members?.map((member) => {
                 const initials = member.email[0].toUpperCase()
@@ -824,7 +821,7 @@ export function CaseItem({
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <TagsIcon className="mr-2 size-3.5" />
-              Tags
+              标签
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-48">
               {tags.map((tag) => {
@@ -861,7 +858,7 @@ export function CaseItem({
             disabled
           >
             <TagsIcon className="mr-2 size-3.5" />
-            <span>No tags available</span>
+            <span>暂无可用标签</span>
           </ContextMenuItem>
         )}
 
@@ -894,7 +891,7 @@ export function CaseItem({
                     onClick={() => handleDropdownChange(definition.id, null)}
                   >
                     <CircleIcon className="mr-2 size-3.5 text-muted-foreground" />
-                    None
+                    无
                   </ContextMenuRadioItem>
                   {definition.options?.map((opt) => {
                     const optionStyle = opt.color
@@ -947,7 +944,7 @@ export function CaseItem({
               onClick={() => onDeleteRequest(caseData)}
             >
               <Trash2 className="mr-2 size-3.5" />
-              Delete
+              删除
             </ContextMenuItem>
           </>
         )}

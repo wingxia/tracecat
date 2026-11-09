@@ -80,7 +80,7 @@ function ActionSessionLiveStream({ sessionId }: { sessionId: string }) {
       const friendlyMessage = parseChatError(error)
       console.error("Error in Vercel chat:", error)
       toast({
-        title: "Chat error",
+        title: "对话错误",
         description: friendlyMessage,
       })
     },
@@ -94,7 +94,7 @@ function ActionSessionLiveStream({ sessionId }: { sessionId: string }) {
       {status === "submitted" ? (
         <div className="flex flex-1 items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
           <Spinner className="size-3" />
-          <span>Connecting to agent…</span>
+          <span>正在连接智能体…</span>
         </div>
       ) : (
         <Conversation className="flex-1">
@@ -171,11 +171,11 @@ function ActionSessionShell({
       <div className="flex h-full flex-col overflow-hidden rounded-md border bg-card">
         <div className="flex items-center gap-2 border-b bg-muted/40 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
           <MessageCircle className="size-3" />
-          <span>Session</span>
+          <span>会话</span>
           {status === "streaming" && (
             <span className="ml-auto flex items-center gap-1 text-[10px] font-medium normal-case text-muted-foreground">
               <Spinner className="size-3" />
-              <span>Streaming…</span>
+              <span>正在接收数据…</span>
             </span>
           )}
         </div>

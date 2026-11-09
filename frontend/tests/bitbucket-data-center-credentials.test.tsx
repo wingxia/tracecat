@@ -34,16 +34,13 @@ describe("Bitbucket Data Center credentials", () => {
   it("saves the instance URL and HTTP access token", async () => {
     const user = userEvent.setup()
     render(<BitbucketDataCenterTokenSetup />)
-    await user.click(screen.getByRole("button", { name: "Connect" }))
+    await user.click(screen.getByRole("button", { name: "连接" }))
     await user.type(
-      screen.getByLabelText("Instance URL"),
+      screen.getByLabelText("实例 URL"),
       "https://example.test/bitbucket"
     )
-    await user.type(
-      screen.getByLabelText("Credential token"),
-      "synthetic-token"
-    )
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.type(screen.getByLabelText("凭据令牌"), "synthetic-token")
+    await user.click(screen.getByRole("button", { name: "保存" }))
     await waitFor(() =>
       expect(mockSave).toHaveBeenCalledWith({
         base_url: "https://example.test/bitbucket",
@@ -59,11 +56,9 @@ describe("Bitbucket Data Center credentials", () => {
       refetchCredentialsStatus: mockRefetch,
     })
     render(<BitbucketDataCenterTokenSetup />)
+    expect(screen.getByRole("button", { name: "重新连接" })).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Reconnect" })
-    ).toBeInTheDocument()
-    expect(
-      screen.getByLabelText("Delete Bitbucket Data Center credentials")
+      screen.getByLabelText("删除 Bitbucket Data Center 凭据")
     ).toBeInTheDocument()
   })
 
@@ -74,10 +69,10 @@ describe("Bitbucket Data Center credentials", () => {
     })
     render(<BitbucketDataCenterTokenSetup />)
     expect(
-      screen.getByText(/Unable to load Bitbucket Data Center credentials/)
+      screen.getByText(/无法加载 Bitbucket Data Center 凭据/)
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Connect" })
+      screen.queryByRole("button", { name: "连接" })
     ).not.toBeInTheDocument()
   })
 })

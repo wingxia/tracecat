@@ -47,7 +47,7 @@ test("workflow and workspace pushes show distinct editor links for duplicate tit
     "href",
     `/workspaces/example/workflows/${ids[1]}`
   )
-  expect(screen.getByText("3 additional error(s) omitted.")).toBeInTheDocument()
+  expect(screen.getByText("3 个其他错误已省略。")).toBeInTheDocument()
 })
 
 test("rejects invalid link targets and falls back to legacy detail", () => {

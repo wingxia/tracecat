@@ -390,7 +390,7 @@ function createThreadFixtures(): CaseCommentThreadRead[] {
         id: "comment-3",
         created_at: "2024-01-02T00:00:00Z",
         updated_at: "2024-01-02T00:00:00Z",
-        content: "Comment deleted",
+        content: "已删除评论",
         parent_id: null,
         workflow: null,
         user: {
@@ -651,44 +651,34 @@ describe("CommentSection", () => {
 
     expect(screen.getByText("Top level")).toBeInTheDocument()
     expect(screen.getByText("Reply one")).toBeInTheDocument()
-    expect(screen.getByText("Comment deleted")).toBeInTheDocument()
+    expect(screen.getByText("已删除评论")).toBeInTheDocument()
   })
 
   it("shows inline reply composer only for active top-level comments and hides controls on tombstones", () => {
     renderCommentSection()
 
-    expect(screen.getByPlaceholderText("Leave a reply...")).toBeInTheDocument()
-    expect(screen.queryAllByPlaceholderText("Leave a reply...")).toHaveLength(1)
-    expect(screen.getByPlaceholderText("Leave a reply...")).toHaveClass(
-      "resize-none"
-    )
+    expect(screen.getByPlaceholderText("回复…")).toBeInTheDocument()
+    expect(screen.queryAllByPlaceholderText("回复…")).toHaveLength(1)
+    expect(screen.getByPlaceholderText("回复…")).toHaveClass("resize-none")
     expect(screen.getByPlaceholderText("Leave a comment...")).toHaveClass(
       "resize-none"
     )
     expect(screen.queryByText("Reply")).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "More options" })
-    ).toBeInTheDocument()
-    expect(
-      screen.queryAllByRole("button", { name: "More options" })
-    ).toHaveLength(1)
-    expect(
-      screen.getByRole("button", { name: "Hide replies" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "更多选项" })).toBeInTheDocument()
+    expect(screen.queryAllByRole("button", { name: "更多选项" })).toHaveLength(
+      1
+    )
+    expect(screen.getByRole("button", { name: "隐藏回复" })).toBeInTheDocument()
   })
 
   it("toggles replies visibility for a parent thread", () => {
     renderCommentSection()
 
-    fireEvent.click(screen.getByRole("button", { name: "Hide replies" }))
+    fireEvent.click(screen.getByRole("button", { name: "隐藏回复" }))
 
     expect(screen.queryByText("Reply one")).not.toBeInTheDocument()
-    expect(
-      screen.queryByPlaceholderText("Leave a reply...")
-    ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Show replies" })
-    ).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText("回复…")).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "显示回复" })).toBeInTheDocument()
   })
 
   it("shows the replies toggle for non-owners", () => {
@@ -700,11 +690,9 @@ describe("CommentSection", () => {
 
     renderCommentSection()
 
+    expect(screen.getByRole("button", { name: "隐藏回复" })).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Hide replies" })
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole("button", { name: "More options" })
+      screen.queryByRole("button", { name: "更多选项" })
     ).not.toBeInTheDocument()
   })
 
@@ -716,7 +704,7 @@ describe("CommentSection", () => {
             id: "deleted-thread",
             created_at: "2024-01-02T00:00:00Z",
             updated_at: "2024-01-02T00:00:00Z",
-            content: "Comment deleted",
+            content: "已删除评论",
             parent_id: null,
             workflow: null,
             user: {
@@ -762,22 +750,16 @@ describe("CommentSection", () => {
 
     renderCommentSection()
 
-    expect(
-      screen.getByRole("button", { name: "Hide replies" })
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByPlaceholderText("Leave a reply...")
-    ).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "隐藏回复" })).toBeInTheDocument()
+    expect(screen.queryByPlaceholderText("回复…")).not.toBeInTheDocument()
     expect(screen.getByText("Reply on deleted thread")).toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "Hide replies" }))
+    fireEvent.click(screen.getByRole("button", { name: "隐藏回复" }))
 
     expect(
       screen.queryByText("Reply on deleted thread")
     ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Show replies" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "显示回复" })).toBeInTheDocument()
   })
 
   it("submits parent_id through the inline reply composer", async () => {
@@ -790,7 +772,7 @@ describe("CommentSection", () => {
 
     renderCommentSection()
 
-    const replyInput = screen.getByPlaceholderText("Leave a reply...")
+    const replyInput = screen.getByPlaceholderText("回复…")
     fireEvent.change(replyInput, {
       target: { value: "New reply" },
     })
@@ -798,7 +780,7 @@ describe("CommentSection", () => {
     if (!replyForm) {
       throw new Error("Reply form should exist")
     }
-    fireEvent.click(within(replyForm).getByRole("button", { name: "Send" }))
+    fireEvent.click(within(replyForm).getByRole("button", { name: "发送" }))
 
     await waitFor(() => {
       expect(createComment).toHaveBeenCalledWith({
@@ -808,7 +790,7 @@ describe("CommentSection", () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText("Leave a reply...")).toHaveValue("")
+      expect(screen.getByPlaceholderText("回复…")).toHaveValue("")
     })
   })
 
@@ -823,11 +805,9 @@ describe("CommentSection", () => {
 
     expect(screen.getByText("Top level")).toBeInTheDocument()
     expect(screen.queryByText("Reply one")).not.toBeInTheDocument()
+    expect(screen.queryByPlaceholderText("回复…")).not.toBeInTheDocument()
     expect(
-      screen.queryByPlaceholderText("Leave a reply...")
-    ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole("button", { name: "Hide replies" })
+      screen.queryByRole("button", { name: "隐藏回复" })
     ).not.toBeInTheDocument()
     expect(screen.queryByTestId("composer-hint")).not.toBeInTheDocument()
     expect(
@@ -861,7 +841,7 @@ describe("CommentSection", () => {
 
       const hints = screen.getAllByTestId("composer-hint")
       expect(hints).toHaveLength(1)
-      expect(hints[0]).toHaveTextContent("Run workflow")
+      expect(hints[0]).toHaveTextContent("运行工作流")
       expect(getForm(composer)).toContainElement(hints[0])
 
       fireEvent.blur(composer)
@@ -900,7 +880,7 @@ describe("CommentSection", () => {
       typeInto(composer, "/")
 
       await waitFor(() => {
-        expect(screen.getByText("Workflows")).toBeInTheDocument()
+        expect(screen.getByText("工作流")).toBeInTheDocument()
       })
       expect(screen.getByText("Escalate case")).toBeInTheDocument()
       expect(screen.getByText("escalate_case")).toBeInTheDocument()
@@ -914,7 +894,7 @@ describe("CommentSection", () => {
       expect(highlights[0]).toHaveAttribute("data-mention-target", "workflow-1")
 
       typeInto(composer, "/Escalate case   Run this workflow  ")
-      fireEvent.click(within(form).getByRole("button", { name: "Send" }))
+      fireEvent.click(within(form).getByRole("button", { name: "发送" }))
 
       await waitFor(() => {
         expect(createComment).toHaveBeenCalledWith({
@@ -940,8 +920,8 @@ describe("CommentSection", () => {
 
       typeInto(composer, "/zzz")
 
-      expect(screen.getByText("No workflows found")).toBeInTheDocument()
-      expect(screen.queryByText("Workflows")).not.toBeInTheDocument()
+      expect(screen.getByText("未找到工作流")).toBeInTheDocument()
+      expect(screen.queryByText("工作流")).not.toBeInTheDocument()
     })
 
     it("submits a bare workflow command with an empty body", async () => {
@@ -1070,7 +1050,7 @@ describe("CommentSection", () => {
 
       typeInto(composer, "check /dev")
       await waitFor(() => {
-        expect(screen.getByText("No workflows found")).toBeInTheDocument()
+        expect(screen.getByText("未找到工作流")).toBeInTheDocument()
       })
 
       // `fireEvent` returns false only when a handler called preventDefault,
@@ -1082,7 +1062,7 @@ describe("CommentSection", () => {
 
       // Escape still closes the session.
       fireEvent.keyDown(composer, { key: "Escape" })
-      expect(screen.queryByText("No workflows found")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到工作流")).not.toBeInTheDocument()
     })
 
     it("submits with Cmd+Enter while an unmatched / query is open", async () => {
@@ -1098,7 +1078,7 @@ describe("CommentSection", () => {
 
       typeInto(composer, "check /dev")
       await waitFor(() => {
-        expect(screen.getByText("No workflows found")).toBeInTheDocument()
+        expect(screen.getByText("未找到工作流")).toBeInTheDocument()
       })
 
       fireEvent.keyDown(composer, { key: "Enter", metaKey: true })
@@ -1117,8 +1097,8 @@ describe("CommentSection", () => {
 
       typeInto(composer, "see https://example.com/path")
 
-      expect(screen.queryByText("Workflows")).not.toBeInTheDocument()
-      expect(screen.queryByText("No workflows found")).not.toBeInTheDocument()
+      expect(screen.queryByText("工作流")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到工作流")).not.toBeInTheDocument()
     })
 
     it("treats / as plain text without case add-ons", () => {
@@ -1129,8 +1109,8 @@ describe("CommentSection", () => {
 
       typeInto(composer, "/")
 
-      expect(screen.queryByText("Workflows")).not.toBeInTheDocument()
-      expect(screen.queryByText("No workflows found")).not.toBeInTheDocument()
+      expect(screen.queryByText("工作流")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到工作流")).not.toBeInTheDocument()
       expect(composer).toHaveValue("/")
       expect(mockWorkflowsListWorkflows).not.toHaveBeenCalled()
     })
@@ -1143,8 +1123,8 @@ describe("CommentSection", () => {
 
       typeInto(composer, "/")
 
-      expect(screen.queryByText("Workflows")).not.toBeInTheDocument()
-      expect(screen.queryByText("No workflows found")).not.toBeInTheDocument()
+      expect(screen.queryByText("工作流")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到工作流")).not.toBeInTheDocument()
       expect(composer).toHaveValue("/")
       expect(mockWorkflowsListWorkflows).not.toHaveBeenCalled()
       expect(screen.queryByTestId("composer-hint")).not.toBeInTheDocument()
@@ -1160,8 +1140,8 @@ describe("CommentSection", () => {
 
       typeInto(composer, "/")
 
-      expect(screen.queryByText("Workflows")).not.toBeInTheDocument()
-      expect(screen.queryByText("No workflows found")).not.toBeInTheDocument()
+      expect(screen.queryByText("工作流")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到工作流")).not.toBeInTheDocument()
       expect(composer).toHaveValue("/")
       expect(mockWorkflowsListWorkflows).not.toHaveBeenCalled()
       expect(mockFoldersListFolders).not.toHaveBeenCalled()
@@ -1251,7 +1231,7 @@ describe("CommentSection", () => {
 
     renderCommentSection()
 
-    expect(screen.getByRole("img", { name: "Error" })).toBeInTheDocument()
+    expect(screen.getByRole("img", { name: "错误" })).toBeInTheDocument()
     expect(mockUseCompactWorkflowExecution).toHaveBeenCalled()
     for (const call of mockUseCompactWorkflowExecution.mock.calls) {
       expect(call[0]).toBeUndefined()
@@ -1314,7 +1294,7 @@ describe("CommentSection", () => {
     expect(screen.getByText("Escalate case")).toBeInTheDocument()
     expect(screen.getByText("escalate_case")).toBeInTheDocument()
     expect(
-      screen.getByRole("link", { name: "Open workflow run" })
+      screen.getByRole("link", { name: "打开工作流运行记录" })
     ).toHaveAttribute(
       "href",
       "/workspaces/workspace-1/workflows/wf_123/executions/exec_456"
@@ -1376,9 +1356,9 @@ describe("CommentSection", () => {
     renderCommentSection()
 
     expect(screen.getByText("Escalate case")).toBeInTheDocument()
-    expect(screen.getByRole("img", { name: "In progress" })).toBeInTheDocument()
+    expect(screen.getByRole("img", { name: "处理中" })).toBeInTheDocument()
     expect(
-      screen.getByRole("link", { name: "Open workflow run" })
+      screen.getByRole("link", { name: "打开工作流运行记录" })
     ).toBeInTheDocument()
     expect(screen.queryByTestId("case-comment-viewer")).not.toBeInTheDocument()
   })
@@ -1434,7 +1414,7 @@ describe("CommentSection", () => {
     renderCommentSection()
 
     expect(
-      screen.getByRole("link", { name: "Open workflow run" })
+      screen.getByRole("link", { name: "打开工作流运行记录" })
     ).toHaveAttribute(
       "href",
       "/workspaces/workspace-1/workflows/wf_789/executions/exec_999"
@@ -1575,20 +1555,14 @@ describe("CommentSection", () => {
 
     renderCommentSection()
 
-    const activity = screen.getByLabelText("Agent activity")
+    const activity = screen.getByLabelText("智能体活动")
     expect(activity.children).toHaveLength(3)
-    expect(activity.children[0]).toHaveTextContent(
-      "Preparing agent is preparing..."
-    )
-    expect(activity.children[1]).toHaveTextContent(
-      "Thinking agent is thinking..."
-    )
-    expect(activity.children[2]).toHaveTextContent(
-      "Failed agent could not finish."
-    )
+    expect(activity.children[0]).toHaveTextContent("Preparing agent 正在准备…")
+    expect(activity.children[1]).toHaveTextContent("Thinking agent 正在思考…")
+    expect(activity.children[2]).toHaveTextContent("Failed agent 未能完成。")
     expect(within(activity).getAllByRole("status")).toHaveLength(2)
     expect(within(activity).getByRole("alert")).toHaveTextContent(
-      "Mention Failed agent again to retry."
+      "再次提及 Failed agent 以重试。"
     )
     expect(
       screen.getByText("Timed out while investigating the case.")
@@ -1596,46 +1570,44 @@ describe("CommentSection", () => {
     expect(screen.queryByText("Succeeded agent")).not.toBeInTheDocument()
     expect(screen.queryByText(/Outdated .* agent/)).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /retry/i })
+      screen.queryByRole("button", { name: /重试/i })
     ).not.toBeInTheDocument()
 
     expect(screen.getByText("Snapshot reply agent")).toBeInTheDocument()
     expect(screen.getByText("Historical reply agent")).toBeInTheDocument()
-    expect(screen.getAllByText("Agent")).toHaveLength(2)
+    expect(screen.getAllByText("智能体")).toHaveLength(2)
     expect(
       screen.getByRole("img", {
-        name: "Agent avatar for Snapshot reply agent",
+        name: "Snapshot reply agent 的智能体头像",
       })
     ).toBeInTheDocument()
     expect(screen.getByText("Tracecat")).toBeInTheDocument()
     expect(screen.getByText("Automated workflow")).toBeInTheDocument()
     expect(
       screen.queryByRole("button", {
-        name: "View Historical reply agent session",
+        name: "查看 Historical reply agent 会话",
       })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "View Preparing agent session" })
+      screen.queryByRole("button", { name: "查看 Preparing agent 会话" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "View Succeeded agent session" })
+      screen.queryByRole("button", { name: "查看 Succeeded agent 会话" })
     ).not.toBeInTheDocument()
 
     fireEvent.click(
-      screen.getByRole("button", { name: "View Thinking agent session" })
+      screen.getByRole("button", { name: "查看 Thinking agent 会话" })
     )
     fireEvent.click(
-      screen.getByRole("button", { name: "View Failed agent session" })
+      screen.getByRole("button", { name: "查看 Failed agent 会话" })
     )
     fireEvent.click(
-      screen.getByRole("button", { name: "View Snapshot reply agent session" })
+      screen.getByRole("button", { name: "查看 Snapshot reply agent 会话" })
     )
     expect(mockOpenChatSession).toHaveBeenNthCalledWith(1, "thinking-session")
     expect(mockOpenChatSession).toHaveBeenNthCalledWith(2, "failed-session")
     expect(mockOpenChatSession).toHaveBeenNthCalledWith(3, "reply-session")
-    expect(
-      screen.getAllByRole("button", { name: "More options" })
-    ).toHaveLength(1)
+    expect(screen.getAllByRole("button", { name: "更多选项" })).toHaveLength(1)
   })
 
   describe("agent mention autocomplete", () => {
@@ -1676,7 +1648,7 @@ describe("CommentSection", () => {
 
       typeInto(getRootComposer(), "@")
 
-      expect(screen.getByText("Agents")).toBeInTheDocument()
+      expect(screen.getByText("智能体")).toBeInTheDocument()
       expect(screen.getByText("Triage agent")).toBeInTheDocument()
       expect(screen.getByText("Malware agent")).toBeInTheDocument()
     })
@@ -1734,11 +1706,11 @@ describe("CommentSection", () => {
 
       typeInto(composer, "@zzz")
 
-      expect(screen.getByText("No agents found")).toBeInTheDocument()
-      expect(screen.queryByText("Agents")).not.toBeInTheDocument()
+      expect(screen.getByText("未找到智能体")).toBeInTheDocument()
+      expect(screen.queryByText("智能体")).not.toBeInTheDocument()
 
       fireEvent.keyDown(composer, { key: "Escape" })
-      expect(screen.queryByText("No agents found")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到智能体")).not.toBeInTheDocument()
     })
 
     it("filters presets by the mention query", () => {
@@ -1881,7 +1853,7 @@ describe("CommentSection", () => {
 
     it("selects with the mouse from the inline reply composer", async () => {
       renderCommentSection()
-      const reply = screen.getByPlaceholderText("Leave a reply...")
+      const reply = screen.getByPlaceholderText("回复…")
 
       typeInto(reply, "@tri")
       fireEvent.click(screen.getByRole("button", { name: /Triage agent/ }))
@@ -2002,9 +1974,7 @@ describe("CommentSection", () => {
         renderCommentSection()
         typeInto(getRootComposer(), "@")
 
-        expect(
-          screen.getByText("Agent mentions are an Enterprise feature")
-        ).toBeInTheDocument()
+        expect(screen.getByText("提及智能体属于企业版功能")).toBeInTheDocument()
         expect(screen.queryByText("Triage agent")).not.toBeInTheDocument()
         expect(mockUseAgentPresets).toHaveBeenCalledWith(
           "workspace-1",
@@ -2026,9 +1996,7 @@ describe("CommentSection", () => {
       const composer = getRootComposer()
       typeInto(composer, "Ping @")
 
-      expect(
-        screen.getByText("Agent mentions are an Enterprise feature")
-      ).toBeInTheDocument()
+      expect(screen.getByText("提及智能体属于企业版功能")).toBeInTheDocument()
 
       fireEvent.keyDown(composer, { key: "Enter", metaKey: true })
 
@@ -2046,14 +2014,12 @@ describe("CommentSection", () => {
       const composer = getRootComposer()
       typeInto(composer, "@")
 
-      expect(
-        screen.getByText("Agent mentions are an Enterprise feature")
-      ).toBeInTheDocument()
+      expect(screen.getByText("提及智能体属于企业版功能")).toBeInTheDocument()
 
       fireEvent.keyDown(composer, { key: "Escape" })
 
       expect(
-        screen.queryByText("Agent mentions are an Enterprise feature")
+        screen.queryByText("提及智能体属于企业版功能")
       ).not.toBeInTheDocument()
     })
 
@@ -2065,7 +2031,7 @@ describe("CommentSection", () => {
       fireEvent.focus(composer)
 
       const hint = screen.getAllByTestId("composer-hint").at(-1)
-      expect(hint).toHaveTextContent("Mention agent")
+      expect(hint).toHaveTextContent("提及智能体")
     })
   })
 })

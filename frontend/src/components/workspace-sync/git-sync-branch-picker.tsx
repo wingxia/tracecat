@@ -97,15 +97,15 @@ export function GitSyncBranchPicker({
         <PopoverTrigger asChild>
           <button
             type="button"
-            aria-label={branch ? `Branch: ${branch}` : "Branch"}
+            aria-label={branch ? `分支：${branch}` : "分支"}
             disabled={disabled}
             className="flex h-8 w-full min-w-0 items-center gap-2 rounded-md border bg-background px-2.5 text-left hover:bg-accent/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
           >
             <GitBranchIcon className="size-3.5 shrink-0 text-muted-foreground" />
             <span className="min-w-0 truncate font-mono text-xs font-medium text-foreground">
-              {branch || "Pick a branch"}
+              {branch || "选择分支"}
             </span>
-            {isCreatingBranch && <BranchTag>new</BranchTag>}
+            {isCreatingBranch && <BranchTag>新建</BranchTag>}
             {isDefault && <BranchTag>default</BranchTag>}
             <ChevronDownIcon className="ml-auto size-3.5 shrink-0 text-muted-foreground" />
           </button>
@@ -120,7 +120,7 @@ export function GitSyncBranchPicker({
               htmlFor="git-sync-new-branch"
               className="px-1 text-[11px] font-medium text-muted-foreground"
             >
-              New branch from {baseBranch ?? "the default branch"}
+              新分支创建来源： {baseBranch ?? "默认分支"}
             </label>
             <div className="flex gap-1.5">
               <Input
@@ -140,7 +140,7 @@ export function GitSyncBranchPicker({
                 disabled={!canCreate}
               >
                 <PlusIcon className="size-3.5" />
-                Create branch
+                创建分支
               </Button>
             </div>
             {nameError && (
@@ -154,20 +154,18 @@ export function GitSyncBranchPicker({
           </form>
           <div className="-mx-2 my-2 h-px bg-border" />
           <span className="px-1 text-[11px] font-medium text-muted-foreground">
-            Existing branches
+            现有分支
           </span>
           {hasError ? (
-            <p className="px-1 py-2 text-xs text-destructive">
-              Could not load branches.
-            </p>
+            <p className="px-1 py-2 text-xs text-destructive">无法加载分支。</p>
           ) : (
             <Command className="mt-1">
               {(branches?.length ?? 0) > 8 && (
-                <CommandInput placeholder="Search branches" className="h-8" />
+                <CommandInput placeholder={"搜索分支"} className="h-8" />
               )}
               <CommandList className="max-h-56">
                 <CommandEmpty className="py-3 text-center text-xs text-muted-foreground">
-                  No branches found
+                  未找到分支
                 </CommandEmpty>
                 {(branches ?? []).map((candidate) => (
                   <CommandItem
@@ -225,10 +223,10 @@ function getBranchSubline({
   baseBranch: string | undefined
 }): string {
   if (isCreatingBranch) {
-    return `Branches off ${baseBranch ?? "the default branch"}`
+    return `分支创建来源：${baseBranch ?? "默认分支"}`
   }
   if (isDefault) {
-    return "Default branch"
+    return "默认分支"
   }
-  return "Updates this branch"
+  return "更新此分支"
 }

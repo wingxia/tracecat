@@ -65,7 +65,7 @@ export function WorkspaceMembersTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Email"
+                title={"邮箱"}
               />
             ),
             cell: ({ row }) => (
@@ -82,7 +82,7 @@ export function WorkspaceMembersTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="First name"
+                title={"名"}
               />
             ),
             cell: ({ row }) => (
@@ -100,7 +100,7 @@ export function WorkspaceMembersTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Last name"
+                title={"姓"}
               />
             ),
             cell: ({ row }) => (
@@ -117,7 +117,7 @@ export function WorkspaceMembersTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Role"
+                title={"角色"}
               />
             ),
             cell: ({ row }) => (
@@ -126,7 +126,7 @@ export function WorkspaceMembersTable({
                   {row.getValue<string>("role_name")}
                 </span>
                 {row.original.via_group && (
-                  <span className="text-muted-foreground">via group</span>
+                  <span className="text-muted-foreground">通过用户组</span>
                 )}
               </div>
             ),
@@ -142,7 +142,7 @@ export function WorkspaceMembersTable({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="size-8 p-0">
-                      <span className="sr-only">Open menu</span>
+                      <span className="sr-only">打开菜单</span>
                       <DotsHorizontalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -152,7 +152,7 @@ export function WorkspaceMembersTable({
                         navigator.clipboard.writeText(row.original.user_id)
                       }
                     >
-                      Copy user ID
+                      复制用户 ID
                     </DropdownMenuItem>
 
                     {canRemoveMembers && (
@@ -164,7 +164,7 @@ export function WorkspaceMembersTable({
                             console.debug("Selected user", row.original)
                           }}
                         >
-                          Remove from workspace
+                          从工作空间移除
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     )}
@@ -178,14 +178,13 @@ export function WorkspaceMembersTable({
       />
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Remove user</AlertDialogTitle>
+          <AlertDialogTitle>移除用户</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove this user from the workspace? This
-            action cannot be undone.
+            确定要从工作空间移除此用户吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={async () => {
@@ -195,11 +194,10 @@ export function WorkspaceMembersTable({
                   await removeMember(selectedUser.user_id)
                 } catch (error) {
                   const description =
-                    getApiErrorDetail(error) ??
-                    "The request could not be completed."
+                    getApiErrorDetail(error) ?? "无法完成请求。"
                   console.error("Failed to remove member", error)
                   toast({
-                    title: "Failed to remove member",
+                    title: "移除成员失败",
                     description,
                     variant: "destructive",
                   })
@@ -208,7 +206,7 @@ export function WorkspaceMembersTable({
               setSelectedUser(null)
             }}
           >
-            Confirm
+            确认
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -218,7 +216,7 @@ export function WorkspaceMembersTable({
 
 const defaultToolbarProps: DataTableToolbarProps<WorkspaceMember> = {
   filterProps: {
-    placeholder: "Filter users by email...",
+    placeholder: "按邮箱筛选用户…",
     column: "email",
   },
 }

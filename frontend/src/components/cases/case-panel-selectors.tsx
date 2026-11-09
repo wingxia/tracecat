@@ -139,7 +139,7 @@ export function StatusSelect({
             )}
           >
             {showLabel && (
-              <span className="text-xs text-muted-foreground">Status</span>
+              <span className="text-xs text-muted-foreground">状态</span>
             )}
             <CaseValueDisplay
               icon={currentStatus.icon}
@@ -199,7 +199,7 @@ export function PrioritySelect({
             )}
           >
             {showLabel && (
-              <span className="text-xs text-muted-foreground">Priority</span>
+              <span className="text-xs text-muted-foreground">优先级</span>
             )}
             <CaseValueDisplay
               icon={currentPriority.icon}
@@ -259,7 +259,7 @@ export function SeveritySelect({
             )}
           >
             {showLabel && (
-              <span className="text-xs text-muted-foreground">Severity</span>
+              <span className="text-xs text-muted-foreground">严重程度</span>
             )}
             <CaseValueDisplay
               icon={currentSeverity.icon}
@@ -382,7 +382,7 @@ export function AssigneeSelect({
               )}
             >
               {showLabel && (
-                <span className="text-xs text-muted-foreground">Assignee</span>
+                <span className="text-xs text-muted-foreground">负责人</span>
               )}
               {assignee ? (
                 <div className="flex items-center gap-1.5">
@@ -412,9 +412,9 @@ export function AssigneeSelect({
         onClick={(e) => e.stopPropagation()}
       >
         <Command>
-          <CommandInput placeholder="Search assignees..." className="text-xs" />
+          <CommandInput placeholder={"搜索负责人…"} className="text-xs" />
           <CommandList>
-            <CommandEmpty>No assignees found.</CommandEmpty>
+            <CommandEmpty>未找到负责人。</CommandEmpty>
             <CommandGroup>
               <CommandItem
                 value="Unassigned"
@@ -425,7 +425,7 @@ export function AssigneeSelect({
                 <NoAssignee iconClassName="!size-2.5" />
                 {/* cmdk owns `aria-selected` for highlight, so the current
                     assignee rides on the accessible name instead. */}
-                {!assignee && <span className="sr-only">{", selected"}</span>}
+                {!assignee && <span className="sr-only">{"，已选择"}</span>}
               </CommandItem>
               {sortedMembers.map((member) => {
                 const isAssignee = assignee?.id === member.user_id
@@ -443,14 +443,14 @@ export function AssigneeSelect({
                       lastName={member.last_name}
                     />
                     {isAssignee && (
-                      <span className="sr-only">{", selected"}</span>
+                      <span className="sr-only">{"，已选择"}</span>
                     )}
                   </CommandItem>
                 )
               })}
               {workspaceMembers.length === 0 && (
                 <div className="flex items-center justify-center p-4 text-xs text-muted-foreground">
-                  No users available to assign
+                  没有可分配的用户
                 </div>
               )}
             </CommandGroup>
@@ -486,7 +486,7 @@ export function NoAssignee({
         />
       </div>
       <span className={cn("text-xs text-muted-foreground", labelClassName)}>
-        {text ?? "Unassigned"}
+        {text ?? "未分配"}
       </span>
     </div>
   )
@@ -612,7 +612,7 @@ export function CaseDropdownSelect({
               </div>
             ) : (
               <span className={cn("text-muted-foreground", valueClassName)}>
-                None
+                无
               </span>
             )}
           </div>
@@ -620,7 +620,7 @@ export function CaseDropdownSelect({
       </SelectTrigger>
       <SelectContent>
         <SelectItem value={NONE_VALUE}>
-          <span className="text-muted-foreground">None</span>
+          <span className="text-muted-foreground">无</span>
         </SelectItem>
         {definition.options?.map((opt) => {
           const optionStyle = opt.color

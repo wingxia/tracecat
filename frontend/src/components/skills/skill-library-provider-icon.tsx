@@ -67,7 +67,7 @@ export function SkillLibraryMaintainerMark({
 }) {
   const maintainer = libraryMaintainer(provider)
   if (maintainer === "official" || !provider) return null
-  const label = `Maintained by ${provider}`
+  const label = `由 ${provider} 维护`
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -90,9 +90,7 @@ export function SkillLibraryMaintainerMark({
       <TooltipContent side="bottom" align="start">
         <p className="font-medium">{label}</p>
         {maintainer === "tracecat" ? (
-          <p className="opacity-80">
-            Ships with Tracecat and updates with each release.
-          </p>
+          <p className="opacity-80">随 Tracecat 提供，并随每次发布更新。</p>
         ) : null}
       </TooltipContent>
     </Tooltip>

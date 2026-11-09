@@ -20,9 +20,9 @@ import { cn } from "@/lib/utils"
 
 /** Badge copy per file status. `null` means no badge is rendered. */
 const STATUS_LABELS: Record<VersionFileStatus, string | null> = {
-  added: "Added",
-  removed: "Removed",
-  modified: "Modified",
+  added: "已添加",
+  removed: "已移除",
+  modified: "已修改",
   unchanged: null,
 }
 

@@ -1,4 +1,5 @@
 import { formatDistanceToNowStrict, intervalToDuration } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { z } from "zod"
 
 /**
@@ -14,7 +15,7 @@ export function formatRelative(
   try {
     const date = value instanceof Date ? value : new Date(value)
     if (Number.isNaN(date.getTime())) return null
-    return formatDistanceToNowStrict(date, { addSuffix: true })
+    return formatDistanceToNowStrict(date, { locale: zhCN, addSuffix: true })
   } catch {
     return null
   }
@@ -43,7 +44,7 @@ export const durationSchema = z
       data.minutes === 0 &&
       data.seconds === 0
     ) {
-      throw new Error("Please provide at least one component in the duration.")
+      throw new Error("请至少填写一个时长单位。")
     }
     return data
   })
@@ -79,7 +80,7 @@ export function parseISODuration(duration: string): Duration {
   const matches = duration.match(regex)
 
   if (!matches) {
-    throw new Error("Invalid ISO 8601 duration format")
+    throw new Error("无效的 ISO 8601 时长格式")
   }
 
   const [
@@ -289,13 +290,13 @@ const DURATION_LONG_NOUNS: Record<
   (typeof DURATION_LONG_UNITS)[number],
   string
 > = {
-  years: "year",
-  months: "month",
-  weeks: "week",
-  days: "day",
-  hours: "hour",
-  minutes: "minute",
-  seconds: "second",
+  years: "年",
+  months: "个月",
+  weeks: "周",
+  days: "天",
+  hours: "小时",
+  minutes: "分钟",
+  seconds: "秒",
 }
 
 /**
@@ -311,9 +312,9 @@ export function formatDurationLong(duration: Partial<Duration>): string {
     const value = duration[unit] ?? 0
     if (value === 0) continue
     const noun = DURATION_LONG_NOUNS[unit]
-    parts.push(`${value} ${noun}${value > 1 ? "s" : ""}`)
+    parts.push(`${value} ${noun}`)
   }
-  return parts.length > 0 ? parts.join(", ") : "0 seconds"
+  return parts.length > 0 ? parts.join("，") : "0 秒"
 }
 
 /**

@@ -187,12 +187,12 @@ function SkillMetadataBadges({ item }: { item: SkillDirectoryItem }) {
       {item.current_version_id ? (
         <Badge variant="secondary" className="h-5 px-2 text-[10px] font-normal">
           <CircleCheck className="mr-1 size-3" />
-          Published
+          已发布
         </Badge>
       ) : (
         <Badge variant="secondary" className="h-5 px-2 text-[10px] font-normal">
           <CircleDot className="mr-1 size-3" />
-          Unpublished
+          未发布
         </Badge>
       )}
     </div>
@@ -241,15 +241,13 @@ export function SkillFolderCreateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Create folder</DialogTitle>
-          <DialogDescription>
-            Create a new folder to organize your skills.
-          </DialogDescription>
+          <DialogTitle>创建文件夹</DialogTitle>
+          <DialogDescription>创建文件夹来整理技能。</DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="py-2">
             <Input
-              placeholder="Folder name"
+              placeholder={"文件夹名称"}
               value={name}
               onChange={(event) => setName(event.target.value)}
               onKeyDown={(event) => {
@@ -265,7 +263,7 @@ export function SkillFolderCreateDialog({
             disabled={createFolderIsPending || !name.trim()}
           >
             {createFolderIsPending ? <Spinner className="mr-2 size-4" /> : null}
-            Create folder
+            创建文件夹
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -306,10 +304,8 @@ function SkillFolderRenameDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Rename folder</DialogTitle>
-          <DialogDescription>
-            Enter a new name for the folder.
-          </DialogDescription>
+          <DialogTitle>重命名文件夹</DialogTitle>
+          <DialogDescription>输入文件夹的新名称。</DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="py-2">
@@ -329,7 +325,7 @@ function SkillFolderRenameDialog({
             disabled={updateFolderIsPending || !name.trim()}
           >
             {updateFolderIsPending ? <Spinner className="mr-2 size-4" /> : null}
-            Rename
+            重命名
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -379,9 +375,9 @@ function SkillFolderMoveDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Move folder</DialogTitle>
+          <DialogTitle>移动文件夹</DialogTitle>
           <DialogDescription>
-            Select a new destination for{" "}
+            选择新的目标位置，移动对象：{" "}
             <span className="font-medium">{folder.name}</span>.
           </DialogDescription>
         </DialogHeader>
@@ -422,7 +418,7 @@ function SkillFolderMoveDialog({
             disabled={moveFolderIsPending}
           >
             {moveFolderIsPending ? <Spinner className="mr-2 size-4" /> : null}
-            Move
+            移动
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -462,9 +458,9 @@ function SkillMoveDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Move skill</DialogTitle>
+          <DialogTitle>移动技能</DialogTitle>
           <DialogDescription>
-            Select a folder for{" "}
+            选择目标文件夹，移动对象：{" "}
             <span className="font-medium">{skill.name}</span>.
           </DialogDescription>
         </DialogHeader>
@@ -505,7 +501,7 @@ function SkillMoveDialog({
             disabled={moveSkillIsPending}
           >
             {moveSkillIsPending ? <Spinner className="mr-2 size-4" /> : null}
-            Move
+            移动
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -535,11 +531,11 @@ function SkillFolderContextActions({
         onSelect={(event) => {
           event.stopPropagation()
           void navigator.clipboard.writeText(item.id)
-          toast({ title: "Copied", description: "Folder ID copied" })
+          toast({ title: "已复制", description: "已复制文件夹 ID" })
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy folder ID
+        复制文件夹 ID
       </ContextMenuItem>
       {canUpdateSkill ? (
         <>
@@ -552,7 +548,7 @@ function SkillFolderContextActions({
             }}
           >
             <Pencil className="mr-2 size-3.5" />
-            Rename folder
+            重命名文件夹
           </ContextMenuItem>
           <ContextMenuItem
             className="text-xs"
@@ -563,7 +559,7 @@ function SkillFolderContextActions({
             }}
           >
             <FolderKanban className="mr-2 size-3.5" />
-            Move folder
+            移动文件夹
           </ContextMenuItem>
         </>
       ) : null}
@@ -585,7 +581,7 @@ function SkillFolderContextActions({
             }}
           >
             <Trash2 className="mr-2 size-3.5" />
-            Delete
+            删除
           </ContextMenuItem>
         </>
       ) : null}
@@ -628,7 +624,7 @@ function SkillContextActions({
           onClick={(event) => event.stopPropagation()}
         >
           <ExternalLinkIcon className="mr-2 size-3.5" />
-          Open in new tab
+          在新标签页中打开
         </Link>
       </ContextMenuItem>
       {canUpdateSkill ? (
@@ -641,7 +637,7 @@ function SkillContextActions({
           }}
         >
           <FolderKanban className="mr-2 size-3.5" />
-          Move to folder
+          移至文件夹
         </ContextMenuItem>
       ) : null}
       {canUpdateSkill ? (
@@ -649,7 +645,7 @@ function SkillContextActions({
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <TagsIcon className="mr-2 size-3.5" />
-              Tags
+              标签
             </ContextMenuSubTrigger>
             <ContextMenuPortal>
               <ContextMenuSubContent>
@@ -695,12 +691,12 @@ function SkillContextActions({
         ) : areTagsLoading ? (
           <ContextMenuItem className="!bg-transparent text-xs !text-muted-foreground">
             <TagsIcon className="mr-2 size-3.5" />
-            Loading tags...
+            正在加载标签…
           </ContextMenuItem>
         ) : (
           <ContextMenuItem className="!bg-transparent text-xs !text-muted-foreground">
             <TagsIcon className="mr-2 size-3.5" />
-            No tags available
+            暂无可用标签
           </ContextMenuItem>
         )
       ) : null}
@@ -709,11 +705,11 @@ function SkillContextActions({
         onSelect={(event) => {
           event.stopPropagation()
           void navigator.clipboard.writeText(item.id)
-          toast({ title: "Copied", description: "Skill ID copied" })
+          toast({ title: "已复制", description: "已复制技能 ID" })
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy skill ID
+        复制技能 ID
       </ContextMenuItem>
       {canDeleteSkill ? (
         <>
@@ -727,7 +723,7 @@ function SkillContextActions({
             }}
           >
             <Trash2 className="mr-2 size-3.5" />
-            Delete
+            删除
           </ContextMenuItem>
         </>
       ) : null}
@@ -1104,9 +1100,7 @@ export function SkillsDashboard({ workspaceId }: { workspaceId: string }) {
           </div>
         ) : error ? (
           <div className="flex h-full items-center justify-center px-6">
-            <span className="text-sm text-destructive">
-              Failed to load skills.
-            </span>
+            <span className="text-sm text-destructive">加载技能失败。</span>
           </div>
         ) : visibleItems.length === 0 ? (
           <div className="flex h-full p-6">
@@ -1117,8 +1111,8 @@ export function SkillsDashboard({ workspaceId }: { workspaceId: string }) {
                 </EmptyMedia>
                 <EmptyTitle>
                   {searchQuery.trim() || filter.active
-                    ? "No skills match your filters"
-                    : "No skills yet"}
+                    ? "没有符合筛选条件的技能"
+                    : "暂无技能"}
                 </EmptyTitle>
               </EmptyHeader>
             </Empty>

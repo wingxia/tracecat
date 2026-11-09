@@ -98,9 +98,9 @@ describe("useStdioMcpVerificationStatus", () => {
     await waitFor(() => expect(toast).toHaveBeenCalledTimes(1))
     expect(result.current.get(mcpIntegrationId)?.status).toBe("failed")
     expect(toast).toHaveBeenLastCalledWith({
-      title: "MCP server verification failed",
+      title: "MCP 服务器验证失败",
       description:
-        "Authentication failed: invalid credentials — Open the failure badge for details.",
+        "Authentication failed: invalid credentials — 打开失败标记以查看详情。",
       variant: "destructive",
     })
 

@@ -146,8 +146,8 @@ export function JsonViewWithControls({
   const tabItems = React.useMemo(
     () =>
       [
-        { value: "nested", label: "Nested", src: originalSrc },
-        { value: "flat", label: "Flat", src: flattenedSrc },
+        { value: "nested", label: "嵌套", src: originalSrc },
+        { value: "flat", label: "平铺", src: flattenedSrc },
       ] as { value: JsonViewWithControlsTabs; label: string; src: unknown }[],
     [flattenedSrc, originalSrc]
   )
@@ -179,7 +179,7 @@ export function JsonViewWithControls({
                   onClick={(e) => e.stopPropagation()}
                 />
                 <p className="text-xs text-foreground/70">
-                  {isExpanded ? "Collapse" : "Expand"}
+                  {isExpanded ? "折叠" : "展开"}
                 </p>
               </div>
             </>
@@ -225,7 +225,7 @@ export function JsonViewWithControls({
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        aria-label="Copy JSONPath"
+                        aria-label={"复制 JSONPath"}
                         className={cn(
                           "m-0 inline-flex size-3 items-center justify-center p-0 text-muted-foreground hover:text-foreground",
                           className
@@ -238,7 +238,7 @@ export function JsonViewWithControls({
                         <LinkIcon className="size-3" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>Copy JSONPath</TooltipContent>
+                    <TooltipContent>复制 JSONPath</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               )}
@@ -286,7 +286,7 @@ function CopyPayloadButton({ node }: { node: unknown }): JSX.Element {
         <TooltipTrigger asChild>
           <button
             type="button"
-            aria-label="Copy JSON payload"
+            aria-label={"复制 JSON 数据"}
             className="json-view--copy inline-flex size-3 items-center justify-center p-0 pl-1.5 text-muted-foreground hover:text-foreground"
             onClick={handleCopy}
           >
@@ -297,7 +297,7 @@ function CopyPayloadButton({ node }: { node: unknown }): JSX.Element {
             )}
           </button>
         </TooltipTrigger>
-        <TooltipContent>Copy JSON payload</TooltipContent>
+        <TooltipContent>复制 JSON 数据</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   )

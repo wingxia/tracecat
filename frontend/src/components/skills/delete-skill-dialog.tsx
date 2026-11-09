@@ -26,17 +26,15 @@ export function DeleteSkillDialog({
     <ConfirmDestructiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete skill"
+      title={"删除技能"}
       description={
         <>
-          Delete{" "}
-          <span className="font-medium text-foreground">{skill?.name}</span>?
-          This removes it from Skills Studio and every agent that uses it,
-          including saved versions. Restoring an older agent version will not
-          bring this skill back. This cannot be undone.
+          删除{" "}
+          <span className="font-medium text-foreground">{skill?.name}</span>
+          吗？此操作会从技能工作室及所有使用它的智能体（包括已保存版本）中移除该技能。恢复旧版智能体也不会找回此技能。此操作无法撤销。
         </>
       }
-      identifier={{ label: "Skill slug", value: slug }}
+      identifier={{ label: "技能标识", value: slug }}
       confirmPhrase={slug}
       isPending={pending}
       onConfirm={onConfirm}

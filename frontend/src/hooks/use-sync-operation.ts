@@ -11,7 +11,7 @@ import {
 export class SyncOperationPollingError extends Error {
   constructor() {
     super(
-      "Unable to read sync progress. The accepted operation may still be running. Reopen Git sync to check its status."
+      "无法读取同步进度，已接受的操作可能仍在运行。请重新打开 Git 同步以查看状态。"
     )
     this.name = "SyncOperationPollingError"
   }
@@ -20,7 +20,7 @@ export class SyncOperationPollingError extends Error {
 /** Leaving the view detaches its waiter while the accepted operation continues. */
 export class SyncOperationWaitCancelled extends Error {
   constructor() {
-    super("Sync continues in the background")
+    super("同步将在后台继续")
     this.name = "SyncOperationWaitCancelled"
   }
 }

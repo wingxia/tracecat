@@ -29,8 +29,8 @@ export function AddCaseTagDialog({
           requestBody: params,
         })
       }}
-      title="Create tag"
-      description="Enter a name for your new case tag."
+      title={"创建标签"}
+      description={"输入新事件标签的名称。"}
     />
   )
 }

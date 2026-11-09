@@ -138,7 +138,7 @@ describe("CanvasToolbar", () => {
       <CanvasToolbar onAddAction={jest.fn()} onAddActions={onAddActions} />
     )
 
-    await user.click(screen.getByRole("button", { name: "Tools" }))
+    await user.click(screen.getByRole("button", { name: "工具" }))
     expect(screen.getByRole("dialog")).toBeInTheDocument()
     expect(
       screen.queryByRole("option", { name: /HTTP request/ })
@@ -147,7 +147,7 @@ describe("CanvasToolbar", () => {
     await user.click(
       await screen.findByRole("option", { name: /Run Ansible playbook/ })
     )
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
 
     expect(onAddActions).toHaveBeenCalledWith([
       expect.objectContaining({ action: "tools.ansible.run_playbook" }),
@@ -159,11 +159,11 @@ describe("CanvasToolbar", () => {
     const onAddAction = jest.fn()
     render(<CanvasToolbar onAddAction={onAddAction} />)
 
-    await user.click(screen.getByRole("button", { name: "Tools" }))
+    await user.click(screen.getByRole("button", { name: "工具" }))
     await user.click(
       await screen.findByRole("option", { name: /Run Ansible playbook/ })
     )
-    await user.click(screen.getByRole("button", { name: "Done" }))
+    await user.click(screen.getByRole("button", { name: "完成" }))
 
     expect(onAddAction).toHaveBeenCalledTimes(1)
     expect(onAddAction).toHaveBeenCalledWith(

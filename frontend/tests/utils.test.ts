@@ -150,19 +150,21 @@ describe("shortTimeAgo", () => {
   }
 
   it("formats each unit", () => {
-    expect(shortTimeAgo(new Date(NOW.getTime() - 30 * 1000))).toBe("just now")
-    expect(shortTimeAgo(new Date(NOW.getTime() - 5 * 60 * 1000))).toBe("5m ago")
-    expect(shortTimeAgo(new Date(NOW.getTime() - 3 * 60 * 60 * 1000))).toBe(
-      "3h ago"
+    expect(shortTimeAgo(new Date(NOW.getTime() - 30 * 1000))).toBe("刚刚")
+    expect(shortTimeAgo(new Date(NOW.getTime() - 5 * 60 * 1000))).toBe(
+      "5 分钟前"
     )
-    expect(shortTimeAgo(daysAgo(3))).toBe("3d ago")
-    expect(shortTimeAgo(daysAgo(14))).toBe("2w ago")
-    expect(shortTimeAgo(daysAgo(90))).toBe("3mo ago")
-    expect(shortTimeAgo(daysAgo(400))).toBe("1y ago")
+    expect(shortTimeAgo(new Date(NOW.getTime() - 3 * 60 * 60 * 1000))).toBe(
+      "3 小时前"
+    )
+    expect(shortTimeAgo(daysAgo(3))).toBe("3 天前")
+    expect(shortTimeAgo(daysAgo(14))).toBe("2 周前")
+    expect(shortTimeAgo(daysAgo(90))).toBe("3 个月前")
+    expect(shortTimeAgo(daysAgo(400))).toBe("1 年前")
   })
 
   it("clamps future dates to just now", () => {
-    expect(shortTimeAgo(new Date(NOW.getTime() + DAY_MS))).toBe("just now")
+    expect(shortTimeAgo(new Date(NOW.getTime() + DAY_MS))).toBe("刚刚")
   })
 
   // Handing over on the smaller unit's own count (4 weeks, 12 months) left the
@@ -174,16 +176,16 @@ describe("shortTimeAgo", () => {
   })
 
   it("keeps weeks through the last day before a month", () => {
-    expect(shortTimeAgo(daysAgo(27))).toBe("3w ago")
-    expect(shortTimeAgo(daysAgo(28))).toBe("4w ago")
-    expect(shortTimeAgo(daysAgo(29))).toBe("4w ago")
-    expect(shortTimeAgo(daysAgo(30))).toBe("1mo ago")
+    expect(shortTimeAgo(daysAgo(27))).toBe("3 周前")
+    expect(shortTimeAgo(daysAgo(28))).toBe("4 周前")
+    expect(shortTimeAgo(daysAgo(29))).toBe("4 周前")
+    expect(shortTimeAgo(daysAgo(30))).toBe("1 个月前")
   })
 
   it("keeps months through the last day before a year", () => {
-    expect(shortTimeAgo(daysAgo(359))).toBe("11mo ago")
-    expect(shortTimeAgo(daysAgo(360))).toBe("12mo ago")
-    expect(shortTimeAgo(daysAgo(364))).toBe("12mo ago")
-    expect(shortTimeAgo(daysAgo(365))).toBe("1y ago")
+    expect(shortTimeAgo(daysAgo(359))).toBe("11 个月前")
+    expect(shortTimeAgo(daysAgo(360))).toBe("12 个月前")
+    expect(shortTimeAgo(daysAgo(364))).toBe("12 个月前")
+    expect(shortTimeAgo(daysAgo(365))).toBe("1 年前")
   })
 })

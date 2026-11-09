@@ -156,8 +156,8 @@ function EditableWorkflowTitle({
     if (next.length < 3) {
       // Reverting without explanation reads as the rename being ignored.
       toast({
-        title: "Name too short",
-        description: "Workflow names must be at least 3 characters.",
+        title: "名称过短",
+        description: "工作流名称至少需要 3 个字符。",
       })
       cancel()
       return
@@ -202,7 +202,7 @@ function EditableWorkflowTitle({
           }
         }}
         maxLength={100}
-        aria-label="Workflow name"
+        aria-label={"工作流名称"}
         className="h-6 w-64 max-w-full px-2 py-1 text-sm"
       />
     )
@@ -231,7 +231,7 @@ function EditableWorkflowTitle({
         variant="ghost"
         size="icon"
         onClick={() => setIsEditing(true)}
-        aria-label="Rename workflow"
+        aria-label={"重命名工作流"}
         className="size-5 shrink-0 opacity-0 transition-opacity group-hover/title:opacity-100 group-focus-within/title:opacity-100"
       >
         <PencilIcon className="size-3 text-muted-foreground" />
@@ -254,7 +254,7 @@ export function BuilderNav() {
 
   const workspaceId = useWorkspaceId()
   const { workspace, workspaceLoading } = useWorkspaceDetails()
-  const workflowTitle = workflow?.title ?? "Untitled workflow"
+  const workflowTitle = workflow?.title ?? "未命名工作流"
   const { folders } = useFolders(workspaceId, {
     enabled: Boolean(workflow?.folder_id),
   })
@@ -451,7 +451,7 @@ function TabSwitcher({ workflowId }: { workflowId: string }) {
               <TooltipTrigger asChild>
                 <span className="flex size-full items-center justify-center">
                   <WorkflowIcon className="mr-2 size-4" />
-                  <span>Workflow</span>
+                  <span>工作流</span>
                 </span>
               </TooltipTrigger>
               <TooltipContent
@@ -462,7 +462,7 @@ function TabSwitcher({ workflowId }: { workflowId: string }) {
                 <span className="inline-flex items-center gap-1">
                   <Kbd>W</Kbd>
                   <span className="inline-flex h-5 items-center rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
-                    then
+                    然后
                   </span>
                   <Kbd>W</Kbd>
                 </span>
@@ -480,7 +480,7 @@ function TabSwitcher({ workflowId }: { workflowId: string }) {
               <TooltipTrigger asChild>
                 <span className="flex size-full items-center justify-center">
                   <SquarePlay className="mr-2 size-4" />
-                  <span>Runs</span>
+                  <span>运行记录</span>
                 </span>
               </TooltipTrigger>
               <TooltipContent
@@ -491,7 +491,7 @@ function TabSwitcher({ workflowId }: { workflowId: string }) {
                 <span className="inline-flex items-center gap-1">
                   <Kbd>R</Kbd>
                   <span className="inline-flex h-5 items-center rounded border bg-muted px-1.5 text-[10px] font-medium text-muted-foreground">
-                    then
+                    然后
                   </span>
                   <Kbd>R</Kbd>
                 </span>
@@ -506,7 +506,7 @@ function TabSwitcher({ workflowId }: { workflowId: string }) {
 
 const publishFormSchema = z.object({
   message: z.string().optional(),
-  branch: z.string().trim().min(1, "Target branch is required"),
+  branch: z.string().trim().min(1, "目标分支不能为空"),
 })
 type TPublishForm = z.infer<typeof publishFormSchema>
 const CREATE_NEW_BRANCH_VALUE = "__create_new_branch__"
@@ -567,7 +567,7 @@ function normalizeRunValidationErrors(
       {
         type: "dsl",
         status: "error",
-        msg: "Workflow validation failed",
+        msg: "工作流校验失败",
         ref: null,
         detail,
       },
@@ -608,7 +608,7 @@ function normalizeRunValidationErrors(
       {
         type: "dsl",
         status: "error",
-        msg: message || "Workflow validation failed",
+        msg: message || "工作流校验失败",
         ref: null,
         detail: nestedDetail,
       },
@@ -696,9 +696,7 @@ export function WorkflowManualTrigger({
         if (validationErrors && validationErrors.length > 0) {
           setManualTriggerErrors(validationErrors)
         } else {
-          setManualTriggerErrors([
-            toDslApiErrorResult("Failed to start workflow"),
-          ])
+          setManualTriggerErrors([toDslApiErrorResult("启动工作流失败")])
         }
       }
     }
@@ -712,12 +710,12 @@ export function WorkflowManualTrigger({
       noErrorTooltip={
         <span>
           {disabled
-            ? "Cannot run workflow."
+            ? "无法运行工作流。"
             : executionPending
-              ? "Starting workflow execution..."
+              ? "正在启动工作流执行…"
               : lockedCount > 0
-                ? `Run the current draft workflow. ${lockedCount} locked ${lockedCount === 1 ? "action reuses its" : "actions reuse their"} past result.`
-                : "Run the current draft workflow with the trigger payload from the trigger node."}
+                ? `运行当前工作流草稿。${lockedCount} 个已锁定动作将复用历史结果。`
+                : "使用触发节点中的数据载荷运行当前工作流草稿。"}
         </span>
       }
     >
@@ -735,7 +733,7 @@ export function WorkflowManualTrigger({
         ) : (
           <PlayIcon className="size-3.5" />
         )}
-        <span>Run</span>
+        <span>运行</span>
         {lockedCount > 0 && (
           <span className="flex items-center gap-0.5 rounded bg-primary-foreground/20 px-1 text-[10px]">
             <LockIcon className="size-2.5" />
@@ -899,7 +897,7 @@ function WorkflowSaveActions({
           validationErrors={validationErrors || []}
           noErrorTooltip={
             <span>
-              Publish workflow v{(workflow.version || 0) + 1} with your changes.
+              发布工作流 v{(workflow.version || 0) + 1} ，包含你的更改。
             </span>
           }
         >
@@ -919,7 +917,7 @@ function WorkflowSaveActions({
             ) : (
               <LayersPlusIcon className="mr-2 size-3.5" />
             )}
-            Publish
+            发布
           </Button>
         </ValidationErrorView>
 
@@ -945,7 +943,7 @@ function WorkflowSaveActions({
                   className="flex flex-col"
                 >
                   <span className="mb-2 text-xs text-muted-foreground">
-                    Version control
+                    版本控制
                   </span>
                   <FormField
                     control={publishForm.control}
@@ -953,7 +951,7 @@ function WorkflowSaveActions({
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs text-muted-foreground">
-                          Target branch
+                          目标分支
                         </FormLabel>
                         <Select
                           value={
@@ -982,7 +980,7 @@ function WorkflowSaveActions({
                               {branchesLoading ? (
                                 <Skeleton className="h-3.5 w-full rounded-sm" />
                               ) : (
-                                <SelectValue placeholder="Select branch" />
+                                <SelectValue placeholder={"选择分支"} />
                               )}
                             </SelectTrigger>
                           </FormControl>
@@ -990,7 +988,7 @@ function WorkflowSaveActions({
                             {hasBranches ? (
                               <>
                                 <SelectItem value={CREATE_NEW_BRANCH_VALUE}>
-                                  Create branch...
+                                  创建分支…
                                 </SelectItem>
                                 <SelectSeparator />
                                 {(repoBranches ?? []).map((branch) => (
@@ -1014,7 +1012,7 @@ function WorkflowSaveActions({
                               </>
                             ) : (
                               <SelectItem value="__no_branches" disabled>
-                                No branches found
+                                未找到分支
                               </SelectItem>
                             )}
                           </SelectContent>
@@ -1028,15 +1026,13 @@ function WorkflowSaveActions({
                               className="h-7 px-3 text-xs"
                             />
                             <p className="mt-1 text-[11px] text-muted-foreground">
-                              The branch will be created from the repository
-                              default branch if it does not exist.
+                              分支不存在时，将从仓库的默认分支创建。
                             </p>
                           </div>
                         )}
                         {!branchesLoading && !hasBranches && (
                           <p className="text-[11px] text-muted-foreground">
-                            No branches available from the configured
-                            repository.
+                            配置的仓库中没有可用分支。
                           </p>
                         )}
                         <FormMessage />
@@ -1049,12 +1045,12 @@ function WorkflowSaveActions({
                     render={({ field }) => (
                       <FormItem className="mt-2">
                         <FormLabel className="text-xs text-muted-foreground">
-                          Commit message
+                          提交说明
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Add a short description of your changes (optional)"
+                            placeholder={"简要描述你的更改（可选）"}
                             className="h-7 px-3 text-xs"
                           />
                         </FormControl>
@@ -1063,7 +1059,7 @@ function WorkflowSaveActions({
                     )}
                   />
                   <div className="mt-2 space-y-1.5">
-                    <p className="text-xs text-muted-foreground">Push mode</p>
+                    <p className="text-xs text-muted-foreground">推送模式</p>
                     <WorkspaceSyncPushModeTabs
                       value={pushMode}
                       onValueChange={setPushMode}
@@ -1083,7 +1079,7 @@ function WorkflowSaveActions({
                     {isPublishing ? (
                       <>
                         <Spinner className="size-3" />
-                        Pushing changes...
+                        正在推送更改…
                       </>
                     ) : (
                       <>
@@ -1112,7 +1108,7 @@ function WorkflowSaveActions({
         variant="secondary"
         className="h-7 text-xs font-normal text-muted-foreground hover:cursor-default"
       >
-        {workflow.version ? `v${workflow.version}` : "Draft"}
+        {workflow.version ? `v${workflow.version}` : "草稿"}
       </Badge>
     </div>
   )
@@ -1147,7 +1143,7 @@ function BuilderNavOptions({
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
             <MoreHorizontal className="size-4" />
-            <span className="sr-only">More</span>
+            <span className="sr-only">更多</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
@@ -1157,7 +1153,7 @@ function BuilderNavOptions({
             workspaceId={workspaceId}
             workflowId={workflowId}
             draft={true}
-            label="Export draft"
+            label={"导出草稿"}
             icon={<DownloadIcon className="mr-2 size-3.5" />}
           />
           <ExportMenuItem
@@ -1166,19 +1162,19 @@ function BuilderNavOptions({
             workspaceId={workspaceId}
             workflowId={workflowId}
             draft={false}
-            label="Export saved"
+            label={"导出已保存版本"}
             icon={<DownloadIcon className="mr-2 size-3.5" />}
           />
           <DropdownMenuItem
             onClick={() =>
               copyToClipboard({
                 value: workflowId,
-                message: "Copied workflow ID to clipboard",
+                message: "已将工作流 ID 复制到剪贴板",
               })
             }
           >
             <CopyIcon className="mr-2 size-3.5" />
-            Copy workflow ID
+            复制工作流 ID
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <AlertDialogTrigger asChild disabled={readOnly}>
@@ -1187,7 +1183,7 @@ function BuilderNavOptions({
               className="text-destructive focus:text-destructive"
             >
               <Trash2Icon className="mr-2 size-3.5" />
-              Delete workflow
+              删除工作流
             </DropdownMenuItem>
           </AlertDialogTrigger>
         </DropdownMenuContent>

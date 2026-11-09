@@ -53,22 +53,21 @@ export function DeleteCaseTaskDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete task</AlertDialogTitle>
+          <AlertDialogTitle>删除任务</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete "{task.title}"? This action cannot
-            be undone.
+            确定要删除“{task.title}”吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleteTaskIsPending}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={handleDelete}
             disabled={deleteTaskIsPending}
           >
-            {deleteTaskIsPending ? "Deleting..." : "Delete"}
+            {deleteTaskIsPending ? "删除中…" : "删除"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

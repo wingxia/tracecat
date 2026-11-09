@@ -214,15 +214,13 @@ export function WorkspaceSyncBranchSelector({
           {branchesIsLoading ? (
             <Skeleton className="h-4 w-full rounded-sm" />
           ) : (
-            <SelectValue placeholder="Select branch" />
+            <SelectValue placeholder={"选择分支"} />
           )}
         </SelectTrigger>
         <SelectContent>
           {hasBranches ? (
             <>
-              <SelectItem value={CREATE_NEW_BRANCH_VALUE}>
-                Create branch...
-              </SelectItem>
+              <SelectItem value={CREATE_NEW_BRANCH_VALUE}>创建分支…</SelectItem>
               <SelectSeparator />
               {(branches ?? []).map((candidate) => (
                 <SelectItem key={candidate.name} value={candidate.name}>
@@ -242,7 +240,7 @@ export function WorkspaceSyncBranchSelector({
             </>
           ) : (
             <SelectItem value="__no_branches" disabled>
-              No branches found
+              未找到分支
             </SelectItem>
           )}
         </SelectContent>
@@ -256,19 +254,17 @@ export function WorkspaceSyncBranchSelector({
             placeholder={newBranchPlaceholder}
           />
           <p className="text-[11px] text-muted-foreground">
-            The branch will be created from the repository default branch.
+            将从仓库默认分支创建此分支。
           </p>
         </div>
       )}
       {!branchesIsLoading && !hasBranches && showNoBranchesMessage && (
         <p className="text-[11px] text-muted-foreground">
-          No branches available from the configured repository.
+          配置的仓库中没有可用分支。
         </p>
       )}
       {branchesError && (
-        <p className="text-[11px] text-destructive">
-          Failed to load repository branches.
-        </p>
+        <p className="text-[11px] text-destructive">加载仓库分支失败。</p>
       )}
     </>
   )

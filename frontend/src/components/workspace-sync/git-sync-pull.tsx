@@ -311,8 +311,8 @@ export function GitSyncPullTab({
     } catch (error) {
       if (error instanceof SyncOperationWaitCancelled) return
       toast({
-        title: "Pull preview failed",
-        description: getApiErrorDetail(error) ?? "Request failed",
+        title: "拉取预览失败",
+        description: getApiErrorDetail(error) ?? "请求失败",
         variant: "destructive",
       })
     } finally {
@@ -374,16 +374,16 @@ export function GitSyncPullTab({
       }
       toast({
         title: result.success
-          ? `Pulled into ${workspaceName}`
-          : "Workspace pull failed",
+          ? `已拉取到 ${workspaceName}`
+          : "工作空间拉取失败",
         description: result.message,
         variant: result.success ? undefined : "destructive",
       })
     } catch (error) {
       if (error instanceof SyncOperationWaitCancelled) return
       toast({
-        title: "Pull failed",
-        description: getApiErrorDetail(error) ?? "Request failed",
+        title: "拉取失败",
+        description: getApiErrorDetail(error) ?? "请求失败",
         variant: "destructive",
       })
     } finally {
@@ -432,7 +432,7 @@ export function GitSyncPullTab({
           />
         ) : (
           <GitSyncPreviewEmpty
-            description={`Preview to see what comes into ${workspaceName} before pulling.`}
+            description={`拉取前先预览将导入 ${workspaceName} 的内容。`}
             isLoading={isPreviewing}
             disabled={
               pullWorkflowsIsPending || commitsIsLoading || !effectivePullSha
@@ -442,8 +442,8 @@ export function GitSyncPullTab({
         )}
       </div>
 
-      <GitSyncActionBar label="Pull actions">
-        <span className="text-xs text-muted-foreground">From</span>
+      <GitSyncActionBar label={"拉取操作"}>
+        <span className="text-xs text-muted-foreground">来源</span>
         <GitSyncCommitPicker
           commits={commits}
           commitSha={effectivePullSha}
@@ -488,7 +488,7 @@ export function GitSyncPullTab({
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>确定吗？</AlertDialogTitle>
             <AlertDialogDescription>
               {getPullConfirmation({
                 changeCount,
@@ -500,7 +500,7 @@ export function GitSyncPullTab({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={pullWorkflowsIsPending || !canApplyPull}
               onClick={() => void handleApplyPull()}
@@ -532,14 +532,14 @@ function OverwriteSchedules({
           onCheckedChange={(value) => onCheckedChange(value === true)}
           disabled={disabled}
         />
-        Overwrite schedules
+        覆盖定时计划
       </label>
       <TooltipProvider delayDuration={150}>
         <Tooltip>
           <TooltipTrigger asChild>
             <button
               type="button"
-              aria-label="About overwriting schedules"
+              aria-label={"关于覆盖定时计划"}
               className="flex text-muted-foreground hover:text-foreground"
             >
               <InfoIcon className="size-3.5" />
@@ -547,8 +547,8 @@ function OverwriteSchedules({
           </TooltipTrigger>
           <TooltipContent className="max-w-64">
             {checked
-              ? "Existing resources with matching IDs are overwritten, including their schedules."
-              : "Existing resources with matching IDs are overwritten. Schedules are preserved."}
+              ? "将覆盖 ID 匹配的现有资源，包括其定时计划。"
+              : "将覆盖 ID 匹配的现有资源，保留定时计划。"}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -574,10 +574,10 @@ function getPullPreviewSummary(
   shortSha: string | undefined,
   baseBranch: string | undefined
 ): string {
-  const commit = shortSha ?? "this commit"
-  const source = baseBranch ? `${commit} on ${baseBranch}` : commit
+  const commit = shortSha ?? "此提交"
+  const source = baseBranch ? `${baseBranch} 上的 ${commit}` : commit
   const counts = formatChangeCounts(diffs)
-  return counts ? `${counts} from ${source}` : `Already matches ${source}`
+  return counts ? `来自 ${source}：${counts}` : `已与 ${source} 一致`
 }
 
 function getPullButtonLabel({
@@ -588,7 +588,7 @@ function getPullButtonLabel({
   workspaceName: string
 }): string {
   // Keep the label stable; the preview above already shows what changes.
-  return isApplying ? "Pulling..." : `Pull into ${workspaceName}`
+  return isApplying ? "拉取中…" : `拉取到 ${workspaceName}`
 }
 
 function getPullConfirmation({
@@ -604,13 +604,13 @@ function getPullConfirmation({
   workspaceName: string
   syncSchedules: boolean
 }): string {
-  const changes = `${changeCount} ${changeCount === 1 ? "change" : "changes"}`
-  const commit = shortSha ?? "the selected commit"
-  const source = baseBranch ? `${commit} on ${baseBranch}` : commit
+  const changes = `${changeCount} 项更改`
+  const commit = shortSha ?? "所选提交"
+  const source = baseBranch ? `${baseBranch} 上的 ${commit}` : commit
   const schedules = syncSchedules
-    ? "Workflow schedules are replaced with the ones in Git."
-    : "Workflow schedules are kept."
-  return `This applies ${changes} from ${source} to ${workspaceName}. ${schedules}`
+    ? "工作流定时计划将替换为 Git 中的版本。"
+    : "保留工作流定时计划。"
+  return `此操作会将来自 ${source} 的 ${changes} 应用到 ${workspaceName}。${schedules}`
 }
 
 /**
@@ -688,7 +688,7 @@ function PullPreview({
       className="ml-auto h-7 shrink-0 text-xs text-foreground"
       onClick={() => setMatchesOpen(true)}
     >
-      Choose matches
+      选择匹配项
     </Button>
   )
 
@@ -698,11 +698,8 @@ function PullPreview({
       <GitSyncNotice tone="warning">
         <span className="flex items-center gap-3">
           <span>
-            Pull is blocked: {unmatchedCount}{" "}
-            {unmatchedCount === 1
-              ? "reference in this commit needs"
-              : "references in this commit need"}{" "}
-            a match in {workspaceName}.
+            拉取被阻止：此提交中的 {unmatchedCount} 个引用需要在 {workspaceName}{" "}
+            中匹配。
           </span>
           {chooseMatches}
         </span>
@@ -712,7 +709,7 @@ function PullPreview({
     notice = (
       <GitSyncNotice tone="warning">
         <span className="flex items-center gap-3">
-          <span>{result.message || "Pull preview failed."}</span>
+          <span>{result.message || "拉取预览失败。"}</span>
           {matchCount > 0 && chooseMatches}
         </span>
       </GitSyncNotice>
@@ -724,13 +721,13 @@ function PullPreview({
         className="flex items-center gap-2 border-b px-5 py-2.5 text-xs text-muted-foreground"
       >
         <CheckIcon className="size-3.5 shrink-0 text-green-700 dark:text-green-500" />
-        <span>Matches checked for {matchedNames.join(", ")}.</span>
+        <span>已检查匹配项，目标为 {matchedNames.join(", ")}.</span>
         <button
           type="button"
           className="text-foreground underline underline-offset-2"
           onClick={() => setMatchesOpen(true)}
         >
-          Change
+          更改
         </button>
       </div>
     )
@@ -746,16 +743,15 @@ function PullPreview({
         >
           <InfoIcon className="size-3.5 shrink-0" />
           <span>
-            Secret stores: {linkedStoreCount} of{" "}
-            {storeMappingRequirements.length} linked. Unlinked secrets import
-            without a store and can be linked later in Credentials.
+            密钥存储： {linkedStoreCount} / {storeMappingRequirements.length}{" "}
+            已关联。未关联的密钥将不带存储导入，之后可在凭据中关联。
           </span>
           <button
             type="button"
             className="text-foreground underline underline-offset-2"
             onClick={() => setMatchesOpen(true)}
           >
-            Choose stores
+            选择存储
           </button>
         </div>
       )}
@@ -766,9 +762,8 @@ function PullPreview({
         >
           <InfoIcon className="size-3.5 shrink-0" />
           <span>
-            Pulling installs {librarySkillInstalls.length}{" "}
-            {librarySkillInstalls.length === 1 ? "skill" : "skills"} from the
-            skills library: {librarySkillInstalls.join(", ")}.
+            拉取会从技能库安装 {librarySkillInstalls.length} 个技能：
+            {librarySkillInstalls.join("、")}。
           </span>
         </div>
       )}
@@ -879,13 +874,13 @@ function MatchesDialog({
         <DialogHeader>
           <DialogTitle>
             {remaining > 0
-              ? `Match ${remaining} ${remaining === 1 ? "reference" : "references"} to pull`
-              : "Matches for this pull"}
+              ? `匹配 ${remaining} ${remaining === 1 ? "个引用" : "个引用"} 后拉取`
+              : "此次拉取的匹配项"}
           </DialogTitle>
           <DialogDescription>
             {total > 0
-              ? `This commit uses references that Tracecat can't match to ${workspaceName} on its own. Choose what each should use here.`
-              : `This commit uses secret stores that Tracecat can't match to ${workspaceName} on its own.`}
+              ? `此提交使用的引用无法自动匹配到 ${workspaceName}，请在此选择各引用的目标。`
+              : `此提交使用的密钥存储无法自动匹配到 ${workspaceName}。`}
             {storeMappingRequirements.length > 0 &&
               " Secret stores are optional: unlinked secrets import without a store."}
           </DialogDescription>
@@ -929,7 +924,7 @@ function MatchesDialog({
         </DialogBody>
         <DialogFooter className="sm:justify-between">
           <span className="text-xs text-muted-foreground">
-            {total > 0 ? `${matched} of ${total} matched` : "Optional"}
+            {total > 0 ? `已匹配 ${matched}/${total} 项` : "可选"}
           </span>
           <div className="flex gap-2">
             <Button
@@ -944,7 +939,7 @@ function MatchesDialog({
                 })
               }
             >
-              Save and preview again
+              保存并再次预览
             </Button>
           </div>
         </DialogFooter>
@@ -965,10 +960,10 @@ function PullDiagnostics({
   return (
     <div className="flex flex-col">
       <div className="flex h-9 items-center gap-1.5 border-b bg-muted/40 px-5 text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">Needs attention</span>
+        <span className="font-medium text-foreground">需要处理</span>
         <span aria-hidden>·</span>
         <span>
-          {diagnostics.length} {diagnostics.length === 1 ? "issue" : "issues"}
+          {diagnostics.length} {diagnostics.length === 1 ? "个问题" : "个问题"}
         </span>
       </div>
       <ul>
@@ -1023,8 +1018,8 @@ function PullResultSummary({
   const isPartial = imported < found || result.diagnostics.length > 0
   const headline =
     imported < found
-      ? `Pulled ${imported} of ${found} into ${workspaceName}`
-      : `Pulled ${imported} into ${workspaceName}`
+      ? `已拉取 ${imported}/${found} 项到 ${workspaceName}`
+      : `已拉取 ${imported} 项到 ${workspaceName}`
   const shortSha = result.commit_sha.substring(0, 7)
 
   return (
@@ -1040,7 +1035,7 @@ function PullResultSummary({
         )}
         <span className="text-sm font-medium">{headline}</span>
         <span className="text-xs text-muted-foreground">
-          from <span className="font-mono">{shortSha}</span>
+          来自 <span className="font-mono">{shortSha}</span>
           {baseBranch && ` on ${baseBranch}`}
           {pulledAt &&
             ` · ${pulledAt.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`}
@@ -1050,8 +1045,7 @@ function PullResultSummary({
         <div className="flex items-center gap-2 border-b px-5 py-2.5 text-xs text-muted-foreground">
           <InfoIcon className="size-3.5 shrink-0" />
           <span>
-            Installed from the skills library:{" "}
-            {(result.library_skill_installs ?? []).join(", ")}.
+            从技能库安装： {(result.library_skill_installs ?? []).join(", ")}.
           </span>
         </div>
       )}
@@ -1061,10 +1055,10 @@ function PullResultSummary({
       {resourceCounts.length > 0 && (
         <>
           <div className="flex h-9 items-center gap-1.5 border-b bg-muted/40 px-5 text-xs text-muted-foreground">
-            <span className="font-medium text-foreground">What changed</span>
+            <span className="font-medium text-foreground">变更内容</span>
             <span aria-hidden>·</span>
             <span>
-              {imported} of {found} imported
+              {imported} / {found} 已导入
             </span>
           </div>
           <ul>
@@ -1090,7 +1084,7 @@ function PullResultSummary({
                       : "text-muted-foreground"
                   )}
                 >
-                  {count.imported} of {count.found}
+                  {count.imported} / {count.found}
                 </span>
               </li>
             ))}

@@ -26,15 +26,14 @@ function pushError(code: string) {
   return Object.assign(new Error("Push failed"), {
     status: 400,
     body: {
-      detail:
-        "Synthetic workflow: Publish this workflow before pushing it to Git.",
+      detail: "Synthetic workflow: 推送到 Git 前，请先发布此工作流。",
       diagnostics: [
         {
           workflow_id: "00000000-0000-4000-8000-000000000001",
           workflow_title: "Synthetic workflow",
           stage: "definition",
           code,
-          message: "Publish this workflow before pushing it to Git.",
+          message: "推送到 Git 前，请先发布此工作流。",
         },
       ],
     },
@@ -94,14 +93,14 @@ test("clicking Push shows the Publish-first modal; dismissing has no side effect
   expect(push).toBeEnabled()
   fireEvent.click(push)
   expect(
-    await screen.findByRole("dialog", { name: "Publish this workflow first" })
+    await screen.findByRole("dialog", { name: "请先发布此工作流" })
   ).toBeInTheDocument()
   expect(
-    screen.getByText("Publish this workflow before pushing it to Git.")
+    screen.getByText("推送到 Git 前，请先发布此工作流。")
   ).toBeInTheDocument()
   expect(toast).not.toHaveBeenCalled()
   expect(workflowsCommitWorkflow).not.toHaveBeenCalled()
-  fireEvent.click(screen.getByRole("button", { name: "Got it" }))
+  fireEvent.click(screen.getByRole("button", { name: "知道了" }))
   await waitFor(() =>
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
   )
@@ -136,10 +135,8 @@ test("Publish from the modal saves one version and closes without retrying Git P
   )
   renderWorkflow()
   fireEvent.click(screen.getByRole("button", { name: "Push" }))
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Publish workflow" })
-  )
-  const pending = await screen.findByRole("button", { name: "Publishing…" })
+  fireEvent.click(await screen.findByRole("button", { name: "发布工作流" }))
+  const pending = await screen.findByRole("button", { name: "发布中…" })
   expect(pending).toBeDisabled()
   fireEvent.click(pending)
   expect(workflowsCommitWorkflow).toHaveBeenCalledTimes(1)
@@ -175,21 +172,19 @@ test("Publish validation errors stay visible in the modal and reach the editor",
   })
   renderWorkflow()
   fireEvent.click(screen.getByRole("button", { name: "Push" }))
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Publish workflow" })
-  )
+  fireEvent.click(await screen.findByRole("button", { name: "发布工作流" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
     "Add an action to this workflow."
   )
   expect(screen.getByRole("dialog")).toBeInTheDocument()
   expect(screen.getByLabelText("Validation errors")).toHaveTextContent("1")
-  expect(screen.getByRole("button", { name: "Publish workflow" })).toBeEnabled()
+  expect(screen.getByRole("button", { name: "发布工作流" })).toBeEnabled()
   jest.mocked(workflowsCommitWorkflow).mockResolvedValueOnce({
     workflow_id: "synthetic",
     status: "success",
     message: "Published",
   })
-  fireEvent.click(screen.getByRole("button", { name: "Publish workflow" }))
+  fireEvent.click(screen.getByRole("button", { name: "发布工作流" }))
   await waitFor(() =>
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
   )
@@ -215,16 +210,14 @@ test("a network retry shows only its own error while preserving editor validatio
   const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
   renderWorkflow()
   fireEvent.click(screen.getByRole("button", { name: "Push" }))
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Publish workflow" })
-  )
+  fireEvent.click(await screen.findByRole("button", { name: "发布工作流" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
     "Previous validation failure."
   )
-  fireEvent.click(screen.getByRole("button", { name: "Publish workflow" }))
+  fireEvent.click(screen.getByRole("button", { name: "发布工作流" }))
   await waitFor(() =>
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Could not publish this workflow. Please try again."
+      "无法发布此工作流，请重试。"
     )
   )
   expect(screen.getByRole("alert")).not.toHaveTextContent(
@@ -250,13 +243,11 @@ test("a transport failure stays in the modal and can be retried", async () => {
   const warn = jest.spyOn(console, "warn").mockImplementation(() => {})
   renderWorkflow()
   fireEvent.click(screen.getByRole("button", { name: "Push" }))
-  fireEvent.click(
-    await screen.findByRole("button", { name: "Publish workflow" })
-  )
+  fireEvent.click(await screen.findByRole("button", { name: "发布工作流" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Could not publish this workflow. Please try again."
+    "无法发布此工作流，请重试。"
   )
-  fireEvent.click(screen.getByRole("button", { name: "Publish workflow" }))
+  fireEvent.click(screen.getByRole("button", { name: "发布工作流" }))
   await waitFor(() =>
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
   )
@@ -270,7 +261,7 @@ test("a successful saved-version Push does not require another Publish", async (
     status: "no_op",
     branch: "sync/example",
     base_branch: "main",
-    message: "No changes",
+    message: "无更改",
   })
   renderWorkflow()
   fireEvent.click(screen.getByRole("button", { name: "Push" }))
@@ -283,7 +274,7 @@ test("legacy string errors cannot select the prerequisite modal", () => {
   expect(
     isPublishRequired(
       Object.assign(new Error(), {
-        body: { detail: "Publish this workflow before pushing it to Git." },
+        body: { detail: "推送到 Git 前，请先发布此工作流。" },
       })
     )
   ).toBe(false)
@@ -292,9 +283,7 @@ test("legacy string errors cannot select the prerequisite modal", () => {
 test("workspace explanation is informational and has no confirmation", () => {
   render(<WorkspacePushExplanation />)
   expect(
-    screen.getByText(
-      /Workspace Push can export new workflows from their current edits without publishing them/
-    )
+    screen.getByText(/工作空间推送可直接导出新工作流的当前编辑，无需先发布/)
   ).toBeInTheDocument()
   expect(screen.queryByRole("button")).not.toBeInTheDocument()
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument()

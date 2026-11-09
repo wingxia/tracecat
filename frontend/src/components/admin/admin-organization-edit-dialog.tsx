@@ -30,15 +30,12 @@ import { toast } from "@/components/ui/use-toast"
 import { useAdminOrganization } from "@/hooks/use-admin"
 
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
+  name: z.string().min(1, "名称不能为空").max(100, "名称过长"),
   slug: z
     .string()
-    .min(1, "Slug is required")
-    .max(50, "Slug is too long")
-    .regex(
-      /^[a-z0-9-]+$/,
-      "Slug must contain only lowercase letters, numbers, and hyphens"
-    ),
+    .min(1, "标识不能为空")
+    .max(50, "标识过长")
+    .regex(/^[a-z0-9-]+$/, "标识只能包含小写字母、数字和连字符"),
   is_active: z.boolean(),
 })
 
@@ -92,15 +89,15 @@ export function AdminOrganizationEditDialog({
     try {
       await updateOrganization(values)
       toast({
-        title: "Organization updated",
-        description: "Changes have been saved.",
+        title: "已更新组织",
+        description: "已保存更改。",
       })
       setDialogOpen(false)
     } catch (error) {
       console.error("Failed to update organization", error)
       toast({
-        title: "Failed to update organization",
-        description: "Please try again.",
+        title: "更新组织失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -111,19 +108,17 @@ export function AdminOrganizationEditDialog({
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent size="md" className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit organization</DialogTitle>
+          <DialogTitle>编辑组织</DialogTitle>
           <DialogDescription>
-            Update organization details
-            {organization ? ` for ${organization.name}.` : "."}
+            更新组织详情
+            {organization ? `（${organization.name}）。` : "."}
           </DialogDescription>
         </DialogHeader>
         {isLoading ? (
-          <div className="py-8 text-center text-muted-foreground">
-            Loading...
-          </div>
+          <div className="py-8 text-center text-muted-foreground">加载中…</div>
         ) : !organization ? (
           <div className="py-8 text-center text-muted-foreground">
-            Organization not found.
+            未找到组织。
           </div>
         ) : (
           <Form {...form}>
@@ -137,13 +132,11 @@ export function AdminOrganizationEditDialog({
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>名称</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>
-                        The display name of the organization.
-                      </FormDescription>
+                      <FormDescription>组织的显示名称。</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -153,12 +146,12 @@ export function AdminOrganizationEditDialog({
                   name="slug"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Slug</FormLabel>
+                      <FormLabel>标识</FormLabel>
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
                       <FormDescription>
-                        Unique identifier for the organization. Used in URLs.
+                        组织的唯一标识，用于 URL。
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -175,9 +168,9 @@ export function AdminOrganizationEditDialog({
                           onCheckedChange={field.onChange}
                         />
                       </FormControl>
-                      <FormLabel className="font-normal">Active</FormLabel>
+                      <FormLabel className="font-normal">已启用</FormLabel>
                       <FormDescription className="ml-4">
-                        Inactive organizations cannot be accessed by users.
+                        用户无法访问已停用的组织。
                       </FormDescription>
                     </FormItem>
                   )}
@@ -185,7 +178,7 @@ export function AdminOrganizationEditDialog({
               </DialogBody>
               <DialogFooter>
                 <Button size="sm" type="submit" disabled={updatePending}>
-                  {updatePending ? "Saving..." : "Save changes"}
+                  {updatePending ? "保存中…" : "保存更改"}
                 </Button>
               </DialogFooter>
             </form>

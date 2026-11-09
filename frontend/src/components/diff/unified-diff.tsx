@@ -131,5 +131,5 @@ function formatHiddenLines(count: number): string {
   if (count === 1) {
     return "1 unchanged line hidden"
   }
-  return `${count} unchanged lines hidden`
+  return `已隐藏 ${count} 行未更改内容`
 }

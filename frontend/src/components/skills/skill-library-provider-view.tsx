@@ -86,17 +86,14 @@ export function SkillLibraryProviderView({
     return (
       <AlertNotification
         level="error"
-        message={`Error loading skill library: ${librarySkillsError.message}`}
+        message={`加载技能库出错：${librarySkillsError.message}`}
       />
     )
   }
 
   if (!provider) {
     return (
-      <AlertNotification
-        level="error"
-        message="This provider is not in the skill library."
-      />
+      <AlertNotification level="error" message={"此提供商不在技能库中。"} />
     )
   }
 
@@ -140,7 +137,7 @@ export function SkillLibraryProviderView({
               </h2>
               <p className="text-sm text-muted-foreground">
                 {provider.description ??
-                  `Skills for ${provider.name}. Install all of them or only the ones you need, then attach them to agents.`}
+                  `${provider.name} 的技能。可全部安装或仅安装所需技能，再关联到智能体。`}
               </p>
             </div>
             {fullyInstalled && canDelete ? (
@@ -151,7 +148,7 @@ export function SkillLibraryProviderView({
                 disabled={isMutating}
                 onClick={() => setConfirmOpen(true)}
               >
-                Uninstall all
+                全部卸载
               </Button>
             ) : null}
             {!fullyInstalled && canCreate ? (
@@ -162,14 +159,14 @@ export function SkillLibraryProviderView({
                 disabled={isMutating}
                 onClick={() => run(() => installLibrarySkills(missing))}
               >
-                Install all
+                全部安装
               </Button>
             ) : null}
           </div>
         </header>
         <section className="flex flex-col gap-1">
           <h3 className="mb-2 border-b pb-2 text-sm font-semibold">
-            Skills{" "}
+            技能{" "}
             <span className="font-normal text-muted-foreground">
               {provider.skills.length}
             </span>
@@ -191,9 +188,9 @@ export function SkillLibraryProviderView({
         </section>
         {provider.repos.length > 0 ? (
           <section className="flex flex-col gap-2">
-            <h3 className="border-b pb-2 text-sm font-semibold">Information</h3>
+            <h3 className="border-b pb-2 text-sm font-semibold">信息</h3>
             <dl className="grid grid-cols-[140px_minmax(0,1fr)] rounded-md border text-xs">
-              <dt className="px-3 py-2.5 text-muted-foreground">Sources</dt>
+              <dt className="px-3 py-2.5 text-muted-foreground">来源</dt>
               <dd className="flex flex-col gap-1.5 px-3 py-2.5">
                 {provider.repos.map((repo) => (
                   <a
@@ -269,7 +266,7 @@ function ProviderSkillRow({
       </div>
       {skill.installed ? (
         <Badge variant="secondary" className="text-[10px]">
-          Installed
+          已安装
         </Badge>
       ) : null}
       {canCreate ? (
@@ -281,7 +278,7 @@ function ProviderSkillRow({
           onClick={onFork}
         >
           <GitForkIcon className="mr-1 size-3.5" />
-          Fork
+          创建分支副本
         </Button>
       ) : null}
       {skill.installed && canDelete ? (
@@ -293,7 +290,7 @@ function ProviderSkillRow({
           disabled={disabled}
           onClick={onUninstall}
         >
-          Uninstall
+          卸载
         </Button>
       ) : null}
       {!skill.installed && canCreate ? (
@@ -305,7 +302,7 @@ function ProviderSkillRow({
           disabled={disabled}
           onClick={onInstall}
         >
-          Install
+          安装
         </Button>
       ) : null}
     </div>

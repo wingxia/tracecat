@@ -98,19 +98,19 @@ const createInsertTableRowSchema = (columns: readonly TableColumnRead[]) => {
       case "TEXT":
         columnValidations[column.name] = z
           .string()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
         break
       case "INTEGER":
         columnValidations[column.name] = z
           .string()
           .trim()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
           .refine(
             (val) => {
               const n = Number(val)
               return Number.isInteger(n)
             },
-            { message: `${column.name} must be an integer` }
+            { message: `${column.name} 必须是整数` }
           )
           .transform((val) => Number(val))
         break
@@ -118,13 +118,13 @@ const createInsertTableRowSchema = (columns: readonly TableColumnRead[]) => {
         columnValidations[column.name] = z
           .string()
           .trim()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
           .refine(
             (val) => {
               const n = Number(val)
               return Number.isFinite(n)
             },
-            { message: `${column.name} must be a number` }
+            { message: `${column.name} 必须是数字` }
           )
           .transform((val) => Number(val))
         break
@@ -132,12 +132,12 @@ const createInsertTableRowSchema = (columns: readonly TableColumnRead[]) => {
         // Accept string inputs and transform to boolean
         columnValidations[column.name] = z
           .string()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
           .transform((val) => {
             const lower = val.toLowerCase().trim()
             if (lower === "true" || lower === "1") return true
             if (lower === "false" || lower === "0") return false
-            throw new Error(`Invalid boolean value. Use true, false, 1, or 0`)
+            throw new Error("布尔值无效，请使用 true、false、1 或 0")
           })
         break
       case "JSONB":
@@ -152,17 +152,17 @@ const createInsertTableRowSchema = (columns: readonly TableColumnRead[]) => {
                 return false
               }
             },
-            { message: `${column.name} must be valid JSON` }
+            { message: `${column.name} 必须是有效的 JSON` }
           )
           .transform((val) => JSON.parse(val))
         break
       case "TIMESTAMPTZ":
         columnValidations[column.name] = z
           .string()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
           .refine(
             (val) => !Number.isNaN(new Date(val).getTime()),
-            `${column.name} must be a valid date and time`
+            `${column.name} 必须为有效的日期和时间`
           )
         break
       case "SELECT": {
@@ -171,47 +171,42 @@ const createInsertTableRowSchema = (columns: readonly TableColumnRead[]) => {
             .string()
             .refine(
               (val) => options.includes(val),
-              `${column.name} must be one of the defined options`
+              `${column.name} 必须为已定义的选项之一`
             )
         } else {
           columnValidations[column.name] = z
             .string()
-            .min(1, `${column.name} is required`)
+            .min(1, `${column.name} 不能为空`)
         }
         break
       }
       case "MULTI_SELECT": {
         const optionSchema =
           options && options.length > 0
-            ? z
-                .string()
-                .refine(
-                  (val) => options.includes(val),
-                  "Invalid option selected"
-                )
-            : z.string().min(1, `${column.name} is required`)
+            ? z.string().refine((val) => options.includes(val), "所选选项无效")
+            : z.string().min(1, `${column.name} 不能为空`)
         columnValidations[column.name] = z
           .array(optionSchema)
-          .min(1, `Select at least one value for ${column.name}`)
+          .min(1, `请为 ${column.name} 至少选择一个值`)
         break
       }
       case "DATE":
         columnValidations[column.name] = z
           .string()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
           .refine((val) => {
             try {
               return !Number.isNaN(new Date(val).getTime())
             } catch {
               return false
             }
-          }, `${column.name} must be a valid date`)
+          }, `${column.name} 必须为有效日期`)
         break
       default:
         // Default to text for any unknown types
         columnValidations[column.name] = z
           .string()
-          .min(1, `${column.name} is required`)
+          .min(1, `${column.name} 不能为空`)
     }
 
     // An optional column may be left blank; a value typed into it is still
@@ -335,20 +330,18 @@ export function TableRowFormDialog({
     }
   }
 
-  let resolvedDescription = isEdit
-    ? "Edit this row."
-    : "Add a new row to this table."
+  let resolvedDescription = isEdit ? "编辑此行。" : "向此数据表添加新行。"
   if (description) {
     resolvedDescription = description
   } else if (tableName) {
-    resolvedDescription = `Add a new row to the "${tableName}" table.`
+    resolvedDescription = `向“${tableName}”数据表添加新行。`
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent size="lg" className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit row" : "Insert row"}</DialogTitle>
+          <DialogTitle>{isEdit ? "编辑行" : "插入行"}</DialogTitle>
           <DialogDescription>{resolvedDescription}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -370,7 +363,7 @@ export function TableRowFormDialog({
                           <SqlTypeBadge type={column.type as SqlType} />
                           {isColumnRequired(column) && (
                             <span className="text-xs text-muted-foreground">
-                              (required)
+                              （必填）
                             </span>
                           )}
                         </FormLabel>
@@ -386,7 +379,7 @@ export function TableRowFormDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={isPending}>
-                {isEdit ? "Save" : "Insert row"}
+                {isEdit ? "保存" : "插入行"}
               </Button>
             </DialogFooter>
           </form>

@@ -94,7 +94,7 @@ function renderPopover(value: UrlFieldValue | null) {
 }
 
 function labelInput() {
-  return screen.getByPlaceholderText("Display label")
+  return screen.getByPlaceholderText("显示标签")
 }
 
 function urlInput() {
@@ -121,7 +121,7 @@ describe("UrlFieldPopover row", () => {
   it('shows "Add..." when there is no value', () => {
     renderPopover(null)
 
-    expect(screen.getByRole("button", { name: "Add..." })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加…" })).toBeInTheDocument()
   })
 
   it("renders a real anchor to the saved URL when it is safe", () => {
@@ -135,7 +135,7 @@ describe("UrlFieldPopover row", () => {
   it("renders a plain button with no href when there is no value", () => {
     renderPopover(null)
 
-    const trigger = screen.getByRole("button", { name: "Add..." })
+    const trigger = screen.getByRole("button", { name: "添加…" })
     expect(trigger).not.toHaveAttribute("href")
     expect(document.querySelector("a")).toBeNull()
   })
@@ -182,9 +182,7 @@ describe("UrlFieldPopover trigger clicks", () => {
       fireEvent(trigger, click)
 
       expect(click.defaultPrevented).toBe(false)
-      expect(
-        screen.queryByPlaceholderText("Display label")
-      ).not.toBeInTheDocument()
+      expect(screen.queryByPlaceholderText("显示标签")).not.toBeInTheDocument()
       expect(
         screen.queryByPlaceholderText("https://example.com")
       ).not.toBeInTheDocument()
@@ -227,13 +225,13 @@ describe("UrlFieldPopover editing", () => {
     const user = userEvent.setup()
     renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(labelInput(), "Ticket")
     await user.type(urlInput(), "/tickets/1")
 
-    expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "应用" })).toBeDisabled()
     expect(
-      screen.getByText("Enter a valid URL, e.g. https://example.com")
+      screen.getByText("输入有效的 URL，例如 https://example.com")
     ).toBeInTheDocument()
   })
 
@@ -241,13 +239,13 @@ describe("UrlFieldPopover editing", () => {
     const user = userEvent.setup()
     renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(labelInput(), "Ticket")
     await user.type(urlInput(), "javascript:alert(1)")
 
-    expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "应用" })).toBeDisabled()
     expect(
-      screen.getByText("URL must start with http:// or https://")
+      screen.getByText("URL 必须以 http:// 或 https:// 开头")
     ).toBeInTheDocument()
   })
 
@@ -255,24 +253,24 @@ describe("UrlFieldPopover editing", () => {
     const user = userEvent.setup()
     renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(urlInput(), "https://example.com/tickets/2")
 
-    expect(screen.getByRole("button", { name: "Apply" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "应用" })).toBeDisabled()
 
     await user.type(labelInput(), "Ticket")
 
-    expect(screen.getByRole("button", { name: "Apply" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "应用" })).toBeEnabled()
   })
 
   it("persists the url and label when Apply is clicked", async () => {
     const user = userEvent.setup()
     const onSave = renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(labelInput(), "Ticket")
     await user.type(urlInput(), "https://example.com/tickets/2")
-    await user.click(screen.getByRole("button", { name: "Apply" }))
+    await user.click(screen.getByRole("button", { name: "应用" }))
 
     expect(onSave).toHaveBeenCalledWith({
       url: "https://example.com/tickets/2",
@@ -287,7 +285,7 @@ describe("UrlFieldPopover editing", () => {
     const user = userEvent.setup()
     const onSave = renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(labelInput(), "Ticket")
     await user.type(urlInput(), "https://example.com/tickets/2")
     await user.type(getTarget(), "{Enter}")
@@ -302,10 +300,10 @@ describe("UrlFieldPopover editing", () => {
     const user = userEvent.setup()
     const onSave = renderPopover(null)
 
-    await user.click(screen.getByRole("button", { name: "Add..." }))
+    await user.click(screen.getByRole("button", { name: "添加…" }))
     await user.type(labelInput(), "  Ticket  ")
     await user.type(urlInput(), "  https://example.com/tickets/2  ")
-    await user.click(screen.getByRole("button", { name: "Apply" }))
+    await user.click(screen.getByRole("button", { name: "应用" }))
 
     expect(onSave).toHaveBeenCalledWith({
       url: "https://example.com/tickets/2",
@@ -321,7 +319,7 @@ describe("UrlFieldPopover actions", () => {
     renderPopover(SAVED)
 
     await user.click(screen.getByRole("link", { name: "Zendesk ticket" }))
-    await user.click(screen.getByRole("button", { name: "Open in new window" }))
+    await user.click(screen.getByRole("button", { name: "在新窗口中打开" }))
 
     expect(openSpy).toHaveBeenCalledWith(
       "https://example.com/tickets/1",
@@ -337,7 +335,7 @@ describe("UrlFieldPopover actions", () => {
     await user.click(screen.getByRole("button", { name: "Bad" }))
 
     expect(
-      screen.getByRole("button", { name: "Open in new window" })
+      screen.getByRole("button", { name: "在新窗口中打开" })
     ).toBeDisabled()
   })
 
@@ -348,7 +346,7 @@ describe("UrlFieldPopover actions", () => {
     await user.click(screen.getByRole("button", { name: "Bad" }))
 
     expect(
-      screen.getByRole("button", { name: "Open in new window" })
+      screen.getByRole("button", { name: "在新窗口中打开" })
     ).toBeDisabled()
   })
 
@@ -357,7 +355,7 @@ describe("UrlFieldPopover actions", () => {
     const onSave = renderPopover(SAVED)
 
     await user.click(screen.getByRole("link", { name: "Zendesk ticket" }))
-    await user.click(screen.getByRole("button", { name: "Remove URL" }))
+    await user.click(screen.getByRole("button", { name: "移除 URL" }))
 
     expect(onSave).toHaveBeenCalledWith(null)
   })
@@ -378,9 +376,7 @@ describe("UrlFieldPopover dismissal", () => {
     await user.click(screen.getByTestId("outside"))
 
     await waitFor(() => {
-      expect(
-        screen.queryByPlaceholderText("Display label")
-      ).not.toBeInTheDocument()
+      expect(screen.queryByPlaceholderText("显示标签")).not.toBeInTheDocument()
     })
     expect(onSave).not.toHaveBeenCalled()
 
@@ -404,10 +400,10 @@ describe("url helpers", () => {
     expect(getUrlHint("")).toBeUndefined()
     expect(getUrlHint("https://example.com")).toBeUndefined()
     expect(getUrlHint("javascript:alert(1)")).toBe(
-      "URL must start with http:// or https://"
+      "URL 必须以 http:// 或 https:// 开头"
     )
     expect(getUrlHint("/tickets/1")).toBe(
-      "Enter a valid URL, e.g. https://example.com"
+      "输入有效的 URL，例如 https://example.com"
     )
   })
 })

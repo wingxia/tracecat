@@ -34,11 +34,11 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 const renameFolderSchema = z.object({
   name: z
     .string()
-    .min(1, "Name is required")
-    .max(100, "Name cannot exceed 100 characters")
+    .min(1, "名称不能为空")
+    .max(100, "名称不能超过 100 个字符")
     .regex(
       /^[a-zA-Z0-9_\-\s]+$/,
-      "Name must contain only letters, numbers, spaces, underscores and hyphens"
+      "名称只能包含字母、数字、空格、下划线和连字符"
     ),
 })
 
@@ -103,10 +103,8 @@ export function FolderRenameDialog({
     >
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Rename Folder</DialogTitle>
-          <DialogDescription>
-            Enter a new name for the folder.
-          </DialogDescription>
+          <DialogTitle>重命名文件夹</DialogTitle>
+          <DialogDescription>输入文件夹的新名称。</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -120,14 +118,12 @@ export function FolderRenameDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2 text-xs">
-                      Name
+                      名称
                     </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      The new name for the folder.
-                    </FormDescription>
+                    <FormDescription>文件夹的新名称。</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -140,7 +136,7 @@ export function FolderRenameDialog({
                 ) : (
                   <Pencil className="mr-2 size-4" />
                 )}
-                Rename Folder
+                重命名文件夹
               </Button>
             </DialogFooter>
           </form>

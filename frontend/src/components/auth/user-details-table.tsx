@@ -32,8 +32,8 @@ export function UserDetails({ user }: { user: UserRead }) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="font-bold">Key</TableHead>
-          <TableHead className="font-bold">Value</TableHead>
+          <TableHead className="font-bold">键</TableHead>
+          <TableHead className="font-bold">值</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

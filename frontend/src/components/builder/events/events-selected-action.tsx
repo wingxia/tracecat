@@ -32,7 +32,7 @@ export function ActionEventPane({
     useWorkflowBuilder()
 
   if (!workflowId)
-    return <AlertNotification level="error" message="No workflow in context" />
+    return <AlertNotification level="error" message={"上下文中没有工作流"} />
 
   const groupedEvents = groupEventsByActionRef(execution.events)
   return (
@@ -42,7 +42,7 @@ export function ActionEventPane({
         onValueChange={setSelectedActionEventRef}
       >
         <SelectTrigger className="h-8 text-xs text-foreground/70 focus:ring-0 focus:ring-offset-0">
-          <SelectValue placeholder="Select an event" />
+          <SelectValue placeholder={"选择执行事件"} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
@@ -86,7 +86,7 @@ function ActionEventView({
   const noEvent = (
     <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
       <CircleDot className="size-3 text-muted-foreground" />
-      <span>Please select an event</span>
+      <span>请选择执行事件</span>
     </div>
   )
   if (!selectedRef) {

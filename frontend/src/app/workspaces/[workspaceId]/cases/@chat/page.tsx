@@ -12,7 +12,7 @@ export default async function ChatPage({
   if (!caseId || !workspaceId) {
     return (
       <div className="h-full flex items-center justify-center">
-        <p className="text-sm text-muted-foreground">No case selected</p>
+        <p className="text-sm text-muted-foreground">未选择事件</p>
       </div>
     )
   }

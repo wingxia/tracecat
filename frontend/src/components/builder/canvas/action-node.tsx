@@ -251,8 +251,8 @@ export default React.memo(function ActionNode({
       } catch (error) {
         console.error("Failed to update action title:", error)
         toast({
-          title: "Couldn't update action title",
-          description: "Please try again.",
+          title: "无法更新动作标题",
+          description: "请重试。",
         })
       }
     },
@@ -273,8 +273,8 @@ export default React.memo(function ActionNode({
     } catch (error) {
       console.error("An error occurred while deleting Action nodes:", error)
       toast({
-        title: "Error deleting action node",
-        description: "Failed to delete action node.",
+        title: "删除动作节点出错",
+        description: "删除动作节点失败。",
         variant: "destructive",
       })
     }
@@ -299,7 +299,7 @@ export default React.memo(function ActionNode({
         requestBody: {
           workflow_id: workflowId,
           ...action,
-          title: `Copy of ${action.title}`,
+          title: `${action.title} 的副本`,
           upstream_edges: [],
         },
       })
@@ -324,14 +324,14 @@ export default React.memo(function ActionNode({
       }
 
       toast({
-        title: "Node duplicated",
-        description: "The action node was duplicated successfully.",
+        title: "已复制节点",
+        description: "已成功复制动作节点。",
       })
     } catch (error) {
       console.error("An error occurred while duplicating Action node:", error)
       toast({
-        title: "Error duplicating action node",
-        description: `Failed to duplicate action node. ${error}`,
+        title: "复制动作节点出错",
+        description: `复制动作节点失败。${error}`,
         variant: "destructive",
       })
     }
@@ -369,20 +369,19 @@ export default React.memo(function ActionNode({
               <b className="inline rounded-sm bg-muted-foreground/10 p-0.5 font-mono">
                 ACTIONS.{action?.title}
               </b>
-              has an invalid configuration. Please ensure that the action inputs
-              are valid YAML and do not contain duplicate keys.
+              配置无效。请确保动作输入为有效 YAML，且不包含重复键。
             </p>
           </div>
         </div>
       )
       console.error("Failed to parse action inputs:", error)
       toast({
-        title: "Invalid action configuration",
+        title: "动作配置无效",
         description,
       })
       setError({
         type: "configuration",
-        message: "Invalid configuration",
+        message: "配置无效",
       })
       return {}
     }
@@ -511,7 +510,7 @@ export default React.memo(function ActionNode({
                         <button
                           type="button"
                           aria-label={
-                            lockedExecutionId ? "Unlock action" : "Lock action"
+                            lockedExecutionId ? "解锁动作" : "锁定动作"
                           }
                           className={cn(
                             "absolute right-2 top-2 rounded p-1 transition-colors hover:bg-muted",
@@ -532,10 +531,10 @@ export default React.memo(function ActionNode({
                       </TooltipTrigger>
                       <TooltipContent side="top" className="text-xs">
                         {lockStale
-                          ? "The locked run is no longer in run history, so draft runs run this action fresh. Click to unlock."
+                          ? "锁定的运行记录已不在历史中，草稿运行将重新执行此动作。点击解锁。"
                           : lockedExecutionId
-                            ? "Draft runs reuse this action's result from a past run. Click to unlock."
-                            : "Lock to a past run's result"}
+                            ? "草稿运行将复用此动作的历史结果。点击解锁。"
+                            : "锁定为历史运行结果"}
                       </TooltipContent>
                     </Tooltip>
                   )}
@@ -575,7 +574,7 @@ export default React.memo(function ActionNode({
                 }
               >
                 <RotateCcwIcon className="size-3.5" />
-                Rerun last run from here
+                从此处重新执行上次运行
               </ContextMenuItem>
               <ContextMenuItem
                 className="gap-2 text-xs"
@@ -587,7 +586,7 @@ export default React.memo(function ActionNode({
                 ) : (
                   <LockIcon className="size-3.5" />
                 )}
-                {lockedExecutionId ? "Unlock action" : "Lock to a past run…"}
+                {lockedExecutionId ? "解锁动作" : "锁定到历史运行…"}
               </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
@@ -660,10 +659,10 @@ function ActionNodeContent({
           <div className="flex w-full flex-1 justify-between">
             <div className="flex flex-col space-y-1">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Unknown action
+                未知动作
               </CardTitle>
               <CardDescription className="text-xs">
-                Action type not found
+                未找到动作类型
               </CardDescription>
             </div>
           </div>
@@ -753,7 +752,7 @@ function ActionNodeContent({
                 <div className="hover:cursor-pointer">
                   <span
                     className="ml-1 flex size-5 items-center justify-center rounded-full border border-rose-300 bg-rose-400 text-xs font-bold text-white shadow"
-                    aria-label={`Found ${validationErrors.length} validation errors`}
+                    aria-label={`发现 ${validationErrors.length} 个校验错误`}
                   >
                     {validationErrors.length}
                   </span>
@@ -762,7 +761,7 @@ function ActionNodeContent({
             </div>
           </TooltipTrigger>
           <TooltipContent side="top" align="center" sideOffset={5}>
-            <p>Found {validationErrors.length} validation errors.</p>
+            <p>发现 {validationErrors.length} 个校验错误。</p>
           </TooltipContent>
         </Tooltip>
       ) : null}
@@ -852,10 +851,10 @@ export function ActionNodeToolbar({
             <Fragment>
               <CommandGroup>
                 {subflowHref !== null && (
-                  <ToolbarLinkItem href={subflowHref} label="Open subflow" />
+                  <ToolbarLinkItem href={subflowHref} label={"打开子工作流"} />
                 )}
                 {tableHref && (
-                  <ToolbarLinkItem href={tableHref} label="Open table" />
+                  <ToolbarLinkItem href={tableHref} label={"打开数据表"} />
                 )}
               </CommandGroup>
               <CommandSeparator />
@@ -868,7 +867,7 @@ export function ActionNodeToolbar({
                 const value = `ACTIONS.${slugifyActionRef(action.title)}.result`
                 navigator.clipboard.writeText(value)
                 toast({
-                  title: "Copied action reference",
+                  title: "已复制动作引用",
                   description: (
                     <Badge
                       variant="secondary"
@@ -881,18 +880,18 @@ export function ActionNodeToolbar({
               }}
             >
               <CopyIcon className="mr-2 size-3" />
-              <span>Copy reference</span>
+              <span>复制引用</span>
             </CommandItem>
             {!readOnly && (
               <CommandItem onSelect={() => form.setFocus("title")}>
                 <PencilIcon className="mr-2 size-3" />
-                <span>Rename</span>
+                <span>重命名</span>
               </CommandItem>
             )}
             {!readOnly && (
               <CommandItem onSelect={handleDuplicateNode}>
                 <CopyPlusIcon className="mr-2 size-3" />
-                <span>Duplicate</span>
+                <span>复制副本</span>
               </CommandItem>
             )}
             <CommandItem
@@ -903,7 +902,7 @@ export function ActionNodeToolbar({
               }}
             >
               <LayoutListIcon className="mr-2 size-3" />
-              <span>Last input</span>
+              <span>上次输入</span>
             </CommandItem>
             <CommandItem
               onSelect={() => {
@@ -913,7 +912,7 @@ export function ActionNodeToolbar({
               }}
             >
               <CircleCheckBigIcon className="mr-2 size-3" />
-              <span>Last result</span>
+              <span>上次结果</span>
             </CommandItem>
             <CommandItem
               onSelect={() =>
@@ -921,7 +920,7 @@ export function ActionNodeToolbar({
               }
             >
               <RotateCcwIcon className="mr-2 size-3" />
-              <span>Rerun from here</span>
+              <span>从此处重新运行</span>
             </CommandItem>
             {!readOnly && (
               <CommandItem onSelect={onToggleLock}>
@@ -930,7 +929,7 @@ export function ActionNodeToolbar({
                 ) : (
                   <LockIcon className="mr-2 size-3" />
                 )}
-                <span>{locked ? "Unlock" : "Lock to a run"}</span>
+                <span>{locked ? "解锁" : "锁定到运行记录"}</span>
               </CommandItem>
             )}
 
@@ -940,7 +939,7 @@ export function ActionNodeToolbar({
                 onSelect={() => handleDeleteNode()}
               >
                 <Trash2Icon className="mr-2 size-3 group-hover:text-red-600" />
-                <span className="group-hover:text-red-600">Delete</span>
+                <span className="group-hover:text-red-600">删除</span>
               </CommandItem>
             )}
           </CommandGroup>
@@ -1017,9 +1016,9 @@ function ChildWorkflowLink({
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
               <span>
-                Open the{" "}
+                打开{" "}
                 <TooltipCode value={childWorkflowAlias ?? childWorkflowId} />
-                subflow
+                子工作流
               </span>
             </TooltipContent>
           </Tooltip>
@@ -1041,8 +1040,8 @@ function ChildWorkflowLink({
             className="max-w-[300px] whitespace-normal break-words"
           >
             <span>
-              This subflow is resolved dynamically at runtime using the{" "}
-              <TooltipCode value="workflow_alias" /> expression
+              此子工作流将在运行时动态解析，使用的{" "}
+              <TooltipCode value="workflow_alias" /> 表达式
             </span>
           </TooltipContent>
         </Tooltip>
@@ -1057,7 +1056,7 @@ function ChildWorkflowLink({
           </TooltipTrigger>
           <TooltipContent sideOffset={20}>
             <span>
-              No matching workflow found for alias{" "}
+              未找到此别名对应的工作流{" "}
               <TooltipCode value={childWorkflowAlias} />
             </span>
           </TooltipContent>
@@ -1078,8 +1077,8 @@ function ChildWorkflowLink({
             </TooltipTrigger>
             <TooltipContent sideOffset={20}>
               <span>
-                Open the <TooltipCode value={childWorkflowAlias} />
-                subflow
+                打开 <TooltipCode value={childWorkflowAlias} />
+                子工作流
               </span>
             </TooltipContent>
           </Tooltip>
@@ -1094,7 +1093,7 @@ function ChildWorkflowLink({
       </TooltipTrigger>
       <TooltipContent sideOffset={20}>
         <span>
-          Missing <TooltipCode value="workflow_alias" />
+          缺失 <TooltipCode value="workflow_alias" />
         </span>
       </TooltipContent>
     </Tooltip>
@@ -1123,7 +1122,7 @@ function TableLink({
         </TooltipTrigger>
         <TooltipContent sideOffset={20}>
           <span>
-            Missing <TooltipCode value={inputKey} />
+            缺失 <TooltipCode value={inputKey} />
           </span>
         </TooltipContent>
       </Tooltip>
@@ -1142,8 +1141,8 @@ function TableLink({
           className="max-w-[300px] whitespace-normal break-words"
         >
           <span>
-            This table is resolved dynamically at runtime using the{" "}
-            <TooltipCode value={inputKey} /> expression
+            此数据表将在运行时动态解析，使用的 <TooltipCode value={inputKey} />{" "}
+            表达式
           </span>
         </TooltipContent>
       </Tooltip>
@@ -1160,7 +1159,7 @@ function TableLink({
         </TooltipTrigger>
         <TooltipContent sideOffset={20}>
           <span>
-            No matching table found for {by === "id" ? "ID" : "name"}{" "}
+            未找到匹配的数据表： {by === "id" ? "ID" : "名称"}{" "}
             <TooltipCode value={value} />
           </span>
         </TooltipContent>
@@ -1181,8 +1180,8 @@ function TableLink({
           </TooltipTrigger>
           <TooltipContent sideOffset={20}>
             <span>
-              Open the <TooltipCode value={tableName ?? value} />
-              table
+              打开 <TooltipCode value={tableName ?? value} />
+              数据表
             </span>
           </TooltipContent>
         </Tooltip>

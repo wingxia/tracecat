@@ -121,9 +121,9 @@ async function openEditor() {
   expect(secretsSearchSecrets).not.toHaveBeenCalled()
   await user.click(screen.getByRole("button", { name: /example_api/ }))
   expect(
-    screen.getByRole("button", { name: "Check access" })
+    screen.getByRole("button", { name: "检查访问权限" })
   ).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Edit" }))
+  await user.click(screen.getByRole("button", { name: "编辑" }))
   return user
 }
 
@@ -143,35 +143,32 @@ test.each(["whole_string", "json"] as const)(
       id: ["example-secret"],
       environment: "staging",
     })
-    expect(screen.getByLabelText("Environment")).toHaveValue("staging")
+    expect(screen.getByLabelText("环境")).toHaveValue("staging")
     expect(
-      screen.getByRole("combobox", { name: "AWS secret store" })
+      screen.getByRole("combobox", { name: "AWS 密钥存储" })
     ).toHaveTextContent("Original store")
     const storeSelect = screen.getByRole("combobox", {
-      name: "AWS secret store",
+      name: "AWS 密钥存储",
     })
     storeSelect.focus()
     await user.keyboard("{Enter}")
     await user.click(
       await screen.findByRole("option", { name: /Replacement store/ })
     )
-    await user.clear(screen.getByLabelText("Secret name or ARN"))
-    await user.type(
-      screen.getByLabelText("Secret name or ARN"),
-      "example/new-key"
-    )
+    await user.clear(screen.getByLabelText("密钥名称或 ARN"))
+    await user.type(screen.getByLabelText("密钥名称或 ARN"), "example/new-key")
     const key =
       mode === "json"
-        ? screen.getByPlaceholderText("Output key")
-        : screen.getByLabelText("Output key")
+        ? screen.getByPlaceholderText("输出键")
+        : screen.getByLabelText("输出键")
     await user.clear(key)
     await user.type(key, "TOKEN")
     if (mode === "json") {
-      expect(screen.getByPlaceholderText("JSON field")).toHaveValue("api_token")
-      await user.clear(screen.getByPlaceholderText("JSON field"))
-      await user.type(screen.getByPlaceholderText("JSON field"), "token")
+      expect(screen.getByPlaceholderText("JSON 字段")).toHaveValue("api_token")
+      await user.clear(screen.getByPlaceholderText("JSON 字段"))
+      await user.type(screen.getByPlaceholderText("JSON 字段"), "token")
     }
-    await user.click(screen.getByRole("button", { name: "Save changes" }))
+    await user.click(screen.getByRole("button", { name: "保存更改" }))
     await waitFor(() =>
       expect(secretsUpdateAwsSecretReference).toHaveBeenCalledWith({
         workspaceId: "example-workspace",
@@ -203,22 +200,22 @@ test("a failed update preserves the edit draft for retry", async () => {
     .mockRejectedValueOnce(new Error("Update failed"))
   const user = await openEditor()
   await screen.findByDisplayValue("example/old-key")
-  await user.clear(screen.getByLabelText("Secret name or ARN"))
+  await user.clear(screen.getByLabelText("密钥名称或 ARN"))
   await user.type(
-    screen.getByLabelText("Secret name or ARN"),
+    screen.getByLabelText("密钥名称或 ARN"),
     "example/corrected-key"
   )
-  await user.click(screen.getByRole("button", { name: "Save changes" }))
+  await user.click(screen.getByRole("button", { name: "保存更改" }))
   await waitFor(() =>
     expect(secretsUpdateAwsSecretReference).toHaveBeenCalledTimes(1)
   )
-  expect(screen.getByLabelText("Secret name or ARN")).toHaveValue(
+  expect(screen.getByLabelText("密钥名称或 ARN")).toHaveValue(
     "example/corrected-key"
   )
   await waitFor(() =>
-    expect(screen.getByRole("button", { name: "Save changes" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "保存更改" })).toBeEnabled()
   )
-  await user.click(screen.getByRole("button", { name: "Save changes" }))
+  await user.click(screen.getByRole("button", { name: "保存更改" }))
   await waitFor(() =>
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
   )
@@ -228,9 +225,9 @@ test("a failed update preserves the edit draft for retry", async () => {
 test("a metadata load failure does not offer an empty form that could overwrite the reference", async () => {
   jest.mocked(secretsSearchSecrets).mockRejectedValue(new Error("Read failed"))
   await openEditor()
-  await screen.findByText("Could not load secret reference")
+  await screen.findByText("无法加载密钥引用")
   expect(
-    screen.queryByRole("button", { name: "Save changes" })
+    screen.queryByRole("button", { name: "保存更改" })
   ).not.toBeInTheDocument()
   expect(secretsUpdateAwsSecretReference).not.toHaveBeenCalled()
 })
@@ -251,7 +248,7 @@ test("the shared form still creates references from credential templates", async
     </QueryClientProvider>
   )
   const storeSelect = await screen.findByRole("combobox", {
-    name: "AWS secret store",
+    name: "AWS 密钥存储",
   })
   storeSelect.focus()
   await user.keyboard("{Enter}")
@@ -261,12 +258,9 @@ test("the shared form still creates references from credential templates", async
   expect(
     screen.queryByRole("option", { name: /Original store/ })
   ).not.toBeInTheDocument()
-  await user.type(
-    screen.getByLabelText("Secret name or ARN"),
-    "example/new-key"
-  )
-  expect(screen.getByLabelText("Name")).toHaveAttribute("readonly")
-  await user.click(screen.getByRole("button", { name: "Save reference" }))
+  await user.type(screen.getByLabelText("密钥名称或 ARN"), "example/new-key")
+  expect(screen.getByLabelText("名称")).toHaveAttribute("readonly")
+  await user.click(screen.getByRole("button", { name: "保存引用" }))
   await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1))
   expect(secretsCreateAwsSecretReference).toHaveBeenCalledWith({
     workspaceId: "example-workspace",

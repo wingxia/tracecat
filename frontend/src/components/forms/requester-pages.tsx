@@ -1,6 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   ChevronRightIcon,
   CircleAlertIcon,
@@ -109,15 +110,15 @@ function FormUnavailableState({ offline }: { offline: boolean }) {
   return (
     <RequesterState
       icon={offline ? CirclePauseIcon : SearchXIcon}
-      title={offline ? "This form isn't accepting requests" : "Form not found"}
+      title={offline ? "此表单当前不接受请求" : "未找到表单"}
       description={
         offline
-          ? "It may be back later. Contact the team that owns it if you need help now."
-          : "This form doesn't exist or you don't have access to it."
+          ? "之后可能会恢复。如需帮助，请联系负责此表单的团队。"
+          : "此表单不存在，或你没有访问权限。"
       }
     >
       <Button asChild variant="outline" className={formStyles.button}>
-        <Link href="/forms">Browse forms</Link>
+        <Link href="/forms">浏览表单</Link>
       </Button>
     </RequesterState>
   )
@@ -125,7 +126,7 @@ function FormUnavailableState({ offline }: { offline: boolean }) {
 
 /** Loading failed for a reason the requester can retry. */
 function RetryState({
-  title = "Something went wrong",
+  title = "出现了问题",
   onRetry,
 }: {
   title?: string
@@ -135,10 +136,10 @@ function RetryState({
     <RequesterState
       icon={CircleAlertIcon}
       title={title}
-      description="Check your connection and try again."
+      description={"请检查网络连接后重试。"}
     >
       <Button variant="outline" className={formStyles.button} onClick={onRetry}>
-        Try again
+        重试
       </Button>
     </RequesterState>
   )
@@ -174,7 +175,7 @@ function WorkspaceMenuItems() {
   return (
     <>
       <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
-        Open workspace
+        打开工作空间
       </DropdownMenuLabel>
       {readable.map((workspace) => (
         <DropdownMenuItem key={workspace.id} className="text-sm" asChild>
@@ -203,7 +204,7 @@ function RequesterPage({
       <header className={requesterStyles.topBar}>
         <Link
           href="/forms"
-          aria-label={`${title}, all forms`}
+          aria-label={`${title}，所有表单`}
           className="flex min-w-0 items-center gap-2.5"
         >
           <Icons.logo className="size-6 shrink-0" />
@@ -213,7 +214,7 @@ function RequesterPage({
         {user && (
           <DropdownMenu>
             <DropdownMenuTrigger
-              aria-label={`Account menu for ${user.getDisplayName()}`}
+              aria-label={`${user.getDisplayName()} 的账号菜单`}
               className="rounded-full focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               <UserAvatar
@@ -236,7 +237,7 @@ function RequesterPage({
               <WorkspaceMenuItems />
               <DropdownMenuItem className="text-sm" onSelect={() => logout()}>
                 <LogOutIcon className="mr-2 size-4" />
-                Sign out
+                退出登录
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -254,11 +255,11 @@ function RequesterGate({ children }: { children: ReactNode }) {
   }
   if (access === "locked") {
     return (
-      <RequesterPage title="Forms">
+      <RequesterPage title={"表单"}>
         <RequesterState
           icon={LockIcon}
-          title="Forms aren't available"
-          description="Contact your administrator."
+          title={"表单不可用"}
+          description={"请联系管理员。"}
         />
       </RequesterPage>
     )
@@ -324,7 +325,7 @@ function RequesterList<T>({
           disabled={list.isFetchingNextPage}
           onClick={() => list.fetchNextPage()}
         >
-          {list.isFetchingNextPage ? "Loading..." : "Load more"}
+          {list.isFetchingNextPage ? "加载中…" : "加载更多"}
         </Button>
       )}
     </div>
@@ -337,11 +338,11 @@ function RequesterCatalog() {
   return (
     <RequesterList
       list={list}
-      errorTitle="Couldn't load forms"
+      errorTitle="无法加载表单"
       empty={{
         icon: ClipboardListIcon,
-        title: "No forms yet",
-        description: "Forms you can fill in will show up here.",
+        title: "暂无表单",
+        description: "你可以填写的表单会显示在此处。",
       }}
     >
       {(forms) => {
@@ -393,11 +394,11 @@ function RequesterSubmissions() {
   return (
     <RequesterList
       list={list}
-      errorTitle="Couldn't load your submissions"
+      errorTitle="无法加载你的提交记录"
       empty={{
         icon: InboxIcon,
-        title: "No submissions yet",
-        description: "Forms you submit will show up here.",
+        title: "暂无提交记录",
+        description: "你提交的表单会显示在此处。",
       }}
     >
       {(submissions) => (
@@ -405,9 +406,9 @@ function RequesterSubmissions() {
           <Table className="text-sm">
             <TableHeader>
               <TableRow>
-                <TableHead>Form</TableHead>
-                <TableHead>Reference</TableHead>
-                <TableHead>Submitted</TableHead>
+                <TableHead>表单</TableHead>
+                <TableHead>引用</TableHead>
+                <TableHead>提交时间</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -425,7 +426,8 @@ function RequesterSubmissions() {
                   <TableCell className="whitespace-nowrap text-muted-foreground">
                     {format(
                       new Date(submission.submitted_at),
-                      "MMM d, yyyy, p"
+                      "MMM d, yyyy, p",
+                      { locale: zhCN }
                     )}
                   </TableCell>
                 </TableRow>
@@ -445,19 +447,19 @@ function RequesterSubmissions() {
 export function RequesterHome() {
   const showSubmissions = useSearchParams().get("tab") === "submissions"
   const tabs = [
-    { label: "Forms", href: "/forms", active: !showSubmissions },
+    { label: "表单", href: "/forms", active: !showSubmissions },
     {
-      label: "My submissions",
+      label: "我的提交",
       href: MY_SUBMISSIONS_HREF,
       active: showSubmissions,
     },
   ]
 
   return (
-    <RequesterPage title="Forms">
+    <RequesterPage title={"表单"}>
       <div className={requesterStyles.catalogColumn}>
-        <h1 className={requesterStyles.pageTitle}>Forms</h1>
-        <nav aria-label="Forms views" className="mt-5 flex gap-5 border-b">
+        <h1 className={requesterStyles.pageTitle}>表单</h1>
+        <nav aria-label={"表单视图"} className="mt-5 flex gap-5 border-b">
           {tabs.map((tab) => (
             <Link
               key={tab.href}
@@ -574,7 +576,7 @@ export function RequesterForm({ formId }: { formId: string }) {
   }
 
   return (
-    <RequesterPage title={location.data?.workspace_name ?? "Forms"}>
+    <RequesterPage title={location.data?.workspace_name ?? "表单"}>
       {body}
     </RequesterPage>
   )

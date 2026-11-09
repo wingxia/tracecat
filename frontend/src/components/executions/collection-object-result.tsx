@@ -23,22 +23,22 @@ const DEFAULT_PAGE_SIZE = 25
 
 function getElementKindLabel(kind: CollectionObject["element_kind"]): string {
   if (kind === "stored_object") {
-    return "Stored items"
+    return "已存储项目"
   }
-  return "Inline values"
+  return "内嵌值"
 }
 
 function getItemKindLabel(item: WorkflowExecutionCollectionPageItem): string {
   if (item.kind === "inline_value") {
-    return "Value"
+    return "值"
   }
   if (item.stored && isExternalStoredObject(item.stored)) {
-    return "File"
+    return "文件"
   }
   if (item.stored && isInlineStoredObject(item.stored)) {
-    return "Value"
+    return "值"
   }
-  return "Stored item"
+  return "已存储项目"
 }
 
 function formatSize(sizeBytes: number): string {
@@ -115,9 +115,7 @@ export function CollectionObjectResult({
       } catch (error) {
         if (!cancelled) {
           const message =
-            error instanceof Error
-              ? error.message
-              : "Failed to fetch collection page"
+            error instanceof Error ? error.message : "获取集合分页失败"
           setPageError(message)
         }
       } finally {
@@ -138,7 +136,7 @@ export function CollectionObjectResult({
   const canNext = (page?.next_offset ?? null) !== null
   const summaryLabel = useMemo(
     () =>
-      `${resolvedCollection.count} items • page size ${resolvedCollection.chunk_size} • ${getElementKindLabel(resolvedCollection.element_kind)}`,
+      `${resolvedCollection.count} 个条目 • 每页 ${resolvedCollection.chunk_size} 项 • ${getElementKindLabel(resolvedCollection.element_kind)}`,
     [
       resolvedCollection.chunk_size,
       resolvedCollection.count,
@@ -155,9 +153,7 @@ export function CollectionObjectResult({
     <div className="flex flex-col gap-3 p-3 text-xs">
       <div className="flex items-center justify-between gap-2">
         <div className="space-y-0.5">
-          <p className="text-sm font-medium text-foreground">
-            Collection results
-          </p>
+          <p className="text-sm font-medium text-foreground">集合结果</p>
           <p className="text-muted-foreground">{summaryLabel}</p>
         </div>
         <Badge variant="secondary" className="text-[10px]">
@@ -168,21 +164,19 @@ export function CollectionObjectResult({
       {isLoadingPage && (
         <div className="flex items-center gap-2 text-muted-foreground">
           <LoaderIcon className="size-3 animate-spin" />
-          <span>Loading collection page...</span>
+          <span>正在加载集合分页…</span>
         </div>
       )}
 
       {pageError && (
-        <div className="text-rose-600">
-          Failed to load collection page: {pageError}
-        </div>
+        <div className="text-rose-600">加载集合分页失败： {pageError}</div>
       )}
 
       {!isLoadingPage && !pageError && (
         <div className="overflow-hidden rounded-md border bg-background">
           {pageItems.length === 0 ? (
             <div className="px-3 py-2 text-muted-foreground">
-              This page has no items.
+              此页没有项目。
             </div>
           ) : (
             pageItems.map((item) => (
@@ -193,7 +187,7 @@ export function CollectionObjectResult({
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">
-                      Item {item.index}
+                      项目 {item.index}
                     </span>
                     <span className="text-muted-foreground">•</span>
                     <span className="text-muted-foreground">
@@ -208,7 +202,7 @@ export function CollectionObjectResult({
                     {item.truncated ? (
                       <>
                         <span>•</span>
-                        <span>Preview truncated</span>
+                        <span>预览已截断</span>
                       </>
                     ) : null}
                   </div>
@@ -250,12 +244,12 @@ export function CollectionObjectResult({
                   )
                 ) : (
                   <div className="space-y-2">
-                    <CodeBlock title={`Item ${item.index} preview`}>
-                      {item.value_preview ?? "No inline preview available."}
+                    <CodeBlock title={`项目 ${item.index} 预览`}>
+                      {item.value_preview ?? "暂无内嵌预览。"}
                     </CodeBlock>
                     {item.truncated ? (
                       <p className="text-muted-foreground">
-                        Showing a truncated preview for this value.
+                        正在显示此值的截断预览。
                       </p>
                     ) : null}
                   </div>
@@ -279,7 +273,7 @@ export function CollectionObjectResult({
             }
           >
             <ChevronLeftIcon className="mr-2 size-3" />
-            Prev
+            上一页
           </Button>
           <Button
             variant="outline"
@@ -295,7 +289,7 @@ export function CollectionObjectResult({
               }
             }}
           >
-            Next
+            下一页
             <ChevronRightIcon className="ml-2 size-3" />
           </Button>
         </div>

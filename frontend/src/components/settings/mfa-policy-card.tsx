@@ -18,7 +18,7 @@ export function MfaPolicyCard({
     <div className="flex items-start justify-between gap-6 rounded-md border p-4">
       <div className="space-y-1">
         <Label htmlFor={id} className="text-sm font-medium">
-          Require security key
+          要求安全密钥
         </Label>
         <p className="text-sm text-muted-foreground">{description}</p>
         {unavailable && (

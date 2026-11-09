@@ -70,8 +70,8 @@ export function WorkflowMoveDialog({
       })
 
       toast({
-        title: "Workflow moved",
-        description: `Successfully moved "${selectedWorkflow.title}" to ${selectedFolder || "root"}`,
+        title: "已移动工作流",
+        description: `已将“${selectedWorkflow.title}”移至 ${selectedFolder || "根目录"}`,
       })
 
       onOpenChange(false)
@@ -79,8 +79,8 @@ export function WorkflowMoveDialog({
     } catch (error) {
       console.error("Failed to move workflow:", error)
       toast({
-        title: "Error",
-        description: "Failed to move workflow",
+        title: "错误",
+        description: "移动工作流失败",
         variant: "destructive",
       })
     } finally {
@@ -99,10 +99,11 @@ export function WorkflowMoveDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm" className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Move workflow</DialogTitle>
+          <DialogTitle>移动工作流</DialogTitle>
           <DialogDescription>
-            Choose a folder to move{" "}
-            <span className="font-medium">{selectedWorkflow?.title}</span> to
+            选择文件夹，移动对象：{" "}
+            <span className="font-medium">{selectedWorkflow?.title}</span>{" "}
+            更改为
           </DialogDescription>
         </DialogHeader>
 
@@ -137,9 +138,7 @@ export function WorkflowMoveDialog({
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      Select a folder...
-                    </div>
+                    <div className="flex items-center gap-2">选择文件夹…</div>
                   )}
                   <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
                 </Button>
@@ -162,7 +161,7 @@ export function WorkflowMoveDialog({
             onClick={handleMove}
             disabled={isLoading || !selectedFolder}
           >
-            {isLoading ? "Moving..." : "Move"}
+            {isLoading ? "移动中…" : "移动"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -124,7 +124,7 @@ const AGENT_TYPE_GROUPS: Record<string, AgentTypeGroupConfig> = {
       "data-[state=open]:border-l-rose-600 data-[state=open]:bg-rose-600/[0.03] dark:data-[state=open]:bg-rose-600/[0.08]",
   },
   unknown: {
-    label: "Unknown",
+    label: "未知",
     iconColor: "text-muted-foreground",
     triggerClassName:
       "data-[state=open]:border-l-muted-foreground data-[state=open]:bg-muted/50",
@@ -147,23 +147,23 @@ interface FilterSelectOption {
 const AGENT_STATUS_FILTER_OPTIONS: FilterSelectOption[] = [
   {
     value: "all",
-    label: "All agent status",
+    label: "所有智能体状态",
     icon: SlidersHorizontalIcon,
   },
   {
     value: "active",
-    label: "Active agents",
+    label: "活跃智能体",
     icon: CircleCheckIcon,
     iconClassName: "text-emerald-600",
   },
   {
     value: "idle",
-    label: "Idle agents",
+    label: "空闲智能体",
     icon: CircleIcon,
   },
   {
     value: "blocked",
-    label: "Blocked agents",
+    label: "受阻智能体",
     icon: ShieldOffIcon,
     iconClassName: "text-destructive",
   },
@@ -172,24 +172,24 @@ const AGENT_STATUS_FILTER_OPTIONS: FilterSelectOption[] = [
 const SESSION_STATE_FILTER_OPTIONS: FilterSelectOption[] = [
   {
     value: "all",
-    label: "All session states",
+    label: "所有会话状态",
     icon: SlidersHorizontalIcon,
   },
   {
     value: "awaiting_initialize",
-    label: "Awaiting initialize",
+    label: "等待初始化",
     icon: Clock3Icon,
     iconClassName: "text-amber-600",
   },
   {
     value: "connected",
-    label: "Connected",
+    label: "已连接",
     icon: CircleCheckIcon,
     iconClassName: "text-emerald-600",
   },
   {
     value: "revoked",
-    label: "Revoked",
+    label: "已撤销",
     icon: ShieldOffIcon,
     iconClassName: "text-destructive",
   },
@@ -198,36 +198,36 @@ const SESSION_STATE_FILTER_OPTIONS: FilterSelectOption[] = [
 const TOOL_STATUS_FILTER_OPTIONS: FilterSelectOption[] = [
   {
     value: "all",
-    label: "All tool status",
+    label: "所有工具状态",
     icon: SlidersHorizontalIcon,
   },
   {
     value: "success",
-    label: "Success",
+    label: "成功",
     icon: CircleCheckIcon,
     iconClassName: "text-emerald-600",
   },
   {
     value: "error",
-    label: "Error",
+    label: "错误",
     icon: XIcon,
     iconClassName: "text-destructive",
   },
   {
     value: "timeout",
-    label: "Timeout",
+    label: "超时时间",
     icon: Clock3Icon,
     iconClassName: "text-amber-600",
   },
   {
     value: "rejected",
-    label: "Rejected",
+    label: "已拒绝",
     icon: XIcon,
     iconClassName: "text-destructive",
   },
   {
     value: "blocked",
-    label: "Blocked",
+    label: "受阻",
     icon: ShieldOffIcon,
     iconClassName: "text-destructive",
   },
@@ -323,10 +323,10 @@ export function WatchtowerMonitor() {
   )
   const selectedWorkspaceName =
     workspaceFilter === "all"
-      ? "All workspaces"
+      ? "所有工作空间"
       : ((workspaces ?? []).find(
           (workspace) => workspace.id === workspaceFilter
-        )?.name ?? "Workspace")
+        )?.name ?? "工作空间")
 
   const groupedAgents = useMemo(() => {
     const grouped = new Map<string, WatchtowerAgentRead[]>()
@@ -374,13 +374,13 @@ export function WatchtowerMonitor() {
         agentId: disableDialogAgent.id,
         reason: normalizeReason(disableReason),
       })
-      toast({ title: "Agent disabled" })
+      toast({ title: "智能体已禁用" })
       setDisableDialogAgent(null)
       setDisableReason("")
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Failed to disable agent",
+        title: "禁用智能体失败",
         description: String(error),
       })
     }
@@ -389,11 +389,11 @@ export function WatchtowerMonitor() {
   const handleEnableAgent = async (agent: WatchtowerAgentRead) => {
     try {
       await enableAgent.mutateAsync({ agentId: agent.id })
-      toast({ title: "Agent enabled" })
+      toast({ title: "智能体已启用" })
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Failed to enable agent",
+        title: "启用智能体失败",
         description: String(error),
       })
     }
@@ -406,13 +406,13 @@ export function WatchtowerMonitor() {
         sessionId: revokeDialogSessionId,
         reason: normalizeReason(revokeReason),
       })
-      toast({ title: "Session revoked" })
+      toast({ title: "会话已撤销" })
       setRevokeDialogSessionId(null)
       setRevokeReason("")
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Failed to revoke session",
+        title: "撤销会话失败",
         description: String(error),
       })
     }
@@ -426,8 +426,8 @@ export function WatchtowerMonitor() {
     return (
       <div className="flex size-full items-center justify-center">
         <EntitlementRequiredEmptyState
-          title="Upgrade required"
-          description="Watchtower monitoring is unavailable on your current plan."
+          title={"需要升级"}
+          description={"当前套餐不支持监控中心。"}
         >
           <Button
             variant="link"
@@ -440,7 +440,7 @@ export function WatchtowerMonitor() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Learn more <ArrowUpRight className="size-4" />
+              了解更多 <ArrowUpRight className="size-4" />
             </a>
           </Button>
         </EntitlementRequiredEmptyState>
@@ -458,13 +458,13 @@ export function WatchtowerMonitor() {
               <div className="flex h-7 w-7 shrink-0 items-center justify-center">
                 <RadarIcon className="size-4 text-muted-foreground" />
               </div>
-              <span className="text-sm font-medium">Monitor</span>
+              <span className="text-sm font-medium">监控</span>
             </div>
             <div className="ml-auto">
               <span className="text-xs text-muted-foreground">
                 {agentsFetching
-                  ? "Refreshing..."
-                  : `${agents.length} agent${agents.length === 1 ? "" : "s"} · Live every 5s`}
+                  ? "刷新中…"
+                  : `${agents.length} 个智能体${agents.length === 1 ? "" : ""} · 每 5 秒刷新`}
               </span>
             </div>
           </header>
@@ -525,7 +525,7 @@ export function WatchtowerMonitor() {
                 <SelectItem value="all">
                   <span className="flex items-center gap-2">
                     <SlidersHorizontalIcon className="size-3.5 text-muted-foreground" />
-                    <span>All workspaces</span>
+                    <span>所有工作空间</span>
                   </span>
                 </SelectItem>
                 {(workspaces ?? []).map((workspace) => (
@@ -579,7 +579,7 @@ export function WatchtowerMonitor() {
                 </div>
               ) : groupedAgents.length === 0 ? (
                 <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                  No local agent sessions observed yet.
+                  尚未检测到本地智能体会话。
                 </div>
               ) : (
                 <div className="h-full overflow-auto">
@@ -657,17 +657,16 @@ export function WatchtowerMonitor() {
                           {agentTypeConfig(selectedAgent.agent_type).label}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {selectedAgent.last_user_name || "Unknown user"} ·{" "}
-                          {selectedAgent.last_user_email || "No email"}
+                          {selectedAgent.last_user_name || "未知用户"} ·{" "}
+                          {selectedAgent.last_user_email || "无邮箱"}
                         </div>
                         <div className="mt-1 text-[11px] text-muted-foreground">
-                          User agent:{" "}
-                          {selectedAgent.raw_user_agent || "Not reported"}
+                          用户代理： {selectedAgent.raw_user_agent || "未上报"}
                         </div>
                         {selectedAgent.status === "blocked" &&
                         selectedAgent.blocked_reason ? (
                           <div className="mt-1 text-[11px] text-muted-foreground">
-                            Blocked reason:{" "}
+                            受阻原因：{" "}
                             <span className="text-foreground">
                               {selectedAgent.blocked_reason}
                             </span>
@@ -687,7 +686,7 @@ export function WatchtowerMonitor() {
                             onClick={() => handleEnableAgent(selectedAgent)}
                           >
                             <PowerIcon className="mr-1.5 size-3.5" />
-                            Enable
+                            启用
                           </Button>
                         ) : (
                           <Button
@@ -700,7 +699,7 @@ export function WatchtowerMonitor() {
                             }}
                           >
                             <ShieldOffIcon className="mr-1.5 size-3.5" />
-                            Disable
+                            禁用
                           </Button>
                         )}
                         <Button
@@ -710,7 +709,7 @@ export function WatchtowerMonitor() {
                           onClick={handlePanelClose}
                         >
                           <XIcon className="size-4" />
-                          <span className="sr-only">Close details</span>
+                          <span className="sr-only">关闭详情</span>
                         </Button>
                       </div>
                     </div>
@@ -722,7 +721,7 @@ export function WatchtowerMonitor() {
                     <div className="min-h-0 border-b lg:border-b-0 lg:border-r">
                       <div className="flex h-8 items-center border-b px-3">
                         <span className="text-xs font-medium text-muted-foreground">
-                          Sessions
+                          会话
                         </span>
                         {selectedSession && (
                           <Button
@@ -735,7 +734,7 @@ export function WatchtowerMonitor() {
                               setRevokeReason("")
                             }}
                           >
-                            Revoke
+                            撤销
                           </Button>
                         )}
                       </div>
@@ -747,7 +746,7 @@ export function WatchtowerMonitor() {
                           </div>
                         ) : sessions.length === 0 ? (
                           <div className="px-3 py-6 text-sm text-muted-foreground">
-                            No sessions for this agent.
+                            此智能体暂无会话。
                           </div>
                         ) : (
                           sessions.map((session) => (
@@ -763,7 +762,7 @@ export function WatchtowerMonitor() {
                             >
                               <div className="flex items-center gap-2">
                                 <div className="min-w-0 flex-1 truncate text-xs font-medium">
-                                  {session.user_email || "No email"}
+                                  {session.user_email || "无邮箱"}
                                 </div>
                                 <StatusBadge status={session.status} />
                               </div>
@@ -781,11 +780,11 @@ export function WatchtowerMonitor() {
                     <div className="min-h-0 flex flex-col">
                       <div className="flex h-8 items-center border-b px-3">
                         <span className="text-xs font-medium text-muted-foreground">
-                          Tool calls
+                          工具调用
                         </span>
                         {selectedSession && (
                           <span className="ml-auto text-[11px] text-muted-foreground">
-                            Session {shortId(selectedSession.id)}
+                            会话 {shortId(selectedSession.id)}
                           </span>
                         )}
                       </div>
@@ -797,11 +796,11 @@ export function WatchtowerMonitor() {
                           </div>
                         ) : selectedSession == null ? (
                           <div className="px-3 py-6 text-sm text-muted-foreground">
-                            Select a session to view tool calls.
+                            选择会话以查看工具调用。
                           </div>
                         ) : toolCalls.length === 0 ? (
                           <div className="px-3 py-6 text-sm text-muted-foreground">
-                            No tool calls captured for this session.
+                            此会话尚未捕获工具调用。
                           </div>
                         ) : (
                           toolCalls.map((toolCall) => (
@@ -832,11 +831,11 @@ export function WatchtowerMonitor() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disable local agent</AlertDialogTitle>
+            <AlertDialogTitle>禁用本地智能体</AlertDialogTitle>
             <AlertDialogDescription>
               {disableDialogAgent
-                ? `Disable ${agentTypeConfig(disableDialogAgent.agent_type).label} for ${disableDialogAgent.last_user_email || "this user"}?`
-                : "Disable this local agent?"}
+                ? `为 ${disableDialogAgent.last_user_email || "此用户"} 禁用 ${agentTypeConfig(disableDialogAgent.agent_type).label}？`
+                : "禁用此本地智能体？"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-2">
@@ -844,17 +843,17 @@ export function WatchtowerMonitor() {
               htmlFor="watchtower-disable-reason"
               className="text-sm text-muted-foreground"
             >
-              Optional reason
+              原因（可选）
             </label>
             <Input
               id="watchtower-disable-reason"
-              placeholder="Reason shown in audit logs"
+              placeholder={"审计日志中显示的原因"}
               value={disableReason}
               onChange={(event) => setDisableReason(event.target.value)}
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={disableAgent.isPending}
@@ -863,7 +862,7 @@ export function WatchtowerMonitor() {
                 void handleDisableAgent()
               }}
             >
-              Disable
+              禁用
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -880,9 +879,9 @@ export function WatchtowerMonitor() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke agent session</AlertDialogTitle>
+            <AlertDialogTitle>撤销智能体会话</AlertDialogTitle>
             <AlertDialogDescription>
-              This will immediately revoke the selected local agent session.
+              此操作会立即撤销所选本地智能体会话。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-2">
@@ -890,17 +889,17 @@ export function WatchtowerMonitor() {
               htmlFor="watchtower-revoke-reason"
               className="text-sm text-muted-foreground"
             >
-              Optional reason
+              原因（可选）
             </label>
             <Input
               id="watchtower-revoke-reason"
-              placeholder="Reason shown in audit logs"
+              placeholder={"审计日志中显示的原因"}
               value={revokeReason}
               onChange={(event) => setRevokeReason(event.target.value)}
             />
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={revokeSession.isPending}
               onClick={(event) => {
@@ -908,7 +907,7 @@ export function WatchtowerMonitor() {
                 void handleRevokeSession()
               }}
             >
-              Revoke
+              撤销
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -978,10 +977,10 @@ function AgentRow({
       <AgentTypeIcon agentType={agent.agent_type} />
       <div className="flex min-w-0 flex-1 items-center gap-2">
         <span className="shrink-0 text-xs font-medium text-muted-foreground">
-          {agent.last_user_name || "Unknown user"}
+          {agent.last_user_name || "未知用户"}
         </span>
         <span className="truncate text-xs">
-          {agent.last_user_email || "No email"}
+          {agent.last_user_email || "无邮箱"}
         </span>
         {activeSessionCount > 0 || inactiveSessionCount > 0 ? (
           <span className="inline-flex shrink-0 items-center gap-2 text-[11px] text-muted-foreground">
@@ -993,7 +992,7 @@ function AgentRow({
                     {activeSessionCount}
                   </span>
                 </TooltipTrigger>
-                <TooltipContent>Active sessions</TooltipContent>
+                <TooltipContent>活跃会话</TooltipContent>
               </Tooltip>
             ) : null}
             {inactiveSessionCount > 0 ? (
@@ -1004,7 +1003,7 @@ function AgentRow({
                     {inactiveSessionCount}
                   </span>
                 </TooltipTrigger>
-                <TooltipContent>Inactive sessions</TooltipContent>
+                <TooltipContent>非活跃会话</TooltipContent>
               </Tooltip>
             ) : null}
           </span>
@@ -1046,7 +1045,7 @@ function StatusBadge({
       <Tooltip>
         <TooltipTrigger asChild>{content}</TooltipTrigger>
         <TooltipContent className="max-w-xs break-words text-xs">
-          Blocked: {reason}
+          受阻： {reason}
         </TooltipContent>
       </Tooltip>
     )
@@ -1078,7 +1077,7 @@ function ToolCallRow({ toolCall }: { toolCall: WatchtowerAgentToolCallRead }) {
         <div className="flex flex-wrap items-center gap-2 pl-6 text-[11px] text-muted-foreground">
           <span>{formatRelative(toolCall.called_at)}</span>
           {typeof toolCall.latency_ms === "number" ? (
-            <span>· {toolCall.latency_ms}ms</span>
+            <span>· {toolCall.latency_ms}毫秒</span>
           ) : null}
           <StatusBadge status={toolCall.call_status} />
         </div>
@@ -1086,7 +1085,7 @@ function ToolCallRow({ toolCall }: { toolCall: WatchtowerAgentToolCallRead }) {
           <div className="space-y-3">
             <div className="space-y-1">
               <div className="text-[11px] font-medium text-muted-foreground uppercase tracking-wide">
-                Args
+                参数
               </div>
               <code className="block max-h-24 overflow-auto rounded-md border bg-muted/40 px-2 py-1 font-mono text-[11px]">
                 {argsPreview}
@@ -1100,7 +1099,7 @@ function ToolCallRow({ toolCall }: { toolCall: WatchtowerAgentToolCallRead }) {
                 className="h-7 px-2 text-xs"
                 onClick={() => setShowArgsDialog(true)}
               >
-                View full args
+                查看完整参数
               </Button>
               {toolCall.error_redacted ? (
                 <span className="truncate text-[11px] text-destructive">
@@ -1117,7 +1116,7 @@ function ToolCallRow({ toolCall }: { toolCall: WatchtowerAgentToolCallRead }) {
           <DialogHeader>
             <DialogTitle className="text-base">{toolName}</DialogTitle>
             <DialogDescription>
-              Full redacted arguments captured for this tool call.
+              为此次工具调用捕获的完整脱敏参数。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>

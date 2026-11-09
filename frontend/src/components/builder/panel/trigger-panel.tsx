@@ -157,7 +157,7 @@ const validateAndNormalizeCidr = (
   try {
     const [address, prefixLength] = ipaddr.parseCIDR(value)
     if (address.kind() !== "ipv4") {
-      throw new Error("Only IPv4 CIDR ranges are supported")
+      throw new Error("仅支持 IPv4 CIDR 范围")
     }
     const normalized = `${toCanonicalString(address)}/${prefixLength}`
     return { normalized }
@@ -165,14 +165,14 @@ const validateAndNormalizeCidr = (
     try {
       const address = ipaddr.parse(value)
       if (address.kind() !== "ipv4") {
-        throw new Error("Only IPv4 addresses are supported")
+        throw new Error("仅支持 IPv4 地址")
       }
       const prefixLength = 32
       const normalized = `${toCanonicalString(address)}/${prefixLength}`
       return { normalized }
     } catch {
       return {
-        error: `Invalid IPv4 address or CIDR: "${value}"`,
+        error: `IPv4 地址或 CIDR 无效：“${value}”`,
       }
     }
   }
@@ -180,14 +180,12 @@ const validateAndNormalizeCidr = (
 
 const webhookFormSchema = z.object({
   status: z.enum($WebhookStatus.enum),
-  methods: z
-    .array(z.enum($WebhookMethod.enum))
-    .min(1, "At least one method is required"),
+  methods: z.array(z.enum($WebhookMethod.enum)).min(1, "至少选择一种方法"),
   allowlisted_cidrs: z
     .array(
       z.object({
         id: z.string(),
-        text: z.string().trim().min(1, "Invalid IP address or CIDR"),
+        text: z.string().trim().min(1, "IP 地址或 CIDR 无效"),
       })
     )
     .superRefine((cidrs, ctx) => {
@@ -253,13 +251,13 @@ const extractApiErrorMessage = (error: unknown, fallback: string): string => {
 
 const formatScheduleDate = (value?: string | null) => {
   if (!value) {
-    return "None"
+    return "无"
   }
   const parsed = new Date(value)
   if (Number.isNaN(parsed.getTime())) {
-    return "Invalid date"
+    return "日期无效"
   }
-  return parsed.toLocaleString()
+  return parsed.toLocaleString("zh-CN")
 }
 
 export function TriggerPanel({ workflow }: { workflow: WorkflowRead }) {
@@ -286,10 +284,10 @@ export function TriggerPanel({ workflow }: { workflow: WorkflowRead }) {
               <div className="flex flex-1 justify-between space-x-12 w-full">
                 <div className="flex flex-col">
                   <div className="flex justify-between items-center w-full text-xs font-medium leading-none">
-                    <div className="flex w-full">Trigger</div>
+                    <div className="flex w-full">触发器</div>
                   </div>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    Workflow Triggers
+                    工作流触发器
                   </p>
                 </div>
               </div>
@@ -321,7 +319,7 @@ export function TriggerPanel({ workflow }: { workflow: WorkflowRead }) {
                 value={TriggerPanelTabs.schedules}
               >
                 <CalendarClockIcon className="mr-2 size-4" />
-                <span>Schedules</span>
+                <span>定时计划</span>
               </TabsTrigger>
               {caseAddonsEnabled && (
                 <TabsTrigger
@@ -329,7 +327,7 @@ export function TriggerPanel({ workflow }: { workflow: WorkflowRead }) {
                   value={TriggerPanelTabs.caseTriggers}
                 >
                   <SquarePlay className="mr-2 size-4" />
-                  <span>Case triggers</span>
+                  <span>事件触发器</span>
                 </TabsTrigger>
               )}
               {formTabVisible && (
@@ -338,7 +336,7 @@ export function TriggerPanel({ workflow }: { workflow: WorkflowRead }) {
                   value={TriggerPanelTabs.form}
                 >
                   <ClipboardListIcon className="mr-2 size-4" />
-                  <span>Form</span>
+                  <span>表单</span>
                 </TabsTrigger>
               )}
             </TabsList>
@@ -452,7 +450,7 @@ export function WebhookControls({
       for (const tag of newTags) {
         const trimmed = tag.text.trim()
         if (!trimmed) {
-          firstError ??= "Invalid IP address or CIDR"
+          firstError ??= "IP 地址或 CIDR 无效"
           continue
         }
         const result = validateAndNormalizeCidr(trimmed)
@@ -472,7 +470,7 @@ export function WebhookControls({
           message: firstError,
         })
         toast({
-          title: "Invalid IP allowlist entry",
+          title: "IP 白名单条目无效",
           description: firstError,
           variant: "destructive",
         })
@@ -493,16 +491,16 @@ export function WebhookControls({
         await mutateAsync({ allowlisted_cidrs: payload })
         form.reset({ ...form.getValues(), allowlisted_cidrs: normalizedValues })
         toast({
-          title: "Allowlist updated",
-          description: "Webhook allowlist saved successfully.",
+          title: "已更新白名单",
+          description: "已成功保存 Webhook 白名单。",
         })
       } catch (error) {
         const description = extractApiErrorMessage(
           error,
-          "Failed to update the IP allowlist."
+          "更新 IP 允许列表失败。"
         )
         toast({
-          title: "Failed to save allowlist",
+          title: "保存白名单失败",
           description,
           variant: "destructive",
         })
@@ -512,7 +510,7 @@ export function WebhookControls({
   )
 
   const formatTimestamp = (value: string | null) =>
-    value ? new Date(value).toLocaleString() : "—"
+    value ? new Date(value).toLocaleString("zh-CN") : "—"
 
   const handleStatusChange = async (checked: boolean) => {
     const newStatus = checked ? "online" : "offline"
@@ -521,17 +519,17 @@ export function WebhookControls({
     try {
       await mutateAsync({ status: newStatus })
       toast({
-        title: "Webhook status updated",
-        description: `Webhook is now ${newStatus}`,
+        title: "已更新 Webhook 状态",
+        description: `Webhook 现已${newStatus}`,
       })
     } catch (error) {
       console.error("Failed to update webhook status", error)
       form.setValue("status", webhook.status)
       toast({
-        title: "Failed to update status",
+        title: "更新状态失败",
         description: extractApiErrorMessage(
           error,
-          "An error occurred while updating the webhook status."
+          "更新 Webhook 状态时发生错误。"
         ),
       })
     }
@@ -543,20 +541,20 @@ export function WebhookControls({
     try {
       await mutateAsync({ include_headers: checked })
       toast({
-        title: "Webhook trigger payload updated",
+        title: "已更新 Webhook 触发数据",
         description: checked
-          ? "TRIGGER will include request headers and metadata"
-          : "TRIGGER will receive the request body only",
+          ? "TRIGGER 将包含请求头和元数据"
+          : "TRIGGER 将仅接收请求正文",
       })
     } catch (error) {
       console.error("Failed to update webhook include_headers", error)
       // Restore the value from before this toggle, not the (possibly stale) prop
       form.setValue("include_headers", !checked)
       toast({
-        title: "Failed to update trigger payload",
+        title: "更新触发数据失败",
         description: extractApiErrorMessage(
           error,
-          "An error occurred while updating the webhook trigger payload."
+          "更新 Webhook 触发载荷时发生错误。"
         ),
         variant: "destructive",
       })
@@ -574,17 +572,17 @@ export function WebhookControls({
     try {
       await mutateAsync({ methods: newMethods })
       toast({
-        title: "Webhook methods updated",
-        description: `The webhook will accept requests via: ${newMethods.sort().join(", ")}`,
+        title: "已更新 Webhook 请求方法",
+        description: `Webhook 将接受以下请求方法：${newMethods.sort().join(", ")}`,
       })
     } catch (error) {
       console.error("Failed to update webhook methods", error)
       form.setValue("methods", webhook.methods ?? ["POST"])
       toast({
-        title: "Failed to update methods",
+        title: "更新请求方法失败",
         description: extractApiErrorMessage(
           error,
-          "An error occurred while updating the webhook methods."
+          "更新 Webhook 方法时发生错误。"
         ),
         variant: "destructive",
       })
@@ -598,18 +596,15 @@ export function WebhookControls({
       setGeneratedAt(response.created_at ?? null)
       setApiKeyDialogOpen(true)
       toast({
-        title: "API key generated",
-        description: "Copy the API key now. It will not be shown again.",
+        title: "已生成 API 密钥",
+        description: "请立即复制 API 密钥，之后不会再次显示。",
       })
       return true
     } catch (error) {
       console.error("Failed to generate webhook API key", error)
       toast({
-        title: "Failed to generate API key",
-        description: extractApiErrorMessage(
-          error,
-          "An error occurred while generating the key."
-        ),
+        title: "生成 API 密钥失败",
+        description: extractApiErrorMessage(error, "生成密钥时发生错误。"),
         variant: "destructive",
       })
       return false
@@ -659,13 +654,11 @@ export function WebhookControls({
             <FormItem>
               <div className="flex items-center justify-between gap-4 rounded-md border p-3">
                 <div className="space-y-1">
-                  <Label className="text-xs font-semibold">
-                    Enable webhook
-                  </Label>
+                  <Label className="text-xs font-semibold">启用 Webhook</Label>
                   <p className="text-xs text-muted-foreground">
                     {field.value === "online"
-                      ? "Webhook is currently active and receiving requests"
-                      : "Webhook is disabled"}
+                      ? "Webhook 已启用，正在接收请求"
+                      : "Webhook 已禁用"}
                   </p>
                 </div>
                 <FormControl>
@@ -689,13 +682,11 @@ export function WebhookControls({
               <FormItem>
                 <div className="flex items-center justify-between gap-4 rounded-md border p-3">
                   <div className="space-y-1">
-                    <Label className="text-xs font-semibold">
-                      Include request headers
-                    </Label>
+                    <Label className="text-xs font-semibold">包含请求头</Label>
                     <p className="text-xs text-muted-foreground">
-                      Pass request headers and metadata to TRIGGER as{" "}
-                      <code>{"{ status_code, headers, data }"}</code> instead of
-                      just the body
+                      将请求头和元数据传入 TRIGGER，格式为{" "}
+                      <code>{"{ status_code, headers, data }"}</code>{" "}
+                      ，而非仅传入请求正文
                     </p>
                   </div>
                   <FormControl>
@@ -717,7 +708,7 @@ export function WebhookControls({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex gap-2 items-center text-xs font-medium">
-                  <span>Allowed HTTP methods</span>
+                  <span>允许的 HTTP 方法</span>
                 </FormLabel>
                 <FormControl>
                   <DropdownMenu>
@@ -729,7 +720,7 @@ export function WebhookControls({
                       >
                         {field.value.length > 0
                           ? field.value.sort().join(", ")
-                          : "Select HTTP methods"}
+                          : "选择 HTTP 方法"}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -776,12 +767,12 @@ export function WebhookControls({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-xs font-medium">
-                  <span>IP allowlist</span>
+                  <span>IP 白名单</span>
                 </FormLabel>
                 <FormControl>
                   <CustomTagInput
                     {...field}
-                    placeholder="Enter an IP address or CIDR. Allow all IPs by default."
+                    placeholder={"输入 IP 地址或 CIDR，默认允许所有 IP。"}
                     tags={field.value}
                     setTags={(newTags) =>
                       handleAllowlistedCidrsChange(
@@ -792,11 +783,11 @@ export function WebhookControls({
                 </FormControl>
                 <FormMessage className="text-xs" />
                 <FormDescription className="text-xs">
-                  Press{" "}
+                  按{" "}
                   <kbd className="px-1 py-0.5 text-[10px] font-semibold bg-muted border rounded tracking-tighter">
-                    Enter ↵
+                    回车 ↵
                   </kbd>{" "}
-                  to add a new entry.
+                  添加新条目。
                 </FormDescription>
               </FormItem>
             )}
@@ -806,14 +797,14 @@ export function WebhookControls({
 
       <div className="space-y-3">
         <Label className="flex items-center gap-2 text-xs font-medium">
-          <span>API key</span>
+          <span>API 密钥</span>
         </Label>
         {hasActiveApiKey ? (
           <div className="rounded-lg border bg-muted/40 p-4 text-xs shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Active key
+                  生效的密钥
                 </span>
                 <span className="font-mono text-xs tracking-wide">
                   {apiKeyPreview ?? "—"}
@@ -835,12 +826,12 @@ export function WebhookControls({
                           }
                         >
                           <MoreHorizontalIcon className="size-4" />
-                          <span className="sr-only">Manage API key</span>
+                          <span className="sr-only">管理 API 密钥</span>
                         </Button>
                       </TooltipTrigger>
                     </DropdownMenuTrigger>
                     <TooltipContent side="bottom" sideOffset={4}>
-                      Manage API key
+                      管理 API 密钥
                     </TooltipContent>
                     <DropdownMenuContent align="end" sideOffset={4}>
                       <DropdownMenuItem
@@ -856,7 +847,7 @@ export function WebhookControls({
                         className="flex items-center gap-2"
                       >
                         <RotateCcwIcon className="size-4" />
-                        <span>Regenerate</span>
+                        <span>重新生成</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onSelect={(event) => {
@@ -871,7 +862,7 @@ export function WebhookControls({
                         className="flex items-center gap-2"
                       >
                         <BanIcon className="size-4" />
-                        <span>Revoke</span>
+                        <span>撤销</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onSelect={(event) => {
@@ -886,7 +877,7 @@ export function WebhookControls({
                         className="flex items-center gap-2 text-destructive focus:text-destructive"
                       >
                         <Trash2Icon className="size-4" />
-                        <span>Delete</span>
+                        <span>删除</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -897,7 +888,7 @@ export function WebhookControls({
             <dl className="grid gap-3 sm:grid-cols-2">
               <div className="space-y-1">
                 <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Created
+                  创建时间
                 </dt>
                 <dd className="font-medium text-accent-foreground">
                   {formatTimestamp(apiKeyCreatedAt)}
@@ -905,7 +896,7 @@ export function WebhookControls({
               </div>
               <div className="space-y-1">
                 <dt className="text-xs uppercase tracking-wide text-muted-foreground">
-                  Last used
+                  上次使用
                 </dt>
                 <dd className="font-medium text-accent-foreground">
                   {formatTimestamp(apiKeyLastUsedAt)}
@@ -919,18 +910,18 @@ export function WebhookControls({
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <span className="text-xs uppercase tracking-wide text-amber-700">
-                    API key revoked
+                    API 密钥已撤销
                   </span>
                   <span className="font-mono text-xs tracking-wide text-amber-900">
                     {apiKeyPreview ?? "—"}
                   </span>
                 </div>
                 <p className="text-[11px] text-muted-foreground">
-                  Revoked {formatTimestamp(apiKeyRevokedAt)}
+                  已撤销 {formatTimestamp(apiKeyRevokedAt)}
                 </p>
                 <p className="text-[11px] text-amber-800">
-                  Webhook requests are blocked until a new API key is generated.
-                  Regenerate to restore access or delete to remove protection.
+                  生成新 API 密钥前，Webhook
+                  请求会被阻止。重新生成可恢复访问，删除则取消保护。
                 </p>
               </div>
               <div className="flex gap-2">
@@ -942,7 +933,7 @@ export function WebhookControls({
                     isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                   }
                 >
-                  {isGeneratingApiKey ? "Generating..." : "Regenerate"}
+                  {isGeneratingApiKey ? "生成中…" : "重新生成"}
                 </Button>
                 <Button
                   size="sm"
@@ -952,7 +943,7 @@ export function WebhookControls({
                     isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                   }
                 >
-                  Delete
+                  删除
                 </Button>
               </div>
             </div>
@@ -961,11 +952,11 @@ export function WebhookControls({
           <div className="rounded-lg border border-dashed bg-muted/20 p-4 text-xs shadow-sm">
             <div className="space-y-2">
               <p className="text-xs font-medium text-muted-foreground">
-                Webhook is not protected
+                Webhook 未受保护
               </p>
               <p className="text-xs text-muted-foreground">
-                No API key is configured. Generate an API key to require clients
-                to authenticate webhook requests.
+                尚未配置 API 密钥。生成密钥后，客户端必须验证身份才能发送
+                Webhook 请求。
               </p>
             </div>
             <Button
@@ -986,7 +977,7 @@ export function WebhookControls({
                       : ""
                   )}
                 />
-                {isGeneratingApiKey ? "Generating..." : "Generate API key"}
+                {isGeneratingApiKey ? "生成中…" : "生成 API 密钥"}
               </>
             </Button>
           </div>
@@ -997,10 +988,9 @@ export function WebhookControls({
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Regenerate API key?</AlertDialogTitle>
+              <AlertDialogTitle>重新生成 API 密钥？</AlertDialogTitle>
               <AlertDialogDescription>
-                Rotating the API key immediately revokes the existing key.
-                Clients must be updated to use the new key.
+                轮换 API 密钥会立即撤销现有密钥，客户端必须更新为新密钥。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -1009,7 +999,7 @@ export function WebhookControls({
                   isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                 }
               >
-                Cancel
+                取消
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleConfirmRegenerate}
@@ -1017,7 +1007,7 @@ export function WebhookControls({
                   isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                 }
               >
-                {isGeneratingApiKey ? "Generating..." : "Regenerate"}
+                {isGeneratingApiKey ? "生成中…" : "重新生成"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -1028,11 +1018,9 @@ export function WebhookControls({
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Revoke API key?</AlertDialogTitle>
+              <AlertDialogTitle>撤销 API 密钥？</AlertDialogTitle>
               <AlertDialogDescription>
-                Revoking disables the existing key immediately while keeping an
-                audit trail. Clients must use a newly generated key to
-                authenticate.
+                撤销会立即停用现有密钥并保留审计记录，客户端必须使用新生成的密钥验证身份。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -1041,7 +1029,7 @@ export function WebhookControls({
                   isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                 }
               >
-                Cancel
+                取消
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleConfirmRevoke}
@@ -1049,7 +1037,7 @@ export function WebhookControls({
                   isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                 }
               >
-                {isRevokingApiKey ? "Revoking..." : "Revoke"}
+                {isRevokingApiKey ? "撤销中…" : "撤销"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -1060,10 +1048,10 @@ export function WebhookControls({
         >
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete API key?</AlertDialogTitle>
+              <AlertDialogTitle>删除 API 密钥？</AlertDialogTitle>
               <AlertDialogDescription>
-                This permanently removes the API key. The webhook will no longer
-                require authenticated requests until a new API key is generated.
+                此操作将永久删除 API 密钥。在生成新密钥之前，Webhook
+                将不再要求请求进行身份验证。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -1072,7 +1060,7 @@ export function WebhookControls({
                   isGeneratingApiKey || isRevokingApiKey || isDeletingApiKey
                 }
               >
-                Cancel
+                取消
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleConfirmDelete}
@@ -1081,28 +1069,28 @@ export function WebhookControls({
                 }
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               >
-                {isDeletingApiKey ? "Deleting..." : "Delete"}
+                {isDeletingApiKey ? "删除中…" : "删除"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
         <p className="text-xs text-muted-foreground">
-          Webhook senders must pass the key in the x-tracecat-api-key header.
+          Webhook 发送方必须通过 x-tracecat-api-key 请求头传递密钥。
         </p>
       </div>
 
       <Dialog open={apiKeyDialogOpen} onOpenChange={handleDialogChange}>
         <DialogContent size="sm">
           <DialogHeader>
-            <DialogTitle>Webhook API key</DialogTitle>
+            <DialogTitle>Webhook API 密钥</DialogTitle>
             <DialogDescription>
-              Copy the key now. It will not be shown again.
+              请立即复制密钥，之后不会再次显示。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div className="space-y-3 text-xs">
               <div className="flex justify-between text-muted-foreground">
-                <span>Generated</span>
+                <span>生成时间</span>
                 <span>{formatTimestamp(generatedAt)}</span>
               </div>
               <div className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2">
@@ -1112,12 +1100,12 @@ export function WebhookControls({
                 {generatedApiKey ? (
                   <CopyButton
                     value={generatedApiKey}
-                    toastMessage="Copied API key to clipboard"
+                    toastMessage="已将 API 密钥复制到剪贴板"
                   />
                 ) : null}
               </div>
               <p className="text-xs text-muted-foreground">
-                Rotate the API key if it is ever exposed.
+                如果 API 密钥泄露，请立即轮换。
               </p>
             </div>
           </DialogBody>
@@ -1129,7 +1117,7 @@ export function WebhookControls({
           <span>URL</span>
           <CopyButton
             value={webhook.url}
-            toastMessage="Copied URL to clipboard"
+            toastMessage="已将 URL 复制到剪贴板"
           />
         </Label>
         <div className="rounded-md border shadow-sm">
@@ -1197,8 +1185,8 @@ export function CaseTriggerControls({
       const nextStatus = checked ? "online" : "offline"
       if (nextStatus === "online" && eventTypes.length === 0) {
         toast({
-          title: "Select case events",
-          description: "Choose at least one case event before enabling.",
+          title: "选择事件变更类型",
+          description: "启用前至少选择一种事件变更类型。",
           variant: "destructive",
         })
         return
@@ -1208,8 +1196,8 @@ export function CaseTriggerControls({
       try {
         await persist(nextStatus, eventTypes, tagFilters)
         toast({
-          title: "Case trigger updated",
-          description: `Case triggers are now ${nextStatus}.`,
+          title: "已更新事件触发器",
+          description: `事件触发器现已${nextStatus}。`,
         })
       } catch {
         setStatus(previousStatus)
@@ -1236,13 +1224,13 @@ export function CaseTriggerControls({
         await persist(nextStatus, nextEvents, tagFilters)
         if (wasOnline && nextEvents.length === 0) {
           toast({
-            title: "Case triggers disabled",
-            description: "Select an event type to re-enable case triggers.",
+            title: "事件触发器已禁用",
+            description: "选择一种事件变更类型以重新启用触发器。",
           })
         } else {
           toast({
-            title: "Case events updated",
-            description: "Case trigger events saved successfully.",
+            title: "已更新事件变更类型",
+            description: "已成功保存事件触发类型。",
           })
         }
       } catch {
@@ -1260,8 +1248,8 @@ export function CaseTriggerControls({
       try {
         await persist(status, eventTypes, values)
         toast({
-          title: "Tag allowlist updated",
-          description: "Case trigger tag filters saved successfully.",
+          title: "已更新标签白名单",
+          description: "已成功保存事件触发器的标签筛选条件。",
         })
       } catch {
         setTagFilters(previousFilters)
@@ -1285,10 +1273,7 @@ export function CaseTriggerControls({
 
   if (caseTriggerError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Failed to load case trigger configuration."
-      />
+      <AlertNotification level="error" message={"加载事件触发器配置失败。"} />
     )
   }
 
@@ -1296,9 +1281,9 @@ export function CaseTriggerControls({
     <ReadOnlyFieldset readOnly={readOnly} className="space-y-4">
       <div className="flex items-center justify-between gap-4 rounded-md border p-3">
         <div className="space-y-1">
-          <Label className="text-xs font-semibold">Enable case triggers</Label>
+          <Label className="text-xs font-semibold">启用事件触发器</Label>
           <p className="text-xs text-muted-foreground">
-            Trigger workflows when selected case events occur.
+            发生所选事件变更时触发工作流。
           </p>
         </div>
         <Switch
@@ -1309,40 +1294,35 @@ export function CaseTriggerControls({
       </div>
 
       <div className="space-y-2">
-        <Label className="text-xs">Case events</Label>
+        <Label className="text-xs">事件变更类型</Label>
         <MultiTagCommandInput
           value={eventTypes}
           onChange={handleEventTypesChange}
           suggestions={CASE_EVENT_SUGGESTIONS}
           searchKeys={["label", "value", "group"]}
-          placeholder="Select case events..."
+          placeholder={"选择事件变更类型…"}
           disabled={isUpdatingCaseTrigger}
           allowCustomTags={false}
         />
         <p className="text-xs text-muted-foreground">
-          Choose which case events will fire this workflow.
+          选择哪些事件变更会触发此工作流。
         </p>
       </div>
 
       <div className="space-y-2">
-        <Label className="text-xs">Tag allowlist</Label>
+        <Label className="text-xs">标签白名单</Label>
         <MultiTagCommandInput
           value={tagFilters}
           onChange={handleTagFiltersChange}
           suggestions={tagSuggestions}
           searchKeys={["label", "value", "description"]}
-          placeholder={
-            caseTagsIsLoading ? "Loading tags..." : "Select case tags..."
-          }
+          placeholder={caseTagsIsLoading ? "正在加载标签…" : "选择事件标签…"}
           disabled={isUpdatingCaseTrigger || caseTagsIsLoading}
           allowCustomTags={false}
         />
+        <p className="text-xs text-muted-foreground">留空时不按标签筛选。</p>
         <p className="text-xs text-muted-foreground">
-          If empty, no tag filtering is applied.
-        </p>
-        <p className="text-xs text-muted-foreground">
-          Tag events match the added or removed tag; other events match current
-          case tags. Workflow-originated events are ignored.
+          标签变更匹配添加或移除的标签，其他变更匹配事件当前的标签。忽略工作流自身产生的变更。
         </p>
       </div>
     </ReadOnlyFieldset>
@@ -1363,9 +1343,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
     return <CenteredSpinner />
   }
   if (schedulesError || !schedules) {
-    return (
-      <AlertNotification level="error" message="Failed to load schedules." />
-    )
+    return <AlertNotification level="error" message={"加载定时计划失败。"} />
   }
 
   return (
@@ -1374,15 +1352,15 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
         <TableHeader>
           <TableRow>
             <TableHead className="pl-3 text-xs font-semibold">ID</TableHead>
-            <TableHead className="text-xs font-semibold">Type</TableHead>
-            <TableHead className="text-xs font-semibold">Schedule</TableHead>
-            <TableHead className="text-xs font-semibold">Status</TableHead>
-            <TableHead className="text-xs font-semibold">Timeout</TableHead>
-            <TableHead className="text-xs font-semibold">Offset</TableHead>
-            <TableHead className="text-xs font-semibold">Starts</TableHead>
-            <TableHead className="text-xs font-semibold">Ends</TableHead>
+            <TableHead className="text-xs font-semibold">输入</TableHead>
+            <TableHead className="text-xs font-semibold">定时计划</TableHead>
+            <TableHead className="text-xs font-semibold">状态</TableHead>
+            <TableHead className="text-xs font-semibold">超时时间</TableHead>
+            <TableHead className="text-xs font-semibold">偏移量</TableHead>
+            <TableHead className="text-xs font-semibold">开始</TableHead>
+            <TableHead className="text-xs font-semibold">结束</TableHead>
             <TableHead className="text-right text-xs font-semibold">
-              Actions
+              动作
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -1414,7 +1392,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                           return offset
                         }
                       })()
-                    : "None"
+                    : "无"
                 const startLabel = formatScheduleDate(start_at)
                 const endLabel = formatScheduleDate(end_at)
 
@@ -1430,9 +1408,8 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                               onClick={async () => {
                                 await navigator.clipboard.writeText(id!)
                                 toast({
-                                  title: "Copied to clipboard",
-                                  description:
-                                    "Schedule ID copied successfully",
+                                  title: "已复制到剪贴板",
+                                  description: "已成功复制定时计划 ID",
                                 })
                               }}
                             >
@@ -1442,14 +1419,14 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                           <TooltipContent>
                             <p className="font-mono text-xs">{id}</p>
                             <p className="text-xs text-muted-foreground">
-                              Click to copy
+                              点击复制
                             </p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </TableCell>
                     <TableCell className="items-center text-xs">
-                      {isCron ? "Cron" : "Interval"}
+                      {isCron ? "Cron" : "间隔"}
                     </TableCell>
                     <TableCell className="items-center text-xs">
                       {isCron ? (
@@ -1467,7 +1444,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                     </TableCell>
                     <TableCell className="text-xs capitalize">
                       <div className="flex">
-                        <p>{timeout ? `${timeout}s` : "None"}</p>
+                        <p>{timeout ? `${timeout}秒` : "无"}</p>
                       </div>
                     </TableCell>
                     <TableCell className="text-xs">
@@ -1496,7 +1473,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
                               <DropdownMenuLabel className="text-xs">
-                                Actions
+                                动作
                               </DropdownMenuLabel>
                               <DropdownMenuItem
                                 onClick={() =>
@@ -1504,7 +1481,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                                 }
                                 className="text-xs"
                               >
-                                Copy ID
+                                复制 ID
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
@@ -1523,27 +1500,24 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                                   })
                                 }}
                               >
-                                {status === "online" ? "Pause" : "Unpause"}
+                                {status === "online" ? "暂停" : "恢复"}
                               </DropdownMenuItem>
                               <AlertDialogTrigger asChild>
                                 <DropdownMenuItem className="text-xs text-rose-500 focus:text-rose-600">
-                                  Delete
+                                  删除
                                 </DropdownMenuItem>
                               </AlertDialogTrigger>
                             </DropdownMenuContent>
                           </DropdownMenu>
                           <AlertDialogContent>
                             <AlertDialogHeader>
-                              <AlertDialogTitle>
-                                Delete schedule
-                              </AlertDialogTitle>
+                              <AlertDialogTitle>删除定时计划</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete this schedule?
-                                This action cannot be undone.
+                                确定要删除此定时计划吗？此操作无法撤销。
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogCancel>取消</AlertDialogCancel>
                               <AlertDialogAction
                                 variant="destructive"
                                 onClick={async () => {
@@ -1554,7 +1528,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                                   })
                                 }}
                               >
-                                Confirm
+                                确认
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -1571,7 +1545,7 @@ export function ScheduleControls({ workflowId }: { workflowId: string }) {
                 className="h-8 text-center bg-muted-foreground/5"
                 colSpan={9}
               >
-                No Schedules
+                暂无定时计划
               </TableCell>
             </TableRow>
           )}
@@ -1620,9 +1594,7 @@ const scheduleInputsSchema = z
           code: z.ZodIssueCode.custom,
           path: ["duration.seconds"],
           message:
-            error instanceof Error
-              ? error.message
-              : "Please provide a valid interval duration.",
+            error instanceof Error ? error.message : "请提供有效的间隔时长。",
         })
       }
 
@@ -1631,8 +1603,7 @@ const scheduleInputsSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["offset"],
-            message:
-              "Must be a valid ISO 8601 duration string (e.g., PT1H, P1D, PT30M)",
+            message: "必须是有效的 ISO 8601 时长字符串（如 PT1H、P1D、PT30M）",
           })
         }
       }
@@ -1642,13 +1613,13 @@ const scheduleInputsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["cronExpression"],
-          message: "Cron expression is required for cron schedules.",
+          message: "Cron 定时计划必须提供 Cron 表达式。",
         })
       } else if (!BASIC_CRON_REGEX.test(cron)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["cronExpression"],
-          message: "Enter a valid cron expression with 5 or 6 fields.",
+          message: "请输入包含 5 或 6 个字段的有效 Cron 表达式。",
         })
       }
 
@@ -1656,7 +1627,7 @@ const scheduleInputsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["offset"],
-          message: "Offset is only supported for interval schedules.",
+          message: "仅间隔型定时计划支持偏移量。",
         })
       }
     }
@@ -1674,7 +1645,7 @@ const scheduleInputsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["startAt"],
-          message: "Enter a valid start date and time.",
+          message: "请输入有效的开始日期和时间。",
         })
       }
     }
@@ -1684,7 +1655,7 @@ const scheduleInputsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["endAt"],
-          message: "Enter a valid end date and time.",
+          message: "请输入有效的结束日期和时间。",
         })
       }
     }
@@ -1696,7 +1667,7 @@ const scheduleInputsSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["endAt"],
-          message: "End time must be after the start time.",
+          message: "结束时间必须晚于开始时间。",
         })
       }
     }
@@ -1752,8 +1723,8 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
   const onSubmit = async (values: ScheduleInputs) => {
     if (!hasVersion) {
       toast({
-        title: "Cannot create schedule",
-        description: "You must commit the workflow before creating a schedule.",
+        title: "无法创建定时计划",
+        description: "创建定时计划前必须先提交工作流。",
         variant: "destructive",
       })
       return
@@ -1835,26 +1806,24 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                   disabled={!hasVersion}
                 >
                   <PlusCircleIcon className="size-4" />
-                  <span>Create schedule</span>
+                  <span>创建定时计划</span>
                 </Button>
               </DialogTrigger>
             </span>
           </TooltipTrigger>
           <TooltipContent>
-            <p>You must save the workflow before creating a schedule.</p>
+            <p>创建定时计划前必须先保存工作流。</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <DialogContent size="lg" className="sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>Create schedule</DialogTitle>
+          <DialogTitle>创建定时计划</DialogTitle>
           <DialogDescription>
-            Configure the schedule for the workflow. The workflow will not run
-            immediately.
+            配置工作流的定时计划。工作流不会立即运行。
             {!hasVersion && (
               <p className="mt-2 text-rose-500">
-                Warning: You must commit the workflow before creating a
-                schedule.
+                警告：创建定时计划前必须先提交工作流。
               </p>
             )}
           </DialogDescription>
@@ -1865,8 +1834,8 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
             onSubmit={form.handleSubmit(onSubmit, () => {
               console.error("Form validation failed")
               toast({
-                title: "Invalid inputs in form",
-                description: "Please check the form for errors.",
+                title: "表单输入无效",
+                description: "请检查表单中的错误。",
               })
             })}
           >
@@ -1878,10 +1847,10 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs capitalize text-foreground/80">
-                        Schedule Type
+                        定时计划类型
                       </FormLabel>
                       <FormDescription className="text-xs">
-                        Choose between interval-based or cron-based scheduling.
+                        选择按时间间隔或 Cron 表达式调度。
                       </FormDescription>
                       <FormControl>
                         <Select
@@ -1889,10 +1858,10 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                           onValueChange={field.onChange}
                         >
                           <SelectTrigger className="text-xs capitalize">
-                            <SelectValue placeholder="Select schedule type" />
+                            <SelectValue placeholder={"选择定时计划类型"} />
                           </SelectTrigger>
                           <SelectContent className="text-xs">
-                            <SelectItem value="interval">Interval</SelectItem>
+                            <SelectItem value="interval">间隔</SelectItem>
                             <SelectItem value="cron">Cron</SelectItem>
                           </SelectContent>
                         </Select>
@@ -1947,10 +1916,10 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs capitalize text-foreground/80">
-                          Cron Expression
+                          Cron 表达式
                         </FormLabel>
                         <FormDescription className="text-xs">
-                          Standard 5 or 6 field cron format, e.g.{" "}
+                          标准的 5 或 6 字段 Cron 格式，例如{" "}
                           <code className="font-mono">0 0 * * *</code>.
                         </FormDescription>
                         <FormControl>
@@ -1974,17 +1943,16 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs capitalize text-foreground/80">
-                        Timeout
+                        超时时间
                       </FormLabel>
                       <FormDescription className="text-xs">
-                        The maximum time in seconds the workflow can run for.
-                        Default is 0 (no timeout).
+                        工作流可运行的最长时间（秒），默认为 0（不超时）。
                       </FormDescription>
                       <FormControl>
                         <Input
                           type="number"
                           className="text-xs capitalize"
-                          placeholder="Timeout (seconds)"
+                          placeholder={"超时时间（秒）"}
                           {...field}
                           onChange={(e) =>
                             field.onChange(
@@ -2008,18 +1976,17 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs capitalize text-foreground/80">
-                          Offset
+                          偏移量
                         </FormLabel>
                         <FormDescription className="text-xs">
-                          Optional delay before the first execution. Use ISO
-                          8601 duration format: PT1H (1 hour), P1D (1 day),
-                          PT30M (30 minutes).
+                          首次执行前的可选延迟，使用 ISO 8601 格式：PT1H（1
+                          小时）、P1D（1 天）、PT30M（30 分钟）。
                         </FormDescription>
                         <FormControl>
                           <Input
                             type="text"
                             className="text-xs"
-                            placeholder="PT1H (optional)"
+                            placeholder={"PT1H（可选）"}
                             {...field}
                           />
                         </FormControl>
@@ -2081,11 +2048,10 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                     return (
                       <FormItem>
                         <FormLabel className="text-xs capitalize text-foreground/80">
-                          Start after
+                          开始时间下限
                         </FormLabel>
                         <FormDescription className="text-xs">
-                          Optional earliest date and time to begin running this
-                          schedule.
+                          此定时计划最早开始运行的日期和时间，可选。
                         </FormDescription>
                         <FormControl>
                           <div className="flex gap-4">
@@ -2100,8 +2066,8 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                                     className="w-32 justify-between font-normal text-xs"
                                   >
                                     {dateValue
-                                      ? dateValue.toLocaleDateString()
-                                      : "Select date"}
+                                      ? dateValue.toLocaleDateString("zh-CN")
+                                      : "选择日期"}
                                     <ChevronDownIcon className="size-4" />
                                   </Button>
                                 </PopoverTrigger>
@@ -2188,11 +2154,10 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                     return (
                       <FormItem>
                         <FormLabel className="text-xs capitalize text-foreground/80">
-                          End by
+                          结束时间上限
                         </FormLabel>
                         <FormDescription className="text-xs">
-                          Optional latest date and time after which the schedule
-                          will stop running.
+                          此定时计划停止运行的最晚日期和时间，可选。
                         </FormDescription>
                         <FormControl>
                           <div className="flex gap-4">
@@ -2207,8 +2172,8 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
                                     className="w-32 justify-between font-normal text-xs"
                                   >
                                     {dateValue
-                                      ? dateValue.toLocaleDateString()
-                                      : "Select date"}
+                                      ? dateValue.toLocaleDateString("zh-CN")
+                                      : "选择日期"}
                                     <ChevronDownIcon className="size-4" />
                                   </Button>
                                 </PopoverTrigger>
@@ -2247,7 +2212,7 @@ export function CreateScheduleDialog({ workflowId }: { workflowId: string }) {
             <DialogFooter>
               <Button size="sm" type="submit" variant="default">
                 <PlusCircleIcon className="mr-2 size-4" />
-                <span>Create schedule</span>
+                <span>创建定时计划</span>
               </Button>
             </DialogFooter>
           </form>

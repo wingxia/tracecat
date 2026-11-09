@@ -87,18 +87,18 @@ function parseCidrLines(text: string): string[] {
 }
 
 const allowlistFormSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
+  name: z.string().trim().min(1, "名称不能为空").max(100),
   description: z.string().trim().max(500).optional(),
   cidrs: z
     .string()
     .refine((text) => parseCidrLines(text).length > 0, {
-      message: "Add at least one IP address or CIDR range",
+      message: "至少添加一个 IP 地址或 CIDR 网段",
     })
     .refine((text) => parseCidrLines(text).length <= MAX_CIDRS_PER_ALLOWLIST, {
-      message: `At most ${MAX_CIDRS_PER_ALLOWLIST} ranges per allowlist`,
+      message: `每个白名单最多包含 ${MAX_CIDRS_PER_ALLOWLIST} 个网段`,
     })
     .refine((text) => parseCidrLines(text).every(isValidCidr), {
-      message: "Every line must be a valid IPv4/IPv6 address or CIDR range",
+      message: "每行必须是有效的 IPv4/IPv6 地址或 CIDR 网段",
     }),
 })
 
@@ -126,7 +126,7 @@ export function OrgSettingsSecurityForm() {
   return (
     <IPAllowlistSettingsForm
       {...useOrgSecuritySettings()}
-      enforcementDescription="Only allow sign-in and API access to this organization from the IP ranges in the allowlists below. Your current IP must be covered before enforcement can be enabled. Platform superusers are exempt."
+      enforcementDescription="仅允许从下方允许列表中的 IP 范围登录和通过 API 访问此组织。启用限制前，列表必须涵盖你当前的 IP。平台超级管理员不受限制。"
     />
   )
 }
@@ -159,7 +159,7 @@ export function IPAllowlistSettingsForm({
     return (
       <AlertNotification
         level="error"
-        message={`Error loading security settings: ${securitySettingsError?.message ?? "unknown error"}`}
+        message={`加载安全设置出错：${securitySettingsError?.message ?? "未知错误"}`}
       />
     )
   }
@@ -240,7 +240,7 @@ export function IPAllowlistSettingsForm({
     <div className="space-y-12">
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div className="space-y-0.5">
-          <Label htmlFor="ip-allowlist-enabled">Enforce IP allowlist</Label>
+          <Label htmlFor="ip-allowlist-enabled">强制执行 IP 白名单</Label>
           <p className="text-sm text-muted-foreground">
             {enforcementDescription}
           </p>
@@ -256,9 +256,9 @@ export function IPAllowlistSettingsForm({
       {enabled && allowlists.length === 0 && (
         <Alert>
           <ShieldAlertIcon className="size-4" />
-          <AlertTitle>No IP allowlists configured</AlertTitle>
+          <AlertTitle>尚未配置 IP 白名单</AlertTitle>
           <AlertDescription>
-            Enforcement has no effect until at least one allowlist is created.
+            至少创建一个白名单后，访问限制才会生效。
           </AlertDescription>
         </Alert>
       )}
@@ -266,13 +266,11 @@ export function IPAllowlistSettingsForm({
       <div className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold tracking-tight">
-              IP allowlists
-            </h3>
+            <h3 className="text-lg font-semibold tracking-tight">IP 白名单</h3>
             <p className="text-sm text-muted-foreground">
-              Group IP addresses or CIDR ranges by purpose, for example a VPN
-              egress or an office network. Up to {MAX_ALLOWLISTS} allowlists
-              with {MAX_CIDRS_PER_ALLOWLIST} ranges each.
+              按用途对 IP 地址或 CIDR 网段分组，例如 VPN
+              出口或办公网络。最多支持 {MAX_ALLOWLISTS} 个白名单，每个包含{" "}
+              {MAX_CIDRS_PER_ALLOWLIST} 个网段。
             </p>
           </div>
           <Button
@@ -282,15 +280,15 @@ export function IPAllowlistSettingsForm({
             disabled={allowlists.length >= MAX_ALLOWLISTS}
           >
             <PlusIcon className="mr-2 size-4" />
-            Create IP allowlist
+            创建 IP 白名单
           </Button>
         </div>
 
         {allowlists.length === 0 ? (
           <div className="rounded-lg border border-dashed p-8 text-center">
-            <p className="text-sm font-medium">No IP allowlists</p>
+            <p className="text-sm font-medium">暂无 IP 白名单</p>
             <p className="text-sm text-muted-foreground">
-              Create an allowlist before enforcing IP restrictions.
+              请先创建白名单，再启用 IP 访问限制。
             </p>
           </div>
         ) : (
@@ -298,9 +296,9 @@ export function IPAllowlistSettingsForm({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>IP ranges</TableHead>
+                  <TableHead>名称</TableHead>
+                  <TableHead>描述</TableHead>
+                  <TableHead>IP 网段</TableHead>
                   <TableHead className="w-24" />
                 </TableRow>
               </TableHeader>
@@ -310,7 +308,7 @@ export function IPAllowlistSettingsForm({
                     <TableCell className="font-medium">{item.name}</TableCell>
                     <TableCell className="max-w-xs text-muted-foreground">
                       {item.description || (
-                        <span className="italic">No description</span>
+                        <span className="italic">暂无描述</span>
                       )}
                     </TableCell>
                     <TableCell>
@@ -326,7 +324,7 @@ export function IPAllowlistSettingsForm({
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label={`Edit ${item.name}`}
+                          aria-label={`编辑 ${item.name}`}
                           onClick={() => openEdit(index)}
                         >
                           <PencilIcon className="size-4" />
@@ -335,7 +333,7 @@ export function IPAllowlistSettingsForm({
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label={`Delete ${item.name}`}
+                          aria-label={`删除 ${item.name}`}
                           onClick={() => setDeletingIndex(index)}
                         >
                           <Trash2Icon className="size-4" />
@@ -352,11 +350,9 @@ export function IPAllowlistSettingsForm({
 
       <div className="space-y-3">
         <div>
-          <h3 className="text-lg font-semibold tracking-tight">
-            Validate an IP address
-          </h3>
+          <h3 className="text-lg font-semibold tracking-tight">验证 IP 地址</h3>
           <p className="text-sm text-muted-foreground">
-            Check whether an IP address is admitted by the saved allowlists.
+            检查已保存的白名单是否允许某个 IP 地址。
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -366,7 +362,7 @@ export function IPAllowlistSettingsForm({
               setCheckIp(e.target.value)
               setCheckResult(null)
             }}
-            placeholder="8.8.8.8 or 2001:db8::1"
+            placeholder={"8.8.8.8 或 2001:db8::1"}
             className="max-w-sm font-mono"
             autoComplete="off"
             spellCheck={false}
@@ -377,7 +373,7 @@ export function IPAllowlistSettingsForm({
             onClick={onCheckIp}
             disabled={checkIpAllowlistIsPending || !checkIp.trim()}
           >
-            Check
+            检查
           </Button>
         </div>
         {checkResult && <IpCheckResult result={checkResult} />}
@@ -411,24 +407,23 @@ export function IPAllowlistSettingsForm({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete IP allowlist</AlertDialogTitle>
+            <AlertDialogTitle>删除 IP 白名单</AlertDialogTitle>
             <AlertDialogDescription>
-              {deleting?.name} and its {deleting?.cidrs.length ?? 0} IP{" "}
-              {deleting?.cidrs.length === 1 ? "range" : "ranges"} will be
-              removed.
+              {deleting?.name} 及其 {deleting?.cidrs.length ?? 0} IP{" "}
+              {deleting?.cidrs.length === 1 ? "个网段" : "个网段"} 将被移除。
               {enabled && allowlists.length === 1
-                ? " This is the last allowlist; enforcement will no longer restrict access."
+                ? " 这是最后一个白名单，删除后将不再限制访问。"
                 : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={onConfirmDelete}
               disabled={updateSecuritySettingsIsPending}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -459,7 +454,7 @@ function AllowlistDialog({
       allowlistFormSchema.refine(
         (values) => !existingNames.includes(values.name.toLowerCase()),
         {
-          message: "An allowlist with this name already exists",
+          message: "已存在同名白名单",
           path: ["name"],
         }
       )
@@ -478,11 +473,11 @@ function AllowlistDialog({
       <DialogContent size="md" className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {initial ? "Edit IP allowlist" : "Create IP allowlist"}
+            {initial ? "编辑 IP 白名单" : "创建 IP 白名单"}
           </DialogTitle>
           <DialogDescription>
-            Name this allowlist and add the IP addresses or CIDR ranges it
-            covers. A description helps you remember why each range exists.
+            为白名单命名，并添加其覆盖的 IP 地址或 CIDR
+            网段。描述可记录每个网段的用途。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -497,11 +492,11 @@ function AllowlistDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Corporate VPN"
+                        placeholder={"企业 VPN"}
                         autoComplete="off"
                       />
                     </FormControl>
@@ -514,11 +509,11 @@ function AllowlistDialog({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description (optional)</FormLabel>
+                    <FormLabel>描述（可选）</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        placeholder="Egress ranges for the office VPN, owned by IT"
+                        placeholder={"由 IT 管理的办公 VPN 出口网段"}
                         autoComplete="off"
                       />
                     </FormControl>
@@ -531,7 +526,7 @@ function AllowlistDialog({
                 name="cidrs"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Allowed IP ranges</FormLabel>
+                    <FormLabel>允许的 IP 网段</FormLabel>
                     <FormControl>
                       <Textarea
                         {...field}
@@ -543,7 +538,7 @@ function AllowlistDialog({
                       />
                     </FormControl>
                     <FormDescription>
-                      One IPv4 or IPv6 address or CIDR range per line.
+                      每行填写一个 IPv4、IPv6 地址或 CIDR 网段。
                       {rangeCount > 0 &&
                         ` ${rangeCount} ${rangeCount === 1 ? "range" : "ranges"}.`}
                     </FormDescription>
@@ -554,7 +549,7 @@ function AllowlistDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={isPending}>
-                {initial ? "Save" : "Create IP allowlist"}
+                {initial ? "保存" : "创建 IP 白名单"}
               </Button>
             </DialogFooter>
           </form>
@@ -569,7 +564,7 @@ function IpCheckResult({ result }: { result: IPAllowlistCheckResult }) {
     return (
       <p className="flex items-center gap-2 text-sm text-muted-foreground">
         <CheckCircle2Icon className="size-4" />
-        Allowed. The allowlist is not currently enforced.
+        允许访问，当前未强制执行白名单。
       </p>
     )
   }
@@ -577,7 +572,7 @@ function IpCheckResult({ result }: { result: IPAllowlistCheckResult }) {
     return (
       <p className="flex items-center gap-2 text-sm text-emerald-700">
         <CheckCircle2Icon className="size-4" />
-        Allowed by {result.matched_cidr}
+        被以下白名单允许： {result.matched_cidr}
         {result.matched_allowlist ? ` (${result.matched_allowlist})` : ""}
       </p>
     )
@@ -585,7 +580,7 @@ function IpCheckResult({ result }: { result: IPAllowlistCheckResult }) {
   return (
     <p className="flex items-center gap-2 text-sm text-destructive">
       <XCircleIcon className="size-4" />
-      Not allowed by the current allowlists
+      当前白名单不允许访问
     </p>
   )
 }

@@ -242,21 +242,18 @@ export function AgentsBoard({
   if (error) {
     const detail =
       typeof error.body?.detail === "string" ? error.body.detail : undefined
-    const message =
-      detail ??
-      error.message ??
-      "Something went wrong while fetching the latest agent sessions."
+    const message = detail ?? error.message ?? "获取最新智能体会话时发生错误。"
 
     return (
       <div className="flex h-full w-full items-center justify-center py-10">
         <Alert variant="destructive" className="max-w-xl">
           <AlertTriangleIcon className="size-4" />
-          <AlertTitle>Unable to load agents</AlertTitle>
+          <AlertTitle>无法加载智能体</AlertTitle>
           <AlertDescription className="flex flex-col gap-3 text-sm">
             <span>{message}</span>
             <div>
               <Button variant="secondary" size="sm" onClick={onRetry}>
-                Try again
+                重试
               </Button>
             </div>
           </AlertDescription>
@@ -272,10 +269,9 @@ export function AgentsBoard({
           <EmptyMedia variant="icon">
             <Leaf className="size-5 text-muted-foreground/60" />
           </EmptyMedia>
-          <EmptyTitle>No agent activity yet.</EmptyTitle>
+          <EmptyTitle>暂无智能体活动。</EmptyTitle>
           <EmptyDescription>
-            When agents run, they will appear here grouped by their latest
-            status.
+            智能体运行后会显示在此处，并按最新状态分组。
           </EmptyDescription>
         </EmptyHeader>
       </Empty>
@@ -462,7 +458,7 @@ function AgentSessionCard({
   const formatWorkflowLabel = (
     summary?: AgentSessionWithStatus["parent_workflow"]
   ): JSX.Element => {
-    if (!summary) return <span>Unknown workflow</span>
+    if (!summary) return <span>未知工作流</span>
     return (
       <span className="flex items-center gap-1.5">
         <span>{summary.title}</span>
@@ -478,7 +474,7 @@ function AgentSessionCard({
   const parentWorkflowLabel = session.parent_workflow ? (
     formatWorkflowLabel(session.parent_workflow)
   ) : (
-    <span>Unknown workflow</span>
+    <span>未知工作流</span>
   )
 
   let rootWorkflowSummary = session.root_workflow ?? null
@@ -499,7 +495,7 @@ function AgentSessionCard({
 
   const workflowLinks = [
     {
-      label: "Workflow",
+      label: "工作流",
       formattedLabel: parentWorkflowLabel,
       workflowId: session.parent_id,
       executionId: session.parent_run_id,
@@ -508,7 +504,7 @@ function AgentSessionCard({
     ...(rootWorkflowSummary
       ? [
           {
-            label: "Root workflow",
+            label: "根工作流",
             formattedLabel: rootWorkflowLabel,
             workflowId: session.root_id,
             executionId: session.root_run_id,
@@ -543,25 +539,25 @@ function AgentSessionCard({
           <div className="flex items-center gap-2">
             <StatusIndicator tone={session.statusTone} className="size-2.5" />
             <span className="text-sm font-semibold">
-              {sessionActionLabel ?? `Session ${session.id.slice(0, 8)}`}
+              {sessionActionLabel ?? `会话 ${session.id.slice(0, 8)}`}
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span>{createdAt.toLocaleString()}</span>
+            <span>{createdAt.toLocaleString("zh-CN")}</span>
             <span aria-hidden="true">•</span>
             <span>{shortTimeAgo(createdAt)}</span>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <span className="text-foreground/65">Session ID:</span>
+            <span className="text-foreground/65">会话 ID：</span>
             <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px]">
               {session.id}
             </code>
             <CopyButton
               value={correlationId}
-              toastMessage="Copied tracecat correlation ID"
-              tooltipMessage="Copy tracecat correlation ID (agent/<session_id>)"
+              toastMessage="已复制 Tracecat 关联 ID"
+              tooltipMessage="复制 Tracecat 关联 ID（agent/<session_id>）"
             />
           </span>
           {session.pendingApprovalCount > 0 && (
@@ -571,8 +567,8 @@ function AgentSessionCard({
                 toneBadgeClasses[session.statusTone]
               )}
             >
-              {session.pendingApprovalCount} pending approval
-              {session.pendingApprovalCount > 1 ? "s" : ""}
+              {session.pendingApprovalCount} 待审批
+              {session.pendingApprovalCount > 1 ? "" : ""}
             </span>
           )}
         </div>
@@ -606,7 +602,7 @@ function AgentSessionCard({
         {sortedCompletedApprovals.length > 0 && (
           <div className="flex flex-col gap-1 pt-1">
             <span className="text-xs font-semibold text-muted-foreground">
-              Recent decisions
+              最近的决策
             </span>
             <div className="flex flex-col gap-1.5">
               {sortedCompletedApprovals.map((approval) => {
@@ -630,9 +626,9 @@ function AgentSessionCard({
                 const decisionLabel =
                   approval.status === "approved"
                     ? hasOverrideArgs
-                      ? "Approved with overrides"
+                      ? "已批准并覆盖参数"
                       : "Approved"
-                    : "Rejected"
+                    : "已拒绝"
                 const decisionTime = approval.approved_at
                   ? shortTimeAgo(new Date(approval.approved_at))
                   : approval.created_at
@@ -647,7 +643,7 @@ function AgentSessionCard({
                   : "unknown"
                 const actionLabel = approval.tool_name
                   ? actionTypeKey
-                  : "Unknown action"
+                  : "未知动作"
                 const { value: toolArgsValue, hasValue: hasToolArgs } =
                   normalizePayload(approval.tool_call_args)
                 const { value: decisionValue, hasValue: hasDecisionValue } =
@@ -699,8 +695,8 @@ function AgentSessionCard({
                       </div>
                       <span className="text-[11px] text-muted-foreground">
                         {decisionLabel}
-                        {hasOverrideArgs ? " • Overrides applied" : ""}
-                        {approverUserId ? " by user" : ""}
+                        {hasOverrideArgs ? " · 已应用覆盖设置" : ""}
+                        {approverUserId ? " 由用户执行" : ""}
                         {decisionTime ? ` • ${decisionTime}` : ""}
                         {reasonText}
                       </span>
@@ -718,7 +714,7 @@ function AgentSessionCard({
                               {hasToolArgs ? (
                                 <div className="flex flex-col gap-1.5">
                                   <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                                    Original args
+                                    原始参数
                                   </span>
                                   <JsonViewWithControls
                                     src={toolArgsValue}
@@ -733,9 +729,9 @@ function AgentSessionCard({
                                   <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                                     {approval.status === "approved"
                                       ? hasOverrideArgs
-                                        ? "Override payload"
-                                        : "Decision payload"
-                                      : "Rejection payload"}
+                                        ? "覆盖数据"
+                                        : "决策数据"
+                                      : "拒绝数据"}
                                   </span>
                                   <JsonViewWithControls
                                     src={decisionValue}
@@ -765,7 +761,7 @@ function AgentSessionCard({
                   : "unknown"
                 const toolLabel = approval.tool_name
                   ? actionTypeKey
-                  : "Unknown tool"
+                  : "未知工具"
                 return (
                   <span
                     key={approval.id}
@@ -774,7 +770,7 @@ function AgentSessionCard({
                     {getIcon(actionTypeKey, {
                       className: "size-5 shrink-0",
                     })}
-                    <span>Awaiting {toolLabel}</span>
+                    <span>等待中 {toolLabel}</span>
                   </span>
                 )
               })}
@@ -785,7 +781,7 @@ function AgentSessionCard({
               onClick={() => onReviewApprovals?.(session)}
               className="shrink-0"
             >
-              Review approvals
+              审核审批
             </Button>
           </div>
         )}
@@ -958,15 +954,13 @@ export function AgentFolderCreateDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Create folder</DialogTitle>
-          <DialogDescription>
-            Create a new folder to organize your agents.
-          </DialogDescription>
+          <DialogTitle>创建文件夹</DialogTitle>
+          <DialogDescription>创建文件夹来整理智能体。</DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="py-2">
             <Input
-              placeholder="Folder name"
+              placeholder={"文件夹名称"}
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => {
@@ -984,7 +978,7 @@ export function AgentFolderCreateDialog({
             disabled={createFolderIsPending || !name.trim()}
           >
             {createFolderIsPending ? <Spinner className="mr-2 size-4" /> : null}
-            Create folder
+            创建文件夹
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1032,15 +1026,13 @@ function AgentFolderRenameDialog({
     >
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Rename folder</DialogTitle>
-          <DialogDescription>
-            Enter a new name for the folder.
-          </DialogDescription>
+          <DialogTitle>重命名文件夹</DialogTitle>
+          <DialogDescription>输入文件夹的新名称。</DialogDescription>
         </DialogHeader>
         <DialogBody>
           <div className="py-2">
             <Input
-              placeholder="New folder name"
+              placeholder={"新文件夹名称"}
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => {
@@ -1062,7 +1054,7 @@ function AgentFolderRenameDialog({
             ) : (
               <Pencil className="mr-2 size-4" />
             )}
-            Rename
+            重命名
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1116,10 +1108,10 @@ function AgentPresetMoveDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Move agent</DialogTitle>
+          <DialogTitle>移动智能体</DialogTitle>
           <DialogDescription>
-            Choose a folder to move{" "}
-            <span className="font-medium">{preset.name}</span> to.
+            选择文件夹，移动对象：{" "}
+            <span className="font-medium">{preset.name}</span> 。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -1153,9 +1145,7 @@ function AgentPresetMoveDialog({
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      Select a folder...
-                    </div>
+                    <div className="flex items-center gap-2">选择文件夹…</div>
                   )}
                   <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
                 </Button>
@@ -1178,7 +1168,7 @@ function AgentPresetMoveDialog({
             onClick={() => void handleMove()}
             disabled={moveAgentPresetIsPending || !selectedFolder}
           >
-            {moveAgentPresetIsPending ? "Moving..." : "Move"}
+            {moveAgentPresetIsPending ? "移动中…" : "移动"}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -1216,11 +1206,11 @@ function AgentItemDeleteDialog({
     <ConfirmDestructiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete agent"
+      title={"删除智能体"}
       description={<AgentDeleteDescription name={item.name} />}
-      identifier={{ label: "Agent slug", value: item.slug }}
+      identifier={{ label: "智能体标识", value: item.slug }}
       confirmPhrase={item.slug}
-      confirmLabel="Delete"
+      confirmLabel={"删除"}
       isPending={deleteAgentPresetIsPending}
       onConfirm={async () => {
         await deleteAgentPreset({ presetId: item.id, presetName: item.name })
@@ -1262,11 +1252,11 @@ function AgentFolderContextActions({
         onSelect={(e) => {
           e.stopPropagation()
           navigator.clipboard.writeText(item.id)
-          toast({ title: "Copied", description: "Folder ID copied" })
+          toast({ title: "已复制", description: "已复制文件夹 ID" })
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy folder ID
+        复制文件夹 ID
       </ContextMenuItem>
       {canUpdateAgent ? (
         <ContextMenuItem
@@ -1279,7 +1269,7 @@ function AgentFolderContextActions({
           }}
         >
           <Pencil className="mr-2 size-3.5" />
-          Rename folder
+          重命名文件夹
         </ContextMenuItem>
       ) : null}
       {canDeleteAgent ? (
@@ -1301,7 +1291,7 @@ function AgentFolderContextActions({
             }}
           >
             <Trash2 className="mr-2 size-3.5" />
-            Delete
+            删除
           </ContextMenuItem>
         </>
       ) : null}
@@ -1360,7 +1350,7 @@ function AgentPresetContextActions({
           rel="noopener noreferrer"
         >
           <ExternalLinkIcon className="mr-2 size-3.5" />
-          Open in new tab
+          在新标签页中打开
         </Link>
       </ContextMenuItem>
       {defaultAgentActions.canSet ? (
@@ -1377,7 +1367,7 @@ function AgentPresetContextActions({
           }}
         >
           <StarIcon className="mr-2 size-3.5" />
-          Make default
+          设为默认
         </ContextMenuItem>
       ) : null}
       {canUpdateAgent ? (
@@ -1394,7 +1384,7 @@ function AgentPresetContextActions({
             }).catch(() => {})
           }}
         >
-          Use in chat
+          在对话中使用
         </ContextMenuCheckboxItem>
       ) : null}
       {canOrganize ? (
@@ -1408,7 +1398,7 @@ function AgentPresetContextActions({
           }}
         >
           <FolderKanban className="mr-2 size-3.5" />
-          Move to folder
+          移至文件夹
         </ContextMenuItem>
       ) : null}
       {canOrganize ? (
@@ -1419,7 +1409,7 @@ function AgentPresetContextActions({
               onClick={(e) => e.stopPropagation()}
             >
               <TagsIcon className="mr-2 size-3.5" />
-              Tags
+              标签
             </ContextMenuSubTrigger>
             <ContextMenuPortal>
               <ContextMenuSubContent>
@@ -1440,8 +1430,8 @@ function AgentPresetContextActions({
                               workspaceId,
                             })
                             toast({
-                              title: "Tag removed",
-                              description: `Removed tag "${tag.name}" from agent`,
+                              title: "已移除标签",
+                              description: `已从智能体移除标签“${tag.name}”`,
                             })
                           } else {
                             await agentPresetsAddPresetTag({
@@ -1450,8 +1440,8 @@ function AgentPresetContextActions({
                               requestBody: { tag_id: tag.id },
                             })
                             toast({
-                              title: "Tag added",
-                              description: `Added tag "${tag.name}" to agent`,
+                              title: "已添加标签",
+                              description: `已为智能体添加标签“${tag.name}”`,
                             })
                           }
                           await Promise.all([
@@ -1468,8 +1458,8 @@ function AgentPresetContextActions({
                         } catch (error) {
                           console.error("Failed to modify tag:", error)
                           toast({
-                            title: "Error",
-                            description: `Failed to ${hasTag ? "remove" : "add"} tag`,
+                            title: "错误",
+                            description: `${hasTag ? "移除" : "添加"}标签失败`,
                             variant: "destructive",
                           })
                         }
@@ -1494,7 +1484,7 @@ function AgentPresetContextActions({
             onClick={(e) => e.stopPropagation()}
           >
             <TagsIcon className="mr-2 size-3.5" />
-            <span>Loading tags...</span>
+            <span>正在加载标签…</span>
           </ContextMenuItem>
         ) : (
           <ContextMenuItem
@@ -1502,7 +1492,7 @@ function AgentPresetContextActions({
             onClick={(e) => e.stopPropagation()}
           >
             <TagsIcon className="mr-2 size-3.5" />
-            <span>No tags available</span>
+            <span>暂无可用标签</span>
           </ContextMenuItem>
         )
       ) : null}
@@ -1512,11 +1502,11 @@ function AgentPresetContextActions({
         onSelect={(e) => {
           e.stopPropagation()
           navigator.clipboard.writeText(item.id)
-          toast({ title: "Copied", description: "Agent ID copied" })
+          toast({ title: "已复制", description: "已复制智能体 ID" })
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy agent ID
+        复制智能体 ID
       </ContextMenuItem>
       {onDuplicate && canDuplicateAgent ? (
         <ContextMenuItem
@@ -1528,7 +1518,7 @@ function AgentPresetContextActions({
           }}
         >
           <CopyPlus className="mr-2 size-3.5" />
-          Duplicate agent
+          复制智能体
         </ContextMenuItem>
       ) : null}
       {canDeleteAgent ? (
@@ -1544,7 +1534,7 @@ function AgentPresetContextActions({
             }}
           >
             <Trash2 className="mr-2 size-3.5" />
-            Delete
+            删除
           </ContextMenuItem>
         </>
       ) : null}
@@ -1844,7 +1834,7 @@ function AgentCatalogRow({
                       className="h-5 gap-1 px-2 text-[10px] font-normal"
                     >
                       <StarIcon className="size-3" />
-                      Default
+                      默认
                     </Badge>
                   ) : null}
                 </div>
@@ -1883,9 +1873,9 @@ function AgentCatalogRow({
 // -- Header ------------------------------------------------------------------
 
 const SORT_FIELD_OPTIONS = [
-  { value: "updated_at", label: "Updated", icon: Clock3 },
-  { value: "created_at", label: "Created", icon: Calendar },
-  { value: "name", label: "Name", icon: Type },
+  { value: "updated_at", label: "更新时间", icon: Clock3 },
+  { value: "created_at", label: "创建时间", icon: Calendar },
+  { value: "name", label: "名称", icon: Type },
 ] as const
 
 const VIEW_ICON: Record<AgentsViewMode, React.ReactNode> = {
@@ -1894,8 +1884,8 @@ const VIEW_ICON: Record<AgentsViewMode, React.ReactNode> = {
 }
 
 const VIEW_LABEL: Record<AgentsViewMode, string> = {
-  list: "List",
-  folders: "Folders",
+  list: "列表",
+  folders: "文件夹",
 }
 
 function AgentsCatalogHeader({
@@ -1933,19 +1923,20 @@ function AgentsCatalogHeader({
   defaultAgentId?: string | null
 }) {
   const selectedSortLabel =
-    SORT_FIELD_OPTIONS.find((o) => o.value === sortBy.field)?.label ?? "Updated"
+    SORT_FIELD_OPTIONS.find((o) => o.value === sortBy.field)?.label ??
+    "更新时间"
 
   return (
     <div className="shrink-0 border-b">
       <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
         <ListHeaderSearch
-          placeholder="Search agents..."
+          placeholder={"搜索智能体…"}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
         <div className="ml-auto flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
-            {totalCount} agents
+            {totalCount} 个智能体
           </span>
         </div>
       </header>
@@ -1959,13 +1950,13 @@ function AgentsCatalogHeader({
             <SelectTrigger className="h-6 w-[138px] rounded-md px-2 text-xs font-medium">
               <div className="flex items-center gap-1.5">
                 {VIEW_ICON[view]}
-                <span>View</span>
+                <span>视图</span>
               </div>
               <SelectValue placeholder={VIEW_LABEL[view]} />
             </SelectTrigger>
             <SelectContent align="start">
-              <SelectItem value="list">List</SelectItem>
-              <SelectItem value="folders">Folders</SelectItem>
+              <SelectItem value="list">列表</SelectItem>
+              <SelectItem value="folders">文件夹</SelectItem>
             </SelectContent>
           </Select>
         ) : null}
@@ -1981,7 +1972,7 @@ function AgentsCatalogHeader({
             }
           >
             <SelectTrigger className="h-6 w-[145px] rounded-r-none border-0 bg-transparent px-2 text-xs font-medium shadow-none focus:ring-0">
-              <span className="text-muted-foreground">Sort by</span>
+              <span className="text-muted-foreground">排序方式</span>
               <span className="text-foreground">{selectedSortLabel}</span>
             </SelectTrigger>
             <SelectContent align="start">
@@ -2007,9 +1998,7 @@ function AgentsCatalogHeader({
                 direction: sortBy.direction === "asc" ? "desc" : "asc",
               })
             }
-            aria-label={
-              sortBy.direction === "asc" ? "Sort ascending" : "Sort descending"
-            }
+            aria-label={sortBy.direction === "asc" ? "升序排序" : "降序排序"}
           >
             {sortBy.direction === "asc" ? (
               <ArrowUpIcon className="size-3.5" />
@@ -2019,7 +2008,7 @@ function AgentsCatalogHeader({
           </button>
         </div>
         <FilterMultiSelect
-          placeholder="MCP servers"
+          placeholder={"MCP 服务器"}
           icon={Sparkles}
           value={filters.mcpSlugs}
           options={mcpOptions}
@@ -2031,7 +2020,7 @@ function AgentsCatalogHeader({
         />
         {workflowOptions ? (
           <FilterMultiSelect
-            placeholder="Workflows"
+            placeholder={"工作流"}
             icon={WorkflowIcon}
             value={filters.workflowIds}
             options={workflowOptions}
@@ -2154,11 +2143,11 @@ export function AgentsDashboard() {
   const mcpIntegrations = canReadIntegrations
     ? mcpQuery.mcpIntegrations
     : undefined
-  let mcpEmptyMessage = "No MCP servers found."
+  let mcpEmptyMessage = "未找到 MCP 服务器。"
   if (canReadIntegrations && mcpQuery.mcpIntegrationsIsLoading) {
-    mcpEmptyMessage = "Loading MCP servers..."
+    mcpEmptyMessage = "正在加载 MCP 服务器…"
   } else if (canReadIntegrations && mcpQuery.mcpIntegrationsError) {
-    mcpEmptyMessage = "Failed to load MCP servers."
+    mcpEmptyMessage = "加载 MCP 服务器失败。"
   }
   const mcpBySlug = useMemo(
     () =>
@@ -2255,8 +2244,8 @@ export function AgentsDashboard() {
       } catch (error) {
         console.error("Failed to duplicate agent preset:", error)
         toast({
-          title: "Error",
-          description: "Could not duplicate agent. Please try again.",
+          title: "错误",
+          description: "无法复制智能体，请重试。",
           variant: "destructive",
         })
       }
@@ -2396,9 +2385,7 @@ export function AgentsDashboard() {
             </div>
           ) : error ? (
             <div className="flex h-full items-center justify-center px-6">
-              <span className="text-sm text-destructive">
-                Failed to load agents.
-              </span>
+              <span className="text-sm text-destructive">加载智能体失败。</span>
             </div>
           ) : visibleItems.length === 0 ? (
             <div className="flex h-full p-6">
@@ -2407,7 +2394,7 @@ export function AgentsDashboard() {
                   <EmptyMedia variant="icon">
                     <MousePointerClickIcon className="size-5 text-muted-foreground/60" />
                   </EmptyMedia>
-                  <EmptyTitle>No agents yet</EmptyTitle>
+                  <EmptyTitle>暂无智能体</EmptyTitle>
                 </EmptyHeader>
               </Empty>
             </div>

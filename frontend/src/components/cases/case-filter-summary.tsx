@@ -30,8 +30,8 @@ export function CaseFilterSummary({
         variant="outline"
         size="sm"
         className="h-auto max-w-full py-0.5 text-xs"
-        aria-label={`Remove ${label}`}
-        title="Remove condition"
+        aria-label={`移除 ${label}`}
+        title={"移除条件"}
         onClick={() => onChange(null)}
       >
         <span className="min-w-0 truncate">{label}</span>
@@ -55,9 +55,9 @@ export function CaseFilterSummary({
     else if ("or" in node) onChange({ or: updated })
     else onChange({ not: updated[0] })
   }
-  let groupLabel = "All"
+  let groupLabel = "全部"
   if ("or" in node) groupLabel = "Any"
-  if ("not" in node) groupLabel = "Not"
+  if ("not" in node) groupLabel = "取反"
   return (
     <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
       <span>{groupLabel} (</span>

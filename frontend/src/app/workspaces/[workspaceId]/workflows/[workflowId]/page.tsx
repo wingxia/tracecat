@@ -4,7 +4,7 @@ import { cookies } from "next/headers"
 import { Builder } from "@/components/builder/builder"
 
 export const metadata: Metadata = {
-  title: "Workflow builder",
+  title: "工作流编辑器",
 }
 
 export default async function BuilderPage() {

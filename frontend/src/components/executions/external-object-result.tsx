@@ -108,10 +108,9 @@ export function ExternalObjectResult({
       link.click()
       document.body.removeChild(link)
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to download object"
+      const message = error instanceof Error ? error.message : "下载对象失败"
       toast({
-        title: "Download failed",
+        title: "下载失败",
         description: message,
       })
     } finally {
@@ -133,10 +132,9 @@ export function ExternalObjectResult({
         })
       setPreview(response)
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to preview object"
+      const message = error instanceof Error ? error.message : "预览对象失败"
       toast({
-        title: "Preview failed",
+        title: "预览失败",
         description: message,
       })
     } finally {
@@ -155,14 +153,14 @@ export function ExternalObjectResult({
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1">
           {compact ? (
-            <p className="text-foreground/80">Large file ({sizeLabel}).</p>
+            <p className="text-foreground/80">大文件（{sizeLabel}).</p>
           ) : (
             <>
               <p className="text-foreground/80">
-                This object is too large to load ({sizeLabel}).
+                此对象过大，无法加载（{sizeLabel}).
               </p>
               <p className="text-muted-foreground">
-                Download to inspect it, or fetch a truncated preview.
+                下载后查看，或获取截断预览。
               </p>
             </>
           )}
@@ -181,7 +179,7 @@ export function ExternalObjectResult({
           ) : (
             <DownloadIcon className="mr-2 size-3" />
           )}
-          Download file
+          下载文件
         </Button>
         <Button
           variant="outline"
@@ -195,7 +193,7 @@ export function ExternalObjectResult({
           ) : (
             <EyeIcon className="mr-2 size-3" />
           )}
-          Try preview
+          尝试预览
         </Button>
       </div>
       {preview && (
@@ -207,7 +205,7 @@ export function ExternalObjectResult({
               </Badge>
               {preview.truncated && (
                 <Badge variant="secondary" className="text-[10px]">
-                  Preview truncated ({formatSize(preview.preview_bytes)})
+                  预览已截断（{formatSize(preview.preview_bytes)})
                 </Badge>
               )}
             </div>
@@ -218,10 +216,10 @@ export function ExternalObjectResult({
               onClick={() => setPreview(null)}
             >
               <XIcon className="mr-1 size-3" />
-              Close preview
+              关闭预览
             </Button>
           </div>
-          <CodeBlock title="Preview">{preview.content}</CodeBlock>
+          <CodeBlock title={"预览"}>{preview.content}</CodeBlock>
         </div>
       )}
     </div>

@@ -91,7 +91,7 @@ export const MAX_SELECTABLE_TOOLS = 50
 export const DEFAULT_CAPABILITY_GROUPS: CapabilityGroup[] = [
   {
     id: "cases",
-    label: "Cases",
+    label: "事件",
     tools: [
       "core.cases.create_case",
       "core.cases.update_case",
@@ -104,7 +104,7 @@ export const DEFAULT_CAPABILITY_GROUPS: CapabilityGroup[] = [
   },
   {
     id: "tables",
-    label: "Tables",
+    label: "数据表",
     tools: [
       "core.table.list_tables",
       "core.table.get_table_metadata",
@@ -127,7 +127,7 @@ export const DEFAULT_CAPABILITY_GROUPS: CapabilityGroup[] = [
   },
   {
     id: "workflows",
-    label: "Workflows",
+    label: "工作流",
     tools: [
       "core.workflow.create_workflow",
       "core.workflow.get_workflow",
@@ -146,7 +146,7 @@ export const DEFAULT_CAPABILITY_GROUPS: CapabilityGroup[] = [
   },
   {
     id: "presets",
-    label: "Agent presets",
+    label: "智能体预设",
     tools: [
       "ai.agent.create_preset",
       "ai.agent.get_preset",
@@ -164,7 +164,7 @@ export const DEFAULT_CAPABILITY_GROUPS: CapabilityGroup[] = [
  */
 const FORMS_CAPABILITY_GROUP: CapabilityGroup = {
   id: "forms",
-  label: "Forms",
+  label: "表单",
   tools: [
     "core.forms.list_forms",
     "core.forms.get_form",
@@ -181,7 +181,7 @@ function humanizeAction(action: string): string {
 
 /** "1 tool" / "4 tools" */
 function toolCountLabel(count: number): string {
-  return `${count} tool${count === 1 ? "" : "s"}`
+  return `${count} 个工具`
 }
 
 /**
@@ -232,9 +232,9 @@ export function ChatToolsPicker({
   // Only surface a limit message when it matters — at the cap — rather than a
   // persistent counter that duplicates the trigger button and group counts.
   const limitMessage = toolsAtLimit
-    ? `You've reached the ${MAX_SELECTABLE_TOOLS}-tool limit. Remove a tool to add another.`
+    ? `已达到 ${MAX_SELECTABLE_TOOLS} 个工具的上限，请移除一个工具后再添加。`
     : mcpAtLimit
-      ? `You've reached the ${MAX_SELECTABLE_TOOLS}-integration limit. Remove one to add another.`
+      ? `已达到 ${MAX_SELECTABLE_TOOLS} 个集成的上限，请移除一个集成后再添加。`
       : null
 
   const toggleExpanded = (key: string) => {
@@ -309,14 +309,14 @@ export function ChatToolsPicker({
           if (option) {
             return {
               ...option,
-              group: "Included by default",
+              group: "默认包含",
             }
           }
           return {
             value,
             label: humanizeAction(value),
-            group: "Included by default",
-            description: "This tool is already included by default.",
+            group: "默认包含",
+            description: "此工具已默认包含。",
           }
         }),
     [defaultToolValues, optionByValue, selectedTools]
@@ -333,8 +333,8 @@ export function ChatToolsPicker({
         .map((value) => ({
           value,
           label: value,
-          group: "No longer available",
-          description: "This tool is no longer available.",
+          group: "不再可用",
+          description: "此工具已不可用。",
           stale: true,
         })),
     [defaultToolValues, optionByValue, selectedTools]
@@ -377,7 +377,7 @@ export function ChatToolsPicker({
         .map((id) => ({
           id,
           name: id,
-          description: "This MCP integration is no longer available.",
+          description: "此 MCP 集成已不可用。",
           stale: true,
         })),
     ],
@@ -391,8 +391,8 @@ export function ChatToolsPicker({
     }
     if (selectedTools.length >= MAX_SELECTABLE_TOOLS) {
       toast({
-        title: "Tool limit reached",
-        description: `You can add at most ${MAX_SELECTABLE_TOOLS} tools. Remove one before adding another.`,
+        title: "已达到工具数量上限",
+        description: `最多添加 ${MAX_SELECTABLE_TOOLS} 个工具，请先移除一个再添加。`,
       })
       return
     }
@@ -416,8 +416,8 @@ export function ChatToolsPicker({
     if (next.size > MAX_SELECTABLE_TOOLS) {
       const additional = next.size - selectedTools.length
       toast({
-        title: "Tool limit reached",
-        description: `Adding these ${additional} tools would exceed the ${MAX_SELECTABLE_TOOLS}-tool limit. Remove some tools first.`,
+        title: "已达到工具数量上限",
+        description: `添加这 ${additional} 个工具会超过 ${MAX_SELECTABLE_TOOLS} 个工具的上限，请先移除部分工具。`,
       })
       return
     }
@@ -431,8 +431,8 @@ export function ChatToolsPicker({
     }
     if (selectedMcpIntegrations.length >= MAX_SELECTABLE_TOOLS) {
       toast({
-        title: "MCP integration limit reached",
-        description: `You can add at most ${MAX_SELECTABLE_TOOLS} MCP integrations. Remove one before adding another.`,
+        title: "已达到 MCP 集成数量上限",
+        description: `最多添加 ${MAX_SELECTABLE_TOOLS} 个 MCP 集成，请先移除一个再添加。`,
       })
       return
     }
@@ -446,7 +446,7 @@ export function ChatToolsPicker({
       <PopoverTrigger asChild>
         <PromptInputButton disabled={disabled} className="h-7 text-xs">
           <SlidersHorizontalIcon className="size-4" />
-          <span>{addedCount > 0 ? `Tools (${addedCount})` : "Tools"}</span>
+          <span>{addedCount > 0 ? `工具（${addedCount}）` : "工具"}</span>
         </PromptInputButton>
       </PopoverTrigger>
       <PopoverContent
@@ -458,7 +458,7 @@ export function ChatToolsPicker({
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search capabilities & tools..."
+            placeholder={"搜索能力和工具…"}
             className="w-full bg-transparent text-[13px] outline-none placeholder:text-muted-foreground"
           />
         </div>
@@ -466,7 +466,7 @@ export function ChatToolsPicker({
         <div className="max-h-80 overflow-y-auto py-1.5">
           {isSearching ? (
             <>
-              <GroupLabel>Add tools</GroupLabel>
+              <GroupLabel>添加工具</GroupLabel>
               {searchResults.length > 0 ? (
                 searchResults.map((tool) => {
                   const isSelected = selectedTools.includes(tool.value)
@@ -485,14 +485,14 @@ export function ChatToolsPicker({
                   )
                 })
               ) : (
-                <EmptyHint>No tools found.</EmptyHint>
+                <EmptyHint>未找到工具。</EmptyHint>
               )}
             </>
           ) : (
             <>
               {isWorkspaceChat ? (
                 <>
-                  <GroupLabel pill="Always on">Active capabilities</GroupLabel>
+                  <GroupLabel pill="始终启用">已启用的能力</GroupLabel>
                   {visibleCapabilityGroups.map((group) => (
                     <CapabilityRow
                       key={group.id}
@@ -507,7 +507,7 @@ export function ChatToolsPicker({
 
               {mcpEnabled && (
                 <>
-                  <GroupLabel>MCP integrations</GroupLabel>
+                  <GroupLabel>MCP 集成</GroupLabel>
                   {visibleMcpIntegrations.length > 0 ? (
                     visibleMcpIntegrations.map((integration) => {
                       const isSelected = selectedMcpIntegrations.includes(
@@ -539,23 +539,21 @@ export function ChatToolsPicker({
                       </span>
                       <div className="min-w-0 flex-1">
                         <div className="text-[13px] font-medium">
-                          Connect an MCP server
+                          连接 MCP 服务器
                         </div>
                         <p className="truncate text-[11px] text-muted-foreground">
-                          Bring your own tools into chat.
+                          将自己的工具接入对话。
                         </p>
                       </div>
                       <ArrowRightIcon className="size-3.5 shrink-0 text-muted-foreground" />
                     </Link>
                   ) : (
-                    <EmptyHint>
-                      No MCP integrations connected in this workspace.
-                    </EmptyHint>
+                    <EmptyHint>此工作空间尚未连接 MCP 集成。</EmptyHint>
                   )}
                 </>
               )}
 
-              <GroupLabel>Add tools</GroupLabel>
+              <GroupLabel>添加工具</GroupLabel>
               {selectedDefaultTools.map((tool) => (
                 <Row
                   key={tool.value}
@@ -600,7 +598,7 @@ export function ChatToolsPicker({
                 })
               ) : staleSelectedTools.length === 0 &&
                 selectedDefaultTools.length === 0 ? (
-                <EmptyHint>No registry tools available.</EmptyHint>
+                <EmptyHint>暂无可用的注册表工具。</EmptyHint>
               ) : null}
             </>
           )}
@@ -612,7 +610,7 @@ export function ChatToolsPicker({
           </div>
         ) : isWorkspaceChat ? (
           <div className="border-t px-3 py-2 text-[11px] text-muted-foreground">
-            Tracecat defaults always included
+            始终包含 Tracecat 默认工具
           </div>
         ) : null}
       </PopoverContent>
@@ -789,7 +787,7 @@ function AddGroupRow({
           </span>
           <span className="text-[11px] text-muted-foreground">
             {selectedCount > 0
-              ? `${selectedCount}/${tools.length} on`
+              ? `已启用 ${selectedCount}/${tools.length}`
               : toolCountLabel(tools.length)}
           </span>
         </button>

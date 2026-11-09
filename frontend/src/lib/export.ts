@@ -75,14 +75,14 @@ function filenameFromHeader(
 export function handleExportError(error: Error) {
   console.error("Failed to download workflow YAML / JSON:", error)
   const toastData = {
-    title: "Error exporting workflow",
-    description: "Could not export workflow. Please try again.",
+    title: "导出工作流出错",
+    description: "无法导出工作流，请重试。",
   }
 
   if (error instanceof AxiosError && error.response?.status === 404) {
-    toastData.title = "No workflow version found"
+    toastData.title = "未找到工作流版本"
     toastData.description =
-      "Cannot export uncommitted workflow. Please commit changes to create a versioned workflow."
+      "无法导出未提交的工作流，请先提交更改以创建工作流版本。"
   } else {
     toastData.description += ` ${error.message}`
   }

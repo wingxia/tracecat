@@ -74,8 +74,8 @@ class ImageChipWidget extends WidgetType {
   toDOM(): HTMLElement {
     const chip = document.createElement("span")
     chip.className = "cm-form-image-chip"
-    chip.textContent = `image ${formatFileSize(this.bytes)}`
-    chip.title = "Inline image. Delete it like a single character."
+    chip.textContent = `图片 ${formatFileSize(this.bytes)}`
+    chip.title = "内嵌图片，可像单个字符一样删除。"
     return chip
   }
 }
@@ -330,16 +330,15 @@ export function FormConfigTab({
       )
       draft.markSaved(saved, text)
       setRejected(null)
-      toast({ title: "Form saved" })
+      toast({ title: "已保存表单" })
     } catch (error) {
       const issues = getFormConfigIssues(error)
       if (issues) {
         setRejected({ text, problems: locateFormIssues(text, issues) })
       } else {
         toast({
-          title: "Couldn't save the form",
-          description:
-            getFormErrorDetail(error)?.message ?? "Something went wrong.",
+          title: "无法保存表单",
+          description: getFormErrorDetail(error)?.message ?? "出现了问题。",
           variant: "destructive",
         })
       }
@@ -353,16 +352,16 @@ export function FormConfigTab({
     null
   if (draft.hasRemoteChange) {
     banner = [
-      "This form changed elsewhere. Reload to see it and lose your unsaved edits, or overwrite it with yours.",
+      "此表单已在其他位置更改。重新加载会丢失未保存的编辑，也可以用当前内容覆盖。",
       [
-        ["Reload", draft.reload],
+        ["重新加载", draft.reload],
         ["Overwrite", () => save(true), !canSave],
       ],
     ]
   } else if (draft.isRestored) {
     banner = [
-      "Unsaved draft restored. Save to keep it.",
-      [["Discard draft", draft.reload]],
+      "已恢复未保存的草稿，请保存以保留。",
+      [["放弃草稿", draft.reload]],
     ]
   }
 
@@ -380,15 +379,15 @@ export function FormConfigTab({
           ]}
         />
         {!canEdit && (
-          <span className="text-xs text-muted-foreground">Read only</span>
+          <span className="text-xs text-muted-foreground">只读</span>
         )}
         {canEdit && mode === "yaml" && (
           <span className="hidden truncate text-xs text-muted-foreground sm:inline">
-            Type{" "}
+            输入{" "}
             <kbd className="rounded border bg-muted px-1 font-mono text-[11px]">
               /
             </kbd>{" "}
-            to add a block
+            以添加内容块
           </span>
         )}
         <span className="flex-1" />
@@ -408,8 +407,8 @@ export function FormConfigTab({
             }}
           >
             {errorCount === 1
-              ? "1 error blocks saving"
-              : `${errorCount} errors block saving`}
+              ? "1 个错误阻止保存"
+              : `${errorCount} 个错误阻止保存`}
           </button>
         )}
         {canEdit && (
@@ -427,10 +426,10 @@ export function FormConfigTab({
                 ) : (
                   <Save className="size-4" />
                 )}
-                <span className="sr-only">Save</span>
+                <span className="sr-only">保存</span>
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Save</TooltipContent>
+            <TooltipContent>保存</TooltipContent>
           </Tooltip>
         )}
       </div>
@@ -485,7 +484,7 @@ export function FormConfigTab({
 
       <div className="flex h-8 flex-none items-center gap-1.5 border-t px-3 text-xs text-muted-foreground">
         <WorkflowIcon className="size-3.5 flex-none" />
-        <span className="flex-none">Inputs from</span>
+        <span className="flex-none">输入来源</span>
         {canReadWorkflows ? (
           <Link
             href={`/workspaces/${form.workspace_id}/workflows/${form.workflow_id}`}
@@ -499,7 +498,7 @@ export function FormConfigTab({
           </span>
         )}
         {typeof form.workflow_version !== "number" && (
-          <span className="flex-none">(draft, not published)</span>
+          <span className="flex-none">（草稿，未发布）</span>
         )}
       </div>
     </div>

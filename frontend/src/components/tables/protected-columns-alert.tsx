@@ -5,11 +5,10 @@ export function ProtectedColumnsAlert() {
   return (
     <Alert>
       <InfoCircledIcon className="size-4" />
-      <AlertTitle>Protected columns</AlertTitle>
+      <AlertTitle>受保护的列</AlertTitle>
       <AlertDescription>
-        Columns named <code>id</code>, <code>created_at</code>, or{" "}
-        <code>updated_at</code> are protected column names and will be skipped
-        during import.
+        以下列名： <code>id</code>, <code>created_at</code>、或{" "}
+        <code>updated_at</code> 属于受保护列名，导入时将跳过。
       </AlertDescription>
     </Alert>
   )

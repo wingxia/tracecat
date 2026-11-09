@@ -35,28 +35,28 @@ export function FolderNotEmptyDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Folder is not empty</AlertDialogTitle>
+          <AlertDialogTitle>文件夹非空</AlertDialogTitle>
           <AlertDialogDescription>
             <span className="font-medium text-foreground">{folderName}</span>{" "}
-            contains {numItems} {numItems === 1 ? "item" : "items"}. Move or
-            delete the {itemNoun} inside it first, then delete the folder.
+            包含 {numItems} {numItems === 1 ? "项" : "项"}。请先移动或删除其中的{" "}
+            {itemNoun} ，再删除文件夹。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex items-center justify-between gap-3 rounded-md border bg-muted/40 px-3 py-2">
           <div className="flex min-w-0 flex-col">
-            <span className="text-xs text-muted-foreground">Folder ID</span>
+            <span className="text-xs text-muted-foreground">文件夹 ID</span>
             <code className="truncate font-mono text-sm">{folderId}</code>
           </div>
           <CopyButton
             value={folderId}
-            toastMessage="Copied folder ID to clipboard"
-            tooltipMessage="Copy folder ID"
+            toastMessage="已将文件夹 ID 复制到剪贴板"
+            tooltipMessage={"复制文件夹 ID"}
             className="size-7 shrink-0"
             iconClassName="size-3.5"
           />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Close</AlertDialogCancel>
+          <AlertDialogCancel>关闭</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

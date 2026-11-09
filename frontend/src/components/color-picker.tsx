@@ -14,7 +14,7 @@ export const ColorPicker = ({
   onChange,
   showInput = false,
   allowEmpty = false,
-  resetLabel = "Use default color",
+  resetLabel = "使用默认颜色",
 }: {
   value: string
   onChange: (color: string) => void
@@ -36,7 +36,7 @@ export const ColorPicker = ({
               !hasColor && "bg-muted text-[9px] text-muted-foreground"
             )}
             style={hasColor ? { backgroundColor: value } : undefined}
-            aria-label="Pick a color"
+            aria-label={"选择颜色"}
           >
             {!hasColor && "-"}
           </button>

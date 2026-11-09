@@ -56,7 +56,7 @@ export function LongTextFieldDrawer({
       open={open}
       onOpenChange={onOpenChange}
       title={fieldLabel}
-      description="Edit the rich text content for this field."
+      description={"编辑此字段的富文本内容。"}
     >
       <div className="flex h-full flex-col">
         <div className="min-h-0 flex-1 overflow-hidden">
@@ -69,7 +69,7 @@ export function LongTextFieldDrawer({
         </div>
         <div className="flex shrink-0 justify-end border-t px-4 py-3">
           <Button variant="outline" onClick={handleSave}>
-            Save
+            保存
           </Button>
         </div>
       </div>
@@ -86,7 +86,7 @@ function jsonLinter(view: EditorView): Diagnostic[] {
     JSON.parse(content)
     return []
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Invalid JSON"
+    const msg = err instanceof Error ? err.message : "JSON 无效"
     const posMatch = msg.match(/position (\d+)/)
     const pos = posMatch ? Number.parseInt(posMatch[1], 10) : 0
     const from = Math.min(pos, content.length)
@@ -143,7 +143,7 @@ export function JsonFieldDrawer({
 
   const handleSave = useCallback(() => {
     if (!validate(draft)) {
-      setError("Invalid JSON")
+      setError("JSON 无效")
       return
     }
     const trimmed = draft.trim()
@@ -175,7 +175,7 @@ export function JsonFieldDrawer({
       open={open}
       onOpenChange={onOpenChange}
       title={fieldLabel}
-      description="Edit the JSON value for this field."
+      description={"编辑此字段的 JSON 值。"}
     >
       <div className="flex h-full flex-col">
         <div className="min-h-0 flex-1 overflow-hidden">
@@ -183,7 +183,7 @@ export function JsonFieldDrawer({
             value={draft}
             onChange={(val) => {
               setDraft(val)
-              if (error) setError(validate(val) ? null : "Invalid JSON")
+              if (error) setError(validate(val) ? null : "JSON 无效")
             }}
             height="100%"
             theme={codeMirrorTheme}
@@ -208,7 +208,7 @@ export function JsonFieldDrawer({
         )}
         <div className="flex shrink-0 justify-end border-t px-4 py-3">
           <Button variant="outline" onClick={handleSave} disabled={!isValid}>
-            Save
+            保存
           </Button>
         </div>
       </div>
@@ -234,7 +234,7 @@ export function ExpandFieldCell({ onClick, hasValue }: ExpandFieldCellProps) {
       className="h-7 w-full justify-end px-2 text-sm font-normal text-muted-foreground"
       onClick={onClick}
     >
-      {hasValue ? "Expand" : "Add..."}
+      {hasValue ? "展开" : "添加…"}
     </Button>
   )
 }

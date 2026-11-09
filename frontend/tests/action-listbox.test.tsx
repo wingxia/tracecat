@@ -104,7 +104,7 @@ describe("ActionListbox", () => {
     fireEvent.change(screen.getByRole("combobox"), {
       target: { value: "zzzzqqq" },
     })
-    expect(screen.getByText("No actions found.")).toBeInTheDocument()
+    expect(screen.getByText("未找到动作。")).toBeInTheDocument()
   })
 })
 

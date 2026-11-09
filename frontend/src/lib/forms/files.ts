@@ -18,7 +18,7 @@ export const uploadFormFile: FormFileUploader = async ({ file, ...scope }) => {
     const uploaded = await formsUploadFormFile({ ...scope, formData: { file } })
     return { id: uploaded.id }
   } catch (error) {
-    throw new Error(getFormErrorDetail(error)?.message ?? "Upload failed")
+    throw new Error(getFormErrorDetail(error)?.message ?? "上传失败")
   }
 }
 

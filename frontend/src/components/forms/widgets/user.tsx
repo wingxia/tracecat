@@ -84,23 +84,22 @@ export function UserWidget(props: FormWidgetProps) {
     )
   }
 
-  let emptyMessage = "No people found."
+  let emptyMessage = "未找到人员。"
   if (usersIsLoading || isCatchingUp) {
     emptyMessage = "Searching..."
   } else if (error) {
-    emptyMessage = "Couldn't search people. Try again."
+    emptyMessage = "无法搜索人员，请重试。"
   }
 
   let summary = (
     <span className="text-muted-foreground">
-      {field.placeholder ??
-        (field.multiple ? "Select people" : "Select a person")}
+      {field.placeholder ?? (field.multiple ? "选择人员" : "选择人员")}
     </span>
   )
   if (selection.length === 1) {
     summary = <UserLabel user={selection[0]} />
   } else if (selection.length > 1) {
-    summary = <span>{selection.length} people selected</span>
+    summary = <span>{selection.length} 人已选择</span>
   }
 
   return (
@@ -132,7 +131,7 @@ export function UserWidget(props: FormWidgetProps) {
           <CommandInput
             value={search}
             onValueChange={setSearch}
-            placeholder="Search by name or email"
+            placeholder={"按姓名或邮箱搜索"}
             className={formStyles.option}
           />
           <CommandList>
@@ -153,7 +152,7 @@ export function UserWidget(props: FormWidgetProps) {
                       className={cn("size-4", !checked && "invisible")}
                     />
                     <UserLabel user={user} />
-                    {checked && <span className="sr-only">, selected</span>}
+                    {checked && <span className="sr-only">，已选择</span>}
                   </CommandItem>
                 )
               })}
@@ -163,7 +162,7 @@ export function UserWidget(props: FormWidgetProps) {
                   onSelect={() => fetchNextPage()}
                   className={cn(formStyles.option, "text-muted-foreground")}
                 >
-                  Load more
+                  加载更多
                 </CommandItem>
               )}
             </CommandGroup>

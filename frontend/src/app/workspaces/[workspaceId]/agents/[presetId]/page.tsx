@@ -11,7 +11,7 @@ export default function AgentPresetsPage() {
   const presetId = params?.presetId
 
   useEffect(() => {
-    document.title = "Agent Presets"
+    document.title = "智能体预设"
   }, [])
 
   return (

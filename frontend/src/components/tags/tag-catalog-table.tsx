@@ -46,13 +46,10 @@ import { useManagedResources } from "@/hooks/use-managed-resources"
 const updateTagSchema = z.object({
   name: z
     .string()
-    .min(1, "Tag name cannot be empty")
-    .max(50, "Tag name cannot be longer than 50 characters")
+    .min(1, "标签名称不能为空")
+    .max(50, "标签名称不能超过 50 个字符")
     .trim()
-    .refine(
-      (name) => name.trim().length > 0,
-      "Tag name cannot be only whitespace"
-    )
+    .refine((name) => name.trim().length > 0, "标签名称不能仅为空白字符")
     .optional(),
   color: z.preprocess(
     (value) => {
@@ -63,7 +60,7 @@ const updateTagSchema = z.object({
     },
     z
       .string()
-      .regex(/^#[0-9A-Fa-f]{6}$/, "Color must be a valid hex color code")
+      .regex(/^#[0-9A-Fa-f]{6}$/, "颜色必须是有效的十六进制色值")
       .optional()
   ),
 })
@@ -143,7 +140,7 @@ export function TagCatalogTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Tag name"
+                title={"标签名称"}
               />
             ),
             cell: ({ row }) => {
@@ -178,7 +175,7 @@ export function TagCatalogTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Color"
+                title={"颜色"}
               />
             ),
             cell: ({ row }) => (
@@ -204,7 +201,7 @@ export function TagCatalogTable({
               <DataTableColumnHeader
                 className="text-xs"
                 column={column}
-                title="Reference"
+                title={"引用"}
               />
             ),
             cell: ({ row }) => (
@@ -223,7 +220,7 @@ export function TagCatalogTable({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="size-8 p-0">
-                      <span className="sr-only">Open menu</span>
+                      <span className="sr-only">打开菜单</span>
                       <DotsHorizontalIcon className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
@@ -234,7 +231,7 @@ export function TagCatalogTable({
                       }
                     >
                       <CopyIcon className="mr-2 size-3" />
-                      Copy reference
+                      复制引用
                     </DropdownMenuItem>
                     {canUpdateTag && !isLocked(row.original.id) ? (
                       <AlertDialogTrigger asChild>
@@ -245,7 +242,7 @@ export function TagCatalogTable({
                           }}
                         >
                           <PencilIcon className="mr-2 size-3" />
-                          Edit tag
+                          编辑标签
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     ) : null}
@@ -259,7 +256,7 @@ export function TagCatalogTable({
                           }}
                         >
                           <Trash2Icon className="mr-2 size-3" />
-                          Delete
+                          删除
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     ) : null}
@@ -274,15 +271,15 @@ export function TagCatalogTable({
       {action === TagItemAction.Delete && selectedTag && (
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete tag</AlertDialogTitle>
+            <AlertDialogTitle>删除标签</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the tag{" "}
-              <strong>{selectedTag.name}</strong>? This action cannot be undone
-              and will remove this tag from all {resourceLabel}.
+              确定要删除标签 <strong>{selectedTag.name}</strong>
+              吗？此操作无法撤销，并将从所有以下资源中移除此标签：{" "}
+              {resourceLabel}.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={async (event) => {
@@ -300,7 +297,7 @@ export function TagCatalogTable({
               disabled={isDeleting}
             >
               <Trash2Icon className="mr-2 size-4" />
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -357,7 +354,7 @@ function EditTagDialogContent({
       console.error("Error updating tag:", error)
       methods.setError("name", {
         type: "manual",
-        message: `Error updating tag: ${String(error)}`,
+        message: `更新标签出错：${String(error)}`,
       })
     }
   }
@@ -365,11 +362,9 @@ function EditTagDialogContent({
   return (
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>Edit tag</AlertDialogTitle>
+        <AlertDialogTitle>编辑标签</AlertDialogTitle>
       </AlertDialogHeader>
-      <AlertDialogDescription>
-        Edit the name and color of the tag.
-      </AlertDialogDescription>
+      <AlertDialogDescription>编辑标签的名称和颜色。</AlertDialogDescription>
       <Form {...methods}>
         <form onSubmit={methods.handleSubmit(handleEdit)}>
           <div className="space-y-4">
@@ -380,11 +375,11 @@ function EditTagDialogContent({
               defaultValue={tag.name}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm">Name</FormLabel>
+                  <FormLabel className="text-sm">名称</FormLabel>
                   <FormControl>
                     <Input
                       className="text-sm"
-                      placeholder="Name"
+                      placeholder={"名称"}
                       {...field}
                       value={field.value ?? ""}
                     />
@@ -405,7 +400,7 @@ function EditTagDialogContent({
                     : "#000000"
                 return (
                   <FormItem>
-                    <FormLabel className="text-sm">Color</FormLabel>
+                    <FormLabel className="text-sm">颜色</FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
                         <Input
@@ -426,16 +421,14 @@ function EditTagDialogContent({
               }}
             />
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isUpdating}>
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel disabled={isUpdating}>取消</AlertDialogCancel>
               <Button
                 type="submit"
                 className="flex items-center gap-2"
                 disabled={isUpdating}
               >
                 <PencilIcon className="size-4" />
-                Save changes
+                保存更改
               </Button>
             </AlertDialogFooter>
           </div>
@@ -447,7 +440,7 @@ function EditTagDialogContent({
 
 const defaultToolbarProps: DataTableToolbarProps<TagItem> = {
   filterProps: {
-    placeholder: "Filter tags by name...",
+    placeholder: "按名称筛选标签…",
     column: "name",
   },
 }

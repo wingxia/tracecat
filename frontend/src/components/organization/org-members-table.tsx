@@ -183,7 +183,7 @@ export function OrgMembersTable() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Email"
+                    title={"邮箱"}
                   />
                 ),
                 cell: ({ row }) => (
@@ -200,7 +200,7 @@ export function OrgMembersTable() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Name"
+                    title={"名称"}
                   />
                 ),
                 cell: ({ row }) => {
@@ -218,7 +218,7 @@ export function OrgMembersTable() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Organization"
+                    title={"组织"}
                   />
                 ),
                 cell: ({ row }) => (
@@ -236,7 +236,7 @@ export function OrgMembersTable() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Status"
+                    title={"状态"}
                   />
                 ),
                 cell: ({ row }) => {
@@ -264,7 +264,7 @@ export function OrgMembersTable() {
                   <DataTableColumnHeader
                     className="text-xs"
                     column={column}
-                    title="Last login"
+                    title={"上次登录"}
                   />
                 ),
                 cell: ({ row }) => {
@@ -279,7 +279,7 @@ export function OrgMembersTable() {
                   const ago = getRelativeTime(date)
                   return (
                     <div className="space-x-2 text-xs">
-                      <span>{date.toLocaleString()}</span>
+                      <span>{date.toLocaleString("zh-CN")}</span>
                       <span className="text-muted-foreground">({ago})</span>
                     </div>
                   )
@@ -307,7 +307,7 @@ export function OrgMembersTable() {
                             roleMenuTrigger.current = event.currentTarget
                           }}
                         >
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">打开菜单</span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -327,21 +327,19 @@ export function OrgMembersTable() {
                                       const url = `${window.location.origin}/invitations/accept?token=${token}`
                                       await navigator.clipboard.writeText(url)
                                       toast({
-                                        title: "Copied",
-                                        description:
-                                          "Invitation link copied to clipboard",
+                                        title: "已复制",
+                                        description: "已将邀请链接复制到剪贴板",
                                       })
                                     } catch {
                                       toast({
-                                        title: "Error",
-                                        description:
-                                          "Failed to copy invitation link",
+                                        title: "错误",
+                                        description: "复制邀请链接失败",
                                         variant: "destructive",
                                       })
                                     }
                                   }}
                                 >
-                                  Copy invitation link
+                                  复制邀请链接
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   disabled={resendInvitationIsPending}
@@ -352,22 +350,20 @@ export function OrgMembersTable() {
                                         member.invitation_id
                                       )
                                       toast({
-                                        title: "Invitation email queued",
+                                        title: "邀请邮件已加入发送队列",
                                         description: member.email,
                                       })
                                     } catch (error) {
                                       const apiError = error as TracecatApiError
                                       if (apiError.status === 409) {
                                         toast({
-                                          title:
-                                            "You just sent an invitation email",
-                                          description:
-                                            "Please try again shortly.",
+                                          title: "你刚刚发送过邀请邮件",
+                                          description: "请稍后重试。",
                                         })
                                         return
                                       }
                                       toast({
-                                        title: "Failed to resend invitation",
+                                        title: "重新发送邀请失败",
                                         description:
                                           getApiErrorDetail(apiError) ??
                                           undefined,
@@ -376,7 +372,7 @@ export function OrgMembersTable() {
                                     }
                                   }}
                                 >
-                                  Resend invitation email
+                                  重新发送邀请邮件
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <AlertDialogTrigger asChild>
@@ -384,7 +380,7 @@ export function OrgMembersTable() {
                                     className="text-rose-500 focus:text-rose-600"
                                     onSelect={() => setSelectedMember(member)}
                                   >
-                                    Revoke invitation
+                                    撤销邀请
                                   </DropdownMenuItem>
                                 </AlertDialogTrigger>
                               </>
@@ -399,7 +395,7 @@ export function OrgMembersTable() {
                                 }
                               }}
                             >
-                              Copy user ID
+                              复制用户 ID
                             </DropdownMenuItem>
                             {(canReadRbac || canRemoveMembers) && (
                               <DropdownMenuGroup>
@@ -411,7 +407,7 @@ export function OrgMembersTable() {
                                         setIsChangeRoleOpen(true)
                                       }}
                                     >
-                                      Manage roles
+                                      管理角色
                                     </DropdownMenuItem>
                                   </DialogTrigger>
                                 )}
@@ -426,7 +422,7 @@ export function OrgMembersTable() {
                                           setRemoveConfirmationEmail("")
                                         }}
                                       >
-                                        Remove from organization
+                                        从组织移除
                                       </DropdownMenuItem>
                                     </AlertDialogTrigger>
                                   </>
@@ -446,20 +442,18 @@ export function OrgMembersTable() {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>
-                {selectedMember?.status === "invited"
-                  ? "Revoke invitation"
-                  : "Remove user"}
+                {selectedMember?.status === "invited" ? "撤销邀请" : "移除用户"}
               </AlertDialogTitle>
               <AlertDialogDescription>
                 {selectedMember?.status === "invited"
-                  ? `Are you sure you want to revoke the invitation for ${selectedMember?.email}? They will no longer be able to join this organization with this invitation.`
-                  : `Are you sure you want to remove ${selectedMember?.email} from the organization? This revokes their sessions and removes their organization access.`}
+                  ? `确定要撤销发送给 ${selectedMember?.email} 的邀请吗？该用户将无法再通过此邀请加入组织。`
+                  : `确定要将 ${selectedMember?.email} 从组织移除吗？此操作会撤销其会话并移除组织访问权限。`}
               </AlertDialogDescription>
             </AlertDialogHeader>
             {selectedMember?.status !== "invited" && selectedMember && (
               <div className="flex flex-col gap-2">
                 <Label htmlFor="remove-org-member-confirmation">
-                  Type the user email to confirm
+                  输入用户邮箱以确认
                 </Label>
                 <Input
                   id="remove-org-member-confirmation"
@@ -475,7 +469,7 @@ export function OrgMembersTable() {
               </div>
             )}
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>取消</AlertDialogCancel>
               <AlertDialogAction
                 variant="destructive"
                 disabled={
@@ -488,7 +482,7 @@ export function OrgMembersTable() {
                     : handleRemoveMember
                 }
               >
-                {selectedMember?.status === "invited" ? "Revoke" : "Confirm"}
+                {selectedMember?.status === "invited" ? "撤销" : "确认"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -522,24 +516,24 @@ type AccessColumn = {
 
 const ROLES_COLUMN: AccessColumn = {
   id: "roles",
-  title: "Roles",
-  filterTitle: "Role",
+  title: "角色",
+  filterTitle: "角色",
   getItems: (member) => member.roles ?? [],
   abbreviate: abbreviateRoleName,
 }
 
 const WORKSPACES_COLUMN: AccessColumn = {
   id: "workspaces",
-  title: "Workspace",
-  filterTitle: "Workspace",
+  title: "工作空间",
+  filterTitle: "工作空间",
   getItems: (member) => member.workspaces ?? [],
   abbreviate: abbreviateName,
 }
 
 const GROUPS_COLUMN: AccessColumn = {
   id: "groups",
-  title: "Groups",
-  filterTitle: "Group",
+  title: "用户组",
+  filterTitle: "用户组",
   getItems: (member) => member.groups ?? [],
   abbreviate: abbreviateName,
 }
@@ -709,7 +703,7 @@ export function ManageUserRolesDialog({
     (!deletes.length || canDeleteAssignment)
   const removedRoles = deletes.map(
     (assignment) =>
-      `${assignment.role_name} in ${assignment.workspace_name ?? "the organization"}`
+      `${assignment.workspace_name ?? "组织"}中的 ${assignment.role_name}`
   )
 
   function stageAssignments(next: DraftAssignment[]) {
@@ -801,8 +795,8 @@ export function ManageUserRolesDialog({
           typeof error === "object" &&
           "status" in error &&
           error.status === 409
-          ? "Roles or group access changed while this dialog was open. Review the current roles and try again."
-          : "Changes could not be confirmed. Review the current roles before trying again."
+          ? "此对话框打开期间，角色或用户组权限已更改。请检查当前角色后重试。"
+          : "无法确认更改，请检查当前角色后重试。"
       )
     } finally {
       setIsSaving(false)
@@ -818,21 +812,21 @@ export function ManageUserRolesDialog({
       onCloseAutoFocus={onCloseAutoFocus}
     >
       <DialogHeader>
-        <DialogTitle>Manage roles - {member.email}</DialogTitle>
+        <DialogTitle>管理角色 - {member.email}</DialogTitle>
       </DialogHeader>
       <DialogBody>
         <div className="space-y-4 py-4">
           {(canCreateAssignment || canUpdateAssignment) && (
             <div className="space-y-2">
-              <Label>Add role assignment</Label>
+              <Label>添加角色分配</Label>
               <div className="flex gap-2">
                 <Select
                   value={roleId}
                   onValueChange={setRoleId}
                   disabled={!ready || isSaving}
                 >
-                  <SelectTrigger className="min-w-0 flex-1" aria-label="Role">
-                    <SelectValue placeholder="Select a role" />
+                  <SelectTrigger className="min-w-0 flex-1" aria-label={"角色"}>
+                    <SelectValue placeholder={"选择角色"} />
                   </SelectTrigger>
                   <SelectContent>
                     {rolesForScope(roles, selectedWorkspaceId).map((role) => (
@@ -852,12 +846,12 @@ export function ManageUserRolesDialog({
                 >
                   <SelectTrigger
                     className="w-[180px] min-w-0 shrink"
-                    aria-label="Scope"
+                    aria-label={"范围"}
                   >
-                    <SelectValue placeholder="Scope" />
+                    <SelectValue placeholder={"范围"} />
                   </SelectTrigger>
                   <SelectContent className="max-w-[calc(100vw-2rem)]">
-                    <SelectItem value="org-wide">Organization</SelectItem>
+                    <SelectItem value="org-wide">组织</SelectItem>
                     {workspaces?.map((workspace) => (
                       <SelectItem
                         key={workspace.id}
@@ -871,7 +865,7 @@ export function ManageUserRolesDialog({
                 </Select>
                 <Button
                   type="button"
-                  aria-label="Add role"
+                  aria-label={"添加角色"}
                   onClick={handleAddRole}
                   disabled={!roleId || !ready || isSaving || !canAdd}
                 >
@@ -882,7 +876,7 @@ export function ManageUserRolesDialog({
           )}
           <div className="space-y-2">
             <Label>
-              Direct roles ({ready ? visibleAssignments.length : "…"})
+              直接分配的角色（{ready ? visibleAssignments.length : "…"})
             </Label>
             <ScrollArea className="h-[320px] rounded-md border">
               <div className="px-4 py-2">
@@ -902,7 +896,7 @@ export function ManageUserRolesDialog({
                           ) : (
                             <GlobeIcon className="size-3" />
                           )}
-                          {assignment.workspace_name ?? "Organization-wide"}
+                          {assignment.workspace_name ?? "整个组织"}
                         </span>
                       </div>
                       {(canDeleteAssignment ||
@@ -915,7 +909,7 @@ export function ManageUserRolesDialog({
                         <Button
                           variant="ghost"
                           size="sm"
-                          aria-label={`Remove ${assignment.role_name} from ${assignment.workspace_name ?? "organization"}`}
+                          aria-label={`从 ${assignment.workspace_name ?? "organization"} 移除 ${assignment.role_name}`}
                           onClick={() => handleRemoveRole(assignment)}
                           disabled={isSaving}
                           className="size-7 shrink-0 p-0 text-muted-foreground hover:text-foreground"
@@ -927,14 +921,14 @@ export function ManageUserRolesDialog({
                   ))}
                 {ready && visibleAssignments.length === 0 && (
                   <p className="text-sm text-muted-foreground">
-                    No direct roles
+                    没有直接分配的角色
                   </p>
                 )}
                 {!ready && (
                   <p role="status" className="text-sm text-muted-foreground">
                     {userAssignmentsError || rolesError || groupsError
-                      ? "Unable to load roles and group access. Close and reopen to retry."
-                      : "Loading roles and group access…"}
+                      ? "无法加载角色和用户组权限，请关闭后重新打开以重试。"
+                      : "正在加载角色和用户组权限…"}
                   </p>
                 )}
               </div>
@@ -942,7 +936,7 @@ export function ManageUserRolesDialog({
           </div>
           {ready && groupAccessKnown && visibleGroupAssignments.length > 0 && (
             <div className="space-y-2">
-              <Label>Roles from groups</Label>
+              <Label>来自用户组的角色</Label>
               <ScrollArea className="rounded-md border [&>[data-radix-scroll-area-viewport]]:max-h-[320px]">
                 <div className="px-4 py-2">
                   {visibleGroupAssignments.map((assignment) => (
@@ -960,24 +954,24 @@ export function ManageUserRolesDialog({
                           ) : (
                             <GlobeIcon className="size-3" />
                           )}
-                          {assignment.workspace_name ?? "Organization-wide"}
+                          {assignment.workspace_name ?? "整个组织"}
                         </span>
                       </div>
                       <span className="shrink-0 text-xs text-muted-foreground">
-                        via {assignment.group_name}
+                        通过 {assignment.group_name}
                       </span>
                     </div>
                   ))}
                 </div>
               </ScrollArea>
               <p className="text-xs text-muted-foreground">
-                Manage these roles through the group.
+                请通过用户组管理这些角色。
               </p>
             </div>
           )}
           {ready && !groupAccessKnown && !groupsIsLoading && (
             <p role="status" className="text-sm text-muted-foreground">
-              Group access cannot be checked. Only direct roles are shown.
+              无法检查用户组权限，仅显示直接分配的角色。
             </p>
           )}
           {saveError && (
@@ -993,7 +987,7 @@ export function ManageUserRolesDialog({
           disabled={isSaving || (hasChanges && !canSave)}
           onClick={() => handleDone()}
         >
-          {isSaving ? "Saving…" : "Done"}
+          {isSaving ? "保存中…" : "完成"}
         </Button>
       </DialogFooter>
       <AlertDialog
@@ -1002,24 +996,25 @@ export function ManageUserRolesDialog({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Save role changes?</AlertDialogTitle>
+            <AlertDialogTitle>保存角色更改？</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove {removedRoles.join(", ")} from {member.email}.
+              此操作将移除 {member.email} 的以下角色：{removedRoles.join("、")}
+              。
               {visibleGroupAssignments.length > 0 &&
-                " Access from groups is unchanged."}
+                " 通过用户组获得的权限保持不变。"}
               {leavesNoRoles &&
-                " This leaves the user with no roles. They stay a member with baseline access. Use Remove member to remove them."}
+                " 此后该用户将没有角色，但仍作为成员保留基本访问权限。若要移除用户，请使用“移除成员”。"}
               {(updates.length > 0 || creates.length > 0) &&
-                " Your other role changes will also be saved."}
+                " 其他角色更改也会一并保存。"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={!canSave}
               onClick={() => handleDone(true)}
             >
-              Confirm changes
+              确认更改
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -1030,7 +1025,7 @@ export function ManageUserRolesDialog({
 
 const defaultToolbarProps: DataTableToolbarProps<OrgMemberRead> = {
   filterProps: {
-    placeholder: "Filter by email...",
+    placeholder: "按邮箱筛选…",
     column: "email",
   },
 }

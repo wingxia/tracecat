@@ -288,8 +288,8 @@ function TableContents<TData>({
   colSpan,
   onClickRow,
   getRowHref,
-  emptyMessage = "No results.",
-  errorMessage = "Failed to fetch data",
+  emptyMessage = "暂无结果。",
+  errorMessage = "获取数据失败",
   pageSize,
 }: {
   isLoading?: boolean

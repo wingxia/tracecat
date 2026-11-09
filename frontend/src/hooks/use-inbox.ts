@@ -121,28 +121,28 @@ function mapInboxStatusToAgentStatus(
     case "pending":
       return {
         derivedStatus: "PENDING_APPROVAL",
-        statusLabel: "Pending approvals",
+        statusLabel: "待审批",
         statusPriority: 0,
         statusTone: "warning",
       }
     case "failed":
       return {
         derivedStatus: "FAILED",
-        statusLabel: "Failed",
+        statusLabel: "失败",
         statusPriority: 1,
         statusTone: "danger",
       }
     case "completed":
       return {
         derivedStatus: "COMPLETED",
-        statusLabel: "Completed",
+        statusLabel: "已完成",
         statusPriority: 7,
         statusTone: "success",
       }
     default:
       return {
         derivedStatus: "UNKNOWN",
-        statusLabel: "Unknown",
+        statusLabel: "未知",
         statusPriority: 8,
         statusTone: "neutral",
       }

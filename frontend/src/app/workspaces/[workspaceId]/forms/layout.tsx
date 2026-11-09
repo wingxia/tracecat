@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { FormsRouteLayout } from "@/components/forms/forms-route-layout"
 
 export const metadata: Metadata = {
-  title: "Forms",
+  title: "表单",
 }
 
 export default function FormsLayout({

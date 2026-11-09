@@ -134,7 +134,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
             >
               <img src="/icon.png" alt="Tracecat" className="size-6 ml-0.5" />
               <span className="truncate font-semibold text-sidebar-foreground">
-                {activeWorkspace?.name || "Select workspace"}
+                {activeWorkspace?.name || "选择工作空间"}
               </span>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -146,7 +146,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
-              Workspaces
+              工作空间
             </DropdownMenuLabel>
             {workspaces?.map((workspace) => (
               <DropdownMenuItem key={workspace.id} asChild>
@@ -183,16 +183,15 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
                       <Plus className="size-4" />
                     </div>
                     <div className="font-medium text-muted-foreground">
-                      Create workspace
+                      创建工作空间
                     </div>
                   </DropdownMenuItem>
                 </DialogTrigger>
                 <DialogContent size="sm" className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle>Create workspace</DialogTitle>
+                    <DialogTitle>创建工作空间</DialogTitle>
                     <DialogDescription>
-                      Workspaces are isolated environments where a team can work
-                      on cases, automations, and credentials.
+                      工作空间是相互隔离的环境，供团队处理事件、自动化和凭据。
                     </DialogDescription>
                   </DialogHeader>
                   <form
@@ -202,12 +201,12 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
                     <DialogBody>
                       <div className="grid gap-4">
                         <div className="grid gap-2">
-                          <Label htmlFor="workspace-name">Workspace name</Label>
+                          <Label htmlFor="workspace-name">工作空间名称</Label>
                           <Input
                             id="workspace-name"
                             value={workspaceName}
                             onChange={(e) => setWorkspaceName(e.target.value)}
-                            placeholder="My workspace"
+                            placeholder={"我的工作空间"}
                             disabled={isCreating}
                           />
                         </div>
@@ -219,7 +218,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
                         type="submit"
                         disabled={isCreating || !workspaceName.trim()}
                       >
-                        {isCreating ? "Creating..." : "Create workspace"}
+                        {isCreating ? "创建中…" : "创建工作空间"}
                       </Button>
                     </DialogFooter>
                   </form>
@@ -231,7 +230,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
               <>
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
-                  Organizations
+                  组织
                 </DropdownMenuLabel>
                 {organizations?.map((organization) => (
                   <DropdownMenuItem
@@ -269,7 +268,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
                   <div className="flex size-6 items-center justify-center">
                     <BuildingIcon className="size-4" />
                   </div>
-                  <span>Organization</span>
+                  <span>组织</span>
                 </Link>
               </DropdownMenuItem>
             )}
@@ -282,7 +281,7 @@ export function AppMenu({ workspaceId }: { workspaceId: string }) {
                   <div className="flex size-6 items-center justify-center">
                     <RadarIcon className="size-4" />
                   </div>
-                  <span>Watchtower</span>
+                  <span>监控中心</span>
                 </Link>
               </DropdownMenuItem>
             )}

@@ -188,7 +188,7 @@ test("analyst builds, persists and clears grouped conditions through the real ca
   seed,
 }) => {
   await page.goto(`/workspaces/${seed.workspace}/cases`)
-  await page.getByRole("textbox", { name: "Search cases" }).fill(seed.prefix)
+  await page.getByRole("textbox", { name: "搜索事件" }).fill(seed.prefix)
   async function showRows(count: number) {
     const group = page.getByRole("button", {
       name: `New ${count}`,
@@ -202,8 +202,8 @@ test("analyst builds, persists and clears grouped conditions through the real ca
   await expect(
     page.getByText(`${seed.prefix} low`, { exact: true })
   ).toBeVisible()
-  await page.getByRole("button", { name: "Conditions", exact: true }).click()
-  const dialog = page.getByRole("dialog", { name: "Case conditions" })
+  await page.getByRole("button", { name: "条件", exact: true }).click()
+  const dialog = page.getByRole("dialog", { name: "事件筛选条件" })
   async function condition(
     index: number,
     field: string,
@@ -231,9 +231,7 @@ test("analyst builds, persists and clears grouped conditions through the real ca
     "Microsoft",
     "metadata.product.vendor_name"
   )
-  await dialog
-    .getByRole("button", { name: "Add condition", exact: true })
-    .click()
+  await dialog.getByRole("button", { name: "添加条件", exact: true }).click()
   await condition(
     1,
     "payload.<path>",
@@ -241,12 +239,12 @@ test("analyst builds, persists and clears grouped conditions through the real ca
     "Defender",
     "metadata.product.name"
   )
-  await dialog.getByRole("button", { name: "Add group", exact: true }).click()
+  await dialog.getByRole("button", { name: "添加分组", exact: true }).click()
   await dialog.getByLabel("Group matching").nth(1).selectOption("any")
   await condition(2, `fields.${seed.score}`, "gte", "80")
   await dialog.getByLabel("Include unset").nth(2).check()
   await dialog
-    .getByRole("button", { name: "Add condition", exact: true })
+    .getByRole("button", { name: "添加条件", exact: true })
     .first()
     .click()
   await condition(3, "priority", "gte", "critical")
@@ -254,9 +252,9 @@ test("analyst builds, persists and clears grouped conditions through the real ca
     dialog
       .getByLabel("Condition value")
       .nth(3)
-      .getByRole("option", { name: "unknown", exact: true })
+      .getByRole("option", { name: "未知", exact: true })
   ).toHaveCount(0)
-  await dialog.getByRole("button", { name: "Apply conditions" }).click()
+  await dialog.getByRole("button", { name: "应用条件" }).click()
   await showRows(2)
   await expect(
     page.getByText(`${seed.prefix} high`, { exact: true })
@@ -274,7 +272,7 @@ test("analyst builds, persists and clears grouped conditions through the real ca
   ).toBeVisible()
   await page.getByRole("button", { name: "Conditions (5)" }).click()
   await dialog
-    .getByRole("button", { name: "Add condition", exact: true })
+    .getByRole("button", { name: "添加条件", exact: true })
     .last()
     .click()
   await condition(4, "created_at", "gte", "2000-01-01T00:00")
@@ -283,27 +281,23 @@ test("analyst builds, persists and clears grouped conditions through the real ca
       new URL(request.url()).pathname.endsWith("/cases/search") &&
       request.method() === "POST"
   )
-  await dialog.getByRole("button", { name: "Apply conditions" }).click()
+  await dialog.getByRole("button", { name: "应用条件" }).click()
   expect((await dated).postDataJSON().filters.and.at(-1).value).toBe(
     "2000-01-01T05:00:00.000Z"
   )
-  await page
-    .getByRole("button", { name: "Clear conditions", exact: true })
-    .click()
+  await page.getByRole("button", { name: "清除条件", exact: true }).click()
   await showRows(5)
   await expect(
     page.getByText(`${seed.prefix} low`, { exact: true })
   ).toBeVisible()
-  await page.getByRole("button", { name: "Conditions", exact: true }).click()
+  await page.getByRole("button", { name: "条件", exact: true }).click()
   await condition(0, "summary", "in", Array(1001).fill("synthetic").join(","))
   await expect(dialog.getByRole("alert")).toContainText("at most 1000 values")
-  await expect(
-    dialog.getByRole("button", { name: "Apply conditions" })
-  ).toBeDisabled()
+  await expect(dialog.getByRole("button", { name: "应用条件" })).toBeDisabled()
   await dialog
     .getByLabel("Condition value", { exact: true })
     .fill(Array(1000).fill(`${seed.prefix} high`).join(","))
-  await dialog.getByRole("button", { name: "Apply conditions" }).click()
+  await dialog.getByRole("button", { name: "应用条件" }).click()
   await showRows(1)
   await expect(
     page.getByText(`${seed.prefix} high`, { exact: true })
@@ -311,7 +305,7 @@ test("analyst builds, persists and clears grouped conditions through the real ca
   await expect(
     page.getByText(`${seed.prefix} low`, { exact: true })
   ).toHaveCount(0)
-  const remove = page.getByRole("button", { name: /^Remove Summary is one of/ })
+  const remove = page.getByRole("button", { name: /^移除 Summary is one of/ })
   await expect(remove.getByText("×", { exact: true })).toBeVisible()
   await remove.click()
   await showRows(5)

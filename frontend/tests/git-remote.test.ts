@@ -88,7 +88,7 @@ describe("parseGitRemote", () => {
     expectError(
       input,
       github,
-      "Paste the SSH clone URL, e.g. git@github.com:owner/repository.git."
+      "粘贴 SSH 克隆 URL，例如 git@github.com:owner/repository.git。"
     )
   })
 
@@ -96,7 +96,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git@gitlab.com:TracecatHQ/detections.git",
       github,
-      "gitlab.com isn't set up for this organization. GitHub here is github.com."
+      "此组织尚未配置 gitlab.com。这里的 GitHub 为 github.com。"
     )
   })
 
@@ -104,7 +104,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git@github.com:TracecatHQ.git",
       github,
-      "Paste the SSH clone URL, e.g. git@github.com:owner/repository.git."
+      "粘贴 SSH 克隆 URL，例如 git@github.com:owner/repository.git。"
     )
   })
 
@@ -139,7 +139,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git@gitlab.com:group/project.git",
       gitlab,
-      "gitlab.com isn't set up for this organization. GitLab here is gitlab.example.com."
+      "此组织尚未配置 gitlab.com。这里的 GitLab 为 gitlab.example.com。"
     )
   })
 
@@ -153,7 +153,7 @@ describe("parseGitRemote", () => {
     expectError(
       "https://gitlab.example.com/gitlab/group/project",
       target,
-      "Paste the SSH clone URL, e.g. git@gitlab.example.com:group/project.git."
+      "粘贴 SSH 克隆 URL，例如 git@gitlab.example.com:group/project.git。"
     )
     expectGitUrl(
       "git@gitlab.example.com:group/project.git",
@@ -177,7 +177,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git@bitbucket.example.com:example-workspace/example-repo.git",
       bitbucket,
-      "Bitbucket Cloud repositories here are on bitbucket.org, not bitbucket.example.com."
+      "此处的 Bitbucket Cloud 仓库位于 bitbucket.org，而非 bitbucket.example.com。"
     )
   })
 
@@ -198,7 +198,7 @@ describe("parseGitRemote", () => {
     ).toEqual({
       kind: "invalid",
       message:
-        "ssh.bitbucket.example.com isn't set up for this organization. Bitbucket Data Center here is bitbucket.example.com.",
+        "此组织尚未配置 ssh.bitbucket.example.com。这里的 Bitbucket Data Center 为 bitbucket.example.com。",
     })
   })
 
@@ -206,7 +206,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git+ssh://git@bitbucket.example.com:7999/PROJ/detections.git",
       dataCenter,
-      "Remove the port. Bitbucket takes it from the organization's instance URL."
+      "请移除端口，Bitbucket 会从组织的实例 URL 获取端口。"
     )
   })
 
@@ -214,7 +214,7 @@ describe("parseGitRemote", () => {
     expectError(
       "git+ssh://git@bitbucket.example.com/PROJ/sub/detections.git",
       dataCenter,
-      "Paste the SSH clone URL, e.g. git@bitbucket.example.com:PROJECT/repository.git."
+      "粘贴 SSH 克隆 URL，例如 git@bitbucket.example.com:PROJECT/repository.git。"
     )
   })
 })

@@ -103,7 +103,7 @@ function getRow(name: string): HTMLElement {
 
 async function openMenu(user: ReturnType<typeof userEvent.setup>, row: string) {
   await user.click(
-    within(getRow(row)).getByRole("button", { name: "Open menu" })
+    within(getRow(row)).getByRole("button", { name: "打开菜单" })
   )
 }
 
@@ -118,7 +118,7 @@ function renderGroups() {
 
 async function openAddMembersDialog(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByText("Operators"))
-  await user.click(screen.getByRole("button", { name: "Add members" }))
+  await user.click(screen.getByRole("button", { name: "添加成员" }))
   return screen.getByRole("dialog")
 }
 
@@ -164,7 +164,7 @@ describe("OrgRbacGroups", () => {
 
     expect(
       screen.getAllByRole("menuitem").map((item) => item.textContent)
-    ).toEqual(["Copy group ID", "Edit group", "Delete"])
+    ).toEqual(["复制用户组 ID", "编辑用户组", "删除"])
     expect(
       screen.queryByRole("menuitem", { name: "Update members" })
     ).not.toBeInTheDocument()
@@ -176,11 +176,9 @@ describe("OrgRbacGroups", () => {
   it("shows badges and the description in the row header", () => {
     renderGroups()
 
-    expect(within(getRow("Operators")).getAllByText(/2 members/)).toHaveLength(
-      1
-    )
+    expect(within(getRow("Operators")).getAllByText(/2 个成员/)).toHaveLength(1)
     expect(
-      within(getRow("Directory team")).getAllByText(/2 members/)
+      within(getRow("Directory team")).getAllByText(/2 个成员/)
     ).toHaveLength(1)
     expect(
       within(getRow("Operators")).getByText("Handles on-call rotations")
@@ -198,32 +196,26 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     await user.click(screen.getByText("Operators"))
 
-    expect(screen.getByRole("button", { name: "Members" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "成员" })).toHaveAttribute(
       "aria-expanded",
       "true"
     )
-    expect(screen.getByRole("button", { name: "Roles" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "角色" })).toHaveAttribute(
       "aria-expanded",
       "true"
     )
     expect(useRbacGroup).toHaveBeenCalledWith("group-1")
     expect(screen.getByText("one@example.com")).toBeInTheDocument()
     expect(screen.getByText("Workspace Editor")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加成员" })).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Add members" })
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole("combobox", { name: "User" })
+      screen.queryByRole("combobox", { name: "用户" })
     ).not.toBeInTheDocument()
-    expect(screen.queryByText("Select a user")).not.toBeInTheDocument()
-    expect(
-      screen.getAllByRole("button", { name: "Remove member" })
-    ).toHaveLength(2)
+    expect(screen.queryByText("选择用户")).not.toBeInTheDocument()
+    expect(screen.getAllByRole("button", { name: "移除成员" })).toHaveLength(2)
     expect(useOrgMembers).not.toHaveBeenCalled()
-    expect(screen.getByRole("button", { name: "Add role" })).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Remove role" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "添加角色" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "移除角色" })).toBeInTheDocument()
     expect(
       screen.queryByText(/All members of this group will inherit/)
     ).not.toBeInTheDocument()
@@ -232,7 +224,7 @@ describe("OrgRbacGroups", () => {
   it("keeps the sections individually collapsible", async () => {
     const user = renderGroups()
     await user.click(screen.getByText("Operators"))
-    await user.click(screen.getByRole("button", { name: "Members" }))
+    await user.click(screen.getByRole("button", { name: "成员" }))
 
     expect(screen.queryByText("one@example.com")).not.toBeInTheDocument()
     expect(screen.getByText("Workspace Editor")).toBeInTheDocument()
@@ -243,14 +235,12 @@ describe("OrgRbacGroups", () => {
     await user.click(screen.getByText("Directory team"))
 
     expect(screen.getByText("one@example.com")).toBeInTheDocument()
+    expect(screen.getByText(/成员关系由身份提供商管理/)).toBeInTheDocument()
     expect(
-      screen.getByText(/Membership is managed by your identity provider/)
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole("button", { name: "Add members" })
+      screen.queryByRole("button", { name: "添加成员" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Remove member" })
+      screen.queryByRole("button", { name: "移除成员" })
     ).not.toBeInTheDocument()
     expect(useOrgMembers).not.toHaveBeenCalled()
   })
@@ -265,7 +255,7 @@ describe("OrgRbacGroups", () => {
     await user.click(screen.getByText("Operators"))
 
     expect(
-      screen.queryByRole("button", { name: "Add members" })
+      screen.queryByRole("button", { name: "添加成员" })
     ).not.toBeInTheDocument()
   })
 
@@ -278,9 +268,9 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     await user.click(screen.getByText("Operators"))
 
-    expect(screen.getByText("Failed to load members")).toBeInTheDocument()
+    expect(screen.getByText("加载成员失败")).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Add members" })
+      screen.queryByRole("button", { name: "添加成员" })
     ).not.toBeInTheDocument()
   })
 
@@ -293,7 +283,7 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     const dialog = await openAddMembersDialog(user)
 
-    expect(within(dialog).getByText("Loading members...")).toBeInTheDocument()
+    expect(within(dialog).getByText("正在加载成员…")).toBeInTheDocument()
   })
 
   it("shows an error when org members fail to load", async () => {
@@ -305,14 +295,10 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     const dialog = await openAddMembersDialog(user)
 
+    expect(within(dialog).getByText("加载成员失败")).toBeInTheDocument()
+    expect(within(dialog).queryByText("正在加载成员…")).not.toBeInTheDocument()
     expect(
-      within(dialog).getByText("Failed to load members")
-    ).toBeInTheDocument()
-    expect(
-      within(dialog).queryByText("Loading members...")
-    ).not.toBeInTheDocument()
-    expect(
-      within(dialog).getByRole("button", { name: "Add members" })
+      within(dialog).getByRole("button", { name: "添加成员" })
     ).toBeDisabled()
   })
 
@@ -321,9 +307,7 @@ describe("OrgRbacGroups", () => {
     const dialog = await openAddMembersDialog(user)
 
     expect(useOrgMembers).toHaveBeenCalled()
-    expect(
-      within(dialog).getByText("Add members - Operators")
-    ).toBeInTheDocument()
+    expect(within(dialog).getByText("添加成员 - Operators")).toBeInTheDocument()
     expect(within(dialog).getByText("three@example.com")).toBeInTheDocument()
     expect(within(dialog).getByText("four@example.com")).toBeInTheDocument()
     expect(
@@ -332,9 +316,9 @@ describe("OrgRbacGroups", () => {
     expect(
       within(dialog).queryByText("invited@example.com")
     ).not.toBeInTheDocument()
-    expect(within(dialog).getByText("Admin")).toBeInTheDocument()
+    expect(within(dialog).getByText("管理员")).toBeInTheDocument()
     expect(
-      within(dialog).getByRole("button", { name: "Add members" })
+      within(dialog).getByRole("button", { name: "添加成员" })
     ).toBeDisabled()
   })
 
@@ -342,7 +326,7 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     const dialog = await openAddMembersDialog(user)
     const search = within(dialog).getByRole("textbox", {
-      name: "Search members",
+      name: "搜索成员",
     })
 
     await user.type(search, "Three")
@@ -353,9 +337,7 @@ describe("OrgRbacGroups", () => {
 
     await user.clear(search)
     await user.type(search, "nobody")
-    expect(
-      within(dialog).getByText("No members match your search")
-    ).toBeInTheDocument()
+    expect(within(dialog).getByText("没有匹配的成员")).toBeInTheDocument()
   })
 
   it("shows the empty state when everyone is already in the group", async () => {
@@ -365,7 +347,7 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     const dialog = await openAddMembersDialog(user)
 
-    expect(within(dialog).getByText("No members to add")).toBeInTheDocument()
+    expect(within(dialog).getByText("没有可添加的成员")).toBeInTheDocument()
   })
 
   it("adds every selected user and closes the dialog", async () => {
@@ -374,13 +356,13 @@ describe("OrgRbacGroups", () => {
 
     await user.click(within(dialog).getByText("three@example.com"))
     expect(
-      within(dialog).getByRole("button", { name: "Add 1 member" })
+      within(dialog).getByRole("button", { name: "添加 1 位成员" })
     ).toBeEnabled()
     await user.click(
-      within(dialog).getByRole("checkbox", { name: "Select four@example.com" })
+      within(dialog).getByRole("checkbox", { name: "选择 four@example.com" })
     )
     await user.click(
-      within(dialog).getByRole("button", { name: "Add 2 members" })
+      within(dialog).getByRole("button", { name: "添加 2 位成员" })
     )
 
     expect(addGroupMembers).toHaveBeenCalledTimes(1)
@@ -396,22 +378,20 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     const dialog = await openAddMembersDialog(user)
 
+    await user.click(within(dialog).getByRole("checkbox", { name: "全选" }))
     await user.click(
-      within(dialog).getByRole("checkbox", { name: "Select all" })
-    )
-    await user.click(
-      within(dialog).getByRole("button", { name: "Add 2 members" })
+      within(dialog).getByRole("button", { name: "添加 2 位成员" })
     )
 
     expect(screen.getByRole("dialog")).toBeInTheDocument()
     expect(
-      within(dialog).getByRole("checkbox", { name: "Select four@example.com" })
+      within(dialog).getByRole("checkbox", { name: "选择 four@example.com" })
     ).toBeChecked()
     expect(
-      within(dialog).getByRole("checkbox", { name: "Select three@example.com" })
+      within(dialog).getByRole("checkbox", { name: "选择 three@example.com" })
     ).not.toBeChecked()
     expect(
-      within(dialog).getByRole("button", { name: "Add 1 member" })
+      within(dialog).getByRole("button", { name: "添加 1 位成员" })
     ).toBeEnabled()
   })
 
@@ -419,6 +399,6 @@ describe("OrgRbacGroups", () => {
     const user = renderGroups()
     await user.click(screen.getByText("Directory team"))
 
-    expect(screen.getByText("No roles")).toBeInTheDocument()
+    expect(screen.getByText("暂无角色")).toBeInTheDocument()
   })
 })

@@ -143,7 +143,7 @@ export function CardsWidget(props: FormWidgetProps) {
       </div>
       {describeRequired && (
         <span id={requiredId} className="sr-only">
-          Required
+          必填
         </span>
       )}
     </div>

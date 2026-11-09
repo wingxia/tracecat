@@ -78,8 +78,8 @@ export function useRerunWorkflowExecution(
       }),
     onSuccess: async ({ wf_exec_id, plan }) => {
       toast({
-        title: "Rerun started",
-        description: `${plan.fixed_action_refs.length} fixed action(s). ${wf_exec_id}`,
+        title: "已开始重新运行",
+        description: `已固定 ${plan.fixed_action_refs.length} 个动作。${wf_exec_id}`,
       })
       await queryClient.refetchQueries({
         queryKey: ["last-manual-execution"],
@@ -91,7 +91,7 @@ export function useRerunWorkflowExecution(
     onError: (error) => {
       const body = error.body as { detail?: unknown } | undefined
       const detail = body?.detail
-      let description = "Check the rerun plan and try again."
+      let description = "请检查重新运行计划后重试。"
       if (typeof detail === "string") {
         description = detail
       } else if (
@@ -102,7 +102,7 @@ export function useRerunWorkflowExecution(
       ) {
         description = detail.message
       }
-      toast({ title: "Could not start rerun", description })
+      toast({ title: "无法开始重新运行", description })
     },
   })
 

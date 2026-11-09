@@ -190,7 +190,7 @@ export function RbacActionMenu({ children }: RbacActionMenuProps) {
       variant="ghost"
       className="size-8 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
     >
-      <span className="sr-only">Open menu</span>
+      <span className="sr-only">打开菜单</span>
       <DotsHorizontalIcon className="size-4" />
     </Button>
   )

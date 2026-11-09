@@ -2,6 +2,7 @@
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { useState } from "react"
 import type { CaseFieldReadMinimal } from "@/client"
 import { EditCustomFieldDialog } from "@/components/cases/edit-custom-field-dialog"
@@ -71,7 +72,7 @@ export function CustomFieldsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Field name"
+                  title={"字段名称"}
                 />
               ),
               cell: ({ row }) => (
@@ -96,7 +97,7 @@ export function CustomFieldsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Data type"
+                  title={"数据类型"}
                 />
               ),
               cell: ({ row }) => {
@@ -131,7 +132,7 @@ export function CustomFieldsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Reference"
+                  title={"引用"}
                 />
               ),
               cell: ({ row }) => (
@@ -148,7 +149,7 @@ export function CustomFieldsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Default value"
+                  title={"默认值"}
                 />
               ),
               cell: ({ row }) => {
@@ -209,7 +210,9 @@ export function CustomFieldsTable({
                 return (
                   <div className="text-xs">
                     {isValidDate
-                      ? format(isValidDate, "MMM d yyyy '·' p")
+                      ? format(isValidDate, "yyyy年M月d日 '·' HH:mm", {
+                          locale: zhCN,
+                        })
                       : defaultValue || "-"}
                   </div>
                 )
@@ -227,7 +230,7 @@ export function CustomFieldsTable({
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="size-8 p-0">
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">打开菜单</span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -237,7 +240,7 @@ export function CustomFieldsTable({
                             navigator.clipboard.writeText(row.original.id)
                           }
                         >
-                          Copy reference
+                          复制引用
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           disabled={isLocked}
@@ -245,7 +248,7 @@ export function CustomFieldsTable({
                             setEditingField(row.original)
                           }}
                         >
-                          Edit field
+                          编辑字段
                         </DropdownMenuItem>
                         <AlertDialogTrigger asChild disabled={isLocked}>
                           <DropdownMenuItem
@@ -255,7 +258,7 @@ export function CustomFieldsTable({
                               setSelectedField(row.original)
                             }}
                           >
-                            Delete
+                            删除
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                       </DropdownMenuContent>
@@ -269,16 +272,14 @@ export function CustomFieldsTable({
         />
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete field</AlertDialogTitle>
+            <AlertDialogTitle>删除字段</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the field{" "}
-              <strong>{selectedField?.display_name}</strong>? This action cannot
-              be undone and will delete all existing values for this field
-              across all cases.
+              确定要删除字段 <strong>{selectedField?.display_name}</strong>
+              吗？此操作无法撤销，将删除所有事件中此字段的现有值。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={async () => {
@@ -294,7 +295,7 @@ export function CustomFieldsTable({
               }}
               disabled={isDeleting}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -314,7 +315,7 @@ export function CustomFieldsTable({
 
 const defaultToolbarProps: DataTableToolbarProps<CaseFieldReadMinimal> = {
   filterProps: {
-    placeholder: "Filter fields by name...",
+    placeholder: "按名称筛选字段…",
     column: "display_name",
   },
 }

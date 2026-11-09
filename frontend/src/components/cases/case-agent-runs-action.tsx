@@ -28,7 +28,7 @@ export function CaseAgentRunsAction({
     <Button asChild variant="outline" size="sm" className="h-7">
       <Link href={getCaseAgentRunsHref(workspaceId, caseId)}>
         <MousePointerClickIcon className="mr-1.5 size-3.5" />
-        View agent runs
+        查看智能体运行记录
       </Link>
     </Button>
   )

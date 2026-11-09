@@ -129,8 +129,8 @@ export function DetachDialog({
       return
     }
     toast({
-      title: "Detached copy created",
-      description: `${copy.name} is now editable.`,
+      title: "已创建独立副本",
+      description: `${copy.name} 现在可以编辑。`,
     })
     onOpenChange(false)
     if (onDetached) {
@@ -144,23 +144,22 @@ export function DetachDialog({
   }
 
   const errorMessage = detachError
-    ? (getApiErrorDetail(detachError) ?? "Could not detach this resource.")
+    ? (getApiErrorDetail(detachError) ?? "无法解除此资源的关联。")
     : null
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="sm">
         <DialogHeader>
-          <DialogTitle>Detach to editable copy</DialogTitle>
+          <DialogTitle>创建可编辑副本</DialogTitle>
           <DialogDescription>
-            Creates a copy you own and can edit. The managed original stays
-            locked and keeps receiving updates.
+            创建归你所有的可编辑副本。托管原件仍保持锁定并继续接收更新。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <form id={formId} onSubmit={handleSubmit} className="space-y-2">
             <Label htmlFor={inputId} className="text-xs">
-              Name of the copy
+              副本名称
             </Label>
             <Input
               id={inputId}
@@ -182,7 +181,7 @@ export function DetachDialog({
             disabled={detachPending || !name.trim()}
           >
             {detachPending && <Spinner className="mr-2 size-4" />}
-            Detach
+            创建独立副本
           </Button>
         </DialogFooter>
       </DialogContent>

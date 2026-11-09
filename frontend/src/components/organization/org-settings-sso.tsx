@@ -91,7 +91,7 @@ export function OrgSettingsSsoForm() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading SAML settings: ${samlSettingsError?.message || "Unknown error"}`}
+        message={`加载 SAML 设置出错：${samlSettingsError?.message || "未知错误"}`}
       />
     )
   }
@@ -105,24 +105,21 @@ export function OrgSettingsSsoForm() {
           <Alert>
             <AlertTriangleIcon className="size-4 !text-destructive" />
             <AlertTitle className="text-destructive">
-              Unable to decrypt organization settings
+              无法解密组织设置
             </AlertTitle>
             <AlertDescription>
-              Some encrypted values could not be decrypted for{" "}
-              {failedKeys.join(", ")}. Please reconfigure and save these
-              settings again.
+              部分加密值无法解密，所属设置为 {failedKeys.join(", ")}
+              。请重新配置并保存这些设置。
             </AlertDescription>
           </Alert>
         )}
         {requiresDomainGuard && !hasActiveDomains && (
           <Alert>
             <AlertTriangleIcon className="size-4 !text-destructive" />
-            <AlertTitle className="text-destructive">
-              Domain guardrail required
-            </AlertTitle>
+            <AlertTitle className="text-destructive">需要域名限制</AlertTitle>
             <AlertDescription>
-              Domain allowlist must be configured to enable SAML SSO. Contact a
-              Tracecat platform admin to set this up for your organization.
+              启用 SAML 单点登录前必须配置域名白名单，请联系 Tracecat
+              平台管理员为组织设置。
             </AlertDescription>
           </Alert>
         )}
@@ -132,10 +129,8 @@ export function OrgSettingsSsoForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Enable SAML SSO</FormLabel>
-                <FormDescription>
-                  Enable SAML SSO for your organization.
-                </FormDescription>
+                <FormLabel>启用 SAML 单点登录</FormLabel>
+                <FormDescription>为组织启用 SAML 单点登录。</FormDescription>
               </div>
               <FormControl>
                 <Switch
@@ -153,11 +148,10 @@ export function OrgSettingsSsoForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Enforce SAML SSO</FormLabel>
+                <FormLabel>强制使用 SAML 单点登录</FormLabel>
                 <FormDescription>
-                  When enabled, users in this organization must authenticate via
-                  SAML. Password login will be disabled for matching email
-                  domains.
+                  启用后，此组织的用户必须通过 SAML
+                  验证身份，匹配邮箱域名的密码登录将被禁用。
                 </FormDescription>
               </div>
               <FormControl>
@@ -175,7 +169,7 @@ export function OrgSettingsSsoForm() {
           name="saml_idp_metadata_url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>IdP metadata URL</FormLabel>
+              <FormLabel>IdP 元数据 URL</FormLabel>
               <FormControl>
                 <Input
                   placeholder="https://tenant.provider.com/app/hash/sso/saml/metadata"
@@ -183,9 +177,7 @@ export function OrgSettingsSsoForm() {
                   value={field.value ?? ""}
                 />
               </FormControl>
-              <FormDescription>
-                This is the Metadata URL from your IdP.
-              </FormDescription>
+              <FormDescription>身份提供商提供的元数据 URL。</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -197,12 +189,12 @@ export function OrgSettingsSsoForm() {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel className="flex items-center gap-2">
-                <span>Service provider ACS URL</span>
+                <span>服务提供商 ACS URL</span>
                 <TooltipProvider>
                   {field.value && (
                     <CopyButton
                       value={field.value}
-                      toastMessage="Copied Service provider ACS URL to clipboard"
+                      toastMessage="已将服务提供商 ACS URL 复制到剪贴板"
                     />
                   )}
                 </TooltipProvider>
@@ -216,16 +208,15 @@ export function OrgSettingsSsoForm() {
                 />
               </FormControl>
               <FormDescription>
-                This is the endpoint where the Service Provider receives and
-                processes SAML assertions from the IdP after successful
-                authentication.
+                身份验证成功后，服务提供商通过此端点接收并处理 IdP 发来的 SAML
+                断言。
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" disabled={updateSamlSettingsIsPending}>
-          Update SSO settings
+          更新单点登录设置
         </Button>
       </form>
     </Form>

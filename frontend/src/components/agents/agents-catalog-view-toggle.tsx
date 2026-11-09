@@ -32,16 +32,16 @@ export function AgentsCatalogViewToggle({
     {
       mode: AgentsCatalogViewMode.Agents,
       icon: MousePointerClickIcon,
-      tooltip: "Agents",
+      tooltip: "智能体",
       href: agentsHref,
-      ariaLabel: "Agents view",
+      ariaLabel: "智能体视图",
     },
     {
       mode: AgentsCatalogViewMode.Tags,
       icon: TagIcon,
-      tooltip: "Agent tags",
+      tooltip: "智能体标签",
       href: tagsHref,
-      ariaLabel: "Agent tags view",
+      ariaLabel: "智能体标签视图",
     },
   ] as const
 

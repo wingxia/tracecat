@@ -98,8 +98,8 @@ import { Switch } from "@/components/ui/switch"
 const updateDefinitionSchema = z.object({
   name: z
     .string()
-    .min(1, "Name cannot be empty")
-    .max(50, "Name cannot be longer than 50 characters")
+    .min(1, "名称不能为空")
+    .max(50, "名称不能超过 50 个字符")
     .trim()
     .optional(),
   icon_name: z.string().max(100).optional(),
@@ -190,7 +190,7 @@ export function DropdownsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Dropdown name"
+                  title={"下拉字段名称"}
                 />
               ),
               cell: ({ row }) => {
@@ -229,7 +229,7 @@ export function DropdownsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Options"
+                  title={"选项"}
                 />
               ),
               cell: ({ row }) => {
@@ -268,7 +268,7 @@ export function DropdownsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Reference"
+                  title={"引用"}
                 />
               ),
               cell: ({ row }) => (
@@ -285,12 +285,12 @@ export function DropdownsTable({
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Ordered"
+                  title={"有序"}
                 />
               ),
               cell: ({ row }) => (
                 <span className="text-xs text-muted-foreground">
-                  {row.original.is_ordered ? "Yes" : "No"}
+                  {row.original.is_ordered ? "是" : "否"}
                 </span>
               ),
               enableSorting: false,
@@ -306,7 +306,7 @@ export function DropdownsTable({
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="size-8 p-0">
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">打开菜单</span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -317,7 +317,7 @@ export function DropdownsTable({
                           }
                         >
                           <CopyIcon className="mr-2 size-3" />
-                          Copy reference
+                          复制引用
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           disabled={isLocked}
@@ -327,7 +327,7 @@ export function DropdownsTable({
                           }}
                         >
                           <PencilIcon className="mr-2 size-3" />
-                          Edit dropdown
+                          编辑下拉字段
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-rose-500 focus:text-rose-600"
@@ -338,7 +338,7 @@ export function DropdownsTable({
                           }}
                         >
                           <Trash2Icon className="mr-2 size-3" />
-                          Delete
+                          删除
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -352,17 +352,14 @@ export function DropdownsTable({
         {action === DefinitionAction.Delete && selectedDef && (
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete dropdown</AlertDialogTitle>
+              <AlertDialogTitle>删除下拉字段</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to delete the dropdown{" "}
-                <strong>{selectedDef.name}</strong>? This action cannot be
-                undone and will remove all dropdown values from cases.
+                确定要删除下拉字段 <strong>{selectedDef.name}</strong>
+                吗？此操作无法撤销，将从事件中移除该字段的所有值。
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={isDeleting}>
-                Cancel
-              </AlertDialogCancel>
+              <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
               <AlertDialogAction
                 variant="destructive"
                 onClick={async () => {
@@ -379,7 +376,7 @@ export function DropdownsTable({
                 disabled={isDeleting}
               >
                 <Trash2Icon className="mr-2 size-4" />
-                Delete
+                删除
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -561,8 +558,7 @@ function EditDefinitionDialog({
       if (!nextRef) {
         methods.setError("name", {
           type: "manual",
-          message:
-            "Name must produce a valid reference (use alphanumeric characters)",
+          message: "名称必须能生成有效引用（请使用字母或数字）",
         })
         return
       }
@@ -671,7 +667,7 @@ function EditDefinitionDialog({
       console.error("Error saving dropdown changes", error)
       methods.setError("name", {
         type: "manual",
-        message: `Error saving changes: ${String(error)}`,
+        message: `保存更改出错：${String(error)}`,
       })
     } finally {
       setIsSaving(false)
@@ -684,9 +680,9 @@ function EditDefinitionDialog({
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent size="md" className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit dropdown</DialogTitle>
+          <DialogTitle>编辑下拉字段</DialogTitle>
           <DialogDescription>
-            Edit the name, icon, settings, and options of the dropdown.
+            编辑下拉字段的名称、图标、设置和选项。
           </DialogDescription>
         </DialogHeader>
         <Form {...methods}>
@@ -704,7 +700,7 @@ function EditDefinitionDialog({
                       <FormControl>
                         <IconPicker
                           className="size-9 shrink-0"
-                          placeholder="Icon"
+                          placeholder={"图标"}
                           value={field.value || undefined}
                           onValueChange={field.onChange}
                         />
@@ -717,18 +713,16 @@ function EditDefinitionDialog({
                   name="name"
                   render={({ field }) => (
                     <FormItem className="flex-1">
-                      <FormLabel className="text-sm">Name</FormLabel>
+                      <FormLabel className="text-sm">名称</FormLabel>
                       <FormControl>
                         <Input
                           className="text-sm"
-                          placeholder="Name"
+                          placeholder={"名称"}
                           {...field}
                           value={field.value ?? ""}
                         />
                       </FormControl>
-                      <FormDescription>
-                        Max 50 alphanumeric characters
-                      </FormDescription>
+                      <FormDescription>最多 50 个字母或数字</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -740,9 +734,9 @@ function EditDefinitionDialog({
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
-                      <FormLabel className="text-sm">Ordered</FormLabel>
+                      <FormLabel className="text-sm">有序</FormLabel>
                       <FormDescription>
-                        Enable sorting by this dropdown in the cases list
+                        允许在事件列表中按此下拉字段排序
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -755,9 +749,9 @@ function EditDefinitionDialog({
                 )}
               />
               <div className="space-y-2">
-                <FormLabel className="text-sm">Options</FormLabel>
+                <FormLabel className="text-sm">选项</FormLabel>
                 <FormDescription>
-                  Drag to reorder. Edit label, icon, and color per option.
+                  拖动以调整顺序，可编辑各选项的标签、图标和颜色。
                 </FormDescription>
                 <DndContext
                   sensors={sensors}
@@ -789,7 +783,7 @@ function EditDefinitionDialog({
                   onClick={handleAddOption}
                 >
                   <PlusIcon className="mr-1 size-3.5" />
-                  Add option
+                  添加选项
                 </Button>
               </div>
             </DialogBody>
@@ -801,7 +795,7 @@ function EditDefinitionDialog({
                 disabled={saving}
               >
                 <PencilIcon className="size-4" />
-                Save changes
+                保存更改
               </Button>
             </DialogFooter>
           </form>
@@ -813,7 +807,7 @@ function EditDefinitionDialog({
 
 const defaultToolbarProps: DataTableToolbarProps<CaseDropdownDefinitionRead> = {
   filterProps: {
-    placeholder: "Filter dropdowns by name...",
+    placeholder: "按名称筛选下拉字段…",
     column: "name",
   },
 }

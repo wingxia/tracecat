@@ -97,7 +97,7 @@ export function StepUpProvider({ children }: { children: React.ReactNode }) {
       settle(true)
     } catch (e) {
       setVerifying(false)
-      setError(e instanceof Error ? e.message : "Verification failed.")
+      setError(e instanceof Error ? e.message : "验证失败。")
     }
   }
 
@@ -107,20 +107,20 @@ export function StepUpProvider({ children }: { children: React.ReactNode }) {
       <Dialog open={open} onOpenChange={(next) => !next && settle(false)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Verify it&apos;s you</DialogTitle>
+            <DialogTitle>验证你的身份</DialogTitle>
             <DialogDescription>
-              This action needs your security key or passkey. You won&apos;t be
-              asked again for 5 minutes.
+              此操作需要使用安全密钥或通行密钥验证，验证后 5
+              分钟内无需再次验证。
             </DialogDescription>
           </DialogHeader>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button variant="outline" onClick={() => settle(false)}>
-              Cancel
+              取消
             </Button>
             <Button onClick={verify} disabled={verifying}>
               <KeyRound className="mr-2 size-4" />
-              {verifying ? "Waiting for security key..." : "Use security key"}
+              {verifying ? "正在等待安全密钥…" : "使用安全密钥"}
             </Button>
           </DialogFooter>
         </DialogContent>

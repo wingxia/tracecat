@@ -51,14 +51,14 @@ export function PublishFirstDialog({
       {/* The required Got it action is this dialog's only dismiss button. */}
       <DialogContent size="sm" className="[&>button]:hidden">
         <DialogHeader>
-          <DialogTitle>Publish this workflow first</DialogTitle>
+          <DialogTitle>请先发布此工作流</DialogTitle>
           <DialogDescription>
-            Publish this workflow before pushing it to Git.
+            推送到 Git 前，请先发布此工作流。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <p className="text-sm text-muted-foreground">
-            Publish a version of your current changes, then retry Push to Git.
+            发布当前更改的版本，然后重试“推送到 Git”。
           </p>
           {publishError && (
             <Alert variant="destructive" className="mt-4">
@@ -78,14 +78,14 @@ export function PublishFirstDialog({
         <DialogFooter>
           <DialogClose asChild>
             <Button size="sm" variant="outline">
-              Got it
+              知道了
             </Button>
           </DialogClose>
           <Button size="sm" onClick={onPublish} disabled={isPublishing}>
             {isPublishing && (
               <Loader2Icon className="mr-2 size-4 animate-spin" />
             )}
-            {isPublishing ? "Publishing…" : "Publish workflow"}
+            {isPublishing ? "发布中…" : "发布工作流"}
           </Button>
         </DialogFooter>
       </DialogContent>

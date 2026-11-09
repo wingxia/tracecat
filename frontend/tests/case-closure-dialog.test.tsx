@@ -141,7 +141,7 @@ describe("CaseClosureDialog", () => {
     renderClosureDialog(onOpenChange)
 
     // Exact name: the footer submit button is also named "Close case".
-    fireEvent.click(screen.getByRole("button", { name: "Close" }))
+    fireEvent.click(screen.getByRole("button", { name: "关闭" }))
 
     expect(onOpenChange).toHaveBeenCalledWith(false)
   })

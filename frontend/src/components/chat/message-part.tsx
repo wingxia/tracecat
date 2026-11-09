@@ -167,7 +167,7 @@ export function MessagePart({
   if (part.type === CANCELLED_DATA_PART_TYPE) {
     return (
       <div key={`${id}-${partIdx}`} className="w-full py-2">
-        <span className="text-xs text-muted-foreground">Interrupted</span>
+        <span className="text-xs text-muted-foreground">已中断</span>
         <div className="mt-2 border-t" />
       </div>
     )
@@ -201,7 +201,7 @@ export function MessagePart({
           <TraceTitle>{label}</TraceTitle>
           {typeof compaction.pre_tokens === "number" && (
             <TraceDescription>
-              {compaction.pre_tokens.toLocaleString()} tokens
+              {compaction.pre_tokens.toLocaleString("zh-CN")} 令牌
             </TraceDescription>
           )}
         </TraceLine>
@@ -276,14 +276,12 @@ export function MessagePart({
     let content: ReactNode
     if (isInterrupted) {
       content = (
-        <div className="text-[11px] text-muted-foreground">
-          Stopped before completion
-        </div>
+        <div className="text-[11px] text-muted-foreground">未完成即停止</div>
       )
     } else if (denial) {
       content = (
         <div className="text-[11px] text-muted-foreground">
-          {denial.reason ?? "Denied by user"}
+          {denial.reason ?? "用户已拒绝"}
         </div>
       )
     } else if (display.isCommand) {
@@ -540,10 +538,10 @@ export function getRunningLineLabel(
       isToolUIPart(lastPart) &&
       !policy.showInternalTools &&
       isInternalTool(lastPart)
-    if (isHiddenToolLast) return "Thinking..."
-    return isAwaitingOutput(status, messages) ? "Thinking..." : null
+    if (isHiddenToolLast) return "思考中…"
+    return isAwaitingOutput(status, messages) ? "思考中…" : null
   }
-  if (status === "submitted") return "Thinking..."
+  if (status === "submitted") return "思考中…"
   if (status !== "streaming") return null
   const lastPart = messages.at(-1)?.parts.at(-1)
   if (lastPart?.type === "data-approval-request") return null
@@ -552,7 +550,7 @@ export function getRunningLineLabel(
   const turnHasSteps = messages
     .slice(turnStart)
     .some(({ parts }) => parts.some(isActivityPart))
-  return turnHasSteps ? "Working..." : "Thinking..."
+  return turnHasSteps ? "处理中…" : "思考中…"
 }
 
 /** The running line for a live thread, at the surrounding verbosity. */
@@ -583,19 +581,19 @@ function getCompactionStatus(phase: CompactionData["phase"]): {
   switch (phase) {
     case "started":
       return {
-        label: "Compacting conversation",
+        label: "正在压缩对话",
         icon: <LoaderCircleIcon className="animate-spin" />,
         status: "running",
       }
     case "failed":
       return {
-        label: "Compaction failed",
+        label: "压缩失败",
         icon: <CircleAlertIcon />,
         status: "error",
       }
     default:
       return {
-        label: "Compacted conversation",
+        label: "已压缩对话",
         icon: <CircleCheckIcon />,
         status: undefined,
       }
@@ -667,14 +665,12 @@ function SubagentToolPart({
         ) : null}
         <SubagentTranscript sessionId={sessionId} finished={finished} />
         {cardState === "output-interrupted" ? (
-          <div className="text-[11px] text-muted-foreground">
-            Stopped before completion
-          </div>
+          <div className="text-[11px] text-muted-foreground">未完成即停止</div>
         ) : null}
         {cardState === "output-error" ? (
           <ToolOutput
             output={undefined}
-            errorText={errorMessage || "Subagent failed"}
+            errorText={errorMessage || "子智能体运行失败"}
           />
         ) : null}
       </ToolContent>
@@ -706,28 +702,28 @@ function SubagentTranscript({
   )
   const recoveryNotice = isRecoveryPaused ? (
     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-      <span>Transcript recovery paused.</span>
+      <span>对话记录恢复已暂停。</span>
       <Button
         variant="link"
         size="sm"
         className="h-auto p-0 text-xs"
         onClick={retryRecovery}
-        aria-label="Retry transcript loading"
+        aria-label={"重新加载对话记录"}
       >
-        Retry
+        重试
       </Button>
     </div>
   ) : null
 
   if (messages.length === 0) {
     if (isRecoveryPaused) return recoveryNotice
-    let placeholder = "Waiting for the agent to start..."
+    let placeholder = "等待智能体启动…"
     if (isError) {
-      placeholder = "Could not load transcript"
+      placeholder = "无法加载对话记录"
     } else if (isLoading) {
-      placeholder = "Loading transcript..."
+      placeholder = "正在加载对话记录…"
     } else if (finished) {
-      placeholder = "No transcript available"
+      placeholder = "暂无对话记录"
     }
     return <p className="text-xs text-muted-foreground">{placeholder}</p>
   }
@@ -759,34 +755,34 @@ const TARGETED_TOOLS: Record<string, { targetKey: string; verbs: ToolVerbs }> =
     Skill: {
       targetKey: "skill",
       verbs: {
-        running: "Loading skill",
-        done: "Loaded skill",
-        failed: "Failed to load skill",
+        running: "正在加载技能",
+        done: "已加载技能",
+        failed: "加载技能失败",
       },
     },
     Read: {
       targetKey: "file_path",
-      verbs: { running: "Reading", done: "Read", failed: "Failed to read" },
+      verbs: { running: "Reading", done: "读取", failed: "读取失败" },
     },
     Write: {
       targetKey: "file_path",
-      verbs: { running: "Writing", done: "Wrote", failed: "Failed to write" },
+      verbs: { running: "Writing", done: "Wrote", failed: "写入失败" },
     },
     Edit: {
       targetKey: "file_path",
-      verbs: { running: "Editing", done: "Edited", failed: "Failed to edit" },
+      verbs: { running: "Editing", done: "Edited", failed: "编辑失败" },
     },
     Grep: {
       targetKey: "pattern",
       verbs: {
-        running: "Searching for",
-        done: "Searched for",
-        failed: "Failed to search for",
+        running: "正在搜索",
+        done: "已搜索",
+        failed: "搜索失败",
       },
     },
     Glob: {
       targetKey: "pattern",
-      verbs: { running: "Finding", done: "Found", failed: "Failed to find" },
+      verbs: { running: "Finding", done: "发现", failed: "查找失败" },
     },
   }
 

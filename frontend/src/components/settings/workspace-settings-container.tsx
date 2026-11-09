@@ -42,7 +42,7 @@ export function WorkspaceSettingsContainer({
   if (error || !workspace) {
     return (
       <div className="py-12 text-center text-sm text-muted-foreground">
-        Failed to load workspace settings.
+        加载工作空间设置失败。
       </div>
     )
   }
@@ -58,8 +58,8 @@ export function WorkspaceSettingsContainer({
       ) : (
         <div className="flex flex-1 items-center justify-center py-12">
           <EntitlementRequiredEmptyState
-            title="Upgrade required"
-            description="Workspace AI model subset controls are unavailable on your current plan."
+            title={"需要升级"}
+            description={"当前套餐不支持工作空间 AI 模型子集设置。"}
           >
             <Button
               variant="link"
@@ -72,7 +72,7 @@ export function WorkspaceSettingsContainer({
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>

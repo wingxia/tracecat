@@ -39,13 +39,9 @@ export default function RbacSettingsPage() {
       <div className="container flex h-full max-w-[1200px] flex-col space-y-8 py-6">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Access control
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">访问控制</h2>
             <p className="text-md text-muted-foreground">
-              Manage roles, groups, and permissions for your organization.
-              Configure fine-grained access control with scopes and assign
-              permissions to users and groups.
+              管理组织的角色、用户组和权限。通过权限范围配置细粒度访问控制，并向用户和用户组分配权限。
             </p>
           </div>
         </div>
@@ -60,31 +56,31 @@ export default function RbacSettingsPage() {
               value="roles"
               className="rounded-none border-b-2 border-transparent px-4 py-2.5 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              Roles
+              角色
             </TabsTrigger>
             <TabsTrigger
               value="groups"
               className="rounded-none border-b-2 border-transparent px-4 py-2.5 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              Groups
+              用户组
             </TabsTrigger>
             <TabsTrigger
               value="assignments"
               className="rounded-none border-b-2 border-transparent px-4 py-2.5 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              Group assignments
+              用户组授权
             </TabsTrigger>
             <TabsTrigger
               value="user-assignments"
               className="rounded-none border-b-2 border-transparent px-4 py-2.5 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              User assignments
+              用户授权
             </TabsTrigger>
             <TabsTrigger
               value="scopes"
               className="rounded-none border-b-2 border-transparent px-4 py-2.5 data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
-              Scopes
+              权限范围
             </TabsTrigger>
           </TabsList>
 

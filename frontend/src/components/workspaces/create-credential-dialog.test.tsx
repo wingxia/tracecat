@@ -62,7 +62,7 @@ test("shows each full template key name as its value field label", async () => {
     expect(await screen.findByText(key)).toBeVisible()
     expect(screen.getByLabelText(key)).toHaveAttribute("type", "password")
   }
-  expect(screen.queryByPlaceholderText("Key")).not.toBeInTheDocument()
+  expect(screen.queryByPlaceholderText("键")).not.toBeInTheDocument()
 })
 
 test("submits template keys with their values", async () => {
@@ -70,10 +70,10 @@ test("submits template keys with their values", async () => {
   renderDialog()
 
   const [clientIdValue, clientSecretValue] =
-    await screen.findAllByPlaceholderText("Value")
+    await screen.findAllByPlaceholderText("值")
   await user.type(clientIdValue, "cid")
   await user.type(clientSecretValue, "csecret")
-  await user.click(screen.getByRole("button", { name: /Create credential/ }))
+  await user.click(screen.getByRole("button", { name: /创建凭据/ }))
 
   await waitFor(() => expect(mockCreateSecret).toHaveBeenCalledTimes(1))
   expect(mockCreateSecret.mock.calls[0][0].keys).toEqual([

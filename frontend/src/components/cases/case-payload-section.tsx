@@ -26,10 +26,10 @@ function NoPaylod() {
         <Braces className="h-6 w-6 text-muted-foreground" />
       </div>
       <h3 className="text-sm font-medium text-muted-foreground mb-1">
-        No payload available
+        暂无数据载荷
       </h3>
       <p className="text-xs text-muted-foreground/75 text-center max-w-[250px]">
-        Payload data will appear here when added to the case
+        添加到事件的数据载荷将显示在此处
       </p>
     </div>
   )

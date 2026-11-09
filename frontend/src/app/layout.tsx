@@ -46,7 +46,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const MaybeAnalytics = PHProvider ? PHProvider : React.Fragment
 
   return (
-    <html lang="en" className="h-full min-h-screen" suppressHydrationWarning>
+    <html lang="zh-CN" className="h-full min-h-screen" suppressHydrationWarning>
       <head>
         <PublicEnvScript />
       </head>

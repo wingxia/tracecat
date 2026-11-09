@@ -51,7 +51,7 @@ const ActionSessionStream = dynamic(
     loading: () => (
       <div className="flex min-h-40 items-center justify-center gap-2 text-xs text-muted-foreground">
         <LoaderIcon className="size-3 animate-spin" />
-        <span>Loading session...</span>
+        <span>正在加载会话…</span>
       </div>
     ),
   }
@@ -103,12 +103,12 @@ export function ActionEventDetails({
         {status === "RUNNING" ? (
           <>
             <LoaderIcon className="size-3 animate-spin text-muted-foreground" />
-            <span>Waiting for events...</span>
+            <span>正在等待执行事件…</span>
           </>
         ) : (
           <>
             <CircleDot className="size-3 text-muted-foreground" />
-            <span>No events</span>
+            <span>暂无执行事件</span>
           </>
         )}
       </div>
@@ -246,7 +246,7 @@ function StreamNav({
   return (
     <>
       <span className="text-xs text-muted-foreground">
-        Stream {currentIndex + 1} of {total}
+        数据流 {currentIndex + 1} / {total}
       </span>
       <Button
         variant="outline"
@@ -254,7 +254,7 @@ function StreamNav({
         className="h-7 w-7"
         onClick={onPrevious}
         disabled={!canGoPrevious}
-        aria-label="Previous stream"
+        aria-label={"上一个数据流"}
       >
         <ChevronLeftIcon className="size-4" />
       </Button>
@@ -264,7 +264,7 @@ function StreamNav({
         className="h-7 w-7"
         onClick={onNext}
         disabled={!canGoNext}
-        aria-label="Next stream"
+        aria-label={"下一个数据流"}
       >
         <ChevronRightIcon className="size-4" />
       </Button>
@@ -444,7 +444,7 @@ function ActionEventBody({
         return (
           <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
             <LoaderIcon className="size-3 animate-spin text-muted-foreground" />
-            <span>Action is scheduled...</span>
+            <span>动作已调度…</span>
           </div>
         )
       case "STARTED":
@@ -454,7 +454,7 @@ function ActionEventBody({
         return (
           <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
             <LoaderIcon className="size-3 animate-spin text-muted-foreground" />
-            <span>Action is running...</span>
+            <span>动作正在运行…</span>
           </div>
         )
     }
@@ -475,14 +475,14 @@ function ActionEventBody({
                 disableUnderline
                 className="h-6 text-xs"
               >
-                Session
+                会话
               </TabsTrigger>
               <TabsTrigger
                 value="result"
                 disableUnderline
                 className="h-6 text-xs"
               >
-                Result
+                结果
               </TabsTrigger>
             </TabsList>
           </div>
@@ -537,7 +537,7 @@ function EventStatusBadge({
     <Badge variant="secondary" className="items-center gap-2">
       {getWorkflowEventIcon(status, "size-4")}
       <span className="text-xs font-semibold text-foreground/70">
-        Action {status.toLowerCase()}
+        动作 {status.toLowerCase()}
       </span>
     </Badge>
   )
@@ -598,7 +598,7 @@ function ActionResultViewer({
     return (
       <div className="flex items-center justify-center gap-2 p-4 text-xs text-muted-foreground">
         <CircleDot className="size-3 text-muted-foreground" />
-        <span>This action returned no result (null).</span>
+        <span>此动作未返回结果（null）。</span>
       </div>
     )
   }
@@ -652,7 +652,7 @@ function StreamDetails({ streamId }: { streamId?: string }) {
   if (streamParts.length === 0) {
     return (
       <div className="flex items-center gap-1 text-xs text-muted-foreground/80">
-        <span>Global scope</span>
+        <span>全局作用域</span>
       </div>
     )
   }
@@ -681,7 +681,7 @@ function StreamDetails({ streamId }: { streamId?: string }) {
 function ErrorEvent({ failure }: { failure: EventFailure }) {
   return (
     <div className="flex flex-col space-y-8 text-xs">
-      <CodeBlock title="Error Message">
+      <CodeBlock title={"错误消息"}>
         {failure.root_cause_message ?? failure.message}
       </CodeBlock>
     </div>

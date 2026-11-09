@@ -171,7 +171,7 @@ export function showFallbackErrorToast(
   description?: string
 ): void {
   toast({
-    description: description ?? getApiErrorDetail(error) ?? "Please try again.",
+    description: description ?? getApiErrorDetail(error) ?? "请重试。",
     variant: "destructive",
   })
 }
@@ -236,14 +236,14 @@ const MCP_OAUTH_DISCOVERY_ERROR_PATTERNS = [
 ]
 
 export function getMcpOAuthConnectErrorDetail(error: unknown): string {
-  const detail = getApiErrorDetail(error) ?? "Unknown error"
+  const detail = getApiErrorDetail(error) ?? "未知错误"
   const normalized = detail.toLowerCase()
   if (
     MCP_OAUTH_DISCOVERY_ERROR_PATTERNS.some((pattern) =>
       normalized.includes(pattern)
     )
   ) {
-    return `MCP OAuth discovery failed. Create an OAuth integration manually, then select it from Advanced. ${detail}`
+    return `MCP OAuth 发现失败。请手动创建 OAuth 集成，再从高级设置中选择。${detail}`
   }
   return detail
 }

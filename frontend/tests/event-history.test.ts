@@ -28,7 +28,7 @@ describe("event-history", () => {
 
   describe("refToLabel", () => {
     it("should label the trigger sentinel as Trigger", () => {
-      expect(refToLabel(WF_TRIGGER_EVENT_REF)).toBe("Trigger")
+      expect(refToLabel(WF_TRIGGER_EVENT_REF)).toBe("触发器")
     })
   })
 

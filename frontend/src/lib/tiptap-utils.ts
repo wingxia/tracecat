@@ -296,7 +296,7 @@ export const handleImageUpload = async (
 ): Promise<string> => {
   // Validate file
   if (!file) {
-    throw new Error("No file provided")
+    throw new Error("未提供文件")
   }
 
   if (file.size > MAX_FILE_SIZE) {
@@ -309,7 +309,7 @@ export const handleImageUpload = async (
   // with your own upload implementation.
   for (let progress = 0; progress <= 100; progress += 10) {
     if (abortSignal?.aborted) {
-      throw new Error("Upload cancelled")
+      throw new Error("上传已取消")
     }
     await new Promise((resolve) => setTimeout(resolve, 500))
     onProgress?.({ progress })

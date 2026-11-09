@@ -16,7 +16,7 @@ export function SlidingPanel({
 }: SlidingPanelProps) {
   return (
     <Sheet modal={false} open={isOpen} onOpenChange={setIsOpen}>
-      <SheetTitle className="sr-only">Sliding Panel</SheetTitle>
+      <SheetTitle className="sr-only">滑动面板</SheetTitle>
       <SheetContent
         className={cn("!animate-none !transition-none !duration-0", className)}
         onOpenAutoFocus={(e) => {

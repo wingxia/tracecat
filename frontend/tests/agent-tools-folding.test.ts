@@ -109,7 +109,7 @@ describe("optional field visibility", () => {
         ([fieldName]) => fieldName
       )
     ).toEqual(["actions", "instructions"])
-    expect(getActionFieldLabel("actions", folding)).toBe("Tools")
+    expect(getActionFieldLabel("actions", folding)).toBe("工具")
     expect(getActionFieldLabel("max_tool_calls", folding)).toBe(
       "Max tool calls"
     )

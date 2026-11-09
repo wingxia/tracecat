@@ -32,7 +32,7 @@ export function getAgentPresetErrorMessage(
       "max_tools" in detail &&
       typeof detail.max_tools === "number"
     ) {
-      return `This agent has ${detail.tool_count} tools; the limit is ${detail.max_tools}.`
+      return `此智能体有 ${detail.tool_count} 个工具，上限为 ${detail.max_tools} 个。`
     }
   }
   return getApiErrorDetail(error) ?? fallback
@@ -87,7 +87,7 @@ function buildCommandSearchSegment(value: string): string {
 
 export function getDuplicateItemName(name: string, fallback: string): string {
   const trimmedName = name.trim()
-  return `Copy of ${trimmedName || fallback}`
+  return `${trimmedName || fallback} 的副本`
 }
 
 export function buildDuplicateAgentSlug(

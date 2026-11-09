@@ -171,11 +171,11 @@ function setup({
 }
 
 function repositoryInput() {
-  return screen.getByRole("textbox", { name: "Repository" })
+  return screen.getByRole("textbox", { name: "仓库" })
 }
 
 function providerSelect() {
-  return screen.getByRole("combobox", { name: "Provider" })
+  return screen.getByRole("combobox", { name: "提供商" })
 }
 
 beforeEach(() => {
@@ -190,13 +190,13 @@ describe("GitSyncConnectionPanel remote line", () => {
     render(<GitSyncConnectionPanel workspace={setup()} onSaved={onSaved} />)
 
     expect(
-      screen.getByRole("heading", { name: "Connect a repository" })
+      screen.getByRole("heading", { name: "连接仓库" })
     ).toBeInTheDocument()
     // One provider: shown, but not a choice.
     expect(providerSelect()).toHaveTextContent("GitHub")
     expect(providerSelect()).toBeDisabled()
     expect(
-      screen.getByText("Uses the GitHub App on TracecatHQ.")
+      screen.getByText("使用 TracecatHQ 的 GitHub 应用。")
     ).toBeInTheDocument()
 
     await user.type(
@@ -204,7 +204,7 @@ describe("GitSyncConnectionPanel remote line", () => {
       "git@github.com:TracecatHQ/detections.git"
     )
     expect(repositoryInput().nextElementSibling).toHaveTextContent(
-      "TracecatHQ/detections on github.com"
+      "TracecatHQ/detections 于 github.com"
     )
     await user.keyboard("{Enter}")
 
@@ -223,13 +223,13 @@ describe("GitSyncConnectionPanel remote line", () => {
     const user = userEvent.setup()
     render(<GitSyncConnectionPanel workspace={setup()} />)
 
-    expect(screen.getByText("Private")).toBeInTheDocument()
-    expect(screen.getByText("Public")).toBeInTheDocument()
+    expect(screen.getByText("私有")).toBeInTheDocument()
+    expect(screen.getByText("公开")).toBeInTheDocument()
     await user.click(screen.getByRole("button", { name: /playbooks/ }))
     expect(repositoryInput()).toHaveValue(
       "git+ssh://git@github.com/TracecatHQ/playbooks.git@trunk"
     )
-    await user.click(screen.getByRole("button", { name: "Connect" }))
+    await user.click(screen.getByRole("button", { name: "连接" }))
 
     await waitFor(() =>
       expect(mockUpdateWorkspace).toHaveBeenCalledWith({
@@ -253,15 +253,15 @@ describe("GitSyncConnectionPanel remote line", () => {
     await user.clear(repositoryInput())
     await user.type(repositoryInput(), "zzz")
     expect(
-      screen.getByText("No match. Paste the SSH clone URL to check it.")
+      screen.getByText("没有匹配项。请粘贴 SSH 克隆 URL 进行检查。")
     ).toBeInTheDocument()
   })
 
   it.each([
-    [[], "Ask an org admin to add it to the app's repositories."],
+    [[], "请联系组织管理员将其添加到应用可访问的仓库。"],
     [
       ["org:settings:update"],
-      "Add it to the app's repositories on GitHub, then try again.",
+      "请在 GitHub 中将其添加到应用可访问的仓库，然后重试。",
     ],
   ])("blocks repositories the GitHub App can't reach", async (scopes, hint) => {
     const user = userEvent.setup()
@@ -273,7 +273,7 @@ describe("GitSyncConnectionPanel remote line", () => {
     )
 
     expect(screen.getByRole("alert")).toHaveTextContent(
-      `The GitHub App can't reach TracecatHQ/elsewhere. ${hint}`
+      `GitHub 应用无法访问 TracecatHQ/elsewhere。${hint}`
     )
     expect(mockUpdateWorkspace).not.toHaveBeenCalled()
   })
@@ -292,9 +292,7 @@ describe("GitSyncConnectionPanel remote line", () => {
     )
 
     expect(
-      screen.getByText(
-        "Couldn't load the list. A pasted SSH clone URL still works."
-      )
+      screen.getByText("无法加载列表，仍可粘贴 SSH 克隆 URL。")
     ).toBeInTheDocument()
     await user.type(
       repositoryInput(),
@@ -328,7 +326,7 @@ describe("GitSyncConnectionPanel remote line", () => {
       "git@github.example.com:TracecatHQ/elsewhere.git{Enter}"
     )
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "github.example.com isn't set up for this organization. GitHub here is github.com."
+      "此组织尚未配置 github.example.com。这里的 GitHub 为 github.com。"
     )
     expect(mockUpdateWorkspace).not.toHaveBeenCalled()
   })
@@ -351,7 +349,7 @@ describe("GitSyncConnectionPanel remote line", () => {
       "git@github.com:TracecatHQ/elsewhere.git{Enter}"
     )
 
-    expect(screen.getByRole("button", { name: "Connect" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "连接" })).toBeDisabled()
     expect(mockUpdateWorkspace).not.toHaveBeenCalled()
   })
 
@@ -366,7 +364,7 @@ describe("GitSyncConnectionPanel remote line", () => {
         })}
       />
     )
-    expect(screen.getByLabelText("Loading repositories")).toBeInTheDocument()
+    expect(screen.getByLabelText("正在加载仓库")).toBeInTheDocument()
   })
 
   it("uses the organization's GitLab host and rejects other hosts", async () => {
@@ -384,18 +382,16 @@ describe("GitSyncConnectionPanel remote line", () => {
       "git@gitlab.example.com:group/project.git"
     )
     expect(
-      screen.getByText("Paste the SSH clone URL from gitlab.example.com.")
+      screen.getByText("粘贴来自 gitlab.example.com 的 SSH 克隆 URL。")
     ).toBeInTheDocument()
-    expect(
-      screen.getByText("Uses the organization's GitLab token.")
-    ).toBeInTheDocument()
+    expect(screen.getByText("使用组织的 GitLab 令牌。")).toBeInTheDocument()
 
     await user.type(
       repositoryInput(),
       "git@gitlab.com:group/project.git{Enter}"
     )
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "gitlab.com isn't set up for this organization. GitLab here is gitlab.example.com."
+      "此组织尚未配置 gitlab.com。这里的 GitLab 为 gitlab.example.com。"
     )
 
     await user.clear(repositoryInput())
@@ -404,7 +400,7 @@ describe("GitSyncConnectionPanel remote line", () => {
       "https://gitlab.example.com/group/sub/project{Enter}"
     )
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Paste the SSH clone URL, e.g. git@gitlab.example.com:group/project.git."
+      "粘贴 SSH 克隆 URL，例如 git@gitlab.example.com:group/project.git。"
     )
 
     await user.clear(repositoryInput())
@@ -439,12 +435,10 @@ describe("GitSyncConnectionPanel remote line", () => {
       />
     )
 
-    expect(providerSelect()).toHaveTextContent(
-      "Choose where the repository lives"
-    )
+    expect(providerSelect()).toHaveTextContent("选择仓库所在位置")
     expect(providerSelect()).toBeEnabled()
     expect(repositoryInput()).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Connect" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "连接" })).toBeDisabled()
 
     await user.click(providerSelect())
     await user.click(await screen.findByRole("option", { name: /GitLab/ }))
@@ -467,16 +461,14 @@ describe("GitSyncConnectionPanel remote line", () => {
 
     expect(providerSelect()).toHaveTextContent("GitHub")
     expect(
-      screen.getByText("Uses the GitHub App on TracecatHQ.")
+      screen.getByText("使用 TracecatHQ 的 GitHub 应用。")
     ).toBeInTheDocument()
     await user.click(providerSelect())
     await user.click(await screen.findByRole("option", { name: /GitLab/ }))
 
+    expect(screen.getByText("使用组织的 GitLab 令牌。")).toBeInTheDocument()
     expect(
-      screen.getByText("Uses the organization's GitLab token.")
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText("Paste the SSH clone URL from GitLab.")
+      screen.getByText("粘贴来自 GitLab 的 SSH 克隆 URL。")
     ).toBeInTheDocument()
     // Without the instance's base path, a web URL can't be mapped to SSH.
     await user.type(
@@ -484,7 +476,7 @@ describe("GitSyncConnectionPanel remote line", () => {
       "https://gitlab.example.com/gitlab/group/project{Enter}"
     )
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Paste the SSH clone URL, e.g. git@gitlab.example.com:group/project.git."
+      "粘贴 SSH 克隆 URL，例如 git@gitlab.example.com:group/project.git。"
     )
     expect(mockUpdateWorkspace).not.toHaveBeenCalled()
   })
@@ -492,11 +484,11 @@ describe("GitSyncConnectionPanel remote line", () => {
   it.each([
     [
       ["org:settings:update"],
-      "Set up GitHub, GitLab or Bitbucket once in Organization › Git providers. Every workspace can then connect a repository.",
+      "在“组织 › Git 提供商”中配置 GitHub、GitLab 或 Bitbucket 后，各工作空间即可连接仓库。",
     ],
     [
       [],
-      "Ask an org admin to set one up in Organization › Git providers. You can connect a repository here once they have.",
+      "请联系组织管理员在“组织 › Git 提供商”中完成配置，之后即可在此连接仓库。",
     ],
   ])("blocks the flow when the org has no provider", (scopes, body) => {
     render(
@@ -508,12 +500,10 @@ describe("GitSyncConnectionPanel remote line", () => {
       />
     )
 
-    expect(
-      screen.getByText("Your organization hasn't set up a Git provider")
-    ).toBeInTheDocument()
+    expect(screen.getByText("组织尚未设置 Git 提供商")).toBeInTheDocument()
     expect(screen.getByText(body)).toBeInTheDocument()
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
-    const link = screen.queryByRole("link", { name: /Set up a Git provider/ })
+    const link = screen.queryByRole("link", { name: /设置 Git 提供商/ })
     if (scopes.length > 0) {
       expect(link).toHaveAttribute("href", "/organization/vcs")
     } else {
@@ -538,7 +528,7 @@ describe("GitSyncConnectionPanel remote line", () => {
         workspace={setup({ gitRepoUrl: url, gitProvider: "github" })}
       />
     )
-    await user.click(screen.getByRole("button", { name: "Change" }))
+    await user.click(screen.getByRole("button", { name: "更改" }))
     expect(repositoryInput()).toHaveValue(url)
   })
 })
@@ -558,23 +548,17 @@ describe("GitSyncConnectionPanel connected repository", () => {
     )
 
     expect(
-      screen.getByText(
-        "Shared by everyone in this workspace. Access uses the organization's GitHub App."
-      )
+      screen.getByText("此工作空间所有成员共享，通过组织的 GitHub 应用 访问。")
     ).toBeInTheDocument()
     expect(screen.getByText("TracecatHQ/detections")).toBeInTheDocument()
-    expect(screen.getByText("Branch").closest("div")).toHaveTextContent(
-      "Branchmain"
+    expect(screen.getByText("分支").closest("div")).toHaveTextContent(
+      "分支main"
     )
     expect(screen.queryByText("Pushes")).not.toBeInTheDocument()
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Change" })).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Disconnect" })
-    ).toBeInTheDocument()
-    expect(
-      screen.getByText("Stops push and pull for this workspace.")
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "更改" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "断开连接" })).toBeInTheDocument()
+    expect(screen.getByText("停止此工作空间的推送和拉取。")).toBeInTheDocument()
     expect(useGitSyncProviders).toHaveBeenLastCalledWith({ enabled: false })
   })
 
@@ -588,13 +572,11 @@ describe("GitSyncConnectionPanel connected repository", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: "Change" }))
+    await user.click(screen.getByRole("button", { name: "更改" }))
     expect(repositoryInput()).toHaveValue(url)
     expect(repositoryInput()).toHaveFocus()
     expect(
-      screen.getByText(
-        "Changing the repository clears any preview on this page."
-      )
+      screen.getByText("更改仓库会清除此页面上的所有预览。")
     ).toBeInTheDocument()
 
     // Focus selected the prefill, so typing replaces it.
@@ -602,7 +584,7 @@ describe("GitSyncConnectionPanel connected repository", () => {
     expect(repositoryInput()).toHaveValue(
       "git@github.com:TracecatHQ/playbooks.git"
     )
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "保存" }))
 
     await waitFor(() =>
       expect(mockUpdateWorkspace).toHaveBeenCalledWith({
@@ -618,7 +600,7 @@ describe("GitSyncConnectionPanel connected repository", () => {
     )
     expect(onSaved).toHaveBeenCalled()
     expect(
-      screen.getByRole("heading", { name: "Repository connection" })
+      screen.getByRole("heading", { name: "仓库连接" })
     ).toBeInTheDocument()
   })
 
@@ -630,15 +612,15 @@ describe("GitSyncConnectionPanel connected repository", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: "Change" }))
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "更改" }))
+    await user.click(screen.getByRole("button", { name: "保存" }))
     await waitFor(() =>
       expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
     )
 
-    await user.click(screen.getByRole("button", { name: "Change" }))
+    await user.click(screen.getByRole("button", { name: "更改" }))
     await user.keyboard("git@github.com:TracecatHQ/playbooks.git")
-    await user.click(screen.getByRole("button", { name: "Cancel" }))
+    await user.click(screen.getByRole("button", { name: "取消" }))
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
     expect(screen.getByText("TracecatHQ/detections")).toBeInTheDocument()
     expect(mockUpdateWorkspace).not.toHaveBeenCalled()
@@ -656,7 +638,7 @@ describe("GitSyncConnectionPanel connected repository", () => {
       />
     )
 
-    const branchSelect = screen.getByRole("combobox", { name: "Branch" })
+    const branchSelect = screen.getByRole("combobox", { name: "分支" })
     expect(branchSelect).toHaveTextContent("maindefault")
     await user.click(branchSelect)
     await user.click(screen.getByRole("option", { name: "release" }))
@@ -676,10 +658,10 @@ describe("GitSyncConnectionPanel connected repository", () => {
         })}
       />
     )
-    expect(screen.getByRole("combobox", { name: "Branch" })).toHaveTextContent(
+    expect(screen.getByRole("combobox", { name: "分支" })).toHaveTextContent(
       "release"
     )
-    await user.click(screen.getByRole("combobox", { name: "Branch" }))
+    await user.click(screen.getByRole("combobox", { name: "分支" }))
     await user.click(screen.getByRole("option", { name: /main/ }))
     await waitFor(() =>
       expect(mockUpdateWorkspace).toHaveBeenCalledWith({
@@ -703,8 +685,8 @@ describe("GitSyncConnectionPanel connected repository", () => {
       />
     )
 
-    const branchSelect = screen.getByRole("combobox", { name: "Branch" })
-    expect(branchSelect).toHaveTextContent("developpinned")
+    const branchSelect = screen.getByRole("combobox", { name: "分支" })
+    expect(branchSelect).toHaveTextContent("develop已固定")
     await user.click(branchSelect)
     await user.click(screen.getByRole("option", { name: "develop default" }))
     await waitFor(() =>
@@ -731,9 +713,9 @@ describe("GitSyncConnectionPanel connected repository", () => {
     } as ReturnType<typeof useRepositoryCommits>)
     render(<GitSyncConnectionPanel workspace={workspace} />)
 
-    const row = screen.getByText("Latest commit").closest("div")
+    const row = screen.getByText("最新提交").closest("div")
     expect(row).toHaveTextContent(
-      "Latest commit01f9d62 · Example Author · about 2 days ago"
+      "最新提交01f9d62 · Example Author · 约 2 天前"
     )
     expect(
       within(row as HTMLElement).getByTitle("Add escalation decision")
@@ -749,10 +731,10 @@ describe("GitSyncConnectionPanel connected repository", () => {
     )
 
     expect(
-      screen.queryByRole("button", { name: "Change" })
+      screen.queryByRole("button", { name: "更改" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Disconnect" })
+      screen.queryByRole("button", { name: "断开连接" })
     ).not.toBeInTheDocument()
   })
 
@@ -760,12 +742,12 @@ describe("GitSyncConnectionPanel connected repository", () => {
     const user = userEvent.setup()
     render(<GitSyncConnectionPanel workspace={setup({ gitRepoUrl: url })} />)
 
-    await user.click(screen.getByRole("button", { name: "Disconnect" }))
+    await user.click(screen.getByRole("button", { name: "断开连接" }))
     const dialog = await screen.findByRole("alertdialog")
     expect(dialog).toHaveTextContent(
-      "Disconnect TracecatHQ/detections?Push and pull stop until a repository is connected again. Nothing in this workspace or the repository is deleted."
+      "断开连接 TracecatHQ/detections?重新连接仓库前，推送和拉取将停止。不会删除工作空间或仓库中的内容。"
     )
-    await user.click(within(dialog).getByRole("button", { name: "Disconnect" }))
+    await user.click(within(dialog).getByRole("button", { name: "断开连接" }))
 
     await waitFor(() => expect(mockUpdateWorkspace).toHaveBeenCalledTimes(1))
     expect(mockUpdateWorkspace).toHaveBeenCalledWith({
@@ -777,9 +759,9 @@ describe("GitSyncConnectionPanel connected repository", () => {
     const user = userEvent.setup()
     render(<GitSyncConnectionPanel workspace={setup({ gitRepoUrl: url })} />)
 
-    await user.click(screen.getByRole("button", { name: "Disconnect" }))
+    await user.click(screen.getByRole("button", { name: "断开连接" }))
     const dialog = await screen.findByRole("alertdialog")
-    await user.click(within(dialog).getByRole("button", { name: "Cancel" }))
+    await user.click(within(dialog).getByRole("button", { name: "取消" }))
 
     await waitFor(() =>
       expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
@@ -794,11 +776,11 @@ describe("GitSyncView connection", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection={false} />
     )
 
-    expect(screen.getByText("No repository connected")).toBeInTheDocument()
+    expect(screen.getByText("尚未连接仓库")).toBeInTheDocument()
     expect(screen.getByTestId("sync-operation-status")).toBeInTheDocument()
     expect(
       screen.getByText(
-        "Ask a workspace admin to connect one. Once it's connected, you can push and pull here."
+        "请联系工作空间管理员连接仓库，连接后即可在此推送和拉取。"
       )
     ).toBeInTheDocument()
     expect(useGitHubAppRepositories).not.toHaveBeenCalled()
@@ -818,9 +800,9 @@ describe("GitSyncView connection", () => {
     render(<GitSyncView workspace={setup()} canSync canManageConnection />)
 
     expect(
-      screen.getByRole("heading", { name: "Connect a repository" })
+      screen.getByRole("heading", { name: "连接仓库" })
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Connect" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "连接" })).toBeInTheDocument()
   })
 
   it("opens the connection from the header and goes back to changes", async () => {
@@ -838,13 +820,13 @@ describe("GitSyncView connection", () => {
     )
 
     expect(screen.getByText("Push tab")).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Edit connection" }))
+    await user.click(screen.getByRole("button", { name: "编辑连接" }))
     expect(
-      screen.getByRole("heading", { name: "Repository connection" })
+      screen.getByRole("heading", { name: "仓库连接" })
     ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Change" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "更改" })).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: "Back to changes" }))
+    await user.click(screen.getByRole("button", { name: "返回变更列表" }))
     expect(screen.getByText("Push tab")).toBeInTheDocument()
   })
 })

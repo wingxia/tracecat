@@ -39,7 +39,7 @@ export function ForEachField() {
                             newExpressions[index] = newValue
                             field.onChange(newExpressions)
                           }}
-                          placeholder="Type @foreach to begin a for loop expression..."
+                          placeholder={"输入 @foreach 开始编写循环表达式…"}
                           className="flex-1"
                         />
                         <Button
@@ -69,7 +69,7 @@ export function ForEachField() {
                   }}
                 >
                   <Plus className="mr-2 size-4" />
-                  Add expression
+                  添加表达式
                 </Button>
               </div>
             </FormControl>

@@ -407,8 +407,7 @@ export function WorkflowTriggerForm({
           <div className="flex flex-col gap-4 pr-3">
             {properties.length === 0 ? (
               <p className="text-xs text-muted-foreground">
-                This workflow does not define any inputs. You can still trigger
-                it with the current case context.
+                此工作流未定义输入，但仍可使用当前事件上下文触发。
               </p>
             ) : (
               properties.map(([fieldName, fieldSchema]) => (
@@ -435,11 +434,11 @@ export function WorkflowTriggerForm({
                           <Tooltip delayDuration={100}>
                             <TooltipTrigger asChild>
                               <span className="flex items-center gap-1 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
-                                Matches custom field
+                                匹配自定义字段
                               </span>
                             </TooltipTrigger>
                             <TooltipContent side="top" className="text-xs">
-                              Auto-filled from case data
+                              已从事件数据自动填充
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -492,7 +491,7 @@ export function WorkflowTriggerForm({
                             >
                               <SelectTrigger>
                                 <SelectValue
-                                  placeholder={`Select ${label.toLowerCase()}...`}
+                                  placeholder={`选择 ${label.toLowerCase()}…`}
                                 />
                               </SelectTrigger>
                               <SelectContent>
@@ -558,7 +557,7 @@ export function WorkflowTriggerForm({
                                       fieldName as keyof TriggerFormValues,
                                       {
                                         type: "manual",
-                                        message: "Invalid JSON",
+                                        message: "JSON 无效",
                                       }
                                     )
                                   }
@@ -617,19 +616,19 @@ export function WorkflowTriggerForm({
                     onClick={resetToDefaults}
                   >
                     <RotateCcw className="size-3 mr-1" />
-                    Reset inputs
+                    重置输入
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
-                  Reset to case defaults
+                  重置为事件默认值
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-          <AlertDialogCancel className="text-xs">Cancel</AlertDialogCancel>
+          <AlertDialogCancel className="text-xs">取消</AlertDialogCancel>
           <Button type="submit" className="text-xs" disabled={isSubmitting}>
             <PlayIcon className="mr-1.5 h-3 w-3" />
-            Trigger
+            触发器
           </Button>
         </AlertDialogFooter>
       </form>
@@ -703,13 +702,13 @@ function CaseValueSelector({
     if (directMatch) {
       addSuggestion(
         `case-field-${directMatch[0]}`,
-        `Use case field • ${caseFieldDisplayNameById.get(directMatch[0]) ?? formatLabel(directMatch[0])}`,
+        `使用事件字段 • ${caseFieldDisplayNameById.get(directMatch[0]) ?? formatLabel(directMatch[0])}`,
         directMatch[1]
       )
     }
 
     if (isValueCompatible(fieldSchema, caseId)) {
-      addSuggestion("case-id", "Use case ID", caseId)
+      addSuggestion("case-id", "使用事件 ID", caseId)
     }
 
     entries
@@ -717,7 +716,7 @@ function CaseValueSelector({
       .forEach(([key, value]) => {
         addSuggestion(
           `case-field-${key}`,
-          `Case field • ${caseFieldDisplayNameById.get(key) ?? formatLabel(key)}`,
+          `事件字段 • ${caseFieldDisplayNameById.get(key) ?? formatLabel(key)}`,
           value
         )
       })
@@ -746,14 +745,14 @@ function CaseValueSelector({
           className="h-6 px-2 text-[11px] font-medium text-muted-foreground pointer-events-none opacity-0 transition-opacity duration-150 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100 focus-visible:pointer-events-auto focus-visible:opacity-100 data-[state=open]:pointer-events-auto data-[state=open]:opacity-100"
         >
           <Plus className="size-3 mr-1" />
-          Add case value
+          添加事件值
         </Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-64 p-0">
         <Command>
-          <CommandInput placeholder="Search case values..." />
+          <CommandInput placeholder={"搜索事件值…"} />
           <CommandList>
-            <CommandEmpty>No matching case values</CommandEmpty>
+            <CommandEmpty>没有匹配的事件值</CommandEmpty>
             <CommandGroup heading="Suggestions">
               {suggestions.map((suggestion) => (
                 <CommandItem
@@ -773,7 +772,7 @@ function CaseValueSelector({
                 </CommandItem>
               ))}
             </CommandGroup>
-            <CommandGroup heading="Custom">
+            <CommandGroup heading={"自定义"}>
               <CommandItem
                 value="custom-value"
                 onSelect={() => {
@@ -782,7 +781,7 @@ function CaseValueSelector({
                 }}
                 className="text-xs"
               >
-                Clear for custom input
+                清除后自定义输入
               </CommandItem>
             </CommandGroup>
           </CommandList>

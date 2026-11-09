@@ -63,13 +63,10 @@ const tableColumnSchema = z
   .object({
     name: z
       .string()
-      .min(1, "Column name is required")
-      .regex(
-        /^[a-zA-Z_]/,
-        "Column name must start with a letter or underscore"
-      ),
+      .min(1, "列名称不能为空")
+      .regex(/^[a-zA-Z_]/, "列名称必须以字母或下划线开头"),
     type: z.enum(SqlTypeCreatableEnum),
-    options: z.array(z.string().min(1, "Option cannot be empty")).optional(),
+    options: z.array(z.string().min(1, "选项不能为空")).optional(),
   })
   .superRefine((column, ctx) => {
     if (isSelectableColumnType(column.type)) {
@@ -77,7 +74,7 @@ const tableColumnSchema = z
       if (!hasValidOptions) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please add at least one option",
+          message: "请至少添加一个选项",
           path: ["options"],
         })
       }
@@ -88,15 +85,13 @@ const createTableSchema = z
   .object({
     name: z
       .string()
-      .min(1, "Name is required")
-      .max(100, "Name cannot exceed 100 characters")
+      .min(1, "名称不能为空")
+      .max(100, "名称不能超过 100 个字符")
       .regex(
         /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-        "Name must start with a letter or underscore and contain only letters, numbers, and underscores"
+        "名称必须以字母或下划线开头，且只能包含字母、数字和下划线"
       ),
-    columns: z
-      .array(tableColumnSchema)
-      .min(1, "At least one column is required"),
+    columns: z.array(tableColumnSchema).min(1, "至少需要一列"),
   })
   .superRefine((data, ctx) => {
     // Check for duplicate column names - only show error on the last occurrence
@@ -118,7 +113,7 @@ const createTableSchema = z
     for (const [_, index] of duplicateIndices.entries()) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Column names must be unique",
+        message: "列名称必须唯一",
         path: ["columns", index, "name"],
       })
     }
@@ -154,7 +149,7 @@ export function CreateTableDialog({
       if (data.columns.length === 0) {
         form.setError("columns", {
           type: "manual",
-          message: "At least one column is required",
+          message: "至少需要一列",
         })
         return
       }
@@ -196,26 +191,25 @@ export function CreateTableDialog({
         ) {
           form.setError("columns", {
             type: "manual",
-            message:
-              "A column name conflicts with a protected column (id, created_at, updated_at).",
+            message: "列名称与受保护的列（id、created_at、updated_at）冲突。",
           })
         } else if (error.status === 409) {
           form.setError("name", {
             type: "manual",
-            message: "A table with this name already exists",
+            message: "已存在同名数据表",
           })
         } else if (detail && error.status !== 500) {
           form.setError("root", { type: "manual", message: detail })
         } else {
           form.setError("root", {
             type: "manual",
-            message: "Failed to create table. Please try again.",
+            message: "创建数据表失败，请重试。",
           })
         }
       } else {
         form.setError("root", {
           type: "manual",
-          message: "Failed to create table. Please try again.",
+          message: "创建数据表失败，请重试。",
         })
         console.error("Error creating table:", error)
       }
@@ -226,9 +220,9 @@ export function CreateTableDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="lg" className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Create table</DialogTitle>
+          <DialogTitle>创建数据表</DialogTitle>
           <DialogDescription>
-            Define your table structure by adding columns and their data types.
+            添加列并设置数据类型，以定义数据表结构。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -243,16 +237,16 @@ export function CreateTableDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter table name..."
+                        placeholder={"输入数据表名称…"}
                         {...field}
                         value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormDescription>
-                      Name of the table. Must be unique within the workspace.
+                      数据表名称，在工作空间内必须唯一。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -264,10 +258,8 @@ export function CreateTableDialog({
                   name="columns"
                   render={() => (
                     <FormItem>
-                      <FormLabel>Columns</FormLabel>
-                      <FormDescription>
-                        Define the columns of the table.
-                      </FormDescription>
+                      <FormLabel>列</FormLabel>
+                      <FormDescription>定义数据表的列。</FormDescription>
                       {fields.map((field, index) => {
                         const columnType = form.watch(`columns.${index}.type`)
                         const requiresOptions =
@@ -283,7 +275,7 @@ export function CreateTableDialog({
                                   <FormItem className="col-span-2">
                                     <FormControl>
                                       <Input
-                                        placeholder="Enter column name..."
+                                        placeholder={"输入列名称…"}
                                         {...field}
                                         value={field.value ?? ""}
                                       />
@@ -303,7 +295,9 @@ export function CreateTableDialog({
                                         onValueChange={field.onChange}
                                       >
                                         <SelectTrigger className="[&>span]:!flex [&>span]:items-center">
-                                          <SelectValue placeholder="Select column type" />
+                                          <SelectValue
+                                            placeholder={"选择列类型"}
+                                          />
                                         </SelectTrigger>
                                         <SelectContent>
                                           {SqlTypeCreatableEnum.map((type) => (
@@ -327,12 +321,12 @@ export function CreateTableDialog({
                                   name={`columns.${index}.options`}
                                   render={({ field }) => (
                                     <FormItem className="col-span-3">
-                                      <FormLabel>Options</FormLabel>
+                                      <FormLabel>选项</FormLabel>
                                       <FormControl>
                                         <MultiTagCommandInput
                                           value={field.value || []}
                                           onChange={field.onChange}
-                                          placeholder="Add allowed values..."
+                                          placeholder={"添加允许的值…"}
                                           allowCustomTags
                                           disableSuggestions
                                           className="w-full"
@@ -340,8 +334,7 @@ export function CreateTableDialog({
                                         />
                                       </FormControl>
                                       <FormDescription className="text-xs">
-                                        Values that will be available when
-                                        inserting rows.
+                                        插入行时可用的值。
                                       </FormDescription>
                                       <FormMessage />
                                     </FormItem>
@@ -359,7 +352,7 @@ export function CreateTableDialog({
                                 }
                               }}
                               disabled={fields.length <= 1}
-                              aria-label="Remove column"
+                              aria-label={"移除列"}
                             >
                               <Trash2Icon className="size-3.5" />
                             </Button>
@@ -380,16 +373,16 @@ export function CreateTableDialog({
                     })
                   }
                   className="space-x-2 text-xs"
-                  aria-label="Add new column"
+                  aria-label={"添加新列"}
                 >
                   <PlusCircle className="mr-2 size-4" />
-                  Add column
+                  添加列
                 </Button>
               </div>
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={createTableIsPending}>
-                Create table
+                创建数据表
               </Button>
             </DialogFooter>
           </form>

@@ -105,7 +105,7 @@ export function useWorkflowSync(workspaceId: string) {
         setPreviewOperationId(operation.id)
       } else {
         if (!prepared.current || prepared.current.key !== key)
-          throw new Error("Preview these changes before applying")
+          throw new Error("请先预览这些更改，再应用")
         const cached = queryClient.getQueryState<SyncOperationRead>([
           "sync-operation",
           workspaceId,
@@ -116,9 +116,7 @@ export function useWorkflowSync(workspaceId: string) {
           expireSyncOperation(cached.data).status !== "ready" ||
           (cached.error && !isTransientSyncError(cached.error))
         ) {
-          throw new Error(
-            "Preview expired or is no longer ready. Preview these changes again before applying."
-          )
+          throw new Error("预览已过期或不再就绪，请重新预览这些更改后再应用。")
         }
         const started = await sendSyncOperationCommand(
           workspaceId,
@@ -134,7 +132,7 @@ export function useWorkflowSync(workspaceId: string) {
       }
       const response = options.dry_run ? operation.preview : operation.result
       if (!response || !("workflows_found" in response))
-        throw new Error(operation.error ?? "Sync did not complete")
+        throw new Error(operation.error ?? "同步未完成")
       return response
     },
     onSuccess: (result) => {
@@ -181,7 +179,7 @@ export function useWorkspaceSyncExport(workspaceId: string) {
         operationId,
       ])
       if (!prepared || expireSyncOperation(prepared).status !== "ready")
-        throw new Error("Preview expired or is no longer ready")
+        throw new Error("预览已过期或不再就绪")
       const started = await sendSyncOperationCommand(
         workspaceId,
         prepared,
@@ -194,7 +192,7 @@ export function useWorkspaceSyncExport(workspaceId: string) {
       const operation = await wait(started.id)
       observeSyncOperation(queryClient, workspaceId, operation)
       if (!operation.result || !("commit" in operation.result))
-        throw new Error(operation.error ?? "Push did not complete")
+        throw new Error(operation.error ?? "推送未完成")
       return operation.result
     },
   })
@@ -223,8 +221,7 @@ export function useWorkspaceSyncExportPreview(
   const [accepted, setAccepted] = useState<{ key: string; id: string }>()
   const creation = useMutation({
     mutationFn: ({ id }: { id: string; key: string }) => {
-      if (!push)
-        throw new Error("Select a target branch and commit message first")
+      if (!push) throw new Error("请先选择目标分支并填写提交信息")
       return workflowsCreateSyncOperation({
         workspaceId,
         requestBody: { id, direction: "push", push, compare_ref: compareRef },
@@ -271,15 +268,13 @@ export function useWorkspaceSyncExportPreview(
 
   let operationError: Error | null = null
   if (operation?.status === "expired") {
-    operationError = new Error(
-      "Preview expired. Refresh the preview before pushing."
-    )
+    operationError = new Error("预览已过期，请刷新预览后再推送。")
   } else if (
     operation?.status === "failed" &&
     // Apply failures belong to the push itself, not the preview.
     !["applying", "finishing"].includes(operation.stage)
   ) {
-    operationError = new Error(operation.error ?? "Preview did not complete")
+    operationError = new Error(operation.error ?? "预览未完成")
   }
 
   return {

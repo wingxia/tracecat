@@ -55,9 +55,9 @@ import { getApiErrorDetail, type TracecatApiError } from "@/lib/errors"
 type PlatformRoleSlug = NonNullable<AdminOrgInvitationCreate["role_slug"]>
 
 const ROLE_OPTIONS: Array<{ label: string; value: PlatformRoleSlug }> = [
-  { label: "Organization owner", value: "organization-owner" },
-  { label: "Organization admin", value: "organization-admin" },
-  { label: "Organization member", value: "organization-member" },
+  { label: "组织所有者", value: "organization-owner" },
+  { label: "组织管理员", value: "organization-admin" },
+  { label: "组织成员", value: "organization-member" },
 ]
 
 function invitationUrl(token: string) {
@@ -124,11 +124,11 @@ export function AdminOrgInvitationsDialog({
   async function copyToClipboard(text: string, description: string) {
     try {
       await navigator.clipboard.writeText(text)
-      toast({ title: "Copied", description })
+      toast({ title: "已复制", description })
     } catch {
       toast({
-        title: "Failed to copy",
-        description: "Clipboard access was denied or is unavailable.",
+        title: "复制失败",
+        description: "剪贴板访问被拒绝或不可用。",
         variant: "destructive",
       })
     }
@@ -137,11 +137,11 @@ export function AdminOrgInvitationsDialog({
   async function copyInvitationLink(invitationId: string) {
     try {
       const { token } = await getInvitationToken(invitationId)
-      await copyToClipboard(invitationUrl(token), "Invitation link copied.")
+      await copyToClipboard(invitationUrl(token), "已复制邀请链接。")
     } catch {
       toast({
-        title: "Failed to copy invitation link",
-        description: "The invitation token could not be loaded.",
+        title: "复制邀请链接失败",
+        description: "无法加载邀请令牌。",
         variant: "destructive",
       })
     }
@@ -156,11 +156,11 @@ export function AdminOrgInvitationsDialog({
       setCreatedToken(invitation.token)
       setEmail("")
       setRoleSlug("organization-owner")
-      toast({ title: "Invitation created", description: invitation.email })
+      toast({ title: "已创建邀请", description: invitation.email })
     } catch {
       toast({
-        title: "Failed to create invitation",
-        description: "Check the email, role, and existing pending invitations.",
+        title: "创建邀请失败",
+        description: "请检查邮箱、角色及现有待处理邀请。",
         variant: "destructive",
       })
     }
@@ -169,18 +169,18 @@ export function AdminOrgInvitationsDialog({
   async function handleResendInvitation(invitation: AdminOrgInvitationRead) {
     try {
       await resendInvitation(invitation.id)
-      toast({ title: "Invitation email queued", description: invitation.email })
+      toast({ title: "邀请邮件已加入发送队列", description: invitation.email })
     } catch (error) {
       const apiError = error as TracecatApiError
       if (apiError.status === 409) {
         toast({
-          title: "You just sent an invitation email",
-          description: "Please try again shortly.",
+          title: "你刚刚发送过邀请邮件",
+          description: "请稍后重试。",
         })
         return
       }
       toast({
-        title: "Failed to resend invitation",
+        title: "重新发送邀请失败",
         description: getApiErrorDetail(apiError) ?? undefined,
         variant: "destructive",
       })
@@ -191,12 +191,11 @@ export function AdminOrgInvitationsDialog({
     if (!revokeTarget) return
     try {
       await revokeInvitation(revokeTarget.id)
-      toast({ title: "Invitation revoked", description: revokeTarget.email })
+      toast({ title: "邀请已撤销", description: revokeTarget.email })
     } catch {
       toast({
-        title: "Failed to revoke invitation",
-        description:
-          "Only pending platform-created invitations can be revoked.",
+        title: "撤销邀请失败",
+        description: "只能撤销由平台创建且尚未处理的邀请。",
         variant: "destructive",
       })
     } finally {
@@ -209,10 +208,8 @@ export function AdminOrgInvitationsDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent size="lg" className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Organization invitations</DialogTitle>
-            <DialogDescription>
-              Create and manage platform-created invitations.
-            </DialogDescription>
+            <DialogTitle>组织邀请</DialogTitle>
+            <DialogDescription>创建和管理由平台发起的邀请。</DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div className="flex flex-col gap-6">
@@ -255,7 +252,7 @@ export function AdminOrgInvitationsDialog({
                     ) : (
                       <PlusIcon data-icon="inline-start" />
                     )}
-                    Create invitation
+                    创建邀请
                   </Button>
                 </div>
 
@@ -275,26 +272,23 @@ export function AdminOrgInvitationsDialog({
                         onClick={() =>
                           copyToClipboard(
                             invitationUrl(createdToken),
-                            "Invitation link copied."
+                            "已复制邀请链接。"
                           )
                         }
                       >
                         <CopyIcon data-icon="inline-start" />
-                        Copy link
+                        复制链接
                       </Button>
                       <Button
                         type="button"
                         variant="outline"
                         size="sm"
                         onClick={() =>
-                          copyToClipboard(
-                            createdToken,
-                            "Invitation token copied."
-                          )
+                          copyToClipboard(createdToken, "已复制邀请令牌。")
                         }
                       >
                         <CopyIcon data-icon="inline-start" />
-                        Copy token
+                        复制令牌
                       </Button>
                     </div>
                   </div>
@@ -305,12 +299,12 @@ export function AdminOrgInvitationsDialog({
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Role</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Expires</TableHead>
+                      <TableHead>邮箱</TableHead>
+                      <TableHead>角色</TableHead>
+                      <TableHead>状态</TableHead>
+                      <TableHead>到期时间</TableHead>
                       <TableHead className="w-[220px] text-right">
-                        Actions
+                        动作
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -321,7 +315,7 @@ export function AdminOrgInvitationsDialog({
                           colSpan={5}
                           className="h-20 text-center text-muted-foreground"
                         >
-                          Loading invitations...
+                          正在加载邀请…
                         </TableCell>
                       </TableRow>
                     ) : invitations.length === 0 ? (
@@ -330,7 +324,7 @@ export function AdminOrgInvitationsDialog({
                           colSpan={5}
                           className="h-20 text-center text-muted-foreground"
                         >
-                          No platform-created invitations
+                          暂无平台创建的邀请
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -346,16 +340,16 @@ export function AdminOrgInvitationsDialog({
                             </Badge>
                             {invitation.last_emailed_at && (
                               <div className="mt-1 text-xs text-muted-foreground">
-                                {`Emailed ${new Date(
+                                {`已向 ${new Date(
                                   invitation.last_emailed_at
-                                ).toLocaleString()}`}
+                                ).toLocaleString("zh-CN")} 发送邮件`}
                               </div>
                             )}
                           </TableCell>
                           <TableCell>
-                            {new Date(
-                              invitation.expires_at
-                            ).toLocaleDateString()}
+                            {new Date(invitation.expires_at).toLocaleDateString(
+                              "zh-CN"
+                            )}
                           </TableCell>
                           <TableCell>
                             <div className="flex justify-end gap-2">
@@ -368,7 +362,7 @@ export function AdminOrgInvitationsDialog({
                                 }
                               >
                                 <CopyIcon data-icon="inline-start" />
-                                Copy link
+                                复制链接
                               </Button>
                               <Button
                                 type="button"
@@ -385,7 +379,7 @@ export function AdminOrgInvitationsDialog({
                                 }
                               >
                                 <EnvelopeClosedIcon data-icon="inline-start" />
-                                Resend
+                                重新发送
                               </Button>
                               <Button
                                 type="button"
@@ -395,7 +389,7 @@ export function AdminOrgInvitationsDialog({
                                 onClick={() => setRevokeTarget(invitation)}
                               >
                                 <TrashIcon data-icon="inline-start" />
-                                Revoke
+                                撤销
                               </Button>
                             </div>
                           </TableCell>
@@ -407,7 +401,7 @@ export function AdminOrgInvitationsDialog({
                 {showPagination && (
                   <div className="flex items-center justify-between border-t px-3 py-2">
                     <span className="text-sm text-muted-foreground">
-                      Page {currentPage + 1}
+                      页 {currentPage + 1}
                     </span>
                     <div className="flex items-center gap-2">
                       <Button
@@ -418,7 +412,7 @@ export function AdminOrgInvitationsDialog({
                         onClick={goToPreviousPage}
                       >
                         <ChevronLeftIcon className="size-4" />
-                        Previous
+                        上一页
                       </Button>
                       <Button
                         type="button"
@@ -427,7 +421,7 @@ export function AdminOrgInvitationsDialog({
                         disabled={!hasNextPage || isLoading}
                         onClick={goToNextPage}
                       >
-                        Next
+                        下一页
                         <ChevronRightIcon className="size-4" />
                       </Button>
                     </div>
@@ -445,20 +439,20 @@ export function AdminOrgInvitationsDialog({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke invitation</AlertDialogTitle>
+            <AlertDialogTitle>撤销邀请</AlertDialogTitle>
             <AlertDialogDescription>
-              Revoke the invitation for {revokeTarget?.email}? This token will
-              no longer allow organization access.
+              撤销此用户的邀请： {revokeTarget?.email}
+              ？此令牌将无法再用于访问组织。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={revokePending}
               onClick={handleRevokeInvitation}
             >
-              Revoke
+              撤销
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -81,22 +81,22 @@ const caseFieldFormSchema = z
     displayName: z
       .string()
       .trim()
-      .min(1, "Field name is required")
-      .max(255, "Field name must be 255 characters or fewer"),
+      .min(1, "字段名称不能为空")
+      .max(255, "字段名称不能超过 255 个字符"),
     reference: z
       .string()
       .trim()
-      .min(1, "Reference is required")
-      .max(100, "Reference must be 100 characters or fewer")
+      .min(1, "引用不能为空")
+      .max(100, "引用不能超过 100 个字符")
       .regex(
         /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-        "Reference must start with a letter or underscore and contain only letters, numbers, and underscores"
+        "引用必须以字母或下划线开头，且只能包含字母、数字和下划线"
       ),
     type: z.enum(SqlTypeCreatableEnum),
     nullable: z.boolean().default(true),
     default: z.string().nullable().optional(),
     defaultMulti: z.array(z.string()).optional(),
-    options: z.array(z.string().min(1, "Option cannot be empty")).optional(),
+    options: z.array(z.string().min(1, "选项不能为空")).optional(),
   })
   .superRefine((data, ctx) => {
     if (isSelectableColumnType(data.type)) {
@@ -104,7 +104,7 @@ const caseFieldFormSchema = z
       if (sanitizedOptions.length === 0) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Please add at least one option",
+          message: "请至少添加一个选项",
           path: ["options"],
         })
       }
@@ -115,7 +115,7 @@ const caseFieldFormSchema = z
           if (!sanitizedOptions.includes(defaultVal)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Default value must be one of the defined options",
+              message: "默认值必须是已定义的选项之一",
               path: ["default"],
             })
           }
@@ -126,7 +126,7 @@ const caseFieldFormSchema = z
           if (!sanitizedOptions.includes(val)) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `"${val}" is not one of the defined options`,
+              message: `“${val}”不在已定义的选项中`,
               path: ["defaultMulti"],
             })
             break
@@ -231,7 +231,7 @@ export function EditCustomFieldDialog({
             if (typeof normalized === "string" && normalized.length === 0) {
               form.setError("default", {
                 type: "manual",
-                message: "Default must be a whole number",
+                message: "默认值必须是整数",
               })
               setIsSubmitting(false)
               return
@@ -241,7 +241,7 @@ export function EditCustomFieldDialog({
             if (!Number.isInteger(parsed)) {
               form.setError("default", {
                 type: "manual",
-                message: "Default must be a whole number",
+                message: "默认值必须是整数",
               })
               setIsSubmitting(false)
               return
@@ -255,7 +255,7 @@ export function EditCustomFieldDialog({
             if (typeof normalized === "string" && normalized.length === 0) {
               form.setError("default", {
                 type: "manual",
-                message: "Default must be a number",
+                message: "默认值必须是数字",
               })
               setIsSubmitting(false)
               return
@@ -265,7 +265,7 @@ export function EditCustomFieldDialog({
             if (Number.isNaN(parsed)) {
               form.setError("default", {
                 type: "manual",
-                message: "Default must be a number",
+                message: "默认值必须是数字",
               })
               setIsSubmitting(false)
               return
@@ -282,7 +282,7 @@ export function EditCustomFieldDialog({
             } else {
               form.setError("default", {
                 type: "manual",
-                message: "Use true, false, 1, or 0",
+                message: "使用 true、false、1 或 0",
               })
               setIsSubmitting(false)
               return
@@ -298,7 +298,7 @@ export function EditCustomFieldDialog({
             if (Number.isNaN(parsed.getTime())) {
               form.setError("default", {
                 type: "manual",
-                message: "Select a valid date and time",
+                message: "选择有效的日期和时间",
               })
               setIsSubmitting(false)
               return
@@ -333,8 +333,8 @@ export function EditCustomFieldDialog({
       await invalidateCaseFieldQueries(queryClient, workspaceId)
 
       toast({
-        title: "Field updated",
-        description: "The case field was updated successfully.",
+        title: "已更新字段",
+        description: "已成功更新事件字段。",
       })
 
       onOpenChange(false)
@@ -345,14 +345,14 @@ export function EditCustomFieldDialog({
         if (apiError.status === 409) {
           form.setError("reference", {
             type: "manual",
-            message: "A field with this reference already exists",
+            message: "已存在相同引用的字段",
           })
           return
         }
       }
       toast({
-        title: "Error updating field",
-        description: "Failed to update the case field. Please try again.",
+        title: "更新字段出错",
+        description: "更新事件字段失败，请重试。",
         variant: "destructive",
       })
     } finally {
@@ -368,10 +368,8 @@ export function EditCustomFieldDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="lg" className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit custom field</DialogTitle>
-          <DialogDescription>
-            Update this custom field for cases.
-          </DialogDescription>
+          <DialogTitle>编辑自定义字段</DialogTitle>
+          <DialogDescription>更新此事件自定义字段。</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -384,13 +382,11 @@ export function EditCustomFieldDialog({
                 name="displayName"
                 render={({ field: fieldInput }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
                       <Input {...fieldInput} />
                     </FormControl>
-                    <FormDescription>
-                      Human-readable label shown throughout the product.
-                    </FormDescription>
+                    <FormDescription>在产品中显示的易读标签。</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -401,13 +397,12 @@ export function EditCustomFieldDialog({
                 name="reference"
                 render={({ field: fieldInput }) => (
                   <FormItem>
-                    <FormLabel>Reference</FormLabel>
+                    <FormLabel>引用</FormLabel>
                     <FormControl>
                       <Input {...fieldInput} className="font-mono" />
                     </FormControl>
                     <FormDescription>
-                      Used in APIs and workflows. Changing it may break existing
-                      references.
+                      用于 API 和工作流，修改可能破坏现有引用。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -425,7 +420,7 @@ export function EditCustomFieldDialog({
                   const Icon = typeConfig?.icon
                   return (
                     <FormItem>
-                      <FormLabel>Data type</FormLabel>
+                      <FormLabel>数据类型</FormLabel>
                       <FormControl>
                         <div className="flex h-10 items-center rounded-md border border-input px-3 text-xs">
                           {field?.kind && Icon ? (
@@ -444,7 +439,7 @@ export function EditCustomFieldDialog({
                         </div>
                       </FormControl>
                       <FormDescription>
-                        Data type is fixed after field creation.
+                        字段创建后无法更改数据类型。
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -458,21 +453,19 @@ export function EditCustomFieldDialog({
                   name="options"
                   render={({ field: fieldInput }) => (
                     <FormItem>
-                      <FormLabel>Options</FormLabel>
+                      <FormLabel>选项</FormLabel>
                       <FormControl>
                         <MultiTagCommandInput
                           value={fieldInput.value || []}
                           onChange={fieldInput.onChange}
-                          placeholder="Add allowed values..."
+                          placeholder={"添加允许的值…"}
                           allowCustomTags
                           disableSuggestions
                           className="w-full"
                           searchKeys={["label"]}
                         />
                       </FormControl>
-                      <FormDescription>
-                        Define the allowed values for this field.
-                      </FormDescription>
+                      <FormDescription>定义此字段允许的值。</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -485,12 +478,12 @@ export function EditCustomFieldDialog({
                   name="defaultMulti"
                   render={({ field: fieldInput }) => (
                     <FormItem>
-                      <FormLabel>Default values (optional)</FormLabel>
+                      <FormLabel>默认值（可选）</FormLabel>
                       <FormControl>
                         <MultiTagCommandInput
                           value={fieldInput.value || []}
                           onChange={fieldInput.onChange}
-                          placeholder="Select default values..."
+                          placeholder={"选择默认值…"}
                           suggestions={sanitizeColumnOptions(
                             form.watch("options")
                           ).map((opt) => ({ id: opt, label: opt, value: opt }))}
@@ -499,7 +492,7 @@ export function EditCustomFieldDialog({
                         />
                       </FormControl>
                       <FormDescription>
-                        Select default values from the options above.
+                        从上述选项中选择默认值。
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -511,7 +504,7 @@ export function EditCustomFieldDialog({
                   name="default"
                   render={({ field: fieldInput }) => (
                     <FormItem>
-                      <FormLabel>Default value (optional)</FormLabel>
+                      <FormLabel>默认值（可选）</FormLabel>
                       <FormControl>
                         <DefaultValueInput
                           type={selectedType}
@@ -530,7 +523,7 @@ export function EditCustomFieldDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={isSubmitting}>
-                Save changes
+                保存更改
               </Button>
             </DialogFooter>
           </form>
@@ -543,17 +536,17 @@ export function EditCustomFieldDialog({
 function getDefaultHelperText(type: SqlTypeCreatable | undefined) {
   switch (type) {
     case "INTEGER":
-      return "Optional whole number that fills in missing values."
+      return "可选的整数，用于填充缺失值。"
     case "NUMERIC":
-      return "Optional numeric value (decimals allowed) used when none is provided."
+      return "未提供值时使用的可选数值，允许小数。"
     case "BOOLEAN":
-      return "Accepts true, false, 1, or 0. Leave blank to omit a default."
+      return "接受 true、false、1 或 0。留空则不设默认值。"
     case "TIMESTAMPTZ":
-      return "Select an ISO8601 date and time (stored in UTC)."
+      return "选择 ISO 8601 日期和时间（以 UTC 存储）。"
     case "SELECT":
-      return "Select a default value from the options above."
+      return "从上述选项中选择默认值。"
     default:
-      return "Optional text used when no value is supplied."
+      return "未提供值时使用的可选文本。"
   }
 }
 
@@ -577,7 +570,7 @@ function DefaultValueInput({
           inputMode="numeric"
           value={field.value ?? ""}
           onChange={(event) => field.onChange(event.target.value)}
-          placeholder="Enter an integer"
+          placeholder={"输入整数"}
         />
       )
     case "NUMERIC":
@@ -587,7 +580,7 @@ function DefaultValueInput({
           inputMode="decimal"
           value={field.value ?? ""}
           onChange={(event) => field.onChange(event.target.value)}
-          placeholder="Enter a number"
+          placeholder={"输入数字"}
         />
       )
     case "BOOLEAN":
@@ -596,7 +589,7 @@ function DefaultValueInput({
           type="text"
           value={field.value ?? ""}
           onChange={(event) => field.onChange(event.target.value)}
-          placeholder="true, false, 1, or 0"
+          placeholder={"true、false、1 或 0"}
         />
       )
     case "TIMESTAMPTZ":
@@ -617,10 +610,10 @@ function DefaultValueInput({
           }
         >
           <SelectTrigger>
-            <SelectValue placeholder="Select a default value" />
+            <SelectValue placeholder={"选择默认值"} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="__none__">No default</SelectItem>
+            <SelectItem value="__none__">无默认值</SelectItem>
             {sanitizedOptions.map((option) => (
               <SelectItem key={option} value={option}>
                 {option}
@@ -635,7 +628,7 @@ function DefaultValueInput({
           type="text"
           value={field.value ?? ""}
           onChange={(event) => field.onChange(event.target.value)}
-          placeholder="Enter default text"
+          placeholder={"输入默认文本"}
         />
       )
   }

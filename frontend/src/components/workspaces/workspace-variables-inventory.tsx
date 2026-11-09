@@ -116,11 +116,11 @@ export function WorkspaceVariablesInventory() {
       key: "environment",
       value: environmentFilter,
       onValueChange: setEnvironmentFilter,
-      placeholder: "Environment",
+      placeholder: "环境",
       allValue: "all",
       widthClassName: "w-[190px]",
       options: [
-        { value: "all", label: "All environments" },
+        { value: "all", label: "所有环境" },
         ...availableEnvironments.map((environment) => ({
           value: environment,
           label: environment,
@@ -137,7 +137,7 @@ export function WorkspaceVariablesInventory() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading variables: ${variablesError?.message || "Variables undefined"}`}
+        message={`加载变量出错：${variablesError?.message || "Variables undefined"}`}
       />
     )
   }
@@ -155,7 +155,7 @@ export function WorkspaceVariablesInventory() {
           <CatalogHeader
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
-            searchPlaceholder="Search variables..."
+            searchPlaceholder={"搜索变量…"}
             selectFilters={selectFilters}
             displayCount={filteredGroups.length}
             countLabel="variables"
@@ -170,14 +170,12 @@ export function WorkspaceVariablesInventory() {
                       <BracketsIcon className="size-5 text-muted-foreground/60" />
                     </EmptyMedia>
                     <EmptyTitle>
-                      {hasActiveFilters
-                        ? "No variables found"
-                        : "No variables yet"}
+                      {hasActiveFilters ? "未找到变量" : "暂无变量"}
                     </EmptyTitle>
                     <EmptyDescription>
                       {hasActiveFilters
-                        ? "No variables found matching your criteria."
-                        : "Create a variable to store reusable values for workflows."}
+                        ? "没有符合条件的变量。"
+                        : "创建变量，为工作流存储可复用的值。"}
                     </EmptyDescription>
                   </EmptyHeader>
                 </Empty>
@@ -216,8 +214,7 @@ export function WorkspaceVariablesInventory() {
                                     </ItemTitle>
                                     <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                                       <span>
-                                        {group.environments.length}{" "}
-                                        environment(s)
+                                        {group.environments.length} 个环境
                                       </span>
                                     </div>
                                   </ItemContent>
@@ -274,7 +271,7 @@ export function WorkspaceVariablesInventory() {
                                                 setSelectedVariable(variable)
                                               }}
                                             >
-                                              Edit
+                                              编辑
                                             </Button>
                                           </EditVariableDialogTrigger>
                                           <DeleteVariableAlertDialogTrigger
@@ -293,7 +290,7 @@ export function WorkspaceVariablesInventory() {
                                                 setSelectedVariable(variable)
                                               }}
                                             >
-                                              Delete
+                                              删除
                                             </Button>
                                           </DeleteVariableAlertDialogTrigger>
                                         </ItemActions>
@@ -333,7 +330,7 @@ export function WorkspaceVariablesInventory() {
                                           )
                                         ) : (
                                           <span className="text-xs text-muted-foreground">
-                                            No values configured.
+                                            尚未配置值。
                                           </span>
                                         )}
                                       </div>

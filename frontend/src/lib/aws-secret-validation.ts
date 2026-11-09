@@ -27,19 +27,19 @@ export function validateAwsRoleArn(value: string): string | null {
     return null
   }
   if (!arn) {
-    return `Enter the IAM role ARN, e.g. ${EXAMPLE_ROLE_ARN}`
+    return `输入 IAM 角色 ARN，例如 ${EXAMPLE_ROLE_ARN}`
   }
   if (/[{}<>]/.test(arn)) {
-    return `Replace the placeholders such as {Account} with real values, e.g. ${EXAMPLE_ROLE_ARN}`
+    return `请将 {Account} 等占位符替换为实际值，例如 ${EXAMPLE_ROLE_ARN}`
   }
   const [prefix, , service, , account, resource] = arn.split(":")
   if (prefix !== "arn" || service !== "iam" || !resource?.startsWith("role/")) {
-    return `Enter an IAM role ARN (not a user, policy, or secret ARN), e.g. ${EXAMPLE_ROLE_ARN}`
+    return `输入 IAM 角色 ARN，而非用户、策略或密钥 ARN，例如 ${EXAMPLE_ROLE_ARN}`
   }
   if (!/^\d{12}$/.test(account ?? "")) {
-    return "The account ID must be exactly 12 digits, e.g. arn:aws:iam::123456789012:role/…"
+    return "账号 ID 必须恰好为 12 位数字，例如 arn:aws:iam::123456789012:role/…"
   }
-  return `Check the role ARN format, e.g. ${EXAMPLE_ROLE_ARN}`
+  return `请检查角色 ARN 格式，例如 ${EXAMPLE_ROLE_ARN}`
 }
 
 /** Explain why a value is not an AWS region code. */
@@ -48,7 +48,7 @@ export function validateAwsRegion(value: string): string | null {
   if (AWS_REGION_REGEX.test(region)) {
     return null
   }
-  return "Enter a region code such as us-east-1 or eu-west-2, not the region display name."
+  return "输入区域代码，如 us-east-1 或 eu-west-2，不要填写区域显示名称。"
 }
 
 /** Explain why a value cannot be used as a `SECRETS.<name>` identifier. */
@@ -57,21 +57,21 @@ export function validateSecretName(value: string): string | null {
     return null
   }
   if (!value) {
-    return "Enter a name, e.g. hello_world"
+    return "输入名称，例如 hello_world"
   }
   if (value.includes(".") || value.startsWith("SECRETS")) {
-    return "Enter only the name, e.g. hello_world, not the full SECRETS.<name>.<key> reference."
+    return "仅输入名称，如 hello_world，不要填写完整的 SECRETS.<name>.<key> 引用。"
   }
   if (value.length > 100) {
-    return "Use 100 characters or fewer."
+    return "最多使用 100 个字符。"
   }
   if (/[A-Z]/.test(value)) {
-    return "Use lowercase letters only, e.g. hello_world"
+    return "仅使用小写字母，例如 hello_world"
   }
   if (/^\d/.test(value)) {
-    return "Start with a letter or underscore, e.g. hello_world"
+    return "以字母或下划线开头，例如 hello_world"
   }
-  return "Use only lowercase letters, digits, and underscores (no spaces or hyphens), e.g. hello_world"
+  return "仅使用小写字母、数字和下划线（不含空格或连字符），例如 hello_world"
 }
 
 /** Explain why a value is not a Secrets Manager secret name or ARN. */
@@ -81,7 +81,7 @@ export function validateAwsSecretId(value: string): string | null {
     secretId.startsWith("arn:") &&
     secretId.length > AWS_SECRET_ID_MAX_LENGTH
   ) {
-    return `Secret ARNs are at most ${AWS_SECRET_ID_MAX_LENGTH} characters.`
+    return `密钥 ARN 最多 ${AWS_SECRET_ID_MAX_LENGTH} 个字符。`
   }
   if (
     AWS_SECRET_ARN_REGEX.test(secretId) ||
@@ -90,15 +90,15 @@ export function validateAwsSecretId(value: string): string | null {
     return null
   }
   if (!secretId) {
-    return "Enter the secret name or ARN, e.g. prod/app/api-key"
+    return "输入密钥名称或 ARN，例如 prod/app/api-key"
   }
   if (secretId.startsWith("arn:")) {
-    return `Enter a full Secrets Manager secret ARN, e.g. ${EXAMPLE_SECRET_ARN}`
+    return `输入完整的 Secrets Manager 密钥 ARN，例如 ${EXAMPLE_SECRET_ARN}`
   }
   if (secretId.length > 512) {
-    return "Secret names are at most 512 characters."
+    return "密钥名称最多 512 个字符。"
   }
-  return "Secret names can only contain letters, digits, and / _ + = . @ - (no spaces), e.g. prod/app/api-key"
+  return "密钥名称只能包含字母、数字和 / _ + = . @ -，不能包含空格，例如 prod/app/api-key"
 }
 
 /** Explain why a value cannot be used as an output key. */
@@ -108,7 +108,7 @@ export function validateSecretKey(value: string): string | null {
     return null
   }
   if (!key) {
-    return "Enter a key name, e.g. API_TOKEN"
+    return "输入键名，例如 API_TOKEN"
   }
-  return "Use letters, digits, and underscores, starting with a letter or underscore, e.g. API_TOKEN"
+  return "使用字母、数字和下划线，并以字母或下划线开头，例如 API_TOKEN"
 }

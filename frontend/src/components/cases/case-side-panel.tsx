@@ -181,7 +181,7 @@ export function CaseSidePanel({
         <DrawerHeader className="flex-row items-center justify-between gap-2 border-b px-3 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <DrawerTitle className="shrink-0 text-xs font-medium text-muted-foreground">
-              {currentCase?.short_id ?? "Case"}
+              {currentCase?.short_id ?? "事件"}
             </DrawerTitle>
             <DrawerDescription className="truncate text-xs text-foreground">
               {currentCase?.summary}
@@ -200,13 +200,13 @@ export function CaseSidePanel({
                     >
                       <Link
                         href={caseHref(workspaceId, caseId)}
-                        aria-label="Open full page"
+                        aria-label={"打开完整页面"}
                       >
                         <Maximize2 className="size-3.5" />
                       </Link>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Open full page</TooltipContent>
+                  <TooltipContent>打开完整页面</TooltipContent>
                 </Tooltip>
               )}
               <DrawerClose
@@ -215,7 +215,7 @@ export function CaseSidePanel({
                     variant="ghost"
                     size="icon"
                     className="size-7"
-                    aria-label="Close side panel"
+                    aria-label={"关闭侧边面板"}
                   />
                 }
               >
@@ -231,18 +231,18 @@ export function CaseSidePanel({
           <span className="flex items-center gap-1 text-xs text-muted-foreground">
             <Kbd>↑</Kbd>
             <Kbd>↓</Kbd>
-            <span>to navigate</span>
+            <span>切换</span>
           </span>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             {foundIndex >= 0 && (
               <span className="tabular-nums">
-                {foundIndex + 1} of {cases.length}
+                {foundIndex + 1} / {cases.length}
                 {hasNextPage ? "+" : ""}
               </span>
             )}
             <span className="flex items-center gap-1">
               <Kbd>Esc</Kbd>
-              <span>to close</span>
+              <span>关闭</span>
             </span>
           </div>
         </DrawerFooter>

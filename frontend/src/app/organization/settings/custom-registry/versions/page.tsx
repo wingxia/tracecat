@@ -21,8 +21,8 @@ export default function CustomRegistryVersionsPage() {
       <OrgRegistryVersionsShell>
         <div className="flex flex-1 items-center justify-center pb-8">
           <EntitlementRequiredEmptyState
-            title="Upgrade required"
-            description="Custom registry versions are unavailable on your current plan."
+            title={"需要升级"}
+            description={"当前套餐不支持自定义注册表版本。"}
           >
             <Button
               variant="link"
@@ -35,7 +35,7 @@ export default function CustomRegistryVersionsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>

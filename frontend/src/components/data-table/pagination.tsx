@@ -73,24 +73,22 @@ export function DataTablePagination<TData>({
       <div className="flex-1 text-xs text-muted-foreground">
         {showSelectedRows ? (
           <p>
-            {table.getFilteredSelectedRowModel().rows.length} of{" "}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {table.getFilteredSelectedRowModel().rows.length} /{" "}
+            {table.getFilteredRowModel().rows.length} 行已选择。
           </p>
         ) : isServerSide &&
           serverSide.startItem &&
           serverSide.endItem &&
           serverSide.totalEstimate ? (
           <p className="text-xs text-muted-foreground">
-            Showing {serverSide.startItem}-{serverSide.endItem} of{" "}
+            显示 {serverSide.startItem}-{serverSide.endItem} /{" "}
             {serverSide.totalEstimate}
           </p>
         ) : null}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-xs font-medium text-foreground/70">
-            Rows per page
-          </p>
+          <p className="text-xs font-medium text-foreground/70">每页行数</p>
           <Select
             value={`${currentPageSize}`}
             onValueChange={(value) => {
@@ -119,14 +117,14 @@ export function DataTablePagination<TData>({
           {isServerSide ? (
             serverSide.totalEstimate ? (
               <span>
-                Page {currentPageIndex + 1} of {totalPages}
+                页 {currentPageIndex + 1} / {totalPages}
               </span>
             ) : (
-              <span>Page {currentPageIndex + 1}</span>
+              <span>页 {currentPageIndex + 1}</span>
             )
           ) : (
             <span>
-              Page {currentPageIndex + 1} of {totalPages}
+              页 {currentPageIndex + 1} / {totalPages}
             </span>
           )}
         </div>
@@ -143,7 +141,7 @@ export function DataTablePagination<TData>({
             }}
             disabled={!canPreviousPage || isLoading}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">前往首页</span>
             <DoubleArrowLeftIcon className="size-4" />
           </Button>
           <Button
@@ -158,7 +156,7 @@ export function DataTablePagination<TData>({
             }}
             disabled={!canPreviousPage || isLoading}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">前往上一页</span>
             <ChevronLeftIcon className="size-4" />
           </Button>
           <Button
@@ -173,7 +171,7 @@ export function DataTablePagination<TData>({
             }}
             disabled={!canNextPage || isLoading}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">前往下一页</span>
             <ChevronRightIcon className="size-4" />
           </Button>
           {!isServerSide && (
@@ -183,7 +181,7 @@ export function DataTablePagination<TData>({
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!canNextPage || isLoading}
             >
-              <span className="sr-only">Go to last page</span>
+              <span className="sr-only">前往末页</span>
               <DoubleArrowRightIcon className="size-4" />
             </Button>
           )}

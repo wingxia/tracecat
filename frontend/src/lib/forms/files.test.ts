@@ -39,9 +39,7 @@ describe("uploadFormFile", () => {
       "This field does not take this type of file"
     )
     upload.mockRejectedValueOnce(new Error("Network Error"))
-    await expect(uploadFormFile({ ...args, file })).rejects.toThrow(
-      "Upload failed"
-    )
+    await expect(uploadFormFile({ ...args, file })).rejects.toThrow("上传失败")
   })
 })
 

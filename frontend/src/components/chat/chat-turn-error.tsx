@@ -5,7 +5,7 @@ import { Action, Actions } from "@/components/ai-elements/actions"
 export function RetryAction({ onRetry }: { onRetry: () => void }) {
   return (
     <Actions className="mt-4">
-      <Action size="sm" onClick={onRetry} label="Retry" tooltip="Retry">
+      <Action size="sm" onClick={onRetry} label={"重试"} tooltip={"重试"}>
         <RefreshCcwIcon className="size-3" />
       </Action>
     </Actions>
@@ -31,10 +31,8 @@ export function TurnErrorLine({
       {dropped ? (
         <p role="alert" className="flex items-center gap-2 text-sm">
           <WifiOffIcon className="size-3.5 shrink-0 text-muted-foreground" />
-          <span className="font-medium">Connection dropped</span>
-          <span className="text-muted-foreground">
-            The reply stopped loading.
-          </span>
+          <span className="font-medium">连接中断</span>
+          <span className="text-muted-foreground">回复已停止加载。</span>
         </p>
       ) : (
         <p

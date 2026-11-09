@@ -18,8 +18,8 @@ export default function SkillTagsPage() {
       <div className="size-full overflow-auto">
         <div className="container flex h-full max-w-[1000px] items-center justify-center py-8">
           <EntitlementRequiredEmptyState
-            title="Enterprise only"
-            description="Skill tags are only available on enterprise plans."
+            title={"仅限企业版"}
+            description={"技能标签仅适用于企业版套餐。"}
           >
             <Button
               variant="link"
@@ -32,7 +32,7 @@ export default function SkillTagsPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>

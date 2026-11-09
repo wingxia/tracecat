@@ -1,6 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import type { BuildEdition } from "@/client"
 import { CenteredSpinner } from "@/components/loading/spinner"
 import { Badge } from "@/components/ui/badge"
@@ -8,7 +9,7 @@ import { siteConfig } from "@/config/site"
 import { useAdminBuildInfo } from "@/hooks/use-admin"
 
 const EDITION_LABELS: Record<BuildEdition, string> = {
-  oss: "Open source",
+  oss: "打开来源",
   ee: "Enterprise",
 }
 
@@ -20,28 +21,26 @@ export function PlatformBuildInfo() {
     return <CenteredSpinner />
   }
   if (buildInfoError || !buildInfo) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        Unable to load build details.
-      </p>
-    )
+    return <p className="text-sm text-muted-foreground">无法加载构建详情。</p>
   }
 
   return (
     <div className="divide-y rounded-lg border">
-      <BuildRow label="Version">
+      <BuildRow label={"版本"}>
         <Badge variant="secondary" className="text-xs text-muted-foreground">
           {buildInfo.version}
         </Badge>
       </BuildRow>
-      <BuildRow label="Edition">{EDITION_LABELS[buildInfo.edition]}</BuildRow>
-      <BuildRow label="Commit">
+      <BuildRow label={"版本类型"}>
+        {EDITION_LABELS[buildInfo.edition]}
+      </BuildRow>
+      <BuildRow label={"提交"}>
         <CommitValue commit={buildInfo.commit} />
       </BuildRow>
-      <BuildRow label="Built">
+      <BuildRow label={"构建时间"}>
         {buildInfo.built_at
-          ? format(new Date(buildInfo.built_at), "PPpp")
-          : "Unknown"}
+          ? format(new Date(buildInfo.built_at), "PPpp", { locale: zhCN })
+          : "未知"}
       </BuildRow>
     </div>
   )
@@ -64,7 +63,7 @@ function BuildRow({
 
 function CommitValue({ commit }: { commit?: string | null }) {
   if (!commit) {
-    return "Unknown"
+    return "未知"
   }
   return (
     <a

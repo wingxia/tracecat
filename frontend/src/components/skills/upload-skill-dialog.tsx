@@ -45,10 +45,9 @@ export function UploadSkillDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>Upload skill</DialogTitle>
+          <DialogTitle>上传技能</DialogTitle>
           <DialogDescription>
-            Upload an existing skill directory containing a SKILL.md file and
-            any bundled resources.
+            上传包含 SKILL.md 文件及附带资源的现有技能目录。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -65,11 +64,9 @@ export function UploadSkillDialog({
           >
             <Upload className="size-6 text-muted-foreground" />
             <div className="space-y-1">
-              <div className="text-sm font-medium">
-                Drop a skill directory here
-              </div>
+              <div className="text-sm font-medium">将技能目录拖放到此处</div>
               <p className="text-xs text-muted-foreground">
-                Or pick a folder from your computer.
+                或从电脑中选择文件夹。
               </p>
             </div>
             <Button
@@ -84,7 +81,7 @@ export function UploadSkillDialog({
               ) : (
                 <Upload className="mr-2 size-4" />
               )}
-              Choose folder
+              选择文件夹
             </Button>
           </div>
 

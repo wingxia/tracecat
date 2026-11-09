@@ -67,13 +67,13 @@ interface CaseDurationsTableProps {
 }
 
 const SELECTION_LABELS: Record<CaseDurationAnchorSelection, string> = {
-  first: "First seen",
-  last: "Last seen",
+  first: "首次出现",
+  last: "最近出现",
 }
 
 const defaultToolbarProps: DataTableToolbarProps<CaseDurationDefinitionRead> = {
   filterProps: {
-    placeholder: "Filter durations...",
+    placeholder: "筛选时长指标…",
     column: "name",
   },
 }
@@ -236,7 +236,7 @@ export function CaseDurationsTable({
             {
               accessorKey: "name",
               header: ({ column }) => (
-                <DataTableColumnHeader column={column} title="Name" />
+                <DataTableColumnHeader column={column} title={"名称"} />
               ),
               cell: ({ row }) => (
                 <div className="flex items-center gap-2 text-xs font-medium text-foreground">
@@ -255,7 +255,7 @@ export function CaseDurationsTable({
                         <button
                           type="button"
                           className="size-5 p-0 text-muted-foreground"
-                          aria-label="View duration description"
+                          aria-label={"查看时长指标描述"}
                         >
                           <Info className="size-3" aria-hidden />
                         </button>
@@ -277,7 +277,7 @@ export function CaseDurationsTable({
             {
               id: "start_anchor",
               header: () => (
-                <span className="text-xs font-semibold">From event</span>
+                <span className="text-xs font-semibold">开始事件</span>
               ),
               cell: ({ row }) => renderAnchor(row.original.start_anchor),
               enableSorting: false,
@@ -290,7 +290,7 @@ export function CaseDurationsTable({
             {
               id: "end_anchor",
               header: () => (
-                <span className="text-xs font-semibold">To event</span>
+                <span className="text-xs font-semibold">结束事件</span>
               ),
               cell: ({ row }) => renderAnchor(row.original.end_anchor),
               enableSorting: false,
@@ -308,7 +308,7 @@ export function CaseDurationsTable({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">打开菜单</span>
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -320,7 +320,7 @@ export function CaseDurationsTable({
                           setIsUpdateDialogOpen(true)
                         }}
                       >
-                        Update duration
+                        更新时长指标
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <AlertDialogTrigger
@@ -332,7 +332,7 @@ export function CaseDurationsTable({
                           disabled={isManaged("case_duration", row.original.id)}
                           onClick={() => setSelectedDuration(row.original)}
                         >
-                          Delete
+                          删除
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     </DropdownMenuContent>
@@ -345,21 +345,21 @@ export function CaseDurationsTable({
         />
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete duration</AlertDialogTitle>
+            <AlertDialogTitle>删除时长指标</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete
+              确定要删除
               {selectedDuration ? (
                 <span className="font-semibold">
                   {` ${selectedDuration.name}`}
                 </span>
               ) : (
-                " this duration"
+                " 此时长指标"
               )}
-              ? This action cannot be undone.
+              吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={isDeleting}
@@ -372,7 +372,7 @@ export function CaseDurationsTable({
                 setSelectedDuration(null)
               }}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

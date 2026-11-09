@@ -374,17 +374,14 @@ export function useCreateAgentPreset(workspaceId: string) {
         queryKey: ["agent-preset-versions", workspaceId, preset.id],
       })
       toast({
-        title: "Agent preset created",
-        description: `Saved ${preset.name}`,
+        title: "已创建智能体预设",
+        description: `已保存 ${preset.name}`,
       })
     },
     onError: (error) => {
-      const detail = getAgentPresetErrorMessage(
-        error,
-        "Failed to create agent preset."
-      )
+      const detail = getAgentPresetErrorMessage(error, "创建智能体预设失败。")
       toast({
-        title: "Create failed",
+        title: "创建失败",
         description: detail,
         variant: "destructive",
       })
@@ -439,17 +436,14 @@ export function useUpdateAgentPreset(workspaceId: string) {
         queryKey: ["agent-providers-status"],
       })
       toast({
-        title: "Agent preset updated",
-        description: `Saved ${preset.name}`,
+        title: "已更新智能体预设",
+        description: `已保存 ${preset.name}`,
       })
     },
     onError: (error) => {
-      const detail = getAgentPresetErrorMessage(
-        error,
-        "Failed to update agent preset."
-      )
+      const detail = getAgentPresetErrorMessage(error, "更新智能体预设失败。")
       toast({
-        title: "Update failed",
+        title: "更新失败",
         description: detail,
         variant: "destructive",
       })
@@ -493,8 +487,8 @@ export function useDeleteAgentPreset(workspaceId: string) {
       })
       const label = variables.presetName ?? variables.presetId
       toast({
-        title: "Agent preset deleted",
-        description: `Removed ${label}`,
+        title: "已删除智能体预设",
+        description: `已移除 ${label}`,
       })
     },
     onError: (error, variables) => {
@@ -503,9 +497,9 @@ export function useDeleteAgentPreset(workspaceId: string) {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to delete agent preset."
+          : "删除智能体预设失败。"
       toast({
-        title: "Delete failed",
+        title: "删除失败",
         description: `${label}: ${detail}`,
         variant: "destructive",
       })
@@ -533,12 +527,12 @@ export function useSetDefaultAgent(workspaceId: string) {
         await queryClient.invalidateQueries({
           queryKey: ["workspace", workspaceId],
         })
-        toast({ title: "Default agent updated" })
+        toast({ title: "已更新默认智能体" })
       },
       onError: () => {
         toast({
-          title: "Could not set default agent",
-          description: "Please try again.",
+          title: "无法设置默认智能体",
+          description: "请重试。",
           variant: "destructive",
         })
       },
@@ -579,17 +573,14 @@ export function useRestoreAgentPresetVersion(workspaceId: string) {
         queryKey: ["agent-directory-items", workspaceId],
       })
       toast({
-        title: "Version restored",
-        description: `${preset.name} now points to the selected version.`,
+        title: "已恢复版本",
+        description: `${preset.name} 现已指向所选版本。`,
       })
     },
     onError: (error) => {
-      const detail = getAgentPresetErrorMessage(
-        error,
-        "Failed to restore preset version."
-      )
+      const detail = getAgentPresetErrorMessage(error, "恢复预设版本失败。")
       toast({
-        title: "Restore failed",
+        title: "恢复失败",
         description: detail,
         variant: "destructive",
       })
@@ -658,8 +649,8 @@ export function useAgentFolders(
       })
       queryClient.invalidateQueries({ queryKey: ["agent-directory-items"] })
       toast({
-        title: "Created folder",
-        description: "Folder created successfully.",
+        title: "已创建文件夹",
+        description: "文件夹创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -667,20 +658,19 @@ export function useAgentFolders(
         case 409:
           console.error("Error creating folder", error)
           return toast({
-            title: "Error creating folder",
-            description:
-              "A folder with this name already exists at this location.",
+            title: "创建文件夹出错",
+            description: "此位置已存在同名文件夹。",
           })
         case 403:
           return toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
         default:
           console.error("Failed to create folder", error)
           return toast({
-            title: "Failed to create folder",
-            description: `An error occurred while creating the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "创建文件夹失败",
+            description: `创建文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -710,8 +700,8 @@ export function useAgentFolders(
       })
       queryClient.invalidateQueries({ queryKey: ["agent-directory-items"] })
       toast({
-        title: "Updated folder",
-        description: "Folder updated successfully.",
+        title: "已更新文件夹",
+        description: "文件夹更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
@@ -719,16 +709,15 @@ export function useAgentFolders(
         case 409:
           console.error("Error updating folder", error)
           toast({
-            title: "Error updating folder",
-            description:
-              "A folder with this name already exists at this location.",
+            title: "更新文件夹出错",
+            description: "此位置已存在同名文件夹。",
           })
           break
         default:
           console.error("Error updating folder", error)
           toast({
-            title: "Error updating folder",
-            description: `An error occurred while updating the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "更新文件夹出错",
+            description: `更新文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
           break
       }
@@ -759,15 +748,15 @@ export function useAgentFolders(
       })
       queryClient.invalidateQueries({ queryKey: ["agent-directory-items"] })
       toast({
-        title: "Moved folder",
-        description: "Folder moved successfully.",
+        title: "已移动文件夹",
+        description: "文件夹移动成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       console.error("Error moving folder", error)
       toast({
-        title: "Error moving folder",
-        description: `An error occurred while moving the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+        title: "移动文件夹出错",
+        description: `移动文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
       })
     },
   })
@@ -796,29 +785,29 @@ export function useAgentFolders(
       })
       queryClient.invalidateQueries({ queryKey: ["agent-directory-items"] })
       toast({
-        title: "Deleted folder",
-        description: "Folder deleted successfully.",
+        title: "已删除文件夹",
+        description: "文件夹删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 400:
           toast({
-            title: "Cannot delete folder",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "无法删除文件夹",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Error deleting folder", error)
           toast({
-            title: "Failed to delete folder",
-            description: `An error occurred while deleting the folder: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "删除文件夹失败",
+            description: `删除文件夹时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
           break
       }
@@ -921,29 +910,29 @@ export function useAgentTagCatalog(
         queryKey: ["agent-directory-items", workspaceId],
       })
       toast({
-        title: "Created agent tag",
-        description: "Agent tag created successfully.",
+        title: "已创建智能体标签",
+        description: "智能体标签创建成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 409:
           toast({
-            title: "Error creating agent tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "创建智能体标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
           console.error("Failed to create agent tag", error)
           toast({
-            title: "Failed to create agent tag",
-            description: `An error occurred while creating the agent tag: ${getApiErrorDetail(error) ?? "Please try again."}`,
+            title: "创建智能体标签失败",
+            description: `创建智能体标签时出错：${getApiErrorDetail(error) ?? "请重试。"}`,
           })
       }
     },
@@ -970,22 +959,22 @@ export function useAgentTagCatalog(
         queryKey: ["agent-directory-items", workspaceId],
       })
       toast({
-        title: "Updated agent tag",
-        description: "Agent tag updated successfully.",
+        title: "已更新智能体标签",
+        description: "智能体标签更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 409:
           toast({
-            title: "Error updating agent tag",
-            description: getApiErrorDetail(error) ?? "Please try again.",
+            title: "更新智能体标签出错",
+            description: getApiErrorDetail(error) ?? "请重试。",
           })
           break
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
       }
@@ -1010,16 +999,16 @@ export function useAgentTagCatalog(
         queryKey: ["agent-directory-items", workspaceId],
       })
       toast({
-        title: "Deleted agent tag",
-        description: "Agent tag deleted successfully.",
+        title: "已删除智能体标签",
+        description: "智能体标签删除成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
       }
@@ -1067,17 +1056,17 @@ export function useMoveAgentPreset(workspaceId: string) {
       })
       queryClient.invalidateQueries({ queryKey: ["agent-directory-items"] })
       toast({
-        title: "Moved agent preset",
-        description: "Agent preset moved successfully.",
+        title: "已移动智能体预设",
+        description: "智能体预设移动成功。",
       })
     },
     onError: (error) => {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to move agent preset."
+          : "移动智能体预设失败。"
       toast({
-        title: "Move failed",
+        title: "移动失败",
         description: detail,
         variant: "destructive",
       })

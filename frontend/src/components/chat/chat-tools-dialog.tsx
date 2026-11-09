@@ -62,7 +62,7 @@ export function ChatToolsDialog({
       <DialogContent
         size="sm"
         className="sm:max-w-[800px]"
-        aria-label="Configure chat tools"
+        aria-label={"配置对话工具"}
       >
         <Form {...form}>
           <form
@@ -89,7 +89,7 @@ export function ChatToolsDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit" disabled={isUpdating}>
-                {isUpdating ? "Saving..." : "Save Tools"}
+                {isUpdating ? "保存中…" : "保存工具"}
               </Button>
             </DialogFooter>
           </form>

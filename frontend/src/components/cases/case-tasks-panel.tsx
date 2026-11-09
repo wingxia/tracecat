@@ -111,9 +111,7 @@ export function CaseTasksPanel({
   if (caseTasksError) {
     return (
       <div className={CASE_TASKS_CONTAINER_CLASS}>
-        <p className="px-3 py-2 text-sm text-muted-foreground">
-          Failed to load tasks
-        </p>
+        <p className="px-3 py-2 text-sm text-muted-foreground">加载任务失败</p>
       </div>
     )
   }

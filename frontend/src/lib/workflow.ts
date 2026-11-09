@@ -44,7 +44,7 @@ export function buildDuplicatedWorkflowDefinition(
     workflow_id: null,
     definition: {
       ...definition.definition,
-      title: `Copy of ${title.trim() || definition.definition.title.trim() || "workflow"}`,
+      title: `${title.trim() || definition.definition.title.trim() || "workflow"} 的副本`,
     },
   }
 }
@@ -71,7 +71,7 @@ export function pruneGraphObject(
 
   // Check that the object at least contains the trigger node
   if (!object.nodes.some((node) => node.type === "trigger")) {
-    throw new Error("Workflow cannot be saved without a trigger node")
+    throw new Error("缺少触发节点，无法保存工作流")
   }
   return object
 }

@@ -47,14 +47,14 @@ export function getProviderCredentialInputs(
   ) {
     return {
       clientId: {
-        label: "Client ID or App ID",
-        description: "Found on the GitHub App's settings page.",
-        placeholder: "Iv23li... or 123456",
+        label: "客户端 ID 或应用 ID",
+        description: "在 GitHub 应用的设置页面查找。",
+        placeholder: "Iv23li… 或 123456",
       },
       clientSecret: {
-        label: "Private key",
+        label: "私钥",
         description:
-          "Paste the private key (.pem) generated on the GitHub App's settings page. Leave blank to keep the existing key.",
+          "粘贴在 GitHub 应用设置页面生成的私钥（.pem）。留空可保留现有密钥。",
         placeholder: "-----BEGIN RSA PRIVATE KEY-----",
         multiline: true,
       },

@@ -106,13 +106,13 @@ export function WorkflowEventsList({
                         onClick={(event) => {
                           event.stopPropagation()
                         }}
-                        aria-label="View subflow run"
+                        aria-label={"查看子工作流运行"}
                       >
                         <Link2Icon className="size-4" />
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent side="top">
-                      <span>View subflow run</span>
+                      <span>查看子工作流运行</span>
                     </TooltipContent>
                   </Tooltip>
                 )}

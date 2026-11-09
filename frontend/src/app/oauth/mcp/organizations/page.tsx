@@ -51,7 +51,7 @@ function getErrorDescription(error: unknown): string {
       return data.error_description
     }
   }
-  return "Something went wrong. Reconnect from your MCP client."
+  return "出现了问题，请从 MCP 客户端重新连接。"
 }
 
 /**
@@ -120,11 +120,11 @@ function McpOrganizationsContent() {
       <Card className="w-full max-w-md">
         <CardHeader className="items-center text-center">
           <AlertCircle className="mb-4 size-12 text-destructive" />
-          <CardTitle>Can&apos;t continue sign-in</CardTitle>
+          <CardTitle>无法继续登录</CardTitle>
           <CardDescription>
             {txnId
               ? getErrorDescription(detailsError)
-              : "This sign-in link is missing its request. Reconnect from your MCP client."}
+              : "此登录链接缺少请求信息，请从 MCP 客户端重新连接。"}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -153,10 +153,9 @@ function McpOrganizationsContent() {
     <Card className="w-full max-w-md">
       <CardHeader className="items-center text-center">
         <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
-        <CardTitle>Choose organizations</CardTitle>
+        <CardTitle>选择组织</CardTitle>
         <CardDescription>
-          Select the organizations this MCP connection can access. The agent
-          acts with your permissions in each one.
+          选择此 MCP 连接可以访问的组织。智能体将使用你在各组织中的权限操作。
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -184,7 +183,7 @@ function McpOrganizationsContent() {
                   </span>
                 </div>
                 {org.id === details.active_organization_id && (
-                  <span className="text-xs text-muted-foreground">Current</span>
+                  <span className="text-xs text-muted-foreground">当前</span>
                 )}
               </label>
             )
@@ -203,10 +202,8 @@ function McpOrganizationsContent() {
           disabled={isSubmitting || selected.size === 0}
         >
           {selected.size === 0
-            ? "Select at least one organization"
-            : `Allow access to ${selected.size} ${
-                selected.size === 1 ? "organization" : "organizations"
-              }`}
+            ? "至少选择一个组织"
+            : `允许访问 ${selected.size} 个${selected.size === 1 ? "组织" : "个组织"}`}
         </Button>
         <Button
           variant="ghost"
@@ -214,7 +211,7 @@ function McpOrganizationsContent() {
           onClick={() => submitMutation.mutate("deny")}
           disabled={isSubmitting}
         >
-          Cancel
+          取消
         </Button>
       </CardFooter>
     </Card>

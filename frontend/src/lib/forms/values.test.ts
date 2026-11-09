@@ -85,8 +85,8 @@ describe("validateFormValues", () => {
     expect(
       validateFormValues(blocks, { agree: false, count: 0, extras: [], quote })
     ).toEqual({
-      extras: "This field is required",
-      quote: "Wait for the uploads to finish",
+      extras: "此字段为必填项",
+      quote: "请等待上传完成",
     })
   })
 })

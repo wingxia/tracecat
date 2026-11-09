@@ -178,8 +178,8 @@ function renderHistory(getDraftPayload: () => AgentPresetCreate | null) {
 }
 
 async function openVersionOneDialog(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: "Versions" }))
-  await user.click(screen.getByText("Version 1"))
+  await user.click(screen.getByRole("button", { name: "版本" }))
+  await user.click(screen.getByText("版本 1"))
   expect(screen.getByRole("alertdialog")).toBeInTheDocument()
 }
 
@@ -201,11 +201,11 @@ describe("AgentPresetVersionHistory", () => {
     expect(items).toHaveLength(2)
     // instructions.md is pinned above config.yaml despite sorting after it.
     expect(items[0]).toHaveTextContent("instructions.md")
-    expect(items[0]).toHaveTextContent("Modified")
+    expect(items[0]).toHaveTextContent("已修改")
     expect(items[1]).toHaveTextContent("config.yaml")
-    expect(items[1]).toHaveTextContent("Modified")
-    expect(within(tree).queryByText("Added")).not.toBeInTheDocument()
-    expect(within(tree).queryByText("Removed")).not.toBeInTheDocument()
+    expect(items[1]).toHaveTextContent("已修改")
+    expect(within(tree).queryByText("已添加")).not.toBeInTheDocument()
+    expect(within(tree).queryByText("已移除")).not.toBeInTheDocument()
   })
 
   it("diffs with the draft as oldValue and the version as newValue", async () => {
@@ -247,9 +247,9 @@ describe("AgentPresetVersionHistory", () => {
 
     const tree = screen.getByRole("tree")
     expect(within(tree).getAllByRole("treeitem")).toHaveLength(2)
-    expect(within(tree).queryByText("Modified")).not.toBeInTheDocument()
-    expect(within(tree).queryByText("Added")).not.toBeInTheDocument()
-    expect(within(tree).queryByText("Removed")).not.toBeInTheDocument()
+    expect(within(tree).queryByText("已修改")).not.toBeInTheDocument()
+    expect(within(tree).queryByText("已添加")).not.toBeInTheDocument()
+    expect(within(tree).queryByText("已移除")).not.toBeInTheDocument()
   })
 
   it("previews current Skill heads instead of historical version pins", async () => {
@@ -309,9 +309,9 @@ describe("AgentPresetVersionHistory", () => {
     const tree = screen.getByRole("tree")
     const items = within(tree).getAllByRole("treeitem")
     expect(items[0]).toHaveTextContent("instructions.md")
-    expect(items[0]).not.toHaveTextContent("Modified")
+    expect(items[0]).not.toHaveTextContent("已修改")
     expect(items[1]).toHaveTextContent("config.yaml")
-    expect(items[1]).not.toHaveTextContent("Modified")
+    expect(items[1]).not.toHaveTextContent("已修改")
   })
 
   it("shows the load-error state and toasts when versions fail to load", async () => {
@@ -324,16 +324,14 @@ describe("AgentPresetVersionHistory", () => {
     const user = userEvent.setup()
     renderHistory(() => buildDraftPayload())
 
-    await user.click(screen.getByRole("button", { name: "Versions" }))
+    await user.click(screen.getByRole("button", { name: "版本" }))
 
-    expect(
-      screen.getByText("Couldn't load version history.")
-    ).toBeInTheDocument()
-    expect(screen.queryByText("No versions yet.")).not.toBeInTheDocument()
+    expect(screen.getByText("无法加载版本历史。")).toBeInTheDocument()
+    expect(screen.queryByText("暂无版本。")).not.toBeInTheDocument()
     // Once per failure, despite the re-renders from opening the dropdown.
     expect(mockToast).toHaveBeenCalledTimes(1)
     expect(mockToast).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Couldn't load version history" })
+      expect.objectContaining({ title: "无法加载版本历史" })
     )
   })
 
@@ -347,12 +345,10 @@ describe("AgentPresetVersionHistory", () => {
     const user = userEvent.setup()
     renderHistory(() => buildDraftPayload())
 
-    await user.click(screen.getByRole("button", { name: "Versions" }))
+    await user.click(screen.getByRole("button", { name: "版本" }))
 
-    expect(screen.getByText("No versions yet.")).toBeInTheDocument()
-    expect(
-      screen.queryByText("Couldn't load version history.")
-    ).not.toBeInTheDocument()
+    expect(screen.getByText("暂无版本。")).toBeInTheDocument()
+    expect(screen.queryByText("无法加载版本历史。")).not.toBeInTheDocument()
     expect(mockToast).not.toHaveBeenCalled()
   })
 
@@ -363,12 +359,10 @@ describe("AgentPresetVersionHistory", () => {
     await openVersionOneDialog(user)
 
     expect(
-      screen.getByText("Fix form errors before comparing versions.")
+      screen.getByText("比较版本前，请先修复表单错误。")
     ).toBeInTheDocument()
     await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "Restore version" })
-      ).toBeDisabled()
+      expect(screen.getByRole("button", { name: "恢复版本" })).toBeDisabled()
     })
     // The whole diff body is replaced by the notice.
     expect(screen.queryByRole("tree")).not.toBeInTheDocument()

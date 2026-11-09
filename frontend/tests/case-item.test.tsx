@@ -117,7 +117,7 @@ describe("CaseItem", () => {
       matched_columns: ["description"],
       excerpts: [source],
     })
-    expect(screen.getByText("Matched description")).toBeInTheDocument()
+    expect(screen.getByText("已匹配 description")).toBeInTheDocument()
     expect(container).toHaveTextContent(source)
     expect(container.querySelector("script")).toBeNull()
     expect(container.querySelector('img[src="x"]')).toBeNull()
@@ -146,10 +146,10 @@ describe("CaseItem", () => {
     expect(container).toHaveTextContent("Time to resolve: 1d")
     expect(screen.getAllByText("Time to resolve")).toHaveLength(2)
     expect(
-      screen.getByText("Duration: 1 day, 4 hours, 4 minutes, 10 seconds")
+      screen.getByText("时长： 1 天，4 小时，4 分钟，10 秒")
     ).toBeInTheDocument()
-    expect(screen.getByText(/Started:/)).toBeInTheDocument()
-    expect(screen.getByText(/Ended:/)).toBeInTheDocument()
+    expect(screen.getByText(/开始：/)).toBeInTheDocument()
+    expect(screen.getByText(/结束：/)).toBeInTheDocument()
     expect(screen.getByText("Analyst verdict")).toBeInTheDocument()
     expect(screen.getByText("Why this matters")).toBeInTheDocument()
   })

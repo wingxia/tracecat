@@ -66,7 +66,7 @@ export function AgentPresetEventLink({
       </Link>
     )
   } else if (presets) {
-    label = <span className="italic">Deleted agent</span>
+    label = <span className="italic">已删除的智能体</span>
   }
 
   return (

@@ -63,15 +63,11 @@ export function CaseTaskWorkflowCommand({
   }
 
   return (
-    <Command aria-label="Set workflow" onKeyDown={handleKeyDown}>
-      <CommandInput
-        autoFocus
-        placeholder="Search workflows…"
-        className="text-xs"
-      />
+    <Command aria-label={"设置工作流"} onKeyDown={handleKeyDown}>
+      <CommandInput autoFocus placeholder={"搜索工作流…"} className="text-xs" />
       <CommandList className="max-h-[min(300px,calc(var(--radix-popper-available-height,100vh)-3rem))]">
         <CommandEmpty className="py-4 text-center text-xs text-muted-foreground">
-          No workflows found.
+          未找到工作流。
         </CommandEmpty>
         <CommandGroup>
           <WorkflowCommandItem
@@ -81,13 +77,13 @@ export function CaseTaskWorkflowCommand({
             icon={
               <CircleSlash className="size-3.5 shrink-0 text-muted-foreground/70" />
             }
-            label="No workflow"
+            label={"无工作流"}
           />
         </CommandGroup>
         {workflows.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Workflows">
+            <CommandGroup heading={"工作流"}>
               {workflows.map((workflow) => (
                 <WorkflowCommandItem
                   key={workflow.id}
@@ -147,7 +143,7 @@ function WorkflowCommandItem({
       />
       {/* cmdk owns `aria-selected` for highlight, so current state rides on
           the accessible name instead. */}
-      {selected && <span className="sr-only">{", current"}</span>}
+      {selected && <span className="sr-only">{"，当前"}</span>}
     </CommandItem>
   )
 }

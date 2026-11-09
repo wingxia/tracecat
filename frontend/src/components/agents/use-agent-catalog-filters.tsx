@@ -113,11 +113,11 @@ export function useAgentCatalogFilterOptions({
     [canReadWorkflows, workflowsByPreset]
   )
 
-  let workflowEmptyMessage = "No workflows run an agent."
+  let workflowEmptyMessage = "没有运行智能体的工作流。"
   if (workflowReferencesIsLoading) {
-    workflowEmptyMessage = "Loading workflows..."
+    workflowEmptyMessage = "正在加载工作流…"
   } else if (workflowReferencesError) {
-    workflowEmptyMessage = "Failed to load workflows."
+    workflowEmptyMessage = "加载工作流失败。"
   }
 
   const filteringByWorkflow = filters.workflowIds.length > 0

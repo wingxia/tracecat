@@ -81,7 +81,7 @@ export function FilterMultiSelect<T extends string>({
   mode,
   onModeChange,
   className,
-  emptyMessage = "No results found.",
+  emptyMessage = "未找到结果。",
   showSort = false,
   sortDescription,
   sortDirection = null,
@@ -140,7 +140,7 @@ export function FilterMultiSelect<T extends string>({
       >
         <div className="flex items-center justify-between border-b px-2 py-1.5">
           <span className="text-[11px] font-medium tracking-wide text-muted-foreground">
-            {modeLabel ?? (mode === "exclude" ? "Excluding" : "Including")}
+            {modeLabel ?? (mode === "exclude" ? "排除" : "包含")}
           </span>
           <div className="flex items-center gap-0.5">
             {(allowExclude
@@ -157,7 +157,7 @@ export function FilterMultiSelect<T extends string>({
                     : "text-muted-foreground hover:bg-muted/50"
                 )}
                 aria-label={
-                  option === "include" ? "Include filters" : "Exclude filters"
+                  option === "include" ? "包含筛选条件" : "排除筛选条件"
                 }
                 onClick={() => onModeChange(option)}
               >
@@ -173,7 +173,7 @@ export function FilterMultiSelect<T extends string>({
         {showSort && (
           <div className="flex items-center justify-between border-b px-2 py-1.5">
             <span className="text-[11px] font-medium tracking-wide text-muted-foreground">
-              Sort
+              排序
             </span>
             <div className="flex items-center gap-0.5">
               <button
@@ -184,7 +184,7 @@ export function FilterMultiSelect<T extends string>({
                     ? "bg-muted text-foreground"
                     : "text-muted-foreground hover:bg-muted/50"
                 )}
-                aria-label="Sort ascending"
+                aria-label={"升序排序"}
                 onClick={() => handleSortClick("asc")}
               >
                 <ArrowUpIcon className="size-3.5" />
@@ -197,7 +197,7 @@ export function FilterMultiSelect<T extends string>({
                     ? "bg-muted text-foreground"
                     : "text-muted-foreground hover:bg-muted/50"
                 )}
-                aria-label="Sort descending"
+                aria-label={"降序排序"}
                 onClick={() => handleSortClick("desc")}
               >
                 <ArrowDownIcon className="size-3.5" />
@@ -212,7 +212,7 @@ export function FilterMultiSelect<T extends string>({
         )}
         <Command>
           <CommandInput
-            placeholder={`Search ${placeholder.toLowerCase()}...`}
+            placeholder={`搜索 ${placeholder.toLowerCase()}…`}
             className="text-xs"
           />
           <CommandList>
@@ -261,7 +261,7 @@ export function FilterMultiSelect<T extends string>({
               className="flex h-7 w-full items-center justify-center gap-1 rounded text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               onClick={() => onChange([])}
             >
-              Clear selection
+              清除选择
               <Cross2Icon className="size-3" />
             </button>
           </div>

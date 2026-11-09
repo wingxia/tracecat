@@ -62,7 +62,7 @@ export function VersionDiffBody({
   if (!selectedPath) {
     diffContent = (
       <div className="flex h-full items-center justify-center px-4 text-sm text-muted-foreground">
-        Select a file to compare.
+        选择文件以比较。
       </div>
     )
   } else if (diff && diff.path === selectedPath) {
@@ -79,7 +79,7 @@ export function VersionDiffBody({
     diffContent = (
       <div className="flex h-full items-center justify-center gap-2 text-sm text-muted-foreground">
         <Loader2 className="size-4 animate-spin" />
-        Loading diff…
+        正在加载差异…
       </div>
     )
   }
@@ -98,7 +98,7 @@ export function VersionDiffBody({
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <div className="flex items-center justify-between gap-2 border-b px-3 py-2">
             <div className="truncate text-xs font-medium">
-              {selectedPath ?? "Select a file"}
+              {selectedPath ?? "选择文件"}
             </div>
             <div className="shrink-0 text-xs text-muted-foreground">
               {`${draftLabel} → ${versionLabel}`}

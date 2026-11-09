@@ -89,7 +89,7 @@ function notFound(): ApiError {
       ok: false,
       status: 404,
       statusText: "Not Found",
-      body: { detail: "Resource not found" },
+      body: { detail: "未找到资源" },
     },
     "Not Found"
   )
@@ -124,9 +124,9 @@ afterEach(() => {
 async function submitEmail(email: string) {
   const user = userEvent.setup()
   render(<AddWorkspaceMember workspace={WORKSPACE} />)
-  await user.click(screen.getByRole("button", { name: /Add member/ }))
+  await user.click(screen.getByRole("button", { name: /添加成员/ }))
   await user.type(screen.getByPlaceholderText("user@example.com"), email)
-  const buttons = screen.getAllByRole("button", { name: /Add member/ })
+  const buttons = screen.getAllByRole("button", { name: /添加成员/ })
   await user.click(buttons[buttons.length - 1])
 }
 
@@ -136,7 +136,7 @@ describe("AddWorkspaceMember", () => {
     const user = userEvent.setup()
     render(<AddWorkspaceMember workspace={WORKSPACE} />)
 
-    await user.click(screen.getByRole("button", { name: /Add member/ }))
+    await user.click(screen.getByRole("button", { name: /添加成员/ }))
 
     expect(mockToast).toHaveBeenCalledTimes(1)
     expect(mockToast.mock.calls[0][0]).not.toHaveProperty("variant")
@@ -200,9 +200,7 @@ describe("AddWorkspaceMember", () => {
 
     await submitEmail("new@b.com")
 
-    expect(
-      await screen.findByText(/Ask an organization admin to invite them/)
-    ).toBeInTheDocument()
+    expect(await screen.findByText(/请联系组织管理员邀请/)).toBeInTheDocument()
     expect(inviteMember).not.toHaveBeenCalled()
   })
 })

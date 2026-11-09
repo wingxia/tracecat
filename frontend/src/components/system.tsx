@@ -10,18 +10,17 @@ type SystemMessageKind = (typeof SYSTEM_MSG_KINDS)[number]
 const SYSTEM_MSG_MAP: Record<SystemMessageKind, React.ReactNode> = {
   "beta-ee-contact-us": (
     <>
-      This feature is in Beta and may be promoted to an enterprise-only feature.
-      Please{" "}
+      此功能处于测试阶段，未来可能调整为企业版专属功能。请{" "}
       <a
         href={CONTACT_US_URL}
         target="_blank"
         rel="noopener noreferrer"
         className="underline hover:text-sky-800 dark:hover:text-sky-100 inline-flex items-center gap-1"
       >
-        contact us
+        联系我们
         <ExternalLink className="size-3 inline-block" />
       </a>{" "}
-      for more information.
+      了解更多信息。
     </>
   ),
 }

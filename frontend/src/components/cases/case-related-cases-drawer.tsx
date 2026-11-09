@@ -83,8 +83,8 @@ export function CaseRelatedCasesDrawer({
       onOpenChange={(open) => {
         if (!open) onClose()
       }}
-      title="Related cases"
-      description="Cases related to selected linked row"
+      title={"相关事件"}
+      description={"与所选关联行相关的事件"}
       size="wide"
     >
       {target && (
@@ -156,14 +156,12 @@ function RelatedCasesList({
     )
   } else if (linkedCasesError) {
     body = (
-      <p className="p-4 text-sm text-muted-foreground">
-        Failed to load related cases.
-      </p>
+      <p className="p-4 text-sm text-muted-foreground">加载相关事件失败。</p>
     )
   } else if (linkedCases.length === 0) {
     body = (
       <p className="p-4 text-sm text-muted-foreground">
-        No other cases link this row.
+        没有其他事件关联此行。
       </p>
     )
   } else {
@@ -210,7 +208,7 @@ function RelatedCasesList({
               onClick={() => fetchNextPage()}
             >
               {isFetchingNextPage && <Spinner className="mr-1 size-3" />}
-              Load more
+              加载更多
             </Button>
           </div>
         )}
@@ -222,7 +220,7 @@ function RelatedCasesList({
     <div className="h-full overflow-y-auto">
       <section className="border-b px-4 py-3">
         <h3 className="mb-2 text-xs font-medium text-muted-foreground">
-          Linked row{target.tableName ? ` in ${target.tableName}` : ""}
+          关联行{target.tableName ? `，位于 ${target.tableName}` : ""}
         </h3>
         <div className="max-h-72 overflow-y-auto">
           <JsonViewWithControls
@@ -233,7 +231,7 @@ function RelatedCasesList({
         </div>
       </section>
       <h3 className="px-4 pb-1 pt-3 text-xs font-medium text-muted-foreground">
-        Cases
+        事件
       </h3>
       {body}
     </div>
@@ -368,7 +366,7 @@ function EmptyValue() {
 
 function formatTimestamp(timestamp: string): string {
   const date = new Date(timestamp)
-  return Number.isNaN(date.getTime()) ? timestamp : date.toLocaleString()
+  return Number.isNaN(date.getTime()) ? timestamp : date.toLocaleString("zh-CN")
 }
 
 /**
@@ -415,7 +413,7 @@ export function CasePropertiesCard({
               target="_blank"
               rel="noopener noreferrer"
             >
-              Open case
+              打开事件
               <ExternalLink className="size-3" />
             </a>
           </Button>
@@ -423,28 +421,28 @@ export function CasePropertiesCard({
         <p className="line-clamp-2 text-sm font-medium">{caseData.summary}</p>
       </div>
       <div className="px-4 py-2">
-        <PropertyRow label="Status">
+        <PropertyRow label={"状态"}>
           {status ? (
             <CaseBadge {...status} className={BADGE_CLASS} />
           ) : (
             caseData.status
           )}
         </PropertyRow>
-        <PropertyRow label="Priority">
+        <PropertyRow label={"优先级"}>
           {priority ? (
             <CaseBadge {...priority} className={BADGE_CLASS} />
           ) : (
             caseData.priority
           )}
         </PropertyRow>
-        <PropertyRow label="Severity">
+        <PropertyRow label={"严重程度"}>
           {severity ? (
             <CaseBadge {...severity} className={BADGE_CLASS} />
           ) : (
             caseData.severity
           )}
         </PropertyRow>
-        <PropertyRow label="Assignee">
+        <PropertyRow label={"负责人"}>
           {caseData.assignee ? (
             <span className="truncate">
               {getDisplayName(caseData.assignee)}
@@ -453,7 +451,7 @@ export function CasePropertiesCard({
             <EmptyValue />
           )}
         </PropertyRow>
-        <PropertyRow label="Tags">
+        <PropertyRow label={"标签"}>
           {caseTags.length > 0 ? (
             caseTags.map((tag) => (
               <CaseColumnBadge
@@ -467,15 +465,15 @@ export function CasePropertiesCard({
             <EmptyValue />
           )}
         </PropertyRow>
-        <PropertyRow label="Tasks">
+        <PropertyRow label={"任务"}>
           <span className="tabular-nums">
             {caseData.num_tasks_completed}/{caseData.num_tasks_total}
           </span>
         </PropertyRow>
-        <PropertyRow label="Created">
+        <PropertyRow label={"创建时间"}>
           {formatTimestamp(caseData.created_at)}
         </PropertyRow>
-        <PropertyRow label="Updated">
+        <PropertyRow label={"更新时间"}>
           {formatTimestamp(caseData.updated_at)}
         </PropertyRow>
       </div>
@@ -508,12 +506,10 @@ export function CasePropertiesCard({
           </div>
         ) : caseDataError ? (
           <p className="py-1 text-xs text-muted-foreground">
-            Failed to load custom fields.
+            加载自定义字段失败。
           </p>
         ) : customFields.length === 0 ? (
-          <p className="py-1 text-xs text-muted-foreground">
-            No custom fields.
-          </p>
+          <p className="py-1 text-xs text-muted-foreground">暂无自定义字段。</p>
         ) : (
           customFields.map((field) => (
             <PropertyRow key={field.id} label={field.display_name}>

@@ -56,7 +56,7 @@ const awsReferenceSchema = z
     name: z.string().superRefine(refineWith(validateSecretName)),
     description: z.string().max(255).default(""),
     environment: z.string().default(""),
-    store_id: z.string().min(1, "Select an authorized store"),
+    store_id: z.string().min(1, "选择已授权的存储"),
     remote_reference: z.string().superRefine(refineWith(validateAwsSecretId)),
     mode: z.enum(["whole_string", "json"]),
     whole_string_key: z.string().default(""),
@@ -85,7 +85,7 @@ const awsReferenceSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["fields"],
-        message: "Add at least one JSON field to read from the secret.",
+        message: "至少添加一个要从密钥中读取的 JSON 字段。",
       })
     }
     const seen = new Set<string>()
@@ -103,14 +103,14 @@ const awsReferenceSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["fields", index, "field"],
-          message: "Enter the top-level JSON field to read, e.g. api_key",
+          message: "输入要读取的顶层 JSON 字段，如 api_key",
         })
       }
       if (key && seen.has(key)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["fields", index, "key"],
-          message: `Output key ${key} is already used. Each key must be unique.`,
+          message: `输出键 ${key} 已被使用，每个键必须唯一。`,
         })
       }
       seen.add(key)
@@ -235,10 +235,8 @@ export function AwsSecretReferenceForm({
         <DialogBody>
           {!storeControlled && storesError && (
             <Alert variant="destructive">
-              <AlertTitle>Could not load secret stores</AlertTitle>
-              <AlertDescription>
-                Close and reopen this form to try again.
-              </AlertDescription>
+              <AlertTitle>无法加载密钥存储</AlertTitle>
+              <AlertDescription>请关闭后重新打开表单以重试。</AlertDescription>
             </Alert>
           )}
           {!storeControlled &&
@@ -247,11 +245,10 @@ export function AwsSecretReferenceForm({
             availableStores.length === 0 && (
               <Alert>
                 <CloudIcon className="size-4" />
-                <AlertTitle>No authorized AWS stores</AlertTitle>
+                <AlertTitle>暂无已授权的 AWS 存储</AlertTitle>
                 <AlertDescription>
-                  An organization admin must add an AWS Secrets Manager store
-                  and authorize this workspace before you can reference secrets
-                  from it.
+                  组织管理员必须先添加 AWS Secrets Manager
+                  存储并授权此工作空间，才能引用其中的密钥。
                 </AlertDescription>
               </Alert>
             )}
@@ -260,9 +257,9 @@ export function AwsSecretReferenceForm({
             name="name"
             render={() => (
               <FormItem>
-                <FormLabel className="text-sm">Name</FormLabel>
+                <FormLabel className="text-sm">名称</FormLabel>
                 <FormDescription className="text-sm">
-                  Referenced as{" "}
+                  引用方式{" "}
                   <code>
                     SECRETS.
                     {validateSecretName(name) ? "<name>" : name}
@@ -286,11 +283,11 @@ export function AwsSecretReferenceForm({
             name="description"
             render={() => (
               <FormItem>
-                <FormLabel className="text-sm">Description</FormLabel>
+                <FormLabel className="text-sm">描述</FormLabel>
                 <FormControl>
                   <Input
                     className="text-sm"
-                    placeholder="Description"
+                    placeholder={"描述"}
                     readOnly={referenceOnly}
                     {...register("description")}
                   />
@@ -304,11 +301,11 @@ export function AwsSecretReferenceForm({
             name="environment"
             render={() => (
               <FormItem>
-                <FormLabel className="text-sm">Environment</FormLabel>
+                <FormLabel className="text-sm">环境</FormLabel>
                 <FormControl>
                   <Input
                     className="text-sm"
-                    placeholder='Default environment: "default"'
+                    placeholder={"默认环境：“default”"}
                     readOnly={referenceOnly}
                     {...register("environment")}
                   />
@@ -323,9 +320,9 @@ export function AwsSecretReferenceForm({
               name="store_id"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm">AWS secret store</FormLabel>
+                  <FormLabel className="text-sm">AWS 密钥存储</FormLabel>
                   <FormDescription className="text-sm">
-                    Only stores authorized for this workspace are listed.
+                    仅列出已授权给此工作空间的存储。
                   </FormDescription>
                   <Select
                     onValueChange={field.onChange}
@@ -334,7 +331,7 @@ export function AwsSecretReferenceForm({
                   >
                     <FormControl>
                       <SelectTrigger className="text-sm">
-                        <SelectValue placeholder="Select a store" />
+                        <SelectValue placeholder={"选择存储"} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -358,10 +355,9 @@ export function AwsSecretReferenceForm({
             name="remote_reference"
             render={() => (
               <FormItem>
-                <FormLabel className="text-sm">Secret name or ARN</FormLabel>
+                <FormLabel className="text-sm">密钥名称或 ARN</FormLabel>
                 <FormDescription className="text-sm">
-                  The secret name as shown in the AWS console (looked up in the
-                  store's region) or its full ARN.
+                  AWS 控制台中显示的密钥名称（在存储所在区域查找）或完整 ARN。
                 </FormDescription>
                 <FormControl>
                   <Input
@@ -379,9 +375,9 @@ export function AwsSecretReferenceForm({
             name="mode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-sm">Value mapping</FormLabel>
+                <FormLabel className="text-sm">值映射</FormLabel>
                 <FormDescription className="text-sm">
-                  How the remote SecretString maps onto secret keys.
+                  将远程 SecretString 映射为密钥字段的方式。
                 </FormDescription>
                 <Select
                   onValueChange={field.onChange}
@@ -395,11 +391,9 @@ export function AwsSecretReferenceForm({
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="whole_string">
-                      Whole string → one key
+                      完整字符串 → 一个键
                     </SelectItem>
-                    <SelectItem value="json">
-                      JSON object → selected fields
-                    </SelectItem>
+                    <SelectItem value="json">JSON 对象 → 所选字段</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -412,7 +406,7 @@ export function AwsSecretReferenceForm({
               name="whole_string_key"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-sm">Output key</FormLabel>
+                  <FormLabel className="text-sm">输出键</FormLabel>
                   <FormControl>
                     <Input
                       className="text-sm"
@@ -432,9 +426,9 @@ export function AwsSecretReferenceForm({
               name="fields"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-sm">JSON fields</FormLabel>
+                  <FormLabel className="text-sm">JSON 字段</FormLabel>
                   <FormDescription className="text-sm">
-                    Map top-level string fields to output keys.
+                    将顶层字符串字段映射到输出键。
                   </FormDescription>
                   <div className="space-y-2">
                     {fields.map((entry, index) => (
@@ -447,7 +441,7 @@ export function AwsSecretReferenceForm({
                               <FormControl>
                                 <Input
                                   className="text-sm"
-                                  placeholder="Output key"
+                                  placeholder={"输出键"}
                                   readOnly={referenceOnly}
                                   {...register(`fields.${index}.key`)}
                                 />
@@ -464,7 +458,7 @@ export function AwsSecretReferenceForm({
                               <FormControl>
                                 <Input
                                   className="text-sm"
-                                  placeholder="JSON field"
+                                  placeholder={"JSON 字段"}
                                   readOnly={referenceOnly}
                                   {...register(`fields.${index}.field`)}
                                 />
@@ -477,7 +471,7 @@ export function AwsSecretReferenceForm({
                           type="button"
                           variant="ghost"
                           size="icon"
-                          aria-label="Remove field"
+                          aria-label={"移除字段"}
                           disabled={referenceOnly}
                           onClick={() => remove(index)}
                         >
@@ -494,7 +488,7 @@ export function AwsSecretReferenceForm({
                     onClick={() => append({ key: "", field: "" })}
                   >
                     <PlusCircle className="mr-2 size-4" />
-                    Add field
+                    添加字段
                   </Button>
                   <FormMessage />
                 </FormItem>
@@ -514,7 +508,7 @@ export function AwsSecretReferenceForm({
             }
           >
             <CloudIcon className="mr-2 size-4" />
-            {secret ? "Save changes" : "Save reference"}
+            {secret ? "保存更改" : "保存引用"}
           </Button>
         </DialogFooter>
       </form>

@@ -133,14 +133,12 @@ describe("SettingsModal workspace navigation", () => {
     expect(mockUseUserScopes).toHaveBeenCalledWith("workspace-123", {
       enabled: true,
     })
-    expect(screen.getByRole("button", { name: "General" })).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Workflows" })
-    ).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Files" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "常规" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "工作流" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "文件" })).toBeInTheDocument()
     // Git sync lives on its own workspace page, not in settings.
     expect(
-      screen.queryByRole("button", { name: /git sync/i })
+      screen.queryByRole("button", { name: /Git 同步/i })
     ).not.toBeInTheDocument()
   })
 
@@ -153,16 +151,16 @@ describe("SettingsModal workspace navigation", () => {
       enabled: true,
     })
     expect(
-      screen.queryByRole("button", { name: "General" })
+      screen.queryByRole("button", { name: "常规" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Workflows" })
+      screen.queryByRole("button", { name: "工作流" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Files" })
+      screen.queryByRole("button", { name: "文件" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /git sync/i })
+      screen.queryByRole("button", { name: /Git 同步/i })
     ).not.toBeInTheDocument()
     expect(screen.getByText("Profile content")).toBeInTheDocument()
   })
@@ -177,16 +175,16 @@ describe("SettingsModal workspace navigation", () => {
       enabled: false,
     })
     expect(
-      screen.queryByRole("button", { name: "General" })
+      screen.queryByRole("button", { name: "常规" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Workflows" })
+      screen.queryByRole("button", { name: "工作流" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Files" })
+      screen.queryByRole("button", { name: "文件" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: /git sync/i })
+      screen.queryByRole("button", { name: /Git 同步/i })
     ).not.toBeInTheDocument()
     expect(screen.getByText("Profile content")).toBeInTheDocument()
   })
@@ -206,9 +204,7 @@ describe("SettingsModal workspace navigation", () => {
         enabled: true,
       })
       expect(mockClearLastWorkspaceId).toHaveBeenCalled()
-      expect(
-        screen.getByRole("button", { name: "General" })
-      ).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: "常规" })).toBeInTheDocument()
     })
   })
 
@@ -233,9 +229,7 @@ describe("SettingsModal workspace navigation", () => {
       expect(mockUseUserScopes).toHaveBeenCalledWith("workspace-admin", {
         enabled: true,
       })
-      expect(
-        screen.getByRole("button", { name: "General" })
-      ).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: "常规" })).toBeInTheDocument()
     })
   })
 

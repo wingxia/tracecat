@@ -89,7 +89,7 @@ describe.each([
     expect(fieldRows(container)).toHaveLength(expectedRows)
     expect(
       screen.getByRole("button", {
-        name: showAll ? "Hide empty fields" : "View all fields",
+        name: showAll ? "隐藏空字段" : "查看所有字段",
       })
     ).toBeInTheDocument()
   })
@@ -139,7 +139,7 @@ describe.each([
         /^clear/i.test(button.getAttribute("aria-label") ?? "")
       )
       for (const button of clearButtons) {
-        expect(button.getAttribute("aria-label")).toMatch(/^Clear \w+ field$/)
+        expect(button.getAttribute("aria-label")).toMatch(/^清除 \\w\+ 字段$/)
         expect(row.firstElementChild).not.toBe(button)
         expect(row.firstElementChild?.contains(button)).toBe(false)
       }
@@ -154,7 +154,7 @@ describe("CasePanelFieldsGroup clear affordance placement", () => {
     renderGroup(true)
 
     expect(
-      screen.queryByRole("button", { name: "Clear verdict field" })
+      screen.queryByRole("button", { name: "清除 verdict 字段" })
     ).not.toBeInTheDocument()
   })
 })
@@ -175,9 +175,9 @@ describe("CasePanelFieldsGroup empty state", () => {
       />
     )
 
-    expect(screen.getByText("No custom fields configured")).toBeInTheDocument()
+    expect(screen.getByText("尚未配置自定义字段")).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "View all fields" })
+      screen.queryByRole("button", { name: "查看所有字段" })
     ).not.toBeInTheDocument()
   })
 })

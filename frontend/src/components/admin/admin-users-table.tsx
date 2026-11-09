@@ -59,10 +59,10 @@ import { useAuth } from "@/hooks/use-auth"
 import { getRelativeTime } from "@/lib/event-history"
 
 const createUserFormSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(12, "Password must be at least 12 characters long"),
-  firstName: z.string().max(255, "First name is too long"),
-  lastName: z.string().max(255, "Last name is too long"),
+  email: z.string().email("邮箱地址无效"),
+  password: z.string().min(12, "密码至少需要 12 个字符"),
+  firstName: z.string().max(255, "名字过长"),
+  lastName: z.string().max(255, "姓氏过长"),
   isSuperuser: z.boolean(),
 })
 
@@ -71,10 +71,10 @@ type CreateUserFormValues = z.infer<typeof createUserFormSchema>
 type UserActionType = "promote" | "demote" | "delete" | "reset-mfa"
 
 const USER_ACTION_CONFIRM_LABELS: Record<UserActionType, string> = {
-  promote: "Promote",
+  promote: "提升",
   demote: "Demote",
-  delete: "Delete",
-  "reset-mfa": "Reset security keys",
+  delete: "删除",
+  "reset-mfa": "重置安全密钥",
 }
 
 export function AdminUsersTable() {
@@ -124,13 +124,13 @@ export function AdminUsersTable() {
         is_superuser: values.isSuperuser,
       })
       toast({
-        title: "User created",
-        description: `${values.email} was created successfully.`,
+        title: "已创建用户",
+        description: `已成功创建 ${values.email}。`,
       })
       createUserForm.reset()
       setIsCreateDialogOpen(false)
     } catch (error) {
-      let description = "Failed to create user. Please try again."
+      let description = "创建用户失败，请重试。"
       if (error instanceof ApiError) {
         const body = error.body as { detail?: unknown }
         if (typeof body.detail === "string") {
@@ -139,7 +139,7 @@ export function AdminUsersTable() {
       }
       console.error("Failed to create user", error)
       toast({
-        title: "Create user failed",
+        title: "创建用户失败",
         description,
         variant: "destructive",
       })
@@ -159,30 +159,30 @@ export function AdminUsersTable() {
       if (actionType === "promote") {
         await promoteToSuperuser(selectedUser.id)
         toast({
-          title: "User promoted",
-          description: `${selectedUser.email} is now a superuser.`,
+          title: "已提升用户权限",
+          description: `${selectedUser.email} 现为超级用户。`,
         })
       } else if (actionType === "demote") {
         await demoteFromSuperuser(selectedUser.id)
         toast({
-          title: "User demoted",
-          description: `${selectedUser.email} is no longer a superuser.`,
+          title: "已降低用户权限",
+          description: `${selectedUser.email} 不再是超级用户。`,
         })
       } else if (actionType === "reset-mfa") {
         await resetUserMfa(selectedUser.id)
         toast({
-          title: "Security keys reset",
-          description: `${selectedUser.email} must register a new key if MFA is required.`,
+          title: "已重置安全密钥",
+          description: `如果要求多因素认证，${selectedUser.email} 必须注册新密钥。`,
         })
       } else {
         await deleteUser(selectedUser.id)
         toast({
-          title: "User deleted",
-          description: `${selectedUser.email} was deleted and sessions were revoked.`,
+          title: "已删除用户",
+          description: `已删除 ${selectedUser.email} 并撤销其会话。`,
         })
       }
     } catch (error) {
-      let description = `Failed to ${actionType} user. Please try again.`
+      let description = `用户操作失败（${actionType}），请重试。`
       if (error instanceof ApiError) {
         const body = error.body as { detail?: unknown }
         if (typeof body.detail === "string") {
@@ -191,7 +191,7 @@ export function AdminUsersTable() {
       }
       console.error(`Failed to ${actionType} user`, error)
       toast({
-        title: "Action failed",
+        title: "操作失败",
         description,
         variant: "destructive",
       })
@@ -217,14 +217,14 @@ export function AdminUsersTable() {
           <DialogTrigger asChild>
             <Button size="sm">
               <PlusIcon className="mr-2 size-4" />
-              Create user
+              创建用户
             </Button>
           </DialogTrigger>
           <DialogContent size="md">
             <DialogHeader>
-              <DialogTitle>Create user</DialogTitle>
+              <DialogTitle>创建用户</DialogTitle>
               <DialogDescription>
-                Create a platform user without adding them to an organization.
+                创建平台用户，暂不将其加入组织。
               </DialogDescription>
             </DialogHeader>
             <Form {...createUserForm}>
@@ -238,7 +238,7 @@ export function AdminUsersTable() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>邮箱</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="user@example.com"
@@ -255,7 +255,7 @@ export function AdminUsersTable() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>密码</FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -264,7 +264,7 @@ export function AdminUsersTable() {
                           />
                         </FormControl>
                         <FormDescription>
-                          Minimum 12 characters. This is the initial password.
+                          初始密码至少需要 12 个字符。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -276,9 +276,9 @@ export function AdminUsersTable() {
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>First name</FormLabel>
+                          <FormLabel>名</FormLabel>
                           <FormControl>
-                            <Input placeholder="Jane" {...field} />
+                            <Input placeholder={"小明"} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -289,9 +289,9 @@ export function AdminUsersTable() {
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Last name</FormLabel>
+                          <FormLabel>姓</FormLabel>
                           <FormControl>
-                            <Input placeholder="Doe" {...field} />
+                            <Input placeholder={"张"} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -310,9 +310,9 @@ export function AdminUsersTable() {
                           />
                         </FormControl>
                         <div className="space-y-1 leading-none">
-                          <FormLabel>Grant superuser access</FormLabel>
+                          <FormLabel>授予超级用户权限</FormLabel>
                           <FormDescription>
-                            Superusers can access all platform admin functions.
+                            超级用户可以访问所有平台管理功能。
                           </FormDescription>
                         </div>
                       </FormItem>
@@ -321,7 +321,7 @@ export function AdminUsersTable() {
                 </DialogBody>
                 <DialogFooter>
                   <Button size="sm" type="submit" disabled={createPending}>
-                    {createPending ? "Creating..." : "Create user"}
+                    {createPending ? "创建中…" : "创建用户"}
                   </Button>
                 </DialogFooter>
               </form>
@@ -349,7 +349,7 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Email"
+                  title={"邮箱"}
                 />
               ),
               cell: ({ row }) => (
@@ -366,7 +366,7 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="First name"
+                  title={"名"}
                 />
               ),
               cell: ({ row }) => (
@@ -384,7 +384,7 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Last name"
+                  title={"姓"}
                 />
               ),
               cell: ({ row }) => (
@@ -401,7 +401,7 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Role"
+                  title={"角色"}
                 />
               ),
               cell: ({ row }) => (
@@ -418,14 +418,14 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Superuser"
+                  title={"超级用户"}
                 />
               ),
               cell: ({ row }) => (
                 <div className="text-xs">
                   {row.getValue<AdminUserRead["is_superuser"]>("is_superuser")
-                    ? "Yes"
-                    : "No"}
+                    ? "是"
+                    : "否"}
                 </div>
               ),
               enableSorting: true,
@@ -437,14 +437,14 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Active"
+                  title={"已启用"}
                 />
               ),
               cell: ({ row }) => (
                 <div className="text-xs">
                   {row.getValue<AdminUserRead["is_active"]>("is_active")
-                    ? "Active"
-                    : "Inactive"}
+                    ? "已启用"
+                    : "已停用"}
                 </div>
               ),
               enableSorting: true,
@@ -456,7 +456,7 @@ export function AdminUsersTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Last login"
+                  title={"上次登录"}
                 />
               ),
               cell: ({ row }) => {
@@ -469,7 +469,7 @@ export function AdminUsersTable() {
                 const ago = getRelativeTime(date)
                 return (
                   <div className="text-xs text-muted-foreground">
-                    <span>{date.toLocaleDateString()}</span>
+                    <span>{date.toLocaleDateString("zh-CN")}</span>
                     <span className="ml-1">({ago})</span>
                   </div>
                 )
@@ -490,7 +490,7 @@ export function AdminUsersTable() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">打开菜单</span>
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -500,7 +500,7 @@ export function AdminUsersTable() {
                           navigator.clipboard.writeText(rowUser.id)
                         }
                       >
-                        Copy user ID
+                        复制用户 ID
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       {rowUser.is_superuser ? (
@@ -514,10 +514,10 @@ export function AdminUsersTable() {
                             }}
                           >
                             {isLastSuperuser
-                              ? "Cannot demote last superuser"
+                              ? "无法降级最后一位超级用户"
                               : isSelf
-                                ? "Cannot demote yourself"
-                                : "Demote from superuser"}
+                                ? "无法降级自己"
+                                : "取消超级用户权限"}
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                       ) : (
@@ -528,7 +528,7 @@ export function AdminUsersTable() {
                               setActionType("promote")
                             }}
                           >
-                            Promote to superuser
+                            提升为超级用户
                           </DropdownMenuItem>
                         </AlertDialogTrigger>
                       )}
@@ -539,7 +539,7 @@ export function AdminUsersTable() {
                             setActionType("reset-mfa")
                           }}
                         >
-                          Reset security keys
+                          重置安全密钥
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                       <AlertDialogTrigger asChild>
@@ -553,10 +553,10 @@ export function AdminUsersTable() {
                           }}
                         >
                           {isLastSuperuser
-                            ? "Cannot delete last superuser"
+                            ? "无法删除最后一位超级用户"
                             : isSelf
-                              ? "Cannot delete yourself"
-                              : "Delete"}
+                              ? "无法删除自己"
+                              : "删除"}
                         </DropdownMenuItem>
                       </AlertDialogTrigger>
                     </DropdownMenuContent>
@@ -571,36 +571,34 @@ export function AdminUsersTable() {
           <AlertDialogHeader>
             <AlertDialogTitle>
               {actionType === "promote"
-                ? "Promote to superuser"
+                ? "提升为超级用户"
                 : actionType === "demote"
-                  ? "Demote from superuser"
+                  ? "取消超级用户权限"
                   : actionType === "reset-mfa"
-                    ? "Reset security keys"
-                    : "Delete user"}
+                    ? "重置安全密钥"
+                    : "删除用户"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {actionType === "promote" ? (
                 <>
-                  Are you sure you want to promote {selectedUser?.email} to
-                  superuser? They will have full access to all admin functions.
+                  确定要将 {selectedUser?.email}{" "}
+                  提升为超级用户吗？该用户将获得所有管理功能的完整访问权限。
                 </>
               ) : actionType === "reset-mfa" ? (
                 <>
-                  Remove every security key, passkey, and recovery code for{" "}
-                  {selectedUser?.email} and sign them out of every session? Use
-                  this when they have lost access. If MFA is required, they must
-                  register a new key at their next sign-in.
+                  移除此用户的所有安全密钥、通行密钥和恢复码：{" "}
+                  {selectedUser?.email}{" "}
+                  并退出其所有会话？用户丢失访问凭据时可执行此操作。若要求多因素认证，用户必须在下次登录时注册新密钥。
                 </>
               ) : actionType === "demote" ? (
                 <>
-                  Are you sure you want to demote {selectedUser?.email} from
-                  superuser? They will lose access to admin functions.
+                  确定要取消 {selectedUser?.email}{" "}
+                  的超级用户权限吗？该用户将失去管理功能的访问权限。
                 </>
               ) : (
                 <>
-                  Are you sure you want to permanently delete{" "}
-                  {selectedUser?.email}? This removes the global user account
-                  and revokes all sessions.
+                  确定要永久删除 {selectedUser?.email}
+                  吗？此操作将移除全局用户账号并撤销其所有会话。
                 </>
               )}
             </AlertDialogDescription>
@@ -608,7 +606,7 @@ export function AdminUsersTable() {
           {actionType === "delete" && selectedUser && (
             <div className="flex flex-col gap-2">
               <Label htmlFor="delete-user-confirmation">
-                Type the user email to confirm
+                输入用户邮箱以确认
               </Label>
               <Input
                 id="delete-user-confirmation"
@@ -625,7 +623,7 @@ export function AdminUsersTable() {
             </div>
           )}
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant={actionType === "promote" ? "default" : "destructive"}
               disabled={
@@ -648,7 +646,7 @@ export function AdminUsersTable() {
 
 const defaultToolbarProps: DataTableToolbarProps<AdminUserRead> = {
   filterProps: {
-    placeholder: "Filter users by email...",
+    placeholder: "按邮箱筛选用户…",
     column: "email",
   },
 }

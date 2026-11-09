@@ -27,8 +27,8 @@ export function AddWorkflowTagDialog({
           requestBody: params,
         })
       }}
-      title="Create tag"
-      description="Enter a name for your new workflow tag."
+      title={"创建标签"}
+      description={"输入新工作流标签的名称。"}
     />
   )
 }

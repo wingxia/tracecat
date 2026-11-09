@@ -1,6 +1,7 @@
 "use client"
 
 import { format, formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   KeyRoundIcon,
   SearchIcon,
@@ -67,18 +68,18 @@ type TokenStatusFilter = "all" | TokenStatus
 const CREATE_MCP_TOKEN_PARAM = "createMcpToken"
 
 const STATUS_FILTERS: { value: TokenStatusFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "active", label: "Active" },
-  { value: "expired", label: "Expired" },
-  { value: "revoked", label: "Revoked" },
+  { value: "all", label: "全部" },
+  { value: "active", label: "已启用" },
+  { value: "expired", label: "已过期" },
+  { value: "revoked", label: "已撤销" },
 ]
 
 const EXPIRATION_PRESETS: { value: ExpirationPreset; label: string }[] = [
-  { value: "never", label: "Never" },
-  { value: "7d", label: "7 days" },
-  { value: "30d", label: "30 days" },
-  { value: "90d", label: "90 days" },
-  { value: "custom", label: "Custom" },
+  { value: "never", label: "从未" },
+  { value: "7d", label: "7 天" },
+  { value: "30d", label: "30 天" },
+  { value: "90d", label: "90 天" },
+  { value: "custom", label: "自定义" },
 ]
 
 function addDaysIso(days: number): string {
@@ -111,16 +112,16 @@ function getDefaultCustomExpiration(): string {
 
 function formatRelativeTimestamp(value?: string | null): string {
   if (!value) {
-    return "Never"
+    return "从未"
   }
-  return formatDistanceToNow(new Date(value), { addSuffix: true })
+  return formatDistanceToNow(new Date(value), { locale: zhCN, addSuffix: true })
 }
 
 function formatFullTimestamp(value?: string | null): string {
   if (!value) {
-    return "Never"
+    return "从未"
   }
-  return format(new Date(value), "PPpp")
+  return format(new Date(value), "PPpp", { locale: zhCN })
 }
 
 function getTokenStatus(token: MCPPersonalAccessTokenRead): TokenStatus {
@@ -141,19 +142,19 @@ function getStatusConfig(status: TokenStatus): {
   switch (status) {
     case "active":
       return {
-        label: "Active",
+        label: "已启用",
         dotClassName: "bg-green-500",
         textClassName: "text-green-700 dark:text-green-400",
       }
     case "expired":
       return {
-        label: "Expired",
+        label: "已过期",
         dotClassName: "bg-muted-foreground",
         textClassName: "text-muted-foreground",
       }
     case "revoked":
       return {
-        label: "Revoked",
+        label: "已撤销",
         dotClassName: "bg-muted-foreground",
         textClassName: "text-muted-foreground",
       }
@@ -196,8 +197,8 @@ function CreateTokenDialog({
     const trimmedName = name.trim()
     if (!trimmedName) {
       toast({
-        title: "Name required",
-        description: "MCP tokens must have a name.",
+        title: "名称不能为空",
+        description: "MCP 令牌必须有名称。",
         variant: "destructive",
       })
       return
@@ -207,8 +208,8 @@ function CreateTokenDialog({
     if (expirationPreset === "custom") {
       if (!customExpiration) {
         toast({
-          title: "Expiration required",
-          description: "Choose a custom expiration time or use another preset.",
+          title: "到期时间不能为空",
+          description: "选择自定义到期时间或使用其他预设。",
           variant: "destructive",
         })
         return
@@ -227,16 +228,15 @@ function CreateTokenDialog({
       <DialogContent size="md">
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <DialogHeader>
-            <DialogTitle>Create MCP token</DialogTitle>
+            <DialogTitle>创建 MCP 令牌</DialogTitle>
             <DialogDescription>
-              Create a workspace-scoped bearer secret for MCP clients that
-              cannot use OIDC.
+              为无法使用 OIDC 的 MCP 客户端创建工作空间范围的 Bearer 凭据。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="mcp-token-name">Name</Label>
+                <Label htmlFor="mcp-token-name">名称</Label>
                 <Input
                   id="mcp-token-name"
                   value={name}
@@ -246,7 +246,7 @@ function CreateTokenDialog({
               </div>
 
               <div className="space-y-2">
-                <Label>Expiration</Label>
+                <Label>到期时间</Label>
                 <Select
                   value={expirationPreset}
                   onValueChange={(value) =>
@@ -269,7 +269,7 @@ function CreateTokenDialog({
               {expirationPreset === "custom" ? (
                 <div className="space-y-2">
                   <Label htmlFor="mcp-token-custom-expiration">
-                    Custom expiration
+                    自定义到期时间
                   </Label>
                   <Input
                     id="mcp-token-custom-expiration"
@@ -285,7 +285,7 @@ function CreateTokenDialog({
           </DialogBody>
           <DialogFooter>
             <Button size="sm" type="submit" disabled={pending}>
-              {pending ? "Creating..." : "Create token"}
+              {pending ? "创建中…" : "创建令牌"}
             </Button>
           </DialogFooter>
         </form>
@@ -310,18 +310,18 @@ function IssuedTokenDialog({
     >
       <DialogContent size="sm" className="w-[calc(100vw-2rem)] max-w-2xl">
         <DialogHeader>
-          <DialogTitle>MCP personal access token</DialogTitle>
+          <DialogTitle>MCP 个人访问令牌</DialogTitle>
           <DialogDescription>
-            Copy your token now, it will not be shown again. See the{" "}
+            请立即复制令牌，之后不会再次显示。客户端连接方式请参阅{" "}
             <a
               href="https://docs.tracecat.com/automations/tracecat-mcp"
               target="_blank"
               rel="noreferrer"
               className="underline underline-offset-2"
             >
-              MCP docs
+              MCP 文档
             </a>{" "}
-            on connecting your client.
+            。
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -331,8 +331,8 @@ function IssuedTokenDialog({
             </code>
             <CopyButton
               value={rawToken}
-              toastMessage="MCP token copied."
-              tooltipMessage="Copy token"
+              toastMessage="已复制 MCP 令牌。"
+              tooltipMessage={"复制令牌"}
               className="size-6 shrink-0"
               iconClassName="size-4 text-foreground/70"
             />
@@ -340,7 +340,7 @@ function IssuedTokenDialog({
         </DialogBody>
         <DialogFooter>
           <Button size="sm" type="button" onClick={onClose}>
-            Done
+            完成
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -392,19 +392,19 @@ function TokenRow({
           </div>
           <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-muted-foreground">
             <span>
-              Preview{" "}
+              预览{" "}
               <code className="font-mono text-foreground/80">
                 {token.preview}
               </code>
             </span>
             <span title={formatFullTimestamp(token.created_at)}>
-              Created {formatRelativeTimestamp(token.created_at)}
+              创建时间 {formatRelativeTimestamp(token.created_at)}
             </span>
             <span title={formatFullTimestamp(token.expires_at)}>
-              Expires {formatRelativeTimestamp(token.expires_at)}
+              到期时间 {formatRelativeTimestamp(token.expires_at)}
             </span>
             <span title={formatFullTimestamp(token.last_used_at)}>
-              Last used {formatRelativeTimestamp(token.last_used_at)}
+              上次使用 {formatRelativeTimestamp(token.last_used_at)}
             </span>
           </div>
         </div>
@@ -420,7 +420,7 @@ function TokenRow({
           className="gap-2 text-muted-foreground hover:text-destructive"
         >
           <Trash2Icon className="size-3.5" />
-          Revoke
+          撤销
         </Button>
       </div>
     </div>
@@ -493,13 +493,13 @@ export function WorkspaceMcpAccess() {
       setIssuedCredential(response)
       setCreateOpen(false)
       toast({
-        title: "MCP token created",
-        description: "Copy the token now. It will not be shown again.",
+        title: "已创建 MCP 令牌",
+        description: "请立即复制令牌，之后不会再次显示。",
       })
     } catch (createError) {
       toast({
-        title: "Failed to create MCP token",
-        description: getApiErrorDetail(createError) ?? "Please try again.",
+        title: "创建 MCP 令牌失败",
+        description: getApiErrorDetail(createError) ?? "请重试。",
         variant: "destructive",
       })
     }
@@ -512,14 +512,14 @@ export function WorkspaceMcpAccess() {
     try {
       await revokeToken(revokeTarget.id)
       toast({
-        title: "MCP token revoked",
-        description: `${revokeTarget.name} can no longer authenticate.`,
+        title: "已撤销 MCP 令牌",
+        description: `${revokeTarget.name} 将无法再验证身份。`,
       })
       setRevokeTarget(null)
     } catch (revokeError) {
       toast({
-        title: "Failed to revoke MCP token",
-        description: getApiErrorDetail(revokeError) ?? "Please try again.",
+        title: "撤销 MCP 令牌失败",
+        description: getApiErrorDetail(revokeError) ?? "请重试。",
         variant: "destructive",
       })
     }
@@ -529,7 +529,7 @@ export function WorkspaceMcpAccess() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading MCP tokens: ${error.message}`}
+        message={`加载 MCP 令牌出错：${error.message}`}
       />
     )
   }
@@ -539,14 +539,14 @@ export function WorkspaceMcpAccess() {
       <div className="shrink-0">
         <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
           <ListHeaderSearch
-            placeholder="Search MCP tokens..."
+            placeholder={"搜索 MCP 令牌…"}
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
 
           <div className="ml-auto flex items-center gap-3">
             <span className="text-xs text-muted-foreground">
-              {filteredTokens.length} tokens
+              {filteredTokens.length} 令牌
             </span>
           </div>
         </header>
@@ -578,7 +578,7 @@ export function WorkspaceMcpAccess() {
               }}
               className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              Reset
+              重置
             </button>
           ) : null}
         </div>
@@ -587,7 +587,7 @@ export function WorkspaceMcpAccess() {
       <div className="min-h-0 flex-1 overflow-auto">
         {isLoading ? (
           <div className="px-4 py-3 text-sm text-muted-foreground">
-            Loading MCP tokens...
+            正在加载 MCP 令牌…
           </div>
         ) : tokens.length === 0 ? (
           <Empty className="rounded-none border-0">
@@ -595,10 +595,9 @@ export function WorkspaceMcpAccess() {
               <EmptyMedia variant="icon">
                 <TerminalIcon />
               </EmptyMedia>
-              <EmptyTitle>No MCP tokens</EmptyTitle>
+              <EmptyTitle>暂无 MCP 令牌</EmptyTitle>
               <EmptyDescription>
-                Create a workspace-scoped token for MCP clients that cannot use
-                OIDC.
+                为无法使用 OIDC 的 MCP 客户端创建工作空间范围的令牌。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -608,9 +607,9 @@ export function WorkspaceMcpAccess() {
               <EmptyMedia variant="icon">
                 <SearchIcon />
               </EmptyMedia>
-              <EmptyTitle>No matching MCP tokens</EmptyTitle>
+              <EmptyTitle>没有匹配的 MCP 令牌</EmptyTitle>
               <EmptyDescription>
-                Adjust the search query or filters to find a token.
+                调整搜索词或筛选条件以查找令牌。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -629,7 +628,7 @@ export function WorkspaceMcpAccess() {
 
         {nextCursor ? (
           <p className="px-4 py-3 text-xs text-muted-foreground">
-            Only the first page of MCP tokens is shown in this view.
+            此视图仅显示第一页 MCP 令牌。
           </p>
         ) : null}
       </div>
@@ -650,16 +649,14 @@ export function WorkspaceMcpAccess() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke MCP token?</AlertDialogTitle>
+            <AlertDialogTitle>撤销 MCP 令牌？</AlertDialogTitle>
             <AlertDialogDescription>
-              This immediately prevents {revokeTarget?.name ?? "this token"}{" "}
-              from authenticating to the MCP server.
+              此操作会立即阻止 {revokeTarget?.name ?? "此令牌"} 向 MCP
+              服务器进行身份验证。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={revokePending}>
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel disabled={revokePending}>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               disabled={revokePending}
@@ -668,7 +665,7 @@ export function WorkspaceMcpAccess() {
                 void handleRevoke()
               }}
             >
-              {revokePending ? "Revoking..." : "Revoke token"}
+              {revokePending ? "撤销中…" : "撤销令牌"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -301,8 +301,8 @@ export function useWorkflowRunMutations() {
     onSuccess: async () => {
       await invalidateRuns()
       toast({
-        title: "Cancel requested",
-        description: "The workflow run cancellation request was sent.",
+        title: "已请求取消",
+        description: "已发送工作流运行取消请求。",
       })
     },
   })
@@ -325,8 +325,8 @@ export function useWorkflowRunMutations() {
     onSuccess: async () => {
       await invalidateRuns()
       toast({
-        title: "Termination requested",
-        description: "The workflow run termination request was sent.",
+        title: "已请求终止",
+        description: "已发送工作流运行终止请求。",
       })
     },
   })
@@ -358,15 +358,15 @@ export function useWorkflowRunMutations() {
         }
         if (result.failed === 0) {
           toast({
-            title: "Bulk cancel requested",
-            description: `Cancellation requested for ${result.success} run(s).`,
+            title: "已请求批量取消",
+            description: `已请求取消 ${result.success} 次运行。`,
           })
           return
         }
         toast({
           variant: "destructive",
-          title: "Bulk cancel completed with errors",
-          description: `${result.success} run(s) canceled, ${result.failed} failed.`,
+          title: "批量取消完成，存在错误",
+          description: `已取消 ${result.success} 次运行，${result.failed} 次失败。`,
         })
       },
     })
@@ -401,15 +401,15 @@ export function useWorkflowRunMutations() {
         }
         if (result.failed === 0) {
           toast({
-            title: "Bulk termination requested",
-            description: `Termination requested for ${result.success} run(s).`,
+            title: "已请求批量终止",
+            description: `已请求终止 ${result.success} 次运行。`,
           })
           return
         }
         toast({
           variant: "destructive",
-          title: "Bulk termination completed with errors",
-          description: `${result.success} run(s) terminated, ${result.failed} failed.`,
+          title: "批量终止完成，存在错误",
+          description: `已终止 ${result.success} 次运行，${result.failed} 次失败。`,
         })
       },
     })
@@ -428,8 +428,8 @@ export function useWorkflowRunMutations() {
     onSuccess: async () => {
       await invalidateRuns()
       toast({
-        title: "Reset started",
-        description: "The workflow run reset request was sent.",
+        title: "已开始重置",
+        description: "已发送工作流运行重置请求。",
       })
     },
   })
@@ -451,14 +451,14 @@ export function useWorkflowRunMutations() {
         const failures = (response.results ?? []).filter((result) => !result.ok)
         if (failures.length === 0) {
           toast({
-            title: "Bulk reset started",
-            description: "All selected workflow runs were reset.",
+            title: "已开始批量重置",
+            description: "已重置所有所选工作流运行。",
           })
         } else {
           toast({
             variant: "destructive",
-            title: "Bulk reset completed with errors",
-            description: `${failures.length} run(s) failed to reset.`,
+            title: "批量重置完成，存在错误",
+            description: `${failures.length} 次运行重置失败。`,
           })
         }
       },

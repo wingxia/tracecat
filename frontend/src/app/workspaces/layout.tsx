@@ -335,12 +335,12 @@ function WorkspaceAccessDenied() {
   return (
     <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
       <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
-      <h1 className="text-2xl font-semibold tracking-tight">Access denied</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">访问被拒绝</h1>
       <span className="text-center text-muted-foreground">
-        You don&apos;t have permission to access this workspace.
+        你没有访问此工作空间的权限。
       </span>
       <Button variant="outline" onClick={() => router.replace("/workspaces")}>
-        Back to workspaces
+        返回工作空间列表
       </Button>
     </main>
   )
@@ -399,7 +399,7 @@ function NoWorkspaces() {
 
     setIsCreating(true)
     try {
-      const workspace = await createWorkspace({ name: "New Workspace" })
+      const workspace = await createWorkspace({ name: "新工作空间" })
       router.replace(getWorkspaceLandingPath(workspace.id))
     } catch (error) {
       console.error("Error creating workspace", error)
@@ -410,11 +410,11 @@ function NoWorkspaces() {
   return (
     <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
       <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
-      <h1 className="text-2xl font-semibold tracking-tight">No workspaces</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">暂无工作空间</h1>
       <span className="text-center text-muted-foreground">
         {canCreateWorkspace
-          ? "There are no workspaces yet. Create one to get started."
-          : "You are not a member of any workspace. Please contact your administrator."}
+          ? "尚无工作空间，请先创建一个。"
+          : "你尚未加入任何工作空间，请联系管理员。"}
       </span>
       <div className="flex gap-2">
         {canCreateWorkspace && (
@@ -424,20 +424,20 @@ function NoWorkspaces() {
             disabled={isCreating}
           >
             <Plus className="mr-2 size-4" />
-            <span>{isCreating ? "Creating..." : "Create workspace"}</span>
+            <span>{isCreating ? "创建中…" : "创建工作空间"}</span>
           </Button>
         )}
         {user?.isSuperuser && (
           <Button variant="outline" asChild>
             <Link href="/admin">
               <Shield className="mr-2 size-4" />
-              <span>Admin</span>
+              <span>管理后台</span>
             </Link>
           </Button>
         )}
         <Button variant="outline" onClick={handleLogout}>
           <LogOut className="mr-2 size-4" />
-          <span>Logout</span>
+          <span>退出登录</span>
         </Button>
       </div>
     </main>

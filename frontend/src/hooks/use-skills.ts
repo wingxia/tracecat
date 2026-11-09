@@ -306,14 +306,14 @@ export function useCreateSkill(workspaceId: string) {
         queryKey: ["skill-draft", workspaceId, skill.id],
       })
       toast({
-        title: "Skill created",
-        description: `Created ${skill.name}`,
+        title: "已创建技能",
+        description: `已创建 ${skill.name}`,
       })
     },
     onError: (error) => {
       toast({
-        title: "Create failed",
-        description: getApiErrorDetail(error) ?? "Failed to create skill.",
+        title: "创建失败",
+        description: getApiErrorDetail(error) ?? "创建技能失败。",
         variant: "destructive",
       })
     },
@@ -346,14 +346,14 @@ export function useUploadSkill(workspaceId: string) {
         queryKey: ["skill-draft", workspaceId, skill.id],
       })
       toast({
-        title: "Skill uploaded",
-        description: `Imported ${skill.name}`,
+        title: "已上传技能",
+        description: `已导入 ${skill.name}`,
       })
     },
     onError: (error) => {
       toast({
-        title: "Upload failed",
-        description: getApiErrorDetail(error) ?? "Failed to upload skill.",
+        title: "上传失败",
+        description: getApiErrorDetail(error) ?? "上传技能失败。",
         variant: "destructive",
       })
     },
@@ -394,14 +394,14 @@ export function usePatchSkillDraft(workspaceId: string) {
         queryKey: ["skill-draft-file", workspaceId, variables.skillId],
       })
       toast({
-        title: "Working copy saved",
-        description: `Revision ${draft.draft_revision}`,
+        title: "已保存工作副本",
+        description: `修订 ${draft.draft_revision}`,
       })
     },
     onError: (error) => {
       toast({
-        title: "Save failed",
-        description: getApiErrorDetail(error) ?? "Failed to save working copy.",
+        title: "保存失败",
+        description: getApiErrorDetail(error) ?? "保存工作副本失败。",
         variant: "destructive",
       })
     },
@@ -468,14 +468,14 @@ export function usePublishSkill(workspaceId: string) {
         queryKey: ["skill-versions", workspaceId, variables.skillId],
       })
       toast({
-        title: "Version published",
-        description: `Published v${version.version}`,
+        title: "已发布版本",
+        description: `已发布 v${version.version}`,
       })
     },
     onError: (error) => {
       toast({
-        title: "Publish failed",
-        description: getApiErrorDetail(error) ?? "Failed to publish skill.",
+        title: "发布失败",
+        description: getApiErrorDetail(error) ?? "发布技能失败。",
         variant: "destructive",
       })
     },
@@ -515,15 +515,14 @@ export function useRestoreSkillVersion(workspaceId: string) {
         queryKey: ["skill-draft-file", workspaceId, variables.skillId],
       })
       toast({
-        title: "Active version updated",
-        description: "The selected published version is now active.",
+        title: "已更新生效版本",
+        description: "所选已发布版本现已生效。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Update failed",
-        description:
-          getApiErrorDetail(error) ?? "Failed to update the active version.",
+        title: "更新失败",
+        description: getApiErrorDetail(error) ?? "更新生效版本失败。",
         variant: "destructive",
       })
     },
@@ -559,15 +558,15 @@ export function useDeleteSkill(workspaceId: string) {
         queryKey: ["skill-versions", workspaceId, variables.skillId],
       })
       toast({
-        title: "Skill deleted",
-        description: "The skill has been deleted.",
+        title: "已删除技能",
+        description: "技能已删除。",
       })
     },
     onError: (error) => {
       const detail = getApiErrorDetail(error)
       toast({
-        title: "Delete failed",
-        description: detail ?? "Failed to delete skill.",
+        title: "删除失败",
+        description: detail ?? "删除技能失败。",
         variant: "destructive",
       })
     },

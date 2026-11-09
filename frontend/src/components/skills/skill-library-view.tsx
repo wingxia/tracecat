@@ -146,7 +146,7 @@ export function SkillLibraryView() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading skill library: ${librarySkillsError.message}`}
+        message={`加载技能库出错：${librarySkillsError.message}`}
       />
     )
   }
@@ -158,10 +158,8 @@ export function SkillLibraryView() {
           <EmptyMedia variant="icon">
             <LibraryIcon className="size-6" />
           </EmptyMedia>
-          <EmptyTitle>No library skills available</EmptyTitle>
-          <EmptyDescription>
-            Library skills ship with Tracecat releases.
-          </EmptyDescription>
+          <EmptyTitle>暂无可用的库技能</EmptyTitle>
+          <EmptyDescription>库技能随 Tracecat 版本发布。</EmptyDescription>
         </EmptyHeader>
       </Empty>
     )
@@ -196,31 +194,31 @@ export function SkillLibraryView() {
     <div className="flex size-full flex-col overflow-auto">
       <header className="flex h-10 shrink-0 items-center gap-3 border-b pl-3 pr-4">
         <ListHeaderSearch
-          aria-label="Search library skills"
-          placeholder="Search library skills..."
+          aria-label={"搜索库技能"}
+          placeholder={"搜索库技能…"}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
         <span className="ml-auto text-xs text-muted-foreground">
-          {skillCount === 1 ? "1 skill" : `${skillCount} skills`}
+          {skillCount === 1 ? "1 个技能" : `${skillCount} 个技能`}
         </span>
       </header>
-      <section aria-label="Installed">
-        <SectionHeader label="Installed" count={installed.length} />
+      <section aria-label={"已安装"}>
+        <SectionHeader label={"已安装"} count={installed.length} />
         {renderRows(
           installed,
           normalizedQuery
-            ? "No installed skills match."
-            : "No library skills installed yet."
+            ? "没有匹配的已安装技能。"
+            : "尚未安装技能库中的技能。"
         )}
       </section>
-      <section aria-label="Available">
-        <SectionHeader label="Available" count={available.length} />
+      <section aria-label={"可用"}>
+        <SectionHeader label={"可用"} count={available.length} />
         {renderRows(
           available,
           normalizedQuery
-            ? "No available skills match."
-            : "Every library skill is installed."
+            ? "没有匹配的可用技能。"
+            : "已安装技能库中的全部技能。"
         )}
       </section>
       <CreateAgentDialog
@@ -269,7 +267,7 @@ function librarySummaryFallback(provider: LibraryProvider): string {
 function skillsLabel(provider: LibraryProvider): string {
   const total = provider.skills.length
   if (provider.installedCount > 0 && provider.installedCount < total) {
-    return `${provider.installedCount} of ${total} skills installed`
+    return `已安装 ${provider.installedCount}/${total} 个技能`
   }
   return `${total} skills`
 }
@@ -327,8 +325,8 @@ function LibraryProviderRow({
   const fullyInstalled = provider.installedCount === provider.skills.length
   const createAgentLabel =
     provider.skills.length > 1
-      ? "Create agent with these skills"
-      : "Create agent with this skill"
+      ? "使用这些技能创建智能体"
+      : "使用此技能创建智能体"
   return (
     <div className="flex flex-wrap items-center gap-3 border-b px-4 py-3 hover:bg-muted/30">
       <LibraryEntryIcon provider={provider} />
@@ -348,7 +346,7 @@ function LibraryProviderRow({
       ) : null}
       {fullyInstalled && canDelete ? (
         <SkillLibraryActionButton
-          label="Uninstall"
+          label={"卸载"}
           className="w-24"
           disabled={disabled}
           onAction={onUninstall}
@@ -358,7 +356,7 @@ function LibraryProviderRow({
       ) : null}
       {fullyInstalled && !canDelete && onCreateAgent ? (
         <SkillLibraryActionButton
-          label="Create agent"
+          label={"创建智能体"}
           className="w-24"
           disabled={disabled}
           onAction={onCreateAgent}
@@ -367,7 +365,7 @@ function LibraryProviderRow({
       ) : null}
       {!fullyInstalled && canCreate ? (
         <SkillLibraryActionButton
-          label="Install"
+          label={"安装"}
           className="w-24"
           disabled={disabled}
           onAction={onInstall}

@@ -29,9 +29,9 @@ describe("PackagePublishSummary", () => {
       />
     )
 
-    expect(screen.getByText("Added to the package (1)")).toBeInTheDocument()
-    expect(screen.getByText("Updated in the package (1)")).toBeInTheDocument()
-    expect(screen.getByText("Removed from the package (1)")).toBeInTheDocument()
+    expect(screen.getByText("已添加到软件包 (1)")).toBeInTheDocument()
+    expect(screen.getByText("已在软件包中更新 (1)")).toBeInTheDocument()
+    expect(screen.getByText("已从软件包移除 (1)")).toBeInTheDocument()
     expect(screen.getByText("legacy")).toBeInTheDocument()
   })
 
@@ -54,8 +54,8 @@ describe("PackagePublishSummary", () => {
       />
     )
 
-    expect(screen.getByText("Updated in the package (1)")).toBeInTheDocument()
-    expect(screen.getByText("Added to the package (1)")).toBeInTheDocument()
+    expect(screen.getByText("已在软件包中更新 (1)")).toBeInTheDocument()
+    expect(screen.getByText("已添加到软件包 (1)")).toBeInTheDocument()
     expect(screen.getAllByText("triage")).toHaveLength(1)
     expect(screen.getAllByText("enrich")).toHaveLength(1)
   })
@@ -63,8 +63,6 @@ describe("PackagePublishSummary", () => {
   it("says nothing changes when the branch already matches", () => {
     render(<PackagePublishSummary compareRef="main" diffs={[]} />)
 
-    expect(
-      screen.getByText(/already matches your selection/)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/已与所选内容一致/)).toBeInTheDocument()
   })
 })

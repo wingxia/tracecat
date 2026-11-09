@@ -181,7 +181,7 @@ describe("WorkspaceLayout empty workspace access", () => {
     mockEntitlementsLoading = false
     mockCreateWorkspace.mockResolvedValue({
       id: "workspace-1",
-      name: "New Workspace",
+      name: "新工作空间",
     })
     mockUseScopeCheck.mockImplementation((scope) => mockScopes[scope] ?? false)
   })
@@ -195,16 +195,12 @@ describe("WorkspaceLayout empty workspace access", () => {
       </WorkspaceLayout>
     )
 
-    expect(
-      screen.getByText(
-        "There are no workspaces yet. Create one to get started."
-      )
-    ).toBeInTheDocument()
-    fireEvent.click(screen.getByRole("button", { name: "Create workspace" }))
+    expect(screen.getByText("尚无工作空间，请先创建一个。")).toBeInTheDocument()
+    fireEvent.click(screen.getByRole("button", { name: "创建工作空间" }))
 
     await waitFor(() => {
       expect(mockCreateWorkspace).toHaveBeenCalledWith({
-        name: "New Workspace",
+        name: "新工作空间",
       })
       expect(mockRouterReplace).toHaveBeenCalledWith("/workspaces/workspace-1")
     })
@@ -218,12 +214,10 @@ describe("WorkspaceLayout empty workspace access", () => {
     )
 
     expect(
-      screen.getByText(
-        "You are not a member of any workspace. Please contact your administrator."
-      )
+      screen.getByText("你尚未加入任何工作空间，请联系管理员。")
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Create workspace" })
+      screen.queryByRole("button", { name: "创建工作空间" })
     ).not.toBeInTheDocument()
   })
 
@@ -237,7 +231,7 @@ describe("WorkspaceLayout empty workspace access", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Create workspace" })
+      screen.getByRole("button", { name: "创建工作空间" })
     ).toBeInTheDocument()
   })
 
@@ -258,12 +252,10 @@ describe("WorkspaceLayout empty workspace access", () => {
       )
 
       expect(
-        screen.getByText(
-          "You are not a member of any workspace. Please contact your administrator."
-        )
+        screen.getByText("你尚未加入任何工作空间，请联系管理员。")
       ).toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Create workspace" })
+        screen.queryByRole("button", { name: "创建工作空间" })
       ).not.toBeInTheDocument()
       expect(screen.queryByText(/upgrade/i)).not.toBeInTheDocument()
     }
@@ -300,14 +292,14 @@ describe("WorkspaceLayout forms intake", () => {
       renderLayout()
 
       expect(mockRouterReplace).toHaveBeenCalledWith(target)
-      expect(screen.queryByText("Access denied")).not.toBeInTheDocument()
+      expect(screen.queryByText("访问被拒绝")).not.toBeInTheDocument()
       // Remembering this workspace would bounce the user here on every visit.
       expect(mockSetLastWorkspaceId).not.toHaveBeenCalled()
     }
   )
 
   it.each([
-    ["enabled", false, "Access denied"],
+    ["enabled", false, "访问被拒绝"],
     ["loading", true, "Loading"],
   ])(
     "does not redirect when Forms is %s and form:read is %p",

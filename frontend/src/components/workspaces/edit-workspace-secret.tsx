@@ -89,7 +89,7 @@ type OktaAuthMethod = "ssws" | "bearer" | "private_key"
 const OKTA_SECRET_NAME = "okta"
 const OKTA_MIN_DPOP_KEY_ROTATION_SECONDS = 3600
 const OKTA_MAX_DPOP_KEY_ROTATION_SECONDS = 90 * 24 * 3600
-const OKTA_CONFIGURED_PLACEHOLDER = "Leave blank to keep configured value"
+const OKTA_CONFIGURED_PLACEHOLDER = "留空以保留已配置的值"
 const OKTA_CONFIGURED_SECRET_PLACEHOLDER = "••••••••••••••••"
 const oktaPrivateKeyFileExtensionRegex = /\.(json|pem)$/i
 const oktaAuthMethodOptions: {
@@ -98,15 +98,15 @@ const oktaAuthMethodOptions: {
 }[] = [
   {
     value: "ssws",
-    label: "API token",
+    label: "API 令牌",
   },
   {
     value: "bearer",
-    label: "Bearer token",
+    label: "Bearer 令牌",
   },
   {
     value: "private_key",
-    label: "Private key",
+    label: "私钥",
   },
 ]
 
@@ -388,7 +388,7 @@ export function EditCredentialsDialog({
       ) {
         methods.setError("okta_api_token", {
           type: "manual",
-          message: "Okta API token is required.",
+          message: "Okta API 令牌不能为空。",
         })
         return false
       }
@@ -400,7 +400,7 @@ export function EditCredentialsDialog({
       ) {
         methods.setError("okta_access_token", {
           type: "manual",
-          message: "Access token or service token is required.",
+          message: "访问令牌或服务令牌不能为空。",
         })
         return false
       }
@@ -409,14 +409,14 @@ export function EditCredentialsDialog({
         if (!hasValueOrExisting("OKTA_CLIENT_ID", values.okta_client_id)) {
           methods.setError("okta_client_id", {
             type: "manual",
-            message: "Client ID is required.",
+            message: "客户端 ID 不能为空。",
           })
           return false
         }
         if (!hasValueOrExisting("OKTA_SCOPES", values.okta_scopes)) {
           methods.setError("okta_scopes", {
             type: "manual",
-            message: "Scopes are required.",
+            message: "权限范围不能为空。",
           })
           return false
         }
@@ -426,8 +426,7 @@ export function EditCredentialsDialog({
         ) {
           methods.setError("okta_private_key", {
             type: "manual",
-            message:
-              "Private key must be a PEM block or an RSA private JWK (kty, n, e, d).",
+            message: "私钥必须是 PEM 块或 RSA 私钥 JWK（kty、n、e、d）。",
           })
           return false
         }
@@ -437,7 +436,7 @@ export function EditCredentialsDialog({
         ) {
           methods.setError("okta_private_key", {
             type: "manual",
-            message: "Private key is required.",
+            message: "私钥不能为空。",
           })
           return false
         }
@@ -448,7 +447,7 @@ export function EditCredentialsDialog({
           if (!Number.isInteger(seconds)) {
             methods.setError("okta_dpop_key_rotation_interval", {
               type: "manual",
-              message: "Rotation interval must be an integer.",
+              message: "轮换间隔必须是整数。",
             })
             return false
           }
@@ -458,7 +457,7 @@ export function EditCredentialsDialog({
           ) {
             methods.setError("okta_dpop_key_rotation_interval", {
               type: "manual",
-              message: "Rotation interval must be 3600 to 7776000 seconds.",
+              message: "轮换间隔必须在 3600 至 7776000 秒之间。",
             })
             return false
           }
@@ -488,7 +487,7 @@ export function EditCredentialsDialog({
         })
         methods.setError("okta_private_key", {
           type: "manual",
-          message: "Upload a .pem or .json file.",
+          message: "请上传 .pem 或 .json 文件。",
         })
         resetOktaPrivateKeyFileInput()
         return
@@ -525,7 +524,7 @@ export function EditCredentialsDialog({
         })
         methods.setError("okta_private_key", {
           type: "manual",
-          message: "Failed to read the uploaded private key file.",
+          message: "读取上传的私钥文件失败。",
         })
         resetOktaPrivateKeyFileInput()
       }
@@ -602,12 +601,11 @@ export function EditCredentialsDialog({
       ) {
         methods.setError("keys", {
           type: "manual",
-          message: "Add all key names and values to recover this secret.",
+          message: "填写所有键名和值以恢复此密钥。",
         })
         toast({
-          title: "Recovery requires all keys",
-          description:
-            "This secret is corrupted. Re-enter all key names and values before saving.",
+          title: "恢复需要所有键",
+          description: "此密钥已损坏，请重新输入所有键名和值后再保存。",
           variant: "destructive",
         })
         return
@@ -645,8 +643,8 @@ export function EditCredentialsDialog({
   const onValidationFailed = (errors: unknown) => {
     console.error("Form validation failed", errors)
     toast({
-      title: "Form validation failed",
-      description: "A validation error occurred while editing the secret.",
+      title: "表单校验失败",
+      description: "编辑密钥时发生校验错误。",
     })
   }
 
@@ -664,33 +662,20 @@ export function EditCredentialsDialog({
       {children}
       <DialogContent size="xl" className={className}>
         <DialogHeader>
-          <DialogTitle>Edit secret</DialogTitle>
+          <DialogTitle>编辑密钥</DialogTitle>
           <DialogDescription className="flex flex-col">
             {valuesOnly ? (
-              <span>
-                Managed by Tracecat. Only values can be changed. Leave a field
-                blank to keep its existing value.
-              </span>
+              <span>由 Tracecat 托管，仅可修改值。字段留空可保留现有值。</span>
             ) : isSshKey ? (
-              <span>
-                SSH keys are write-once. Delete and recreate the secret to
-                rotate the key.
-              </span>
+              <span>SSH 密钥只能写入一次。要轮换密钥，请删除后重新创建。</span>
             ) : isOktaCredentialForm ? (
               <span>
-                Choose the Okta auth method to update. Blank configured fields
-                keep their existing values.
+                选择要更新的 Okta 身份验证方式，已配置字段留空可保留现有值。
               </span>
             ) : typeHasFixedKeys ? (
-              <span>
-                Key names are fixed for this secret type. Leave a field blank to
-                keep its existing value.
-              </span>
+              <span>此密钥类型的键名固定，字段留空可保留现有值。</span>
             ) : (
-              <span>
-                Leave a field blank to keep its existing value. You must update
-                all keys at once.
-              </span>
+              <span>字段留空可保留现有值。更新时必须一次提交所有键。</span>
             )}
           </DialogDescription>
         </DialogHeader>
@@ -703,11 +688,11 @@ export function EditCredentialsDialog({
               {selectedSecret?.is_corrupted && (
                 <Alert>
                   <AlertTriangleIcon className="size-4 !text-amber-600" />
-                  <AlertTitle>Unable to decrypt current key data</AlertTitle>
+                  <AlertTitle>无法解密当前密钥数据</AlertTitle>
                   <AlertDescription>
                     {isSshKey
-                      ? "This SSH key secret cannot be edited. Delete and recreate it with a new key."
-                      : "Stored key names and values could not be decrypted. Re-enter all key names and values before saving."}
+                      ? "此 SSH 密钥无法编辑，请删除并使用新密钥重新创建。"
+                      : "无法解密已保存的键名和值，请重新输入所有键名和值后再保存。"}
                   </AlertDescription>
                 </Alert>
               )}
@@ -717,19 +702,19 @@ export function EditCredentialsDialog({
                 name="name"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
 
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={selectedSecret?.name || "Name"}
+                        placeholder={selectedSecret?.name || "名称"}
                         disabled={valuesOnly}
                         {...register("name")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("name") && "Name will be left unchanged."}
+                      {!methods.watch("name") && "名称保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -740,21 +725,18 @@ export function EditCredentialsDialog({
                 name="description"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Description</FormLabel>
+                    <FormLabel className="text-sm">描述</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedSecret?.description || "Description"
-                        }
+                        placeholder={selectedSecret?.description || "描述"}
                         disabled={valuesOnly}
                         {...register("description")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("description") &&
-                        "Description will be left unchanged."}
+                      {!methods.watch("description") && "描述保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -765,21 +747,18 @@ export function EditCredentialsDialog({
                 name="environment"
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-sm">Environment</FormLabel>
+                    <FormLabel className="text-sm">环境</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder={
-                          selectedSecret?.environment || "Environment"
-                        }
+                        placeholder={selectedSecret?.environment || "环境"}
                         disabled={valuesOnly}
                         {...register("environment")}
                       />
                     </FormControl>
                     <FormMessage />
                     <span className="text-xs text-foreground/50">
-                      {!methods.watch("environment") &&
-                        "Environment will be left unchanged."}
+                      {!methods.watch("environment") && "环境保持不变。"}
                     </span>
                   </FormItem>
                 )}
@@ -792,7 +771,7 @@ export function EditCredentialsDialog({
                     name="okta_auth_method"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm">Auth method</FormLabel>
+                        <FormLabel className="text-sm">身份验证方式</FormLabel>
                         <Select
                           onValueChange={(value) => {
                             const authMethod = value as OktaAuthMethod
@@ -812,7 +791,7 @@ export function EditCredentialsDialog({
                         >
                           <FormControl>
                             <SelectTrigger className="text-sm">
-                              <SelectValue placeholder="Select auth method" />
+                              <SelectValue placeholder={"选择身份验证方式"} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -837,7 +816,7 @@ export function EditCredentialsDialog({
                     name="okta_base_url"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-sm">Org URL</FormLabel>
+                        <FormLabel className="text-sm">组织 URL</FormLabel>
                         <FormControl>
                           <Input
                             className="text-sm"
@@ -851,7 +830,7 @@ export function EditCredentialsDialog({
                           />
                         </FormControl>
                         <FormDescription className="text-sm">
-                          Optional when actions pass an org URL.
+                          动作已传入组织 URL 时可留空。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -865,14 +844,14 @@ export function EditCredentialsDialog({
                       name="okta_api_token"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm">API token</FormLabel>
+                          <FormLabel className="text-sm">API 令牌</FormLabel>
                           <FormControl>
                             <Input
                               className="text-sm"
                               placeholder={
                                 canPreserveOktaKey("OKTA_API_TOKEN")
                                   ? OKTA_CONFIGURED_SECRET_PLACEHOLDER
-                                  : "Okta SSWS API token"
+                                  : "Okta SSWS API 令牌"
                               }
                               type="password"
                               {...field}
@@ -893,16 +872,14 @@ export function EditCredentialsDialog({
                         name="okta_access_token"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">
-                              Access token
-                            </FormLabel>
+                            <FormLabel className="text-sm">访问令牌</FormLabel>
                             <FormControl>
                               <Input
                                 className="text-sm"
                                 placeholder={
                                   canPreserveOktaKey("OKTA_ACCESS_TOKEN")
                                     ? OKTA_CONFIGURED_SECRET_PLACEHOLDER
-                                    : "OAuth access token"
+                                    : "OAuth 访问令牌"
                                 }
                                 type="password"
                                 {...field}
@@ -919,16 +896,14 @@ export function EditCredentialsDialog({
                         name="okta_service_token"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">
-                              Service token
-                            </FormLabel>
+                            <FormLabel className="text-sm">服务令牌</FormLabel>
                             <FormControl>
                               <Input
                                 className="text-sm"
                                 placeholder={
                                   canPreserveOktaKey("OKTA_SERVICE_TOKEN")
                                     ? OKTA_CONFIGURED_SECRET_PLACEHOLDER
-                                    : "OAuth service token"
+                                    : "OAuth 服务令牌"
                                 }
                                 type="password"
                                 {...field}
@@ -952,7 +927,7 @@ export function EditCredentialsDialog({
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="text-sm">
-                                Client ID
+                                客户端 ID
                               </FormLabel>
                               <FormControl>
                                 <Input
@@ -960,7 +935,7 @@ export function EditCredentialsDialog({
                                   placeholder={
                                     canPreserveOktaKey("OKTA_CLIENT_ID")
                                       ? OKTA_CONFIGURED_PLACEHOLDER
-                                      : "Okta OAuth client ID"
+                                      : "Okta OAuth 客户端 ID"
                                   }
                                   {...field}
                                   disabled={oktaKeyLocked("OKTA_CLIENT_ID")}
@@ -976,7 +951,9 @@ export function EditCredentialsDialog({
                           name="okta_scopes"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-sm">Scopes</FormLabel>
+                              <FormLabel className="text-sm">
+                                权限范围
+                              </FormLabel>
                               <FormControl>
                                 <Input
                                   className="text-sm"
@@ -990,7 +967,7 @@ export function EditCredentialsDialog({
                                 />
                               </FormControl>
                               <FormDescription className="text-sm">
-                                Space or comma separated.
+                                以空格或逗号分隔。
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -1004,14 +981,14 @@ export function EditCredentialsDialog({
                         name="okta_kid"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">Key ID</FormLabel>
+                            <FormLabel className="text-sm">密钥 ID</FormLabel>
                             <FormControl>
                               <Input
                                 className="text-sm"
                                 placeholder={
                                   canPreserveOktaKey("OKTA_KID")
                                     ? OKTA_CONFIGURED_PLACEHOLDER
-                                    : "Optional JWK key ID"
+                                    : "可选的 JWK 密钥 ID"
                                 }
                                 {...field}
                                 disabled={oktaKeyLocked("OKTA_KID")}
@@ -1033,8 +1010,8 @@ export function EditCredentialsDialog({
                                 <FormLabel className="text-sm">DPoP</FormLabel>
                                 <FormDescription className="text-sm">
                                   {canPreserveOktaKey("OKTA_DPOP_ENABLED")
-                                    ? "Toggle on to enable proof-of-possession tokens. Leave off to keep the configured value."
-                                    : "Enable proof-of-possession tokens."}
+                                    ? "开启以启用持有证明令牌。保持关闭可保留现有配置值。"
+                                    : "启用持有证明令牌。"}
                                 </FormDescription>
                               </div>
                               <FormControl>
@@ -1060,7 +1037,7 @@ export function EditCredentialsDialog({
                                 render={({ field: intervalField }) => (
                                   <FormItem>
                                     <FormLabel className="text-sm">
-                                      Key rotation interval
+                                      密钥轮换间隔
                                     </FormLabel>
                                     <FormControl>
                                       <Input
@@ -1080,7 +1057,7 @@ export function EditCredentialsDialog({
                                       />
                                     </FormControl>
                                     <FormDescription className="text-sm">
-                                      Optional seconds; SDK default is 86400.
+                                      秒数，可选；SDK 默认为 86400。
                                     </FormDescription>
                                     <FormMessage />
                                   </FormItem>
@@ -1097,9 +1074,7 @@ export function EditCredentialsDialog({
                         name="okta_private_key"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm">
-                              Private key
-                            </FormLabel>
+                            <FormLabel className="text-sm">私钥</FormLabel>
                             <input
                               ref={oktaPrivateKeyFileInputRef}
                               type="file"
@@ -1123,7 +1098,7 @@ export function EditCredentialsDialog({
                                   className="h-36 font-mono text-xs"
                                   placeholder={
                                     canPreserveOktaKey("OKTA_PRIVATE_KEY")
-                                      ? "Leave blank to keep configured private key"
+                                      ? "留空以保留已配置的私钥"
                                       : "-----BEGIN PRIVATE KEY-----"
                                   }
                                   {...field}
@@ -1139,8 +1114,8 @@ export function EditCredentialsDialog({
                             </div>
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <FormDescription className="text-sm">
-                                Paste PEM or JWK JSON, or drop a .pem/.json file
-                                into the field.
+                                粘贴 PEM 或 JWK JSON，或将 .pem/.json
+                                文件拖入此字段。
                               </FormDescription>
                               <Button
                                 type="button"
@@ -1151,8 +1126,8 @@ export function EditCredentialsDialog({
                               >
                                 <UploadCloudIcon className="mr-2 size-4" />
                                 {oktaPrivateKeyFileName
-                                  ? "Replace file"
-                                  : "Upload file"}
+                                  ? "替换文件"
+                                  : "上传文件"}
                               </Button>
                             </div>
                             {oktaPrivateKeyFileName && (
@@ -1172,7 +1147,7 @@ export function EditCredentialsDialog({
               {!isSshKey && !isOktaCredentialForm && (
                 <>
                   <FormItem>
-                    <FormLabel className="text-sm">Keys</FormLabel>
+                    <FormLabel className="text-sm">键</FormLabel>
 
                     {fields.length > 0 &&
                       fields.map((keysItem, index) => (
@@ -1190,7 +1165,7 @@ export function EditCredentialsDialog({
                                   <Input
                                     id={`key-${index}`}
                                     className="text-sm"
-                                    placeholder={"Key"}
+                                    placeholder={"键"}
                                     readOnly={hasFixedKeys}
                                     {...field}
                                   />
@@ -1253,12 +1228,12 @@ export function EditCredentialsDialog({
                       className="w-full space-x-2 text-xs text-foreground/80"
                     >
                       <PlusCircle className="mr-2 size-4" />
-                      Add item
+                      添加条目
                     </Button>
                   )}
                   {fields.length === 0 && !hasFixedKeys && (
                     <span className="text-xs text-foreground/50">
-                      Secrets will be left unchanged.
+                      密钥将保持不变。
                     </span>
                   )}
                 </>
@@ -1268,7 +1243,7 @@ export function EditCredentialsDialog({
               {/* Wait for the managed lookup so locked fields are known. */}
               <Button size="sm" type="submit" disabled={managedLoading}>
                 <SaveIcon className="mr-2 size-4" />
-                Save
+                保存
               </Button>
             </DialogFooter>
           </form>

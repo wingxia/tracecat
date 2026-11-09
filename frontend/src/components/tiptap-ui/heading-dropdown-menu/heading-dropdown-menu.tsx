@@ -86,9 +86,9 @@ export const HeadingDropdownMenu = React.forwardRef<
             role="button"
             disabled={!canToggle}
             data-disabled={!canToggle}
-            aria-label="Format text as heading"
+            aria-label={"将文本设为标题"}
             aria-pressed={isActive}
-            tooltip="Heading"
+            tooltip={"标题"}
             {...buttonProps}
             ref={ref}
           >
@@ -106,7 +106,7 @@ export const HeadingDropdownMenu = React.forwardRef<
                     <HeadingButton
                       editor={editor}
                       level={level}
-                      text={`Heading ${level}`}
+                      text={`标题 ${level}`}
                       showTooltip={false}
                     />
                   </DropdownMenuItem>

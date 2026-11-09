@@ -39,7 +39,7 @@ import { useWorkspaceId } from "@/providers/workspace-id"
 
 const formSchema = z.object({
   file: z.instanceof(File).refine((file) => file.size <= 5000000, {
-    message: "File size must be less than 5MB.",
+    message: "文件大小必须小于 5MB。",
   }),
 })
 
@@ -81,7 +81,7 @@ export function WorkspaceManagementButton() {
             role="combobox"
             className="items-center space-x-2 bg-emerald-500 text-white shadow-sm hover:bg-emerald-500"
           >
-            <span>Manage Workspace</span>
+            <span>管理工作空间</span>
             <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -90,14 +90,14 @@ export function WorkspaceManagementButton() {
             <DropdownMenuItem
               onClick={async () => await handleCreateWorkflow()}
             >
-              Add member
+              添加成员
               <DropdownMenuShortcut>
                 <UserCircle2Icon className="size-4" />
               </DropdownMenuShortcut>
             </DropdownMenuItem>
             <DialogTrigger asChild>
               <DropdownMenuItem>
-                From YAML
+                从 YAML 导入
                 <DropdownMenuShortcut>
                   <BracesIcon className="size-4" />
                 </DropdownMenuShortcut>
@@ -108,10 +108,8 @@ export function WorkspaceManagementButton() {
       </DropdownMenu>
       <DialogContent size="sm" className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Import workflow from file</DialogTitle>
-          <DialogDescription>
-            Import a workflow from either a YAML file.
-          </DialogDescription>
+          <DialogTitle>从文件导入工作流</DialogTitle>
+          <DialogDescription>从 YAML 文件导入工作流。</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -125,7 +123,7 @@ export function WorkspaceManagementButton() {
                 name="file"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>File</FormLabel>
+                    <FormLabel>文件</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
@@ -138,7 +136,7 @@ export function WorkspaceManagementButton() {
                         }}
                       />
                     </FormControl>
-                    <FormDescription>Upload a file (max 5MB)</FormDescription>
+                    <FormDescription>上传文件（最大 5MB）</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -146,7 +144,7 @@ export function WorkspaceManagementButton() {
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit">
-                Upload
+                上传
               </Button>
             </DialogFooter>
           </form>

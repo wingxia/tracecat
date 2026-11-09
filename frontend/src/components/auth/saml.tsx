@@ -37,7 +37,7 @@ export function SamlSSOButton({ returnUrl, ...props }: SamlSSOButtonProps) {
       ) : (
         <Icons.saml className="mr-2 size-4" />
       )}{" "}
-      SAML (SSO)
+      SAML（单点登录）
     </Button>
   )
 }

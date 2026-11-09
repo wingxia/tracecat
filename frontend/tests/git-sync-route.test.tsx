@@ -63,9 +63,9 @@ describe("WorkspaceGitSyncPage", () => {
 
     render(<WorkspaceGitSyncPage />)
 
-    expect(screen.getByText("Unable to check plan access")).toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Reload" })).toBeInTheDocument()
-    expect(screen.queryByText("Upgrade required")).not.toBeInTheDocument()
+    expect(screen.getByText("无法检查套餐权限")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "重新加载" })).toBeInTheDocument()
+    expect(screen.queryByText("需要升级")).not.toBeInTheDocument()
   })
 
   it("shows the upgrade state when the plan lacks Git Sync", () => {
@@ -77,7 +77,7 @@ describe("WorkspaceGitSyncPage", () => {
 
     render(<WorkspaceGitSyncPage />)
 
-    expect(screen.getByText("Upgrade required")).toBeInTheDocument()
+    expect(screen.getByText("需要升级")).toBeInTheDocument()
   })
 
   it("shows the page when the plan includes Git Sync", () => {
@@ -120,7 +120,7 @@ describe("WorkspaceGitSyncPage", () => {
       render(<WorkspaceGitSyncPage />)
 
       expect(
-        screen.getByText("You don't have permission to sync this workspace.")
+        screen.getByText("你没有同步此工作空间的权限。")
       ).toBeInTheDocument()
       expect(screen.queryByText(/Git Sync view/)).not.toBeInTheDocument()
     })

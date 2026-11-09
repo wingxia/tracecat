@@ -99,7 +99,9 @@ function CompactWorkflowEventsHeader({
 }) {
   const startTime = execution.execution_time ?? execution.start_time
   const duration = formatRunDuration(startTime, execution.close_time)
-  const timeLabel = startTime ? new Date(startTime).toLocaleTimeString() : null
+  const timeLabel = startTime
+    ? new Date(startTime).toLocaleTimeString("zh-CN")
+    : null
   const detail = execution.status === "RUNNING" ? "Running…" : duration
 
   return (
@@ -170,7 +172,7 @@ export function WorkflowEventsHeader({
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <ZapIcon className="size-3" />
-          <span>Trigger type</span>
+          <span>触发类型</span>
         </div>
         <div className="ml-auto">
           <Tooltip delayDuration={500}>
@@ -195,7 +197,7 @@ export function WorkflowEventsHeader({
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <CircleDot className="size-3" />
-          <span>Status</span>
+          <span>状态</span>
         </div>
         <div className="ml-auto">
           <Tooltip delayDuration={500}>
@@ -217,47 +219,47 @@ export function WorkflowEventsHeader({
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <CalendarIcon className="size-3" />
-          <span>Scheduled</span>
+          <span>定时触发</span>
         </div>
         <Badge
           variant="secondary"
           className="ml-auto font-normal text-foreground/60"
         >
-          {new Date(execution.start_time).toLocaleString()}
+          {new Date(execution.start_time).toLocaleString("zh-CN")}
         </Badge>
       </div>
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <AlarmClockPlusIcon className="size-3" />
-          <span>Start time</span>
+          <span>开始时间</span>
         </div>
         <Badge
           variant="secondary"
           className="ml-auto font-normal text-foreground/60"
         >
           {execution.execution_time
-            ? new Date(execution.execution_time).toLocaleString()
+            ? new Date(execution.execution_time).toLocaleString("zh-CN")
             : "..."}
         </Badge>
       </div>
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <AlarmClockCheckIcon className="size-3" />
-          <span>End time</span>
+          <span>结束时间</span>
         </div>
         <Badge
           variant="secondary"
           className="ml-auto font-normal text-foreground/60"
         >
           {execution.close_time
-            ? new Date(execution.close_time).toLocaleString()
+            ? new Date(execution.close_time).toLocaleString("zh-CN")
             : "..."}
         </Badge>
       </div>
       <div className="flex items-center gap-1">
         <div className="flex items-center gap-2">
           <RotateCcwIcon className="size-3" />
-          <span>Rerun</span>
+          <span>重新运行</span>
         </div>
         <Button
           variant="outline"
@@ -266,7 +268,7 @@ export function WorkflowEventsHeader({
           disabled={execution.status === "RUNNING"}
           onClick={() => setRerunOpen(true)}
         >
-          Rerun with fixed results
+          使用固定结果重新运行
         </Button>
         <WorkflowRerunDialog
           executionId={execution.id}
@@ -285,7 +287,7 @@ export function WorkflowEventsHeader({
           <div className="flex items-center gap-1">
             <div className="flex items-center gap-2">
               <CirclePlayIcon className="size-3" />
-              <span>Parent run</span>
+              <span>父级运行</span>
             </div>
             <Badge variant="outline" className="ml-auto text-foreground/70">
               <Link
@@ -294,7 +296,7 @@ export function WorkflowEventsHeader({
                 <Tooltip>
                   <TooltipTrigger>
                     <div className="flex items-center gap-1">
-                      <span className="font-normal">View detailed run</span>
+                      <span className="font-normal">查看运行详情</span>
                       <SquareArrowOutUpRightIcon className="size-3" />
                     </div>
                   </TooltipTrigger>
@@ -308,7 +310,7 @@ export function WorkflowEventsHeader({
           <div className="flex items-center gap-1">
             <div className="flex items-center gap-2">
               <WorkflowIcon className="size-3" />
-              <span>Parent workflow</span>
+              <span>父工作流</span>
             </div>
             <Badge variant="outline" className="ml-auto text-foreground/70">
               <Link
@@ -320,7 +322,7 @@ export function WorkflowEventsHeader({
                 <Tooltip>
                   <TooltipTrigger>
                     <div className="flex items-center gap-1">
-                      <span className="font-normal">Go to workflow</span>
+                      <span className="font-normal">前往工作流</span>
                       <SquareArrowOutUpRightIcon className="size-3" />
                     </div>
                   </TooltipTrigger>
@@ -465,7 +467,7 @@ export function WorkflowEvents({
         latestEvent?.action_name === "core.loop.start" ? loopMeta : undefined
       const loopTooltip =
         latestEvent?.action_name === "core.loop.start" && loopMeta
-          ? `Iteration ${loopMeta}`
+          ? `迭代 ${loopMeta}`
           : loopMeta
       const instanceCount = relatedEvents.length
       const childWorkflowRunLink = getChildWorkflowRunLink(relatedEvents)
@@ -485,11 +487,11 @@ export function WorkflowEvents({
           <TooltipTrigger asChild>
             <span className="flex items-center gap-0.5">
               <PinIcon className="size-2.5" />
-              Fixed
+              已固定
             </span>
           </TooltipTrigger>
           <TooltipContent side="top">
-            <span>Result reused from {fixedFrom}</span>
+            <span>结果复用自 {fixedFrom}</span>
           </TooltipContent>
         </Tooltip>
       ) : undefined
@@ -499,7 +501,7 @@ export function WorkflowEvents({
         label: refToLabel(actionRef),
         meta: fixedBadge ?? loopBadge,
         time: latestStartTime
-          ? new Date(latestStartTime).toLocaleTimeString()
+          ? new Date(latestStartTime).toLocaleTimeString("zh-CN")
           : "-",
         icon: isLoopAction ? (
           loopTooltip ? (
@@ -557,7 +559,7 @@ export function WorkflowEvents({
                 }}
               >
                 <LayoutListIcon className="size-3" />
-                <span>View last input</span>
+                <span>查看上次输入</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={!canViewResult}
@@ -569,7 +571,7 @@ export function WorkflowEvents({
                 }}
               >
                 <CircleCheckBigIcon className="size-3" />
-                <span>View last result</span>
+                <span>查看上次结果</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={!canFocusAction}
@@ -583,7 +585,7 @@ export function WorkflowEvents({
                 ) : (
                   <ScanEyeIcon className="size-3" />
                 )}
-                <span>Focus action</span>
+                <span>定位动作</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -597,7 +599,7 @@ export function WorkflowEvents({
       <div className="pointer-events-none mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <CalendarSearchIcon className="size-3" />
-          <span>Events</span>
+          <span>执行事件</span>
         </div>
       </div>
 
@@ -611,12 +613,12 @@ export function WorkflowEvents({
                 {status === "RUNNING" ? (
                   <>
                     <LoaderIcon className="size-3 animate-spin text-muted-foreground" />
-                    <span>Waiting for events...</span>
+                    <span>正在等待执行事件…</span>
                   </>
                 ) : (
                   <>
                     <CircleDot className="size-3 text-muted-foreground" />
-                    <span>No events</span>
+                    <span>暂无执行事件</span>
                   </>
                 )}
               </div>

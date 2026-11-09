@@ -36,16 +36,16 @@ export function useOrgAgentOtelSettings() {
         queryKey: ["org-agent-otel-settings"],
       })
       toast({
-        title: "Updated agent telemetry",
-        description: "Agent telemetry settings updated successfully.",
+        title: "已更新智能体遥测",
+        description: "智能体遥测设置更新成功。",
       })
     },
     onError: (error: TracecatApiError) => {
       switch (error.status) {
         case 403:
           toast({
-            title: "Forbidden",
-            description: "You cannot perform this action",
+            title: "禁止访问",
+            description: "你无法执行此操作",
           })
           break
         default:
@@ -54,8 +54,8 @@ export function useOrgAgentOtelSettings() {
             detail: getApiErrorDetail(error),
           })
           toast({
-            title: "Failed to update agent telemetry",
-            description: `An error occurred while updating agent telemetry settings: ${getApiErrorDetail(error) ?? "unknown error"}`,
+            title: "更新智能体遥测失败",
+            description: `更新智能体遥测设置时出错：${getApiErrorDetail(error) ?? "未知错误"}`,
           })
       }
     },

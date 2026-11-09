@@ -70,7 +70,7 @@ export function AgGridCellRenderer(params: AgGridCellRendererParams) {
         {isStringValue && isTextType && canEdit && (
           <button
             type="button"
-            aria-label="Edit text"
+            aria-label={"编辑文本"}
             onClick={() =>
               openPanel({
                 mode: "edit-text",
@@ -88,7 +88,7 @@ export function AgGridCellRenderer(params: AgGridCellRendererParams) {
         {isStringValue && isTextType && !canEdit && (
           <button
             type="button"
-            aria-label="View text"
+            aria-label={"查看文本"}
             onClick={() =>
               openPanel({ mode: "view-text", value: params.value, title })
             }
@@ -102,7 +102,7 @@ export function AgGridCellRenderer(params: AgGridCellRendererParams) {
           <>
             <button
               type="button"
-              aria-label="View JSON"
+              aria-label={"查看 JSON"}
               onClick={() =>
                 openPanel({ mode: "view-json", value: params.value, title })
               }
@@ -113,7 +113,7 @@ export function AgGridCellRenderer(params: AgGridCellRendererParams) {
             {canEdit && (
               <button
                 type="button"
-                aria-label="Edit JSON"
+                aria-label={"编辑 JSON"}
                 onClick={() =>
                   openPanel({
                     mode: "edit-json",

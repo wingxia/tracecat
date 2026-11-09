@@ -15,11 +15,7 @@ export default function AdminTiersPage() {
   }
 
   if (error) {
-    return (
-      <div className="text-center text-muted-foreground">
-        Failed to load tiers
-      </div>
-    )
+    return <div className="text-center text-muted-foreground">加载套餐失败</div>
   }
 
   return (
@@ -27,9 +23,9 @@ export default function AdminTiersPage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">Tiers</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">套餐</h2>
             <p className="text-base text-muted-foreground">
-              Manage plans and resource limits.
+              管理套餐和资源限制。
             </p>
           </div>
           <div className="ml-auto flex items-center space-x-2">
@@ -38,10 +34,9 @@ export default function AdminTiersPage() {
         </div>
         <Alert variant="warning">
           <AlertTriangleIcon className="size-4" />
-          <AlertTitle>Enterprise license required</AlertTitle>
+          <AlertTitle>需要企业版许可证</AlertTitle>
           <AlertDescription>
-            All tier settings on this page are Enterprise-only and will be gated
-            behind a license key in a future release.
+            此页面的所有套餐设置仅适用于企业版，未来版本将要求许可证密钥。
           </AlertDescription>
         </Alert>
         <AdminTiersTable />

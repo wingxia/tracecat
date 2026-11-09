@@ -343,12 +343,12 @@ function CaseTaskReadRow({
                     patchStatus(value)
                   }
                 }}
-                ariaLabel="Change status"
+                ariaLabel={"更改状态"}
                 tooltip={statusDefinition.label}
               >
                 <button
                   type="button"
-                  aria-label={`Change status: ${statusDefinition.label}`}
+                  aria-label={`更改状态：${statusDefinition.label}`}
                   className={TASK_ICON_TRIGGER_CLASS}
                 >
                   <CaseTaskStatusIcon status={status} className="size-4" />
@@ -368,11 +368,7 @@ function CaseTaskReadRow({
                   <button
                     type="button"
                     aria-expanded={descriptionExpanded}
-                    aria-label={
-                      descriptionExpanded
-                        ? "Hide description"
-                        : "Show description"
-                    }
+                    aria-label={descriptionExpanded ? "隐藏描述" : "显示描述"}
                     onClick={() => setDescriptionExpanded((prev) => !prev)}
                     className={cn(
                       TASK_ICON_TRIGGER_CLASS,
@@ -402,14 +398,14 @@ function CaseTaskReadRow({
                       patchPriority(value)
                     }
                   }}
-                  ariaLabel="Set priority"
+                  ariaLabel={"设置优先级"}
                   tooltip={
-                    showPriority ? priorityDefinition.label : "Set priority"
+                    showPriority ? priorityDefinition.label : "设置优先级"
                   }
                 >
                   <button
                     type="button"
-                    aria-label={`Set priority: ${priorityDefinition.label}`}
+                    aria-label={`设置优先级：${priorityDefinition.label}`}
                     className={cn(
                       TASK_ICON_TRIGGER_CLASS,
                       !showPriority && TASK_HOVER_REVEAL_CLASS
@@ -430,16 +426,14 @@ function CaseTaskReadRow({
                   value={assigneeId}
                   emptyValue={UNASSIGNED}
                   onSelect={patchAssignee}
-                  placeholder="Assign to…"
-                  ariaLabel="Assign to"
-                  tooltip={assignee ? assignee.email : "Assign to"}
+                  placeholder={"分配给…"}
+                  ariaLabel={"分配给"}
+                  tooltip={assignee ? assignee.email : "分配给"}
                 >
                   <button
                     type="button"
                     aria-label={
-                      assignee
-                        ? `Assign to: currently ${assignee.email}`
-                        : "Assign to"
+                      assignee ? `分配给：当前为 ${assignee.email}` : "分配给"
                     }
                     className="flex size-6 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   >
@@ -464,7 +458,7 @@ function CaseTaskReadRow({
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        aria-label={`Run workflow: ${resolvedWorkflow.title}`}
+                        aria-label={`运行工作流：${resolvedWorkflow.title}`}
                         onClick={() => setRunDialogOpen(true)}
                         className={cn(
                           TASK_PILL_CLASS,
@@ -478,7 +472,7 @@ function CaseTaskReadRow({
                       </button>
                     </TooltipTrigger>
                     <TooltipContent side="top" className="text-xs">
-                      Run workflow
+                      运行工作流
                     </TooltipContent>
                   </Tooltip>
                 )}
@@ -508,20 +502,20 @@ function CaseTaskReadRow({
             onClick={() => onRequestEdit(task)}
           >
             <Pencil className="mr-2 size-3.5" />
-            Edit task
+            编辑任务
           </ContextMenuItem>
           <ContextMenuItem
             className="text-xs"
             onClick={() => setRunsDrawerOpen(true)}
           >
             <History className="mr-2 size-3.5" />
-            View workflow runs
+            查看工作流运行记录
           </ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <CircleDot className="mr-2 size-3.5" />
-              Change status
+              更改状态
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-40">
               <ContextMenuRadioGroup value={status}>
@@ -551,7 +545,7 @@ function CaseTaskReadRow({
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <User className="mr-2 size-3.5" />
-              Assign to
+              分配给
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-56">
               <ContextMenuRadioGroup value={assigneeId ?? UNASSIGNED}>
@@ -561,7 +555,7 @@ function CaseTaskReadRow({
                   onClick={() => patchAssignee(null)}
                 >
                   <CircleSlash className="mr-2 size-3 text-muted-foreground/50" />
-                  No assignee
+                  无负责人
                 </ContextMenuRadioItem>
                 {sortedMembers.map((member) => (
                   <ContextMenuRadioItem
@@ -586,7 +580,7 @@ function CaseTaskReadRow({
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <SignalHigh className="mr-2 size-3.5" />
-              Set priority
+              设置优先级
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-40">
               <ContextMenuRadioGroup value={priority}>
@@ -615,7 +609,7 @@ function CaseTaskReadRow({
           <ContextMenuSub>
             <ContextMenuSubTrigger className="text-xs">
               <Workflow className="mr-2 size-3.5" />
-              Set workflow
+              设置工作流
             </ContextMenuSubTrigger>
             <ContextMenuSubContent className="w-72 p-0">
               <CaseTaskWorkflowCommand
@@ -634,7 +628,7 @@ function CaseTaskReadRow({
             onClick={() => onDelete(task)}
           >
             <Trash2 className="mr-2 size-3.5" />
-            Delete
+            删除
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>

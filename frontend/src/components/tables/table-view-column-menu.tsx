@@ -67,7 +67,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="size-4 p-0 !ring-0">
-            <span className="sr-only">Configure column</span>
+            <span className="sr-only">配置列</span>
             <ChevronDownIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -80,7 +80,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
             }}
           >
             <CopyIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-            Copy ID
+            复制 ID
           </DropdownMenuItem>
           <DropdownMenuItem
             className="py-1 text-xs text-foreground/80"
@@ -90,7 +90,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
             }}
           >
             <CopyIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-            Copy name
+            复制名称
           </DropdownMenuItem>
           {canUpdateTable &&
             !schemaLocked &&
@@ -103,7 +103,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
                 }}
               >
                 <UnlinkIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-                Delete unique index
+                删除唯一索引
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem
@@ -114,7 +114,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
                 }}
               >
                 <DatabaseZapIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-                Create unique index
+                创建唯一索引
               </DropdownMenuItem>
             ))}
           {!schemaLocked && (
@@ -136,7 +136,7 @@ export function TableViewColumnMenu({ column }: { column: TableColumnRead }) {
               }}
             >
               <Trash2Icon className="mr-2 size-3 group-hover/item:text-destructive" />
-              Delete
+              删除
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>
@@ -201,8 +201,8 @@ function TableColumnDeleteDialog({
   const handleDeleteColumn = async () => {
     if (confirmName !== column.name) {
       toast({
-        title: "Column name does not match",
-        description: "Please type the exact column name to confirm deletion",
+        title: "列名称不匹配",
+        description: "请输入完整准确的列名称以确认删除",
       })
       return
     }
@@ -223,33 +223,31 @@ function TableColumnDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete column permanently</AlertDialogTitle>
+          <AlertDialogTitle>永久删除列</AlertDialogTitle>
           <AlertDialogDescription>
-            To confirm deletion, type the column name <b>{column.name}</b>{" "}
-            below. This action cannot be undone.
+            请在下方输入列名称 <b>{column.name}</b> 以确认删除。此操作无法撤销。
             {selected && (
               <span className="mt-2 block">
-                This column is included in semantic search. Deleting it removes
-                it from search and rebuilds any remaining selected columns.
+                此列参与语义搜索。删除后会将其移出搜索，并为其余选中的列重建索引。
               </span>
             )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="my-4">
           <Input
-            placeholder={`Type "${column.name}" to confirm`}
+            placeholder={`输入“${column.name}”以确认`}
             value={confirmName}
             onChange={(e) => setConfirmName(e.target.value)}
           />
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDeleteColumn}
             variant="destructive"
             disabled={confirmName !== column.name}
           >
-            Delete
+            删除
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -260,10 +258,10 @@ function TableColumnDeleteDialog({
 const _updateColumnSchema = z.object({
   name: z
     .string()
-    .min(1, { message: "Name must be at least 1 character" })
-    .max(255, { message: "Name must be less than 255 characters" })
+    .min(1, { message: "名称至少需要 1 个字符" })
+    .max(255, { message: "名称必须少于 255 个字符" })
     .regex(/^[a-zA-Z0-9_]+$/, {
-      message: "Name must contain only letters, numbers, and underscores",
+      message: "名称只能包含字母、数字和下划线",
     }),
   type: z.enum(SqlTypeCreatableEnum),
   nullable: z.boolean(),
@@ -292,15 +290,13 @@ function TableColumnIndexDialog({
       <AlertDialog open={open} onOpenChange={onOpenChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Column is already a unique index
-            </AlertDialogTitle>
+            <AlertDialogTitle>此列已有唯一索引</AlertDialogTitle>
             <AlertDialogDescription>
-              Column <b>{column.name}</b> is already a unique index.
+              列 <b>{column.name}</b> 已具有唯一索引。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Close</AlertDialogCancel>
+            <AlertDialogCancel>关闭</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -321,8 +317,8 @@ function TableColumnIndexDialog({
       })
 
       toast({
-        title: "Created unique index",
-        description: "Column is now a unique index.",
+        title: "已创建唯一索引",
+        description: "此列现已具有唯一索引。",
       })
 
       onOpenChange()
@@ -342,22 +338,22 @@ function TableColumnIndexDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Create unique index</AlertDialogTitle>
+          <AlertDialogTitle>创建唯一索引</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to make column <b>{column.name}</b> a unique
-            index? This enables upsert operations on the table.
+            确定要为列 <b>{column.name}</b> 创建唯一索引吗？这将启用数据表的
+            upsert 操作。
             <br />
             <br />
-            <strong>Requirements:</strong>
+            <strong>要求：</strong>
             <ul className="mt-2 list-disc pl-5 text-xs">
-              <li>All values in the column must be unique</li>
-              <li>Only one unique index is allowed per table</li>
+              <li>此列的所有值必须唯一</li>
+              <li>每个数据表只允许一个唯一索引</li>
             </ul>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={updateColumnIsPending}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleSetIndex}
@@ -366,12 +362,12 @@ function TableColumnIndexDialog({
             {updateColumnIsPending ? (
               <>
                 <Spinner />
-                Creating...
+                创建中…
               </>
             ) : (
               <>
                 <DatabaseZapIcon className="mr-2 size-4" />
-                Create unique index
+                创建唯一索引
               </>
             )}
           </AlertDialogAction>
@@ -409,8 +405,8 @@ function TableColumnDropIndexDialog({
       })
 
       toast({
-        title: "Removed unique index",
-        description: "Column is no longer a unique index.",
+        title: "已移除唯一索引",
+        description: "此列已不再具有唯一索引。",
       })
 
       onOpenChange()
@@ -430,19 +426,18 @@ function TableColumnDropIndexDialog({
     >
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete unique index</AlertDialogTitle>
+          <AlertDialogTitle>删除唯一索引</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to remove the unique index from column{" "}
-            <b>{column.name}</b>?
+            确定要移除以下列的唯一索引： <b>{column.name}</b>?
             <br />
             <br />
-            Upsert operations that rely on this column as the conflict key will
-            stop working until a new unique index is created on another column.
+            在其他列上创建新唯一索引之前，依赖此列作为冲突键的 upsert
+            操作将无法使用。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={updateColumnIsPending}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDropIndex}
@@ -452,12 +447,12 @@ function TableColumnDropIndexDialog({
             {updateColumnIsPending ? (
               <>
                 <Spinner />
-                Removing...
+                移除中…
               </>
             ) : (
               <>
                 <UnlinkIcon className="mr-2 size-4" />
-                Delete unique index
+                删除唯一索引
               </>
             )}
           </AlertDialogAction>

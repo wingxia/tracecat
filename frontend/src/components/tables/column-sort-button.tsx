@@ -41,16 +41,16 @@ export function ColumnSortButton({
   const direction = sort.orderBy === columnName ? sort.sort : null
 
   let SortIcon = ArrowUpDownIcon
-  let label = `Sort by ${columnName}`
-  let hint = "Sort ascending"
+  let label = `按 ${columnName} 排序`
+  let hint = "升序排序"
   if (direction === "asc") {
     SortIcon = ArrowDownAZIcon
-    label = `${columnName}, sorted ascending. Activate to sort descending.`
-    hint = "Sort descending"
+    label = `${columnName}，当前为升序。点击切换为降序。`
+    hint = "降序排序"
   } else if (direction === "desc") {
     SortIcon = ArrowDownZAIcon
-    label = `${columnName}, sorted descending. Activate to remove sorting.`
-    hint = "Clear sort"
+    label = `${columnName}，当前为降序。点击取消排序。`
+    hint = "清除排序"
   }
 
   return (

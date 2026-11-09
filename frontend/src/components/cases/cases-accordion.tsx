@@ -52,49 +52,49 @@ interface StatusGroupConfig {
 
 const STATUS_GROUPS: Record<StatusGroup, StatusGroupConfig> = {
   new: {
-    label: "New",
+    label: "新建",
     icon: FlagTriangleRightIcon,
     statuses: ["new"],
     iconColor: "text-yellow-600",
     aggregateKey: "new",
   },
   in_progress: {
-    label: "In progress",
+    label: "处理中",
     icon: TrafficConeIcon,
     statuses: ["in_progress"],
     iconColor: "text-blue-600",
     aggregateKey: "in_progress",
   },
   on_hold: {
-    label: "On hold",
+    label: "挂起",
     icon: CirclePauseIcon,
     statuses: ["on_hold"],
     iconColor: "text-orange-600",
     aggregateKey: "on_hold",
   },
   resolved: {
-    label: "Resolved",
+    label: "已解决",
     icon: CheckCircleIcon,
     statuses: ["resolved"],
     iconColor: "text-green-600",
     aggregateKey: "resolved",
   },
   closed: {
-    label: "Closed",
+    label: "已关闭",
     icon: CheckCircleIcon,
     statuses: ["closed"],
     iconColor: "text-violet-600",
     aggregateKey: "closed",
   },
   other: {
-    label: "Other",
+    label: "其他",
     icon: CircleIcon,
     statuses: ["other"],
     iconColor: "text-muted-foreground",
     aggregateKey: "other",
   },
   unknown: {
-    label: "Unknown",
+    label: "未知",
     icon: CircleHelpIcon,
     statuses: ["unknown"],
     iconColor: "text-muted-foreground",
@@ -540,7 +540,7 @@ export function CasesAccordion({
           ref={loadMoreRef}
           className="flex h-10 items-center justify-center text-xs text-muted-foreground"
         >
-          {isFetchingNextPage ? "Loading more cases..." : "Scroll to load more"}
+          {isFetchingNextPage ? "正在加载更多事件…" : "滚动以加载更多"}
         </div>
       )}
     </div>

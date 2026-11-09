@@ -11,7 +11,7 @@ function validationError(detail: unknown) {
       statusText: "Unprocessable Content",
       body: { detail },
     },
-    "Validation Error"
+    "校验错误"
   )
 }
 
@@ -27,7 +27,7 @@ describe("describeApiError", () => {
         },
       ])
     )
-    expect(message).toBe("Role ARN is not in the expected format.")
+    expect(message).toBe("角色 ARN 的格式不符合要求。")
   })
 
   it("keeps model validator messages readable", () => {

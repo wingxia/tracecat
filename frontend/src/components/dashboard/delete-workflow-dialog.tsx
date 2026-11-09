@@ -31,19 +31,19 @@ export function DeleteWorkflowConfirmDialog({
     <ConfirmDestructiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete workflow"
+      title={"删除工作流"}
       description={
         <>
-          Permanently delete{" "}
+          永久删除{" "}
           {workflowTitle ? (
             <span className="font-medium text-foreground">{workflowTitle}</span>
           ) : (
-            "this workflow"
+            "此工作流"
           )}
-          ? This also deletes its schedules. This cannot be undone.
+          吗？其定时计划也将被删除，此操作无法撤销。
         </>
       }
-      identifier={{ label: "Workflow ID", value: id }}
+      identifier={{ label: "工作流 ID", value: id }}
       confirmPhrase={id}
       isPending={deleteWorkflowIsPending}
       onConfirm={async () => {

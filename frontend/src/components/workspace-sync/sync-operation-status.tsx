@@ -81,8 +81,7 @@ function RetryNotice({
     <GitSyncNotice tone="error">
       <span className="flex items-center gap-3">
         <span className="min-w-0 flex-1">
-          Last {direction} did not finish.{" "}
-          {operation.error ?? "Retry to resume it."}
+          上次 {direction} 未完成。 {operation.error ?? "重试以恢复。"}
           {operation.data_applied &&
             " Workspace changes were already imported and will not be imported again."}
           {retry.error && " Could not retry. Refresh and try again."}
@@ -95,7 +94,7 @@ function RetryNotice({
           disabled={retry.isPending}
           onClick={() => retry.mutate()}
         >
-          Retry
+          重试
         </Button>
       </span>
     </GitSyncNotice>
@@ -105,10 +104,10 @@ function RetryNotice({
 function getApplyingMessage(operation: SyncOperationRead): string {
   if (operation.direction === "push") {
     const branch = operation.inputs.push?.branch
-    return `Pushing${branch ? ` to ${branch}` : ""} in the background. You can leave this page.`
+    return `正在后台推送${branch ? `到 ${branch}` : ""}，可以离开此页面。`
   }
   if (operation.data_applied) {
-    return "Pull imported. Finishing schedules and background work."
+    return "拉取内容已导入，正在完成定时计划和后台操作。"
   }
-  return "Pulling into the workspace in the background. You can leave this page."
+  return "正在后台拉取到工作空间，可以离开此页面。"
 }

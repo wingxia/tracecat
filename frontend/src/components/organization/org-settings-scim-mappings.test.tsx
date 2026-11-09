@@ -174,14 +174,11 @@ function renderScim() {
   )
 }
 
-const PICKER = "Tracecat groups for IdP team"
+const PICKER = "IdP team 的 Tracecat 用户组"
 
 async function toggleTarget(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole("button", { name: PICKER }))
-  await user.type(
-    screen.getByPlaceholderText("Search Tracecat groups"),
-    "target"
-  )
+  await user.type(screen.getByPlaceholderText("搜索 Tracecat 用户组"), "target")
   await user.click(screen.getByRole("option", { name: "Target team" }))
   if (screen.queryByRole("listbox")) await user.keyboard("{Escape}")
 }
@@ -193,26 +190,24 @@ test("pending mappings stay local until reviewed activation", async () => {
   expect(screen.getByRole("button", { name: PICKER })).toHaveTextContent(
     "Target team"
   )
-  expect(
-    screen.getByText(/1 draft applies when you activate/)
-  ).toBeInTheDocument()
+  expect(screen.getByText(/1 项草稿.*激活/)).toBeInTheDocument()
   expect(applyMappingChanges).not.toHaveBeenCalled()
   expect(activate.mutateAsync).not.toHaveBeenCalled()
-  fireEvent.click(screen.getByRole("button", { name: "Review and activate" }))
+  fireEvent.click(screen.getByRole("button", { name: "审核并激活" }))
   fireEvent.click(
-    await screen.findByRole("button", { name: /loses? group access/ })
+    await screen.findByRole("button", { name: /失去用户组访问权限/ })
   )
   expect(screen.getByText("manual@example.com")).toBeInTheDocument()
   expect(review.mutateAsync).toHaveBeenCalledWith({
     mappings: [{ external_group_id: "source", group_id: "target" }],
     delete: [],
   })
-  expect(screen.getByText("Removed from Target team")).toBeInTheDocument()
-  fireEvent.click(screen.getByRole("button", { name: /from your directory/ }))
+  expect(screen.getByText("已从 Target team 移除")).toBeInTheDocument()
+  fireEvent.click(screen.getByRole("button", { name: /来自目录/ }))
   expect(screen.getByText("eligible@example.com")).toBeInTheDocument()
   // The preview already holds everyone, so nothing is refetched.
   expect(review.mutateAsync).toHaveBeenCalledTimes(1)
-  fireEvent.click(screen.getByRole("button", { name: "Activate for 1 user" }))
+  fireEvent.click(screen.getByRole("button", { name: "为 1 位用户启用" }))
   await waitFor(() =>
     expect(activate.mutateAsync).toHaveBeenCalledWith([
       { external_group_id: "source", group_id: "target" },
@@ -233,7 +228,7 @@ test("a pending connection drafts without waiting on live mappings", () => {
     </TooltipProvider>
   )
   expect(screen.getByRole("button", { name: PICKER })).toBeInTheDocument()
-  expect(screen.queryByText("Unable to load group mappings")).toBeNull()
+  expect(screen.queryByText("无法加载用户组映射")).toBeNull()
 })
 
 test("drafts stop at the review cap", () => {
@@ -247,7 +242,7 @@ test("drafts stop at the review cap", () => {
   for (const group of externalGroups) {
     fireEvent.click(
       screen.getByRole("button", {
-        name: `Tracecat groups for ${group.display_name}`,
+        name: `${group.display_name} 的 Tracecat 用户组`,
       })
     )
     fireEvent.click(screen.getByRole("option", { name: "Target team" }))
@@ -255,11 +250,9 @@ test("drafts stop at the review cap", () => {
       key: "Escape",
     })
   }
+  expect(screen.getByText(/100 项草稿.*激活/)).toBeInTheDocument()
   expect(
-    screen.getByText(/100 drafts apply when you activate/)
-  ).toBeInTheDocument()
-  expect(
-    screen.getByRole("button", { name: "Tracecat groups for IdP team 100" })
+    screen.getByRole("button", { name: "IdP team 100 的 Tracecat 用户组" })
   ).not.toHaveTextContent("Target team")
 }, 30_000)
 
@@ -267,10 +260,10 @@ test("discarding drafts clears them without writing", async () => {
   const user = userEvent.setup()
   renderScim()
   await toggleTarget(user)
-  await user.click(screen.getByRole("button", { name: "Discard drafts" }))
-  expect(screen.queryByText(/draft applies/)).toBeNull()
+  await user.click(screen.getByRole("button", { name: "放弃草稿" }))
+  expect(screen.queryByText(/项草稿将生效/)).toBeNull()
   expect(screen.getByRole("button", { name: PICKER })).toHaveTextContent(
-    "Not mapped"
+    "未映射"
   )
 })
 
@@ -285,9 +278,7 @@ test("drafts cannot be discarded while their review is loading", async () => {
         <OrgSettingsScim />
       </TooltipProvider>
     )
-    expect(
-      screen.getByRole("button", { name: "Discard drafts" })
-    ).toBeDisabled()
+    expect(screen.getByRole("button", { name: "放弃草稿" })).toBeDisabled()
   } finally {
     review.isPending = false
   }
@@ -299,22 +290,20 @@ test("active changes stay drafts until one review applies them", async () => {
   renderScim()
   await toggleTarget(user)
   expect(review.mutateAsync).not.toHaveBeenCalled()
-  expect(screen.getByText(/1 draft applies after review/)).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Review changes" }))
+  expect(screen.getByText(/1 项草稿.*审核/)).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "审核更改" }))
   await user.click(
-    await screen.findByRole("button", { name: /loses? group access/ })
+    await screen.findByRole("button", { name: /失去用户组访问权限/ })
   )
   expect(screen.getByText("manual@example.com")).toBeInTheDocument()
-  expect(screen.getByText("Removed from Target team")).toBeInTheDocument()
-  expect(screen.getByText("Added IdP team")).toBeInTheDocument()
-  expect(screen.getByText("1 added · 1 removed")).toBeInTheDocument()
-  expect(
-    screen.getByText("Removes 1 previously added member.")
-  ).toBeInTheDocument()
+  expect(screen.getByText("已从 Target team 移除")).toBeInTheDocument()
+  expect(screen.getByText("已添加 IdP team")).toBeInTheDocument()
+  expect(screen.getByText("新增 1 人 · 移除 1 人")).toBeInTheDocument()
+  expect(screen.getByText("移除 1 位此前添加的成员。")).toBeInTheDocument()
   // Joining the organization is an activation outcome only.
   expect(screen.queryByText("eligible@example.com")).toBeNull()
   expect(applyMappingChanges).not.toHaveBeenCalled()
-  fireEvent.click(screen.getByRole("button", { name: "Apply 1 change" }))
+  fireEvent.click(screen.getByRole("button", { name: "应用 1 项更改" }))
   await waitFor(() =>
     expect(applyMappingChanges).toHaveBeenCalledWith({
       create: [{ external_group_id: "source", group_id: "target" }],
@@ -332,19 +321,19 @@ test("missing affected-user labels prevent confirmation", async () => {
   const user = userEvent.setup()
   renderScim()
   await toggleTarget(user)
-  await user.click(screen.getByRole("button", { name: "Review changes" }))
+  await user.click(screen.getByRole("button", { name: "审核更改" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Affected user details could not be loaded"
+    "无法加载受影响用户的详情"
   )
-  expect(screen.getByRole("button", { name: "Apply 1 change" })).toBeDisabled()
+  expect(screen.getByRole("button", { name: "应用 1 项更改" })).toBeDisabled()
   expect(applyMappingChanges).not.toHaveBeenCalled()
 })
 
 test("cancelling review leaves memberships untouched", async () => {
   renderScim()
-  fireEvent.click(screen.getByRole("button", { name: "Review and activate" }))
-  await screen.findByRole("button", { name: /loses? group access/ })
-  fireEvent.click(screen.getByRole("button", { name: "Close" }))
+  fireEvent.click(screen.getByRole("button", { name: "审核并激活" }))
+  await screen.findByRole("button", { name: /失去用户组访问权限/ })
+  fireEvent.click(screen.getByRole("button", { name: "关闭" }))
   expect(activate.mutateAsync).not.toHaveBeenCalled()
   expect(applyMappingChanges).not.toHaveBeenCalled()
 })
@@ -363,7 +352,7 @@ test("search narrows the group rows", () => {
   ]
   renderScim()
   expect(screen.getByText("Ops")).toBeInTheDocument()
-  fireEvent.change(screen.getByRole("searchbox", { name: "Search groups" }), {
+  fireEvent.change(screen.getByRole("searchbox", { name: "搜索用户组" }), {
     target: { value: "idp t" },
   })
   expect(screen.getByText("IdP team")).toBeInTheDocument()
@@ -379,11 +368,9 @@ test("mapping pages load on request and removals apply after review", async () =
   ]
   const { rerender } = renderScim()
   expect(screen.queryByRole("button", { name: PICKER })).toBeNull()
-  expect(screen.queryByText("Not mapped")).toBeNull()
-  expect(
-    screen.getByText("Load all mappings to view selections.")
-  ).toBeInTheDocument()
-  fireEvent.click(screen.getByRole("button", { name: "Load more mappings" }))
+  expect(screen.queryByText("未映射")).toBeNull()
+  expect(screen.getByText("加载全部映射以查看选择。")).toBeInTheDocument()
+  fireEvent.click(screen.getByRole("button", { name: "加载更多映射" }))
   expect(fetchNextMappings).toHaveBeenCalledTimes(1)
   mappingsIsFetchingNextPage = true
   rerender(
@@ -391,9 +378,7 @@ test("mapping pages load on request and removals apply after review", async () =
       <OrgSettingsScim />
     </TooltipProvider>
   )
-  expect(
-    screen.getByRole("button", { name: "Loading mappings…" })
-  ).toBeDisabled()
+  expect(screen.getByRole("button", { name: "正在加载映射…" })).toBeDisabled()
   mappingsIsFetchingNextPage = false
   mappingsError = new Error("Unavailable")
   rerender(
@@ -401,9 +386,7 @@ test("mapping pages load on request and removals apply after review", async () =
       <OrgSettingsScim />
     </TooltipProvider>
   )
-  expect(screen.getByRole("alert")).toHaveTextContent(
-    "Unable to load more mappings"
-  )
+  expect(screen.getByRole("alert")).toHaveTextContent("无法加载更多映射")
   expect(screen.queryByRole("button", { name: PICKER })).toBeNull()
   mappingsHasNextPage = false
   mappingsError = null
@@ -442,21 +425,21 @@ test("mapping pages load on request and removals apply after review", async () =
   })
   await toggleTarget(user)
   expect(applyMappingChanges).not.toHaveBeenCalled()
-  await user.click(screen.getByRole("button", { name: "Review changes" }))
+  await user.click(screen.getByRole("button", { name: "审核更改" }))
   expect(review.mutateAsync).toHaveBeenCalledWith({
     mappings: [],
     delete: ["mapping"],
   })
   await user.click(
-    await screen.findByRole("button", { name: /loses? group access/ })
+    await screen.findByRole("button", { name: /失去用户组访问权限/ })
   )
   expect(screen.getByText("gone@example.com")).toBeInTheDocument()
-  expect(screen.getByText("removed IdP team")).toBeInTheDocument()
+  expect(screen.getByText("已移除 IdP team")).toBeInTheDocument()
   await user.click(
-    screen.getByRole("button", { name: /1 IdP member becomes manual/ })
+    screen.getByRole("button", { name: /1 位 IdP 成员将改为手动管理/ })
   )
   expect(screen.getByText("kept@example.com")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Apply 1 change" }))
+  await user.click(screen.getByRole("button", { name: "应用 1 项更改" }))
   await waitFor(() =>
     expect(applyMappingChanges).toHaveBeenCalledWith({
       create: [],
@@ -482,20 +465,18 @@ test("generic RBAC permissions cannot administer mappings", () => {
   mappings = []
   renderScim()
   expect(screen.getByRole("button", { name: PICKER })).toBeDisabled()
-  expect(
-    screen.getByRole("button", { name: "Review and activate" })
-  ).toBeDisabled()
+  expect(screen.getByRole("button", { name: "审核并激活" })).toBeDisabled()
 })
 
 test("pending connection is labelled pending, with directory counts", () => {
   renderScim()
-  expect(screen.getByText("Pending")).toBeInTheDocument()
-  expect(screen.queryByText("Active")).not.toBeInTheDocument()
+  expect(screen.getByText("待处理")).toBeInTheDocument()
+  expect(screen.queryByText("已启用")).not.toBeInTheDocument()
   expect(
     screen.getByText(
       (_, element) =>
         element?.tagName === "DD" &&
-        element.textContent === "Pending·3 users (1 inactive)·1 group"
+        element.textContent === "待处理·3 个用户 （1 个已停用）·1 用户组"
     )
   ).toBeInTheDocument()
 })
@@ -506,24 +487,22 @@ test.each([undefined, initialConnection])(
     connection = cached
     connectionError = Object.assign(new Error("Unavailable"), { status: 503 })
     const { rerender } = render(<ScimSettingsPage />)
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Could not load SCIM connection"
-    )
-    expect(screen.queryByRole("button", { name: "Generate token" })).toBeNull()
-    expect(screen.queryByRole("button", { name: "Rotate token" })).toBeNull()
-    fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+    expect(screen.getByRole("alert")).toHaveTextContent("无法加载 SCIM 连接")
+    expect(screen.queryByRole("button", { name: "生成令牌" })).toBeNull()
+    expect(screen.queryByRole("button", { name: "轮换令牌" })).toBeNull()
+    fireEvent.click(screen.getByRole("button", { name: "重试" }))
     expect(refetchConnection).toHaveBeenCalledTimes(1)
     expect(issueToken).not.toHaveBeenCalled()
     connectionIsFetching = true
     rerender(<ScimSettingsPage />)
-    expect(screen.getByRole("button", { name: "Retry" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "重试" })).toBeDisabled()
   }
 )
 
 test("a confirmed absent connection still offers setup", () => {
   connection = null
   render(<ScimSettingsPage />)
-  expect(screen.getByRole("button", { name: "Generate token" })).toBeEnabled()
+  expect(screen.getByRole("button", { name: "生成令牌" })).toBeEnabled()
 })
 
 test("unknown plan access shows an error instead of an upgrade denial", () => {
@@ -532,18 +511,16 @@ test("unknown plan access shows an error instead of an upgrade denial", () => {
   const { rerender } = render(<ScimSettingsPage />, {
     wrapper: TooltipProvider,
   })
-  expect(screen.getByRole("alert")).toHaveTextContent(
-    "Unable to check plan access"
-  )
-  expect(screen.getByRole("button", { name: "Reload" })).toBeEnabled()
-  expect(screen.queryByText("Not available on your plan")).toBeNull()
+  expect(screen.getByRole("alert")).toHaveTextContent("无法检查套餐权限")
+  expect(screen.getByRole("button", { name: "重新加载" })).toBeEnabled()
+  expect(screen.queryByText("当前套餐不支持")).toBeNull()
   expect(readConnection).not.toHaveBeenCalled()
   hasEntitlementData = true
   rerender(<ScimSettingsPage />)
-  expect(screen.getByText("Not available on your plan")).toBeInTheDocument()
+  expect(screen.getByText("当前套餐不支持")).toBeInTheDocument()
   entitled = true
   rerender(<ScimSettingsPage />)
-  expect(screen.getByText("Pending")).toBeInTheDocument()
+  expect(screen.getByText("待处理")).toBeInTheDocument()
 })
 
 test("a SCIM-only custom role can navigate to SCIM settings", () => {
@@ -556,7 +533,7 @@ test("a SCIM-only custom role can navigate to SCIM settings", () => {
     "href",
     "/organization/settings/scim"
   )
-  expect(screen.queryByRole("link", { name: "Application" })).toBeNull()
+  expect(screen.queryByRole("link", { name: "应用" })).toBeNull()
   allowedScopes = []
   rerender(
     <SidebarProvider>
@@ -564,7 +541,7 @@ test("a SCIM-only custom role can navigate to SCIM settings", () => {
     </SidebarProvider>
   )
   expect(screen.queryByRole("link", { name: "SCIM" })).toBeNull()
-  expect(screen.queryByText("Settings")).toBeNull()
+  expect(screen.queryByText("设置")).toBeNull()
 })
 
 test("a new token is shown once alongside the base URL", async () => {
@@ -575,7 +552,7 @@ test("a new token is shown once alongside the base URL", async () => {
       <OrgSettingsScimConnection />
     </TooltipProvider>
   )
-  fireEvent.click(screen.getByRole("button", { name: "Generate token" }))
+  fireEvent.click(screen.getByRole("button", { name: "生成令牌" }))
   expect(await screen.findByText("raw")).toBeInTheDocument()
   expect(
     screen.getByText("https://api.example.com/backend/scim/v2")
@@ -605,9 +582,7 @@ test.each([
       <OrgSettingsScimConnection />
     </TooltipProvider>
   )
-  expect(
-    screen.getByRole("button", { name: "Connection actions" })
-  ).toBeDisabled()
+  expect(screen.getByRole("button", { name: "连接操作" })).toBeDisabled()
 })
 
 test("rotation asks for confirmation before issuing a token", async () => {
@@ -617,18 +592,16 @@ test("rotation asks for confirmation before issuing a token", async () => {
       <OrgSettingsScimConnection />
     </TooltipProvider>
   )
-  await user.click(screen.getByRole("button", { name: "Connection actions" }))
-  await user.click(screen.getByRole("menuitem", { name: "Rotate token" }))
-  expect(
-    screen.getByText(/current token stops working immediately/)
-  ).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "连接操作" }))
+  await user.click(screen.getByRole("menuitem", { name: "轮换令牌" }))
+  expect(screen.getByText(/当前令牌将立即失效/)).toBeInTheDocument()
   expect(issueToken).not.toHaveBeenCalled()
 })
 
 test("users without SCIM authority cannot load the directory settings", () => {
   allowedScopes = ["org:rbac:read", "org:settings:read"]
   render(<ScimSettingsPage />)
-  expect(screen.getByText("You lack permission")).toBeInTheDocument()
+  expect(screen.getByText("权限不足")).toBeInTheDocument()
   expect(readConnection).not.toHaveBeenCalled()
 })
 
@@ -639,10 +612,10 @@ test("SCIM authority alone enables token management", async () => {
       <OrgSettingsScimConnection />
     </TooltipProvider>
   )
-  await user.click(screen.getByRole("button", { name: "Connection actions" }))
-  expect(screen.getByRole("menuitem", { name: "Rotate token" })).toBeEnabled()
-  expect(screen.getByRole("menuitem", { name: "Disconnect" })).toBeEnabled()
-  expect(screen.queryByRole("menuitem", { name: /Revoke/ })).toBeNull()
+  await user.click(screen.getByRole("button", { name: "连接操作" }))
+  expect(screen.getByRole("menuitem", { name: "轮换令牌" })).toBeEnabled()
+  expect(screen.getByRole("menuitem", { name: "断开连接" })).toBeEnabled()
+  expect(screen.queryByRole("menuitem", { name: /撤销/ })).toBeNull()
 })
 
 test("disconnect confirms before detaching", async () => {
@@ -651,14 +624,14 @@ test("disconnect confirms before detaching", async () => {
   disconnect.mockResolvedValue(undefined)
   renderScim()
   await toggleTarget(user)
-  expect(screen.getByText(/1 draft applies after review/)).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Connection actions" }))
-  await user.click(screen.getByRole("menuitem", { name: "Disconnect" }))
-  expect(screen.getByText(/nobody loses access/)).toBeInTheDocument()
+  expect(screen.getByText(/1 项草稿.*审核/)).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "连接操作" }))
+  await user.click(screen.getByRole("menuitem", { name: "断开连接" }))
+  expect(screen.getByText(/不会失去访问权限/)).toBeInTheDocument()
   expect(disconnect).not.toHaveBeenCalled()
-  await user.click(screen.getByRole("button", { name: "Disconnect" }))
+  await user.click(screen.getByRole("button", { name: "断开连接" }))
   await waitFor(() => expect(disconnect).toHaveBeenCalledTimes(1))
-  expect(screen.queryByText(/draft applies/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/项草稿将生效/)).not.toBeInTheDocument()
 })
 
 test("show all fetches the full review once", async () => {
@@ -674,10 +647,10 @@ test("show all fetches the full review once", async () => {
     })
     .mockResolvedValueOnce({ ...preview, to_idp: people(...movers) })
   renderScim()
-  fireEvent.click(screen.getByRole("button", { name: "Review and activate" }))
+  fireEvent.click(screen.getByRole("button", { name: "审核并激活" }))
   fireEvent.click(
     await screen.findByRole("button", {
-      name: /12 manual members become IdP-managed/,
+      name: /12 位手动成员将改为由 IdP 管理/,
     })
   )
   expect(screen.getByText("mover-09@example.com")).toBeInTheDocument()
@@ -687,7 +660,7 @@ test("show all fetches the full review once", async () => {
     delete: [],
     full: true,
   })
-  fireEvent.click(screen.getByRole("button", { name: /from your directory/ }))
+  fireEvent.click(screen.getByRole("button", { name: /来自目录/ }))
   expect(review.mutateAsync).toHaveBeenCalledTimes(2)
 })
 
@@ -699,13 +672,13 @@ test("a disconnected directory offers a new token instead", async () => {
     revoked_at: "2026-01-02T00:00:00Z",
   }
   renderScim()
-  expect(screen.getByText("Disconnected")).toBeInTheDocument()
-  expect(screen.getByText("SCIM disconnected")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Connection actions" }))
+  expect(screen.getByText("已断开")).toBeInTheDocument()
+  expect(screen.getByText("SCIM 已断开")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "连接操作" }))
   expect(
-    screen.getByRole("menuitem", { name: "Generate new token" })
+    screen.getByRole("menuitem", { name: "生成新令牌" })
   ).toBeInTheDocument()
-  expect(screen.queryByRole("menuitem", { name: "Disconnect" })).toBeNull()
+  expect(screen.queryByRole("menuitem", { name: "断开连接" })).toBeNull()
 })
 
 test("a picker with several groups lists every name A to Z", () => {
@@ -729,34 +702,28 @@ test("activation discloses inactive members leaving the organization", async () 
     groups: [],
   })
   renderScim()
-  fireEvent.click(screen.getByRole("button", { name: "Review and activate" }))
-  fireEvent.click(
-    await screen.findByRole("button", { name: /leaves? the organization/ })
-  )
+  fireEvent.click(screen.getByRole("button", { name: "审核并激活" }))
+  fireEvent.click(await screen.findByRole("button", { name: /人将离开组织/ }))
   expect(screen.getByText("leaver@example.com")).toBeInTheDocument()
   expect(
-    screen.getByText(
-      "1 person joins the organization and 1 person loses access."
-    )
+    screen.getByText("1 人将加入组织，1 人将失去访问权限。")
   ).toBeInTheDocument()
   expect(
-    screen.getByRole("button", { name: "Activate for 1 user" })
+    screen.getByRole("button", { name: "为 1 位用户启用" })
   ).toBeInTheDocument()
 })
 
 test("activation is not offered while the connection fails to load", () => {
   connectionError = { status: 500 }
   renderScim()
-  expect(
-    screen.queryByRole("button", { name: "Review and activate" })
-  ).toBeNull()
+  expect(screen.queryByRole("button", { name: "审核并激活" })).toBeNull()
 })
 
 test("confirmation waits for the full review to load", async () => {
   const { rerender } = renderScim()
-  fireEvent.click(screen.getByRole("button", { name: "Review and activate" }))
+  fireEvent.click(screen.getByRole("button", { name: "审核并激活" }))
   const confirm = await screen.findByRole("button", {
-    name: "Activate for 1 user",
+    name: "为 1 位用户启用",
   })
   expect(confirm).toBeEnabled()
   review.isPending = true
@@ -767,7 +734,7 @@ test("confirmation waits for the full review to load", async () => {
       </TooltipProvider>
     )
     expect(
-      screen.getByRole("button", { name: "Activate for 1 user" })
+      screen.getByRole("button", { name: "为 1 位用户启用" })
     ).toBeDisabled()
   } finally {
     review.isPending = false

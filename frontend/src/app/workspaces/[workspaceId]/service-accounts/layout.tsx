@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Service accounts | Workspace",
+  title: "服务账号 | 工作空间",
 }
 
 export default function WorkspaceServiceAccountsLayout({

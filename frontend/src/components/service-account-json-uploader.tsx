@@ -53,9 +53,7 @@ export function ServiceAccountJsonUploader({
       onChange(JSON.stringify(parsed))
     } catch (error) {
       const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to parse service account JSON key."
+        error instanceof Error ? error.message : "解析服务账号 JSON 密钥失败。"
       onError(message)
     }
   }
@@ -105,7 +103,7 @@ export function ServiceAccountJsonUploader({
         setFileName(null)
         setDetectedEmail(null)
         onDetectedEmail?.(null)
-        onError("Upload a .json file exported from Google Cloud.")
+        onError("上传从 Google Cloud 导出的 .json 文件。")
         resetInput()
         return
       }
@@ -117,16 +115,16 @@ export function ServiceAccountJsonUploader({
         try {
           const parsed = JSON.parse(text)
           if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-            throw new Error("Uploaded key must be a JSON object.")
+            throw new Error("上传的密钥必须为 JSON 对象。")
           }
           if (parsed.type !== "service_account") {
-            throw new Error('JSON key must include "type": "service_account".')
+            throw new Error('JSON 密钥必须包含 "type": "service_account"。')
           }
           if (
             typeof parsed.private_key !== "string" ||
             parsed.private_key.trim().length === 0
           ) {
-            throw new Error("JSON key is missing a private_key.")
+            throw new Error("JSON 密钥缺少 private_key。")
           }
 
           if (parsed.subject) {
@@ -159,7 +157,7 @@ export function ServiceAccountJsonUploader({
           const message =
             error instanceof Error
               ? error.message
-              : "Failed to parse service account JSON key."
+              : "解析服务账号 JSON 密钥失败。"
           onError(message)
         } finally {
           resetInput()
@@ -170,7 +168,7 @@ export function ServiceAccountJsonUploader({
         setFileName(null)
         setDetectedEmail(null)
         onDetectedEmail?.(null)
-        onError("Failed to read the uploaded file.")
+        onError("读取上传的文件失败。")
         resetInput()
       }
 
@@ -249,7 +247,7 @@ export function ServiceAccountJsonUploader({
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="mr-2 h-4 w-4" />
-                {fileName ? "Replace file" : "Choose JSON"}
+                {fileName ? "替换文件" : "选择 JSON"}
               </Button>
               {fileName && (
                 <Button
@@ -259,19 +257,19 @@ export function ServiceAccountJsonUploader({
                   onClick={clearSelection}
                 >
                   <X className="mr-1 h-4 w-4" />
-                  Remove
+                  移除
                 </Button>
               )}
             </div>
           </div>
           {existingConfigured && !fileName && (
             <p className="text-xs text-muted-foreground">
-              Existing key remains active until you provide a new file.
+              提供新文件之前，现有密钥保持有效。
             </p>
           )}
           {detectedEmail && (
             <p className="text-xs text-muted-foreground">
-              Detected service account:{" "}
+              检测到的服务账号：{" "}
               <span className="font-medium">{detectedEmail}</span>
             </p>
           )}
@@ -284,12 +282,12 @@ export function ServiceAccountJsonUploader({
             onCheckedChange={handleAssumeUserChange}
             disabled={!value}
           />
-          <Label htmlFor="assume-user">Assume User</Label>
+          <Label htmlFor="assume-user">模拟用户</Label>
         </div>
         {assumeUser && (
           <div className="mt-4">
             <Label htmlFor="user-email">
-              User Email
+              用户邮箱
               <span className="ml-1 text-red-500">*</span>
             </Label>
             <Input
@@ -309,11 +307,11 @@ export function ServiceAccountJsonUploader({
             />
             {emailTouched && !userEmail.trim() ? (
               <p className="mt-1 text-xs text-destructive">
-                User email is required when assuming a user.
+                模拟用户时必须填写用户邮箱。
               </p>
             ) : (
               <p className="mt-1 text-xs text-muted-foreground">
-                The service account will impersonate this user.
+                服务账号将以此用户身份操作。
               </p>
             )}
           </div>

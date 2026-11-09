@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "SCIM | Organization",
+  title: "SCIM | 组织",
 }
 
 export default function ScimLayout({

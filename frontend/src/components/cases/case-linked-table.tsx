@@ -306,10 +306,8 @@ export function CaseLinkedTable({
       setSelectedRowIds(EMPTY_SELECTION)
       goToFirstPage()
       toast({
-        title: "Rows unlinked",
-        description: `Unlinked ${unlinkedCount} ${
-          unlinkedCount === 1 ? "row" : "rows"
-        } from this case.`,
+        title: "已取消行关联",
+        description: `已从此事件取消关联 ${unlinkedCount} ${unlinkedCount === 1 ? "行" : "行"}。`,
       })
     } catch (error) {
       // Every request commits on its own: deselect what landed before a retry.
@@ -319,27 +317,25 @@ export function CaseLinkedTable({
           dropCommitted(previous, committedRowIds)
         )
         goToFirstPage()
-        const detail = getApiErrorDetail(error.cause) ?? "Try again."
+        const detail = getApiErrorDetail(error.cause) ?? "请重试。"
         if (error.unlinkedCount > 0) {
           toast({
-            title: "Some rows were not unlinked",
-            description: `Unlinked ${error.unlinkedCount} ${
-              error.unlinkedCount === 1 ? "row" : "rows"
-            } before a request failed. ${detail}`,
+            title: "部分行未能取消关联",
+            description: `请求失败前已取消关联 ${error.unlinkedCount} ${error.unlinkedCount === 1 ? "行" : "行"}。${detail}`,
             variant: "destructive",
           })
           return
         }
         toast({
-          title: "Could not unlink rows",
+          title: "无法取消行关联",
           description: detail,
           variant: "destructive",
         })
         return
       }
       toast({
-        title: "Could not unlink rows",
-        description: getApiErrorDetail(error) ?? "Try again.",
+        title: "无法取消行关联",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     }
@@ -375,14 +371,14 @@ export function CaseLinkedTable({
       )
       goToFirstPage()
       toast({
-        title: "Row unlinked",
-        description: "Unlinked the row from this case.",
+        title: "已取消行关联",
+        description: "已取消此行与事件的关联。",
       })
     } catch (error) {
       const cause = error instanceof CaseRowsUnlinkError ? error.cause : error
       toast({
-        title: "Could not unlink row",
-        description: getApiErrorDetail(cause) ?? "Try again.",
+        title: "无法取消行关联",
+        description: getApiErrorDetail(cause) ?? "请重试。",
         variant: "destructive",
       })
     }
@@ -433,7 +429,7 @@ export function CaseLinkedTable({
   if (rowsError && !isStaleRowQuery) {
     gridContent = (
       <div className="flex items-center gap-3 p-3 text-sm text-destructive">
-        Failed to load linked rows.
+        加载关联行失败。
         {(isSearching || sortingState.orderBy !== null) && (
           // The header that holds the filter is unmounted with the grid.
           <Button
@@ -442,7 +438,7 @@ export function CaseLinkedTable({
             className="h-7 text-xs text-foreground"
             onClick={resetRowQuery}
           >
-            Clear filter and sort
+            清除筛选和排序
           </Button>
         )}
       </div>
@@ -493,7 +489,7 @@ export function CaseLinkedTable({
                 onSelect={() => viewRelatedCases(menuRow)}
               >
                 <Layers className="mr-2 size-3.5" />
-                View related cases
+                查看相关事件
                 {canViewRelatedCases === false && (
                   <LockedFeatureChip className="ml-auto" />
                 )}
@@ -505,7 +501,7 @@ export function CaseLinkedTable({
                   onSelect={() => setEditRow(menuRow)}
                 >
                   <Pencil className="mr-2 size-3.5" />
-                  Edit row
+                  编辑行
                 </ContextMenuItem>
               )}
               {canUpdate && (
@@ -517,7 +513,7 @@ export function CaseLinkedTable({
                     onSelect={() => handleUnlinkRow(menuRow)}
                   >
                     <Unlink2 className="mr-2 size-3.5" />
-                    Unlink row
+                    取消行关联
                   </ContextMenuItem>
                 </>
               )}
@@ -527,8 +523,8 @@ export function CaseLinkedTable({
         <LockedFeatureModal
           open={lockedDialogOpen}
           onOpenChange={setLockedDialogOpen}
-          title="Enterprise only"
-          description="Related cases are only available on enterprise plans."
+          title={"仅限企业版"}
+          description={"相关事件功能仅适用于企业版套餐。"}
           bullets={[]}
         />
       </>
@@ -545,15 +541,15 @@ export function CaseLinkedTable({
     >
       <div className="flex min-w-0 items-baseline gap-2">
         <span className="truncate text-sm font-medium">
-          {tableName ?? "Table"}
+          {tableName ?? "数据表"}
         </span>
         {showRange ? (
           <span className="shrink-0 text-xs text-muted-foreground tabular-nums">
-            {startItem}–{endItem} of {totalRows}
+            {startItem}–{endItem} / {totalRows}
           </span>
         ) : (
           <span className="shrink-0 text-xs text-muted-foreground">
-            {rowCount} {rowCount === 1 ? "row" : "rows"}
+            {rowCount} {rowCount === 1 ? "行" : "行"}
           </span>
         )}
       </div>
@@ -561,7 +557,7 @@ export function CaseLinkedTable({
         {canUpdate && selectedCount > 0 && (
           <>
             <span className="text-xs text-muted-foreground tabular-nums">
-              {selectedCount} selected
+              {selectedCount} 已选择
             </span>
             <Button
               variant="ghost"
@@ -575,7 +571,7 @@ export function CaseLinkedTable({
               ) : (
                 <Unlink2 className="mr-1 size-3" />
               )}
-              Unlink
+              取消关联
             </Button>
           </>
         )}
@@ -587,7 +583,7 @@ export function CaseLinkedTable({
             onClick={onLinkRows}
           >
             <Link2 className="mr-1 size-3" />
-            Link rows
+            关联行
           </Button>
         )}
         {canAddRow && (
@@ -598,7 +594,7 @@ export function CaseLinkedTable({
             onClick={() => setInsertDialogOpen(true)}
           >
             <Plus className="mr-1 size-3" />
-            Insert row
+            插入行
           </Button>
         )}
         {!isExpanded && (
@@ -607,21 +603,21 @@ export function CaseLinkedTable({
               <Button
                 variant="ghost"
                 size="sm"
-                aria-label="Expand table"
+                aria-label={"展开数据表"}
                 className="size-7 p-0 text-muted-foreground"
                 onClick={handleExpand}
               >
                 <Maximize2 className="size-3" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Expand table</TooltipContent>
+            <TooltipContent>展开数据表</TooltipContent>
           </Tooltip>
         )}
         {!isExpanded && isPaged && (
           <span className="flex items-center">
             <button
               type="button"
-              aria-label="Previous page"
+              aria-label={"上一页"}
               className={PAGE_ARROW_CLASS}
               disabled={!hasPreviousPage || pagingIsBlocked}
               onClick={goToPreviousPage}
@@ -630,7 +626,7 @@ export function CaseLinkedTable({
             </button>
             <button
               type="button"
-              aria-label="Next page"
+              aria-label={"下一页"}
               className={PAGE_ARROW_CLASS}
               disabled={!hasNextPage || pagingIsBlocked}
               onClick={goToNextPage}
@@ -762,7 +758,7 @@ function CaseLinkedTableDialogContent({
   ...tableProps
 }: CaseLinkedTableDialogProps) {
   const { panelOpen, closePanel } = useTablePanel()
-  const title = tableProps.tableName ?? "Table"
+  const title = tableProps.tableName ?? "数据表"
 
   function handleOpenChange(nextOpen: boolean) {
     if (!nextOpen) closePanel()
@@ -795,7 +791,7 @@ function CaseLinkedTableDialogContent({
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">
-          Rows of {title} linked to this case.
+          行所属数据表： {title} ，已关联到此事件。
         </DialogDescription>
         {/* Radix unmounts the body on close, so the page and picks reset. */}
         <CaseLinkedTable {...tableProps} variant="expanded" />
@@ -833,7 +829,7 @@ function CaseLinkedTableValuePane() {
         <Button
           variant="ghost"
           size="sm"
-          aria-label="Close panel"
+          aria-label={"关闭面板"}
           className="size-6 shrink-0 p-0 text-muted-foreground"
           onClick={closePanel}
         >

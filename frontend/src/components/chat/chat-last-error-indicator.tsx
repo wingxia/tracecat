@@ -41,11 +41,11 @@ export function ChatLastErrorIndicator({
         <TooltipTrigger asChild>
           <AlertTriangle
             className={cn("size-3.5 shrink-0 text-destructive", className)}
-            aria-label="Last run failed"
+            aria-label={"上次运行失败"}
           />
         </TooltipTrigger>
         <TooltipContent className="max-w-xs">
-          <p className="text-xs font-medium">Last run failed</p>
+          <p className="text-xs font-medium">上次运行失败</p>
           <p className="mt-1 whitespace-pre-wrap break-words text-xs text-muted-foreground">
             {lastError}
           </p>

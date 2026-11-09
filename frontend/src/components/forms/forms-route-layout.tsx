@@ -29,8 +29,8 @@ export function FormsRouteLayout({ children }: { children: ReactNode }) {
         {access === "locked" ? (
           <div className="flex h-full items-center justify-center p-8">
             <EntitlementRequiredEmptyState
-              title="Forms aren't available"
-              description="Forms are not included in your organization's plan. Contact your administrator."
+              title={"表单不可用"}
+              description={"组织套餐不包含表单功能，请联系管理员。"}
             />
           </div>
         ) : (

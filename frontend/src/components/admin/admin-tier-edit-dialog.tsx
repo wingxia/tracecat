@@ -35,10 +35,7 @@ import {
 } from "@/lib/tier-entitlements"
 
 const formSchema = z.object({
-  display_name: z
-    .string()
-    .min(1, "Name is required")
-    .max(50, "Name is too long"),
+  display_name: z.string().min(1, "名称不能为空").max(50, "名称过长"),
   max_concurrent_workflows: z.coerce
     .number()
     .int()
@@ -136,15 +133,15 @@ export function AdminTierEditDialog({
         sort_order: values.sort_order,
       })
       toast({
-        title: "Tier updated",
-        description: "Changes have been saved.",
+        title: "已更新套餐",
+        description: "已保存更改。",
       })
       setDialogOpen(false)
     } catch (error) {
       console.error("Failed to update tier", error)
       toast({
-        title: "Failed to update tier",
-        description: "Please try again.",
+        title: "更新套餐失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
@@ -155,18 +152,16 @@ export function AdminTierEditDialog({
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent size="lg" className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Edit tier</DialogTitle>
+          <DialogTitle>编辑套餐</DialogTitle>
           <DialogDescription>
-            Update tier details{tier ? ` for ${tier.display_name}.` : "."}
+            更新套餐详情{tier ? `（${tier.display_name}）。` : "."}
           </DialogDescription>
         </DialogHeader>
         {isLoading ? (
-          <div className="py-8 text-center text-muted-foreground">
-            Loading...
-          </div>
+          <div className="py-8 text-center text-muted-foreground">加载中…</div>
         ) : !tier ? (
           <div className="py-8 text-center text-muted-foreground">
-            Tier not found.
+            未找到套餐。
           </div>
         ) : (
           <Form {...form}>
@@ -181,7 +176,7 @@ export function AdminTierEditDialog({
                     name="display_name"
                     render={({ field }) => (
                       <FormItem className="col-span-2">
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>名称</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -194,7 +189,7 @@ export function AdminTierEditDialog({
                     name="sort_order"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Sort order</FormLabel>
+                        <FormLabel>排序</FormLabel>
                         <FormControl>
                           <Input type="number" min={0} {...field} />
                         </FormControl>
@@ -215,7 +210,7 @@ export function AdminTierEditDialog({
                             />
                           </FormControl>
                           <FormLabel className="font-normal">
-                            Default tier
+                            默认套餐
                           </FormLabel>
                         </FormItem>
                       )}
@@ -231,7 +226,7 @@ export function AdminTierEditDialog({
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>
-                          <FormLabel className="font-normal">Active</FormLabel>
+                          <FormLabel className="font-normal">已启用</FormLabel>
                         </FormItem>
                       )}
                     />
@@ -245,11 +240,11 @@ export function AdminTierEditDialog({
                       name="max_concurrent_workflows"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Max concurrent workflows</FormLabel>
+                          <FormLabel>最大并发工作流数</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Unlimited"
+                              placeholder={"不限制"}
                               {...field}
                               value={field.value ?? ""}
                               onChange={(event) =>
@@ -270,11 +265,11 @@ export function AdminTierEditDialog({
                       name="max_action_executions_per_workflow"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Max actions per workflow</FormLabel>
+                          <FormLabel>每个工作流的最大动作数</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Unlimited"
+                              placeholder={"不限制"}
                               {...field}
                               value={field.value ?? ""}
                               onChange={(event) =>
@@ -295,11 +290,11 @@ export function AdminTierEditDialog({
                       name="max_concurrent_actions"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Max concurrent actions</FormLabel>
+                          <FormLabel>最大并发动作数</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Unlimited"
+                              placeholder={"不限制"}
                               {...field}
                               value={field.value ?? ""}
                               onChange={(event) =>
@@ -320,11 +315,11 @@ export function AdminTierEditDialog({
                       name="api_rate_limit"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>API rate limit</FormLabel>
+                          <FormLabel>API 速率限制</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Unlimited"
+                              placeholder={"不限制"}
                               {...field}
                               value={field.value ?? ""}
                               onChange={(event) =>
@@ -336,7 +331,7 @@ export function AdminTierEditDialog({
                               }
                             />
                           </FormControl>
-                          <FormDescription>Requests per second</FormDescription>
+                          <FormDescription>每秒请求数</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -346,11 +341,11 @@ export function AdminTierEditDialog({
                       name="api_burst_capacity"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>API burst capacity</FormLabel>
+                          <FormLabel>API 突发容量</FormLabel>
                           <FormControl>
                             <Input
                               type="number"
-                              placeholder="Unlimited"
+                              placeholder={"不限制"}
                               {...field}
                               value={field.value ?? ""}
                               onChange={(event) =>
@@ -362,9 +357,7 @@ export function AdminTierEditDialog({
                               }
                             />
                           </FormControl>
-                          <FormDescription>
-                            Maximum burst requests
-                          </FormDescription>
+                          <FormDescription>最大突发请求数</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -372,7 +365,7 @@ export function AdminTierEditDialog({
                   </div>
                 </div>
                 <div className="border-t pt-4">
-                  <h4 className="mb-3 text-sm font-medium">Entitlements</h4>
+                  <h4 className="mb-3 text-sm font-medium">功能权益</h4>
                   <div className="space-y-3">
                     {TIER_ENTITLEMENTS.map((entitlement) => (
                       <FormField
@@ -408,7 +401,7 @@ export function AdminTierEditDialog({
               </DialogBody>
               <DialogFooter>
                 <Button size="sm" type="submit" disabled={updatePending}>
-                  {updatePending ? "Saving..." : "Save changes"}
+                  {updatePending ? "保存中…" : "保存更改"}
                 </Button>
               </DialogFooter>
             </form>

@@ -37,7 +37,7 @@ import {
 import { compareVersionManifests } from "@/lib/version-diff"
 
 /** Shown in place of the diff when the draft form cannot be serialized. */
-const DRAFT_UNAVAILABLE_MESSAGE = "Fix form errors before comparing versions."
+const DRAFT_UNAVAILABLE_MESSAGE = "比较版本前，请先修复表单错误。"
 
 /** Props for {@link AgentPresetVersionHistory}. */
 export type AgentPresetVersionHistoryProps = {
@@ -221,7 +221,7 @@ function AgentPresetVersionDiffContent({
         selectedPath={null}
         onSelectPath={setSelectedPath}
         diff={null}
-        draftLabel="Current draft"
+        draftLabel="当前草稿"
         versionLabel={versionLabel}
         message={DRAFT_UNAVAILABLE_MESSAGE}
       />
@@ -235,9 +235,9 @@ function AgentPresetVersionDiffContent({
         selectedPath={null}
         onSelectPath={setSelectedPath}
         diff={null}
-        draftLabel="Current draft"
+        draftLabel="当前草稿"
         versionLabel={versionLabel}
-        message="Failed to load this version."
+        message={"加载此版本失败。"}
       />
     )
   }
@@ -246,7 +246,7 @@ function AgentPresetVersionDiffContent({
     return (
       <div className="flex min-h-0 items-center justify-center gap-2 rounded-md border px-4 py-8 text-sm text-muted-foreground">
         <Loader2 className="size-4 animate-spin" />
-        Loading version…
+        正在加载版本…
       </div>
     )
   }
@@ -257,7 +257,7 @@ function AgentPresetVersionDiffContent({
       selectedPath={effectiveSelectedPath}
       onSelectPath={setSelectedPath}
       diff={diff}
-      draftLabel="Current draft"
+      draftLabel="当前草稿"
       versionLabel={versionLabel}
       pinnedPaths={[AGENT_PRESET_INSTRUCTIONS_PATH, AGENT_PRESET_CONFIG_PATH]}
     />
@@ -296,8 +296,8 @@ export function AgentPresetVersionHistory({
       return
     }
     toast({
-      title: "Couldn't load version history",
-      description: "Please try again later.",
+      title: "无法加载版本历史",
+      description: "请稍后重试。",
       variant: "destructive",
     })
   }, [versionsError])
@@ -343,7 +343,7 @@ export function AgentPresetVersionHistory({
   const documentDescriptor = useMemo<VersionedDocumentDescriptor>(
     () => ({
       entityLabel: "agent",
-      name: preset?.name ?? "this agent",
+      name: preset?.name ?? "此智能体",
       currentVersionId,
     }),
     [preset?.name, currentVersionId]

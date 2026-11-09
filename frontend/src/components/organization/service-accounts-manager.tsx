@@ -1,6 +1,7 @@
 "use client"
 
 import { format, formatDistanceToNow } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   BotIcon,
   ChevronRightIcon,
@@ -174,17 +175,17 @@ interface StatusGroupConfig {
 
 const STATUS_GROUPS: Record<ServiceAccountStatusGroup, StatusGroupConfig> = {
   active: {
-    label: "Active",
+    label: "已启用",
     dotClassName: "bg-green-500",
     textClassName: "text-green-700 dark:text-green-400",
   },
   disabled: {
-    label: "Disabled",
+    label: "已禁用",
     dotClassName: "bg-muted-foreground",
     textClassName: "text-muted-foreground",
   },
   no_active_key: {
-    label: "No active key",
+    label: "没有生效的密钥",
     dotClassName: "bg-rose-500",
     textClassName: "text-rose-700 dark:text-rose-400",
   },
@@ -202,10 +203,10 @@ const SERVICE_ACCOUNT_STATUS_FILTERS: Array<{
   value: ServiceAccountStatusFilter
   label: string
 }> = [
-  { value: "all", label: "All" },
-  { value: "active", label: "Active" },
-  { value: "disabled", label: "Disabled" },
-  { value: "no-active-key", label: "No active key" },
+  { value: "all", label: "全部" },
+  { value: "active", label: "已启用" },
+  { value: "disabled", label: "已禁用" },
+  { value: "no-active-key", label: "没有生效的密钥" },
 ]
 
 const SERVICE_ACCOUNT_NAME_COLUMN_CLASS =
@@ -257,22 +258,22 @@ function getApiErrorDetail(error: unknown, fallback: string): string {
 
 function formatTimestamp(value?: string | null): string {
   if (!value) {
-    return "Never"
+    return "从未"
   }
 
-  return formatDistanceToNow(new Date(value), { addSuffix: true })
+  return formatDistanceToNow(new Date(value), { locale: zhCN, addSuffix: true })
 }
 
 function formatFullTimestamp(value?: string | null): string {
   if (!value) {
-    return "Never"
+    return "从未"
   }
 
-  return format(new Date(value), "PPpp")
+  return format(new Date(value), "PPpp", { locale: zhCN })
 }
 
 function getApiKeyStatusLabel(apiKey: ServiceAccountApiKeyRead): string {
-  return apiKey.revoked_at ? "Revoked" : "Active"
+  return apiKey.revoked_at ? "已撤销" : "已启用"
 }
 
 function getApiKeyStatusTone(apiKey: ServiceAccountApiKeyRead): {
@@ -377,7 +378,7 @@ function RowActionButton({
 function LastUsedIndicator({ value }: { value?: string | null }) {
   const relativeTimestamp = formatTimestamp(value)
   const fullTimestamp = formatFullTimestamp(value)
-  const label = !value ? "Last used: Never" : `Last used ${relativeTimestamp}`
+  const label = !value ? "上次使用：从未使用" : `上次使用 ${relativeTimestamp}`
   const accessibleLabel = value ? `${label}; ${fullTimestamp}` : label
 
   return (
@@ -451,7 +452,7 @@ function ServiceAccountDetailPanel({
         <section className="space-y-3">
           <div className="inline-flex items-center gap-2 text-sm font-medium">
             <ShieldIcon className="size-3.5 text-muted-foreground" />
-            <span>Scopes</span>
+            <span>权限范围</span>
           </div>
           {(serviceAccount.scopes?.length ?? 0) > 0 ? (
             <div className="flex flex-wrap gap-2">
@@ -468,23 +469,23 @@ function ServiceAccountDetailPanel({
               )}
             </div>
           ) : (
-            <p className="text-xs text-muted-foreground">No scopes assigned.</p>
+            <p className="text-xs text-muted-foreground">尚未分配权限范围。</p>
           )}
         </section>
 
         <section className="space-y-3">
           <div className="inline-flex items-center gap-2 text-sm font-medium">
             <KeyRoundIcon className="size-3.5 text-muted-foreground" />
-            <span>API keys</span>
+            <span>API 密钥</span>
           </div>
           {error ? (
             <AlertNotification
               level="error"
-              message={`Error loading API keys: ${error.message}`}
+              message={`加载 API 密钥出错：${error.message}`}
             />
           ) : isLoading ? (
             <div className="text-xs text-muted-foreground">
-              Loading API keys...
+              正在加载 API 密钥…
             </div>
           ) : (apiKeysPage?.items?.length ?? 0) === 0 ? (
             <Empty className="border-0 px-0">
@@ -492,9 +493,9 @@ function ServiceAccountDetailPanel({
                 <EmptyMedia variant="icon">
                   <KeyRoundIcon />
                 </EmptyMedia>
-                <EmptyTitle>No API keys</EmptyTitle>
+                <EmptyTitle>暂无 API 密钥</EmptyTitle>
                 <EmptyDescription>
-                  This service account does not have any issued keys yet.
+                  此服务账号尚未签发任何密钥。
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -503,12 +504,12 @@ function ServiceAccountDetailPanel({
               <Table>
                 <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableHead className="text-xs">Name</TableHead>
-                    <TableHead className="text-xs">Status</TableHead>
-                    <TableHead className="text-xs">Secret key</TableHead>
-                    <TableHead className="text-xs">Created by</TableHead>
-                    <TableHead className="text-xs">Created</TableHead>
-                    <TableHead className="text-xs">Last used</TableHead>
+                    <TableHead className="text-xs">名称</TableHead>
+                    <TableHead className="text-xs">状态</TableHead>
+                    <TableHead className="text-xs">私密密钥</TableHead>
+                    <TableHead className="text-xs">创建者</TableHead>
+                    <TableHead className="text-xs">创建时间</TableHead>
+                    <TableHead className="text-xs">上次使用</TableHead>
                     <TableHead className="h-8 w-[40px]" />
                   </TableRow>
                 </TableHeader>
@@ -550,7 +551,7 @@ function ServiceAccountDetailPanel({
                           {getUserDisplayName(
                             apiKey.created_by_user,
                             apiKey.created_by
-                          ) ?? "Unknown"}
+                          ) ?? "未知"}
                         </TableCell>
                         <TableCell className="text-xs text-muted-foreground">
                           {formatTimestamp(apiKey.created_at)}
@@ -561,7 +562,7 @@ function ServiceAccountDetailPanel({
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end gap-1">
                             <RowActionButton
-                              label="Revoke API key"
+                              label={"撤销 API 密钥"}
                               danger={true}
                               className="size-7"
                               disabled={
@@ -591,7 +592,7 @@ function ServiceAccountDetailPanel({
 
           {apiKeysPage?.next_cursor ? (
             <p className="mt-4 text-xs text-muted-foreground">
-              Only the first page of API keys is shown in this view.
+              此视图仅显示第一页 API 密钥。
             </p>
           ) : null}
         </section>
@@ -772,8 +773,8 @@ export function ServiceAccountsManager({
     const trimmedName = draft.name.trim()
     if (!trimmedName) {
       toast({
-        title: "Name required",
-        description: "Service accounts must have a name.",
+        title: "名称不能为空",
+        description: "服务账号必须有名称。",
         variant: "destructive",
       })
       return
@@ -790,8 +791,8 @@ export function ServiceAccountsManager({
           },
         })
         toast({
-          title: `${kindLabel} service account updated`,
-          description: `${trimmedName} was updated.`,
+          title: `已更新 ${kindLabel} 服务账号`,
+          description: `已更新 ${trimmedName}。`,
         })
       } else {
         const response = await onCreate({
@@ -802,16 +803,15 @@ export function ServiceAccountsManager({
         })
         setIssuedCredential(response)
         toast({
-          title: `${kindLabel} service account created`,
-          description:
-            "Copy the initial API key now. It will not be shown again.",
+          title: `已创建 ${kindLabel} 服务账号`,
+          description: "请立即复制初始 API 密钥，之后不会再次显示。",
         })
       }
       setDialogOpen(false)
     } catch (saveError) {
       toast({
-        title: `Failed to save ${kindLabel.toLowerCase()} service account`,
-        description: getApiErrorDetail(saveError, "Please try again."),
+        title: `保存 ${kindLabel.toLowerCase()} 服务账号失败`,
+        description: getApiErrorDetail(saveError, "请重试。"),
         variant: "destructive",
       })
     }
@@ -826,14 +826,14 @@ export function ServiceAccountsManager({
       if (actionDialogState.type === "disable") {
         await onDisable(actionDialogState.serviceAccount.id)
         toast({
-          title: "Service account disabled",
-          description: `${actionDialogState.serviceAccount.name} can no longer authenticate.`,
+          title: "服务账号已禁用",
+          description: `${actionDialogState.serviceAccount.name} 将无法再验证身份。`,
         })
       } else if (actionDialogState.type === "enable") {
         await onEnable(actionDialogState.serviceAccount.id)
         toast({
-          title: "Service account enabled",
-          description: `${actionDialogState.serviceAccount.name} can authenticate again.`,
+          title: "服务账号已启用",
+          description: `${actionDialogState.serviceAccount.name} 现可重新验证身份。`,
         })
       } else {
         await onRevokeApiKey({
@@ -841,15 +841,15 @@ export function ServiceAccountsManager({
           apiKeyId: actionDialogState.apiKey.id,
         })
         toast({
-          title: "API key revoked",
-          description: `${actionDialogState.apiKey.name} was revoked.`,
+          title: "API 密钥已撤销",
+          description: `已撤销 ${actionDialogState.apiKey.name}。`,
         })
       }
       setActionDialogState(null)
     } catch (actionError) {
       toast({
-        title: "Action failed",
-        description: getApiErrorDetail(actionError, "Please try again."),
+        title: "操作失败",
+        description: getApiErrorDetail(actionError, "请重试。"),
         variant: "destructive",
       })
     }
@@ -871,14 +871,13 @@ export function ServiceAccountsManager({
       setIssueTarget(null)
       setIssueKeyName("Primary")
       toast({
-        title: "API key issued",
-        description:
-          "Copy the replacement API key now. It will not be shown again.",
+        title: "已签发 API 密钥",
+        description: "请立即复制替换用的 API 密钥，之后不会再次显示。",
       })
     } catch (issueError) {
       toast({
-        title: "Failed to issue API key",
-        description: getApiErrorDetail(issueError, "Please try again."),
+        title: "签发 API 密钥失败",
+        description: getApiErrorDetail(issueError, "请重试。"),
         variant: "destructive",
       })
     }
@@ -888,7 +887,7 @@ export function ServiceAccountsManager({
     return (
       <AlertNotification
         level="error"
-        message={`Error loading ${kindLabel.toLowerCase()} service accounts: ${error.message}`}
+        message={`加载 ${kindLabel.toLowerCase()} 服务账号出错：${error.message}`}
       />
     )
   }
@@ -898,14 +897,14 @@ export function ServiceAccountsManager({
       <div className="shrink-0">
         <header className="flex h-10 items-center gap-3 border-b pl-3 pr-4">
           <ListHeaderSearch
-            placeholder={`Search ${kindLabel.toLowerCase()} service accounts...`}
+            placeholder={`搜索 ${kindLabel.toLowerCase()} 服务账号…`}
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
           />
 
           <div className="ml-auto flex items-center gap-3">
             <span className="text-xs text-muted-foreground">
-              {filteredServiceAccounts.length} service accounts
+              {filteredServiceAccounts.length} 个服务账号
             </span>
           </div>
         </header>
@@ -937,7 +936,7 @@ export function ServiceAccountsManager({
               }}
               className="flex h-6 items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
-              Reset
+              重置
             </button>
           )}
         </div>
@@ -946,7 +945,7 @@ export function ServiceAccountsManager({
       <div className="min-h-0 flex-1 overflow-auto">
         {isLoading ? (
           <div className="px-4 py-3 text-sm text-muted-foreground">
-            Loading service accounts...
+            正在加载服务账号…
           </div>
         ) : serviceAccounts.length === 0 ? (
           <Empty className="rounded-none border-0">
@@ -954,10 +953,9 @@ export function ServiceAccountsManager({
               <EmptyMedia variant="icon">
                 <KeyRoundIcon />
               </EmptyMedia>
-              <EmptyTitle>No service accounts</EmptyTitle>
+              <EmptyTitle>暂无服务账号</EmptyTitle>
               <EmptyDescription>
-                Create a service account to manage machine access for this{" "}
-                {kindLabel.toLowerCase()}.
+                创建服务账号以管理此范围的机器访问： {kindLabel.toLowerCase()}.
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -967,9 +965,9 @@ export function ServiceAccountsManager({
               <EmptyMedia variant="icon">
                 <SearchIcon />
               </EmptyMedia>
-              <EmptyTitle>No matching service accounts</EmptyTitle>
+              <EmptyTitle>没有匹配的服务账号</EmptyTitle>
               <EmptyDescription>
-                Adjust the search query or filters to find a service account.
+                调整搜索词或筛选条件以查找服务账号。
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -1051,7 +1049,7 @@ export function ServiceAccountsManager({
                       </span>
 
                       <span className={SERVICE_ACCOUNT_CREATOR_COLUMN_CLASS}>
-                        {ownerLabel ? `Created by ${ownerLabel}` : ""}
+                        {ownerLabel ? `创建者：${ownerLabel}` : ""}
                       </span>
 
                       <div className="flex min-w-0 items-center gap-2">
@@ -1083,7 +1081,7 @@ export function ServiceAccountsManager({
                       onKeyDown={(event) => event.stopPropagation()}
                     >
                       <RowActionButton
-                        label="Edit service account"
+                        label={"编辑服务账号"}
                         className="size-7"
                         disabled={!canUpdate}
                         onClick={() => openEditDialog(serviceAccount)}
@@ -1091,7 +1089,7 @@ export function ServiceAccountsManager({
                         <SquarePenIcon className="size-3.5" />
                       </RowActionButton>
                       <RowActionButton
-                        label="Create API key"
+                        label={"创建 API 密钥"}
                         className="size-7"
                         disabled={
                           Boolean(serviceAccount.disabled_at) || !canUpdate
@@ -1108,8 +1106,8 @@ export function ServiceAccountsManager({
                       <RowActionButton
                         label={
                           serviceAccount.disabled_at
-                            ? "Enable service account"
-                            : "Disable service account"
+                            ? "启用服务账号"
+                            : "禁用服务账号"
                         }
                         className="size-7"
                         disabled={!canDisable}
@@ -1150,7 +1148,7 @@ export function ServiceAccountsManager({
 
         {nextCursor ? (
           <div className="flex h-10 items-center justify-center text-xs text-muted-foreground">
-            Only the first page of service accounts is shown.
+            仅显示第一页服务账号。
           </div>
         ) : null}
       </div>
@@ -1166,23 +1164,19 @@ export function ServiceAccountsManager({
           >
             <DialogHeader>
               <DialogTitle>
-                {editingServiceAccount
-                  ? "Edit service account"
-                  : "Create service account"}
+                {editingServiceAccount ? "编辑服务账号" : "创建服务账号"}
               </DialogTitle>
               <DialogDescription>
                 {editingServiceAccount
-                  ? "Update the service account name, description, and permissions."
-                  : `Create a ${kindLabel.toLowerCase()} service account with specific permissions.`}
+                  ? "更新服务账号的名称、描述和权限。"
+                  : `创建具有指定权限的 ${kindLabel.toLowerCase()} 服务账号。`}
               </DialogDescription>
             </DialogHeader>
             <DialogBody>
               <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden">
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="service-account-name">
-                      Service account name
-                    </Label>
+                    <Label htmlFor="service-account-name">服务账号名称</Label>
                     <Input
                       id="service-account-name"
                       name="service-account-name"
@@ -1193,14 +1187,12 @@ export function ServiceAccountsManager({
                           name: event.target.value,
                         }))
                       }
-                      placeholder="e.g., CI deployer"
+                      placeholder={"例如：CI 部署账号"}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="service-account-description">
-                      Description
-                    </Label>
+                    <Label htmlFor="service-account-description">描述</Label>
                     <Input
                       id="service-account-description"
                       name="service-account-description"
@@ -1211,7 +1203,7 @@ export function ServiceAccountsManager({
                           description: event.target.value,
                         }))
                       }
-                      placeholder="Optional description"
+                      placeholder={"可选描述"}
                     />
                   </div>
                 </div>
@@ -1219,7 +1211,7 @@ export function ServiceAccountsManager({
                 {!editingServiceAccount ? (
                   <div className="space-y-2">
                     <Label htmlFor="service-account-initial-key-name">
-                      Initial key label
+                      初始密钥标签
                     </Label>
                     <Input
                       id="service-account-initial-key-name"
@@ -1231,18 +1223,17 @@ export function ServiceAccountsManager({
                           initialKeyName: event.target.value,
                         }))
                       }
-                      placeholder="Primary"
+                      placeholder={"主要"}
                     />
                   </div>
                 ) : null}
 
                 <div className="flex min-h-0 flex-1 flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <Label>Permissions ({scopeCounts} scopes selected)</Label>
+                    <Label>权限（{scopeCounts} 项权限范围已选择）</Label>
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Set permission levels by category, or expand to select
-                    individual scopes.
+                    按类别设置权限级别，或展开后选择各项权限范围。
                   </div>
                   <div className="h-[400px] overflow-y-auto rounded-md border">
                     <div className="divide-y divide-border/50">
@@ -1275,10 +1266,10 @@ export function ServiceAccountsManager({
                 }
               >
                 {isSaving
-                  ? "Saving..."
+                  ? "保存中…"
                   : editingServiceAccount
-                    ? "Save changes"
-                    : "Create service account"}
+                    ? "保存更改"
+                    : "创建服务账号"}
               </Button>
             </DialogFooter>
           </form>
@@ -1295,10 +1286,9 @@ export function ServiceAccountsManager({
       >
         <DialogContent size="sm" className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Copy API key</DialogTitle>
+            <DialogTitle>复制 API 密钥</DialogTitle>
             <DialogDescription>
-              This secret is only shown once. Copy it now before closing this
-              dialog.
+              此密钥只显示一次，请在关闭对话框前复制。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
@@ -1309,8 +1299,8 @@ export function ServiceAccountsManager({
                 </code>
                 <CopyButton
                   value={issuedCredential.issued_api_key.raw_key}
-                  toastMessage="API key copied"
-                  tooltipMessage="Copy raw key"
+                  toastMessage="已复制 API 密钥"
+                  tooltipMessage="复制原始密钥"
                   className="size-6 shrink-0"
                   iconClassName="size-4 text-foreground/70"
                 />
@@ -1326,30 +1316,30 @@ export function ServiceAccountsManager({
       >
         <DialogContent size="sm">
           <DialogHeader>
-            <DialogTitle>Create API key</DialogTitle>
+            <DialogTitle>创建 API 密钥</DialogTitle>
             <DialogDescription>
               {issueTarget?.active_api_key?.name ? (
                 <>
-                  The current active key{" "}
+                  当前生效的密钥{" "}
                   <span className={INLINE_NAME_HIGHLIGHT_CLASS}>
                     {issueTarget.active_api_key.name}
                   </span>
-                  will be revoked and replaced with a new one.
+                  将被撤销并由新密钥替代。
                 </>
               ) : (
-                "The current active key will be revoked and replaced with a new one."
+                "当前生效的密钥将被撤销并由新密钥替代。"
               )}
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div className="space-y-2">
-              <Label htmlFor="issued-key-name">New key label</Label>
+              <Label htmlFor="issued-key-name">新密钥标签</Label>
               <Input
                 id="issued-key-name"
                 name="issued-key-name"
                 value={issueKeyName}
                 onChange={(event) => setIssueKeyName(event.target.value)}
-                placeholder="Primary"
+                placeholder={"主要"}
               />
             </div>
           </DialogBody>
@@ -1359,7 +1349,7 @@ export function ServiceAccountsManager({
               onClick={handleIssueApiKey}
               disabled={issueApiKeyPending}
             >
-              {issueApiKeyPending ? "Issuing..." : "Issue key"}
+              {issueApiKeyPending ? "签发中…" : "签发密钥"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -1377,10 +1367,10 @@ export function ServiceAccountsManager({
           <AlertDialogHeader>
             <AlertDialogTitle>
               {actionDialogState?.type === "disable"
-                ? "Disable service account"
+                ? "禁用服务账号"
                 : actionDialogState?.type === "enable"
-                  ? "Enable service account"
-                  : "Revoke API key"}
+                  ? "启用服务账号"
+                  : "撤销 API 密钥"}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {actionDialogState?.type === "disable" ? (
@@ -1388,28 +1378,28 @@ export function ServiceAccountsManager({
                   <span className={INLINE_NAME_HIGHLIGHT_CLASS}>
                     {actionDialogState.serviceAccount.name}
                   </span>
-                  will stop authenticating immediately.
+                  将立即停止身份验证。
                 </>
               ) : actionDialogState?.type === "enable" ? (
                 <>
                   <span className={INLINE_NAME_HIGHLIGHT_CLASS}>
                     {actionDialogState.serviceAccount.name}
                   </span>
-                  will be able to authenticate again.
+                  将可重新验证身份。
                 </>
               ) : (
                 <>
                   <span className={INLINE_NAME_HIGHLIGHT_CLASS}>
                     {actionDialogState?.apiKey.name}
                   </span>
-                  will no longer authenticate.
+                  将无法再验证身份。
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isActionPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               variant={
@@ -1421,7 +1411,7 @@ export function ServiceAccountsManager({
                 await handleConfirmAction()
               }}
             >
-              {isActionPending ? "Working..." : "Confirm"}
+              {isActionPending ? "处理中…" : "确认"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

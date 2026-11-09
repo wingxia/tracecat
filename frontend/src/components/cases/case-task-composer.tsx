@@ -83,7 +83,7 @@ export function AddTaskRow({ onClick }: AddTaskRowProps) {
       <span className="flex size-6 shrink-0 items-center justify-center">
         <Plus className="size-4" />
       </span>
-      Create task
+      创建任务
     </button>
   )
 }
@@ -240,12 +240,12 @@ export function CaseTaskComposer({
               form.setValue("status", value)
             }
           }}
-          ariaLabel="Change status"
+          ariaLabel={"更改状态"}
           tooltip={statusDefinition.label}
         >
           <button
             type="button"
-            aria-label={`Change status: ${statusDefinition.label}`}
+            aria-label={`更改状态：${statusDefinition.label}`}
             className={TASK_ICON_TRIGGER_CLASS}
           >
             <CaseTaskStatusIcon status={status} className="size-4" />
@@ -259,8 +259,8 @@ export function CaseTaskComposer({
             registerTitleRef(node)
             titleRef.current = node
           }}
-          placeholder="Task title"
-          aria-label="Task title"
+          placeholder={"任务标题"}
+          aria-label={"任务标题"}
           className="min-w-0 flex-1 bg-transparent text-sm font-medium leading-6 text-foreground outline-none placeholder:text-muted-foreground/60"
         />
         {/* Shrinkable, not `shrink-0`: in a narrow panel — the chat artifact
@@ -278,12 +278,12 @@ export function CaseTaskComposer({
                 form.setValue("priority", value)
               }
             }}
-            ariaLabel="Set priority"
-            tooltip={showPriority ? priorityDefinition.label : "Set priority"}
+            ariaLabel={"设置优先级"}
+            tooltip={showPriority ? priorityDefinition.label : "设置优先级"}
           >
             <button
               type="button"
-              aria-label={`Set priority: ${priorityDefinition.label}`}
+              aria-label={`设置优先级：${priorityDefinition.label}`}
               className={TASK_ICON_TRIGGER_CLASS}
             >
               <PriorityIcon
@@ -301,16 +301,14 @@ export function CaseTaskComposer({
             value={assignee?.id ?? null}
             emptyValue={UNASSIGNED}
             onSelect={(value) => form.setValue("assignee_id", value)}
-            placeholder="Assign to…"
-            ariaLabel="Assign to"
-            tooltip={assignee ? assignee.email : "Assign to"}
+            placeholder={"分配给…"}
+            ariaLabel={"分配给"}
+            tooltip={assignee ? assignee.email : "分配给"}
           >
             <button
               type="button"
               aria-label={
-                assignee
-                  ? `Assign to: currently ${assignee.email}`
-                  : "Assign to"
+                assignee ? `分配给：当前为 ${assignee.email}` : "分配给"
               }
               className="flex size-6 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
@@ -352,7 +350,7 @@ export function CaseTaskComposer({
             >
               <Workflow className="size-3.5 shrink-0" />
               <span className="min-w-0 truncate">
-                {selectedWorkflow ? selectedWorkflow.title : "Workflow"}
+                {selectedWorkflow ? selectedWorkflow.title : "工作流"}
               </span>
             </button>
           </CaseTaskWorkflowPicker>
@@ -362,7 +360,7 @@ export function CaseTaskComposer({
             type="button"
             variant="ghost"
             size="icon"
-            aria-label="Cancel"
+            aria-label={"取消"}
             className="ml-1 size-6 shrink-0 rounded text-muted-foreground hover:text-foreground"
             onClick={onClose}
             disabled={isPending}
@@ -375,7 +373,7 @@ export function CaseTaskComposer({
             size="icon"
             className="size-6 shrink-0 rounded-full border-border/70"
             disabled={isPending || !title.trim()}
-            aria-label={task ? "Save task" : "Create task"}
+            aria-label={task ? "保存任务" : "创建任务"}
           >
             <ArrowUpIcon className="size-3.5" />
           </Button>
@@ -393,8 +391,8 @@ export function CaseTaskComposer({
           descriptionRef.current = node
         }}
         onKeyDown={handleDescriptionKeyDown}
-        placeholder="Add description…"
-        aria-label="Task description"
+        placeholder={"添加描述…"}
+        aria-label={"任务描述"}
         maxLength={CASE_TASK_DESCRIPTION_MAX_LENGTH}
         rows={1}
         className="mb-1.5 w-full resize-none overflow-hidden bg-transparent pl-8 pr-1 text-sm leading-6 outline-none placeholder:text-muted-foreground/60"

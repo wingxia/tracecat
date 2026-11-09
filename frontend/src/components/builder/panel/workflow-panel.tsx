@@ -90,23 +90,23 @@ const createWorkflowUpdateFormSchema = (workspaceId: string) =>
       title: z
         .string()
         .trim()
-        .min(3, { message: "Name must be at least 3 characters" })
-        .max(100, { message: "Name cannot exceed 100 characters" }),
+        .min(3, { message: "名称至少需要 3 个字符" })
+        .max(100, { message: "名称不能超过 100 个字符" }),
       alias: z
         .string()
-        .max(100, { message: "Alias cannot exceed 100 characters" })
+        .max(100, { message: "别名不能超过 100 个字符" })
         .nullish(),
       // Config fields
       environment: z
         .string()
-        .max(100, { message: "Environment cannot exceed 100 characters" })
+        .max(100, { message: "环境名称不能超过 100 个字符" })
         .optional(),
       tunnel: z.string().max(63).optional(),
       timeout: z
         .number()
-        .min(0, { message: "Timeout must be at least 0 seconds" })
+        .min(0, { message: "超时时间不能小于 0 秒" })
         .max(1209600, {
-          message: "Timeout cannot exceed 14 days (1209600 seconds)",
+          message: "超时时间不能超过 14 天（1209600 秒）",
         })
         .optional(),
       /* Input Schema */
@@ -115,7 +115,7 @@ const createWorkflowUpdateFormSchema = (workspaceId: string) =>
           z.string(),
           z
             .object({
-              type: z.string().min(1, { message: "Type is required" }),
+              type: z.string().min(1, { message: "类型不能为空" }),
               description: z.string().nullable().optional(),
               default: z.unknown().nullable().optional(),
             })
@@ -126,7 +126,7 @@ const createWorkflowUpdateFormSchema = (workspaceId: string) =>
       /* Error Handler */
       error_handler: z
         .string()
-        .max(100, { message: "Error handler cannot exceed 100 characters" })
+        .max(100, { message: "错误处理器不能超过 100 个字符" })
         .nullish(),
     })
     .superRefine(async (values, ctx) => {
@@ -156,7 +156,7 @@ const createWorkflowUpdateFormSchema = (workspaceId: string) =>
             message:
               messages && messages.length > 0
                 ? messages.join("\n")
-                : "Invalid trigger input definition.",
+                : "触发器输入定义无效。",
           })
         }
       } catch (error) {
@@ -164,7 +164,7 @@ const createWorkflowUpdateFormSchema = (workspaceId: string) =>
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["expects"],
-          message: "Failed to validate trigger inputs. Please try again.",
+          message: "校验触发器输入失败，请重试。",
         })
       }
     })
@@ -176,7 +176,7 @@ type WorkflowUpdateForm = z.infer<WorkflowUpdateFormSchema>
 
 const workflowReadmeSchema = z
   .string()
-  .max(1000, { message: "README cannot exceed 1000 characters" })
+  .max(1000, { message: "README 不能超过 1000 个字符" })
 
 type WorkflowPanelTab = "workflow" | "readme" | "versions"
 
@@ -203,7 +203,7 @@ export function WorkflowPanel({
                 value="workflow"
               >
                 <LayoutListIcon className="mr-2 size-4" />
-                <span>Workflow</span>
+                <span>工作流</span>
               </TabsTrigger>
               <TabsTrigger
                 className="flex h-full min-w-24 items-center justify-center rounded-none px-5 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none"
@@ -217,7 +217,7 @@ export function WorkflowPanel({
                 value="versions"
               >
                 <History className="mr-2 size-4" />
-                <span>Versions</span>
+                <span>版本</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -269,10 +269,10 @@ function WorkflowVersionsPanel({
       <div className="flex h-10 items-center justify-between border-b px-3">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <History className="size-3.5" />
-          <span>Workflow history</span>
+          <span>工作流历史</span>
         </div>
         {workflow.version ? (
-          <Badge variant="secondary">{`Current v${workflow.version}`}</Badge>
+          <Badge variant="secondary">{`当前 v${workflow.version}`}</Badge>
         ) : null}
       </div>
       <ScrollArea className="flex-1">
@@ -295,17 +295,17 @@ function WorkflowVersionsPanel({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Restore workflow version?</AlertDialogTitle>
+            <AlertDialogTitle>恢复工作流版本？</AlertDialogTitle>
             <AlertDialogDescription>
               {confirmVersion !== null
-                ? `Restoring v${confirmVersion} will overwrite your current draft. Any uncommitted changes will be discarded.`
+                ? `恢复 v${confirmVersion} 将覆盖当前草稿，所有未提交的更改都会被丢弃。`
                 : null}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={() => void handleConfirmRestore()}>
-              Restore
+              恢复
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -340,7 +340,7 @@ function WorkflowVersionsHistory({
   if (definitionsError) {
     return (
       <div className="px-4 py-6 text-sm text-destructive">
-        Failed to load workflow versions.
+        加载工作流版本失败。
       </div>
     )
   }
@@ -353,10 +353,8 @@ function WorkflowVersionsHistory({
             <EmptyMedia variant="icon">
               <History />
             </EmptyMedia>
-            <EmptyTitle>Versions</EmptyTitle>
-            <EmptyDescription>
-              Save the workflow to start tracking versions.
-            </EmptyDescription>
+            <EmptyTitle>版本</EmptyTitle>
+            <EmptyDescription>保存工作流以开始记录版本。</EmptyDescription>
           </EmptyHeader>
         </Empty>
       </div>
@@ -380,10 +378,8 @@ function WorkflowVersionsHistory({
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium">{`v${definition.version}`}</span>
-                    {isCurrent ? (
-                      <Badge variant="secondary">Current</Badge>
-                    ) : null}
-                    {isLatest ? <Badge variant="outline">Latest</Badge> : null}
+                    {isCurrent ? <Badge variant="secondary">当前</Badge> : null}
+                    {isLatest ? <Badge variant="outline">最新</Badge> : null}
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">
                     {getRelativeTime(new Date(definition.created_at))}
@@ -396,14 +392,14 @@ function WorkflowVersionsHistory({
                             variant="outline"
                             className="max-w-full overflow-hidden truncate whitespace-nowrap font-mono font-normal"
                             tabIndex={0}
-                            aria-label={`Registry lock: ${registryLockSummary}`}
+                            aria-label={`注册表锁定：${registryLockSummary}`}
                           >
                             {registryLockSummary}
                           </Badge>
                         </TooltipTrigger>
                         <TooltipContent className="max-w-sm">
                           <div className="space-y-1">
-                            <div className="font-medium">Registry lock</div>
+                            <div className="font-medium">注册表锁定</div>
                             {registryLockEntries.map((entry) => (
                               <div
                                 key={entry.origin}
@@ -417,7 +413,7 @@ function WorkflowVersionsHistory({
                       </Tooltip>
                     ) : (
                       <span className="text-xs text-muted-foreground">
-                        No registry lock
+                        未锁定注册表
                       </span>
                     )}
                   </div>
@@ -432,12 +428,12 @@ function WorkflowVersionsHistory({
                         className="size-8"
                         disabled={restorePending}
                         onClick={() => onRestore(definition.version)}
-                        aria-label={`Restore v${definition.version}`}
+                        aria-label={`恢复 v${definition.version}`}
                       >
                         <RotateCcw className="size-3.5" />
                       </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Restore</TooltipContent>
+                    <TooltipContent>恢复</TooltipContent>
                   </Tooltip>
                 ) : null}
               </div>
@@ -545,7 +541,7 @@ function WorkflowSettingsPanel({
           } else {
             console.error("Validation failed, unknown error", error)
             methods.setError("root", {
-              message: `Validation failed, unknown error: ${JSON.stringify(
+              message: `校验失败，未知错误：${JSON.stringify(
                 apiError.body.detail
               )}`,
             })
@@ -578,7 +574,7 @@ function WorkflowSettingsPanel({
         ([fieldName, error]) => {
           methods.setError(fieldName as keyof WorkflowUpdateForm, {
             type: "validation",
-            message: error[0] || "Invalid value",
+            message: error[0] || "值无效",
           })
         }
       )
@@ -616,22 +612,22 @@ function WorkflowSettingsPanel({
                         <div className="w-full space-y-4">
                           <div className="flex w-full items-center justify-between text-muted-foreground">
                             <span className="font-mono text-sm font-semibold">
-                              Workflow name
+                              工作流名称
                             </span>
                           </div>
                           <span className="text-muted-foreground">
-                            A human-readable name for the workflow. Must be at
-                            least 3 characters and less than 100 characters.
+                            便于识别的工作流名称，至少 3 个字符且少于 100
+                            个字符。
                           </span>
                         </div>
                       </HoverCardContent>
                     </HoverCard>
-                    <span>Name</span>
+                    <span>名称</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       className="text-xs"
-                      placeholder="Name your workflow..."
+                      placeholder={"为工作流命名…"}
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -662,33 +658,32 @@ function WorkflowSettingsPanel({
                           <div className="w-full space-y-4">
                             <div className="flex w-full items-center justify-between text-muted-foreground">
                               <span className="font-mono text-sm font-semibold">
-                                Workflow alias
+                                工作流别名
                               </span>
                               <span className="text-xs text-muted-foreground/80">
-                                (optional)
+                                （可选）
                               </span>
                             </div>
                             <span className="text-muted-foreground">
-                              A unique identifier for the workflow that can be
-                              used instead of the workflow ID. Must be unique
-                              within your workspace.
+                              可代替工作流 ID
+                              使用的唯一标识，在当前工作空间内必须唯一。
                             </span>
                           </div>
                         </HoverCardContent>
                       </HoverCard>
-                      <span>Alias</span>
+                      <span>别名</span>
                     </FormLabel>
                     {field.value && (
                       <CopyButton
                         value={field.value}
-                        toastMessage="Copied workflow alias to clipboard"
+                        toastMessage="已将工作流别名复制到剪贴板"
                       />
                     )}
                   </div>
                   <FormControl>
                     <Input
                       className="text-xs"
-                      placeholder="Unique identifier for this workflow"
+                      placeholder={"此工作流的唯一标识"}
                       {...field}
                       value={field.value || ""}
                       onChange={(e) => field.onChange(e.target.value || null)}
@@ -719,32 +714,31 @@ function WorkflowSettingsPanel({
                           <div className="w-full space-y-4">
                             <div className="flex w-full items-center justify-between text-muted-foreground">
                               <span className="font-mono text-sm font-semibold">
-                                Error handler workflow
+                                错误处理工作流
                               </span>
                               <span className="text-xs text-muted-foreground/80">
-                                (optional)
+                                （可选）
                               </span>
                             </div>
                             <span className="text-muted-foreground">
-                              The ID or alias of another workflow to run when
-                              this workflow encounters an error.
+                              此工作流出错时要运行的另一个工作流的 ID 或别名。
                             </span>
                           </div>
                         </HoverCardContent>
                       </HoverCard>
-                      <span>Error workflow</span>
+                      <span>错误处理工作流</span>
                     </FormLabel>
                     {field.value && (
                       <CopyButton
                         value={field.value}
-                        toastMessage="Copied error workflow to clipboard"
+                        toastMessage="已将错误处理工作流复制到剪贴板"
                       />
                     )}
                   </div>
                   <FormControl>
                     <Input
                       className="text-xs"
-                      placeholder="Workflow to run when an error occurs."
+                      placeholder={"发生错误时运行的工作流。"}
                       {...field}
                       value={field.value || ""}
                       onChange={field.onChange}
@@ -761,7 +755,7 @@ function WorkflowSettingsPanel({
               control={methods.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Default tunnel</FormLabel>
+                  <FormLabel className="text-xs">默认隧道</FormLabel>
                   <FormControl>
                     <TunnelSelect
                       value={field.value}
@@ -769,12 +763,11 @@ function WorkflowSettingsPanel({
                         field.onChange(value)
                         void methods.handleSubmit(onSubmit)()
                       }}
-                      noneLabel="No tunnel"
+                      noneLabel="无隧道"
                     />
                   </FormControl>
                   <FormDescription className="text-xs">
-                    Route HTTP(S) traffic from every action through this tunnel
-                    unless the action sets its own.
+                    所有动作的 HTTP(S) 流量默认通过此隧道路由，动作可自行覆盖。
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -800,20 +793,19 @@ function WorkflowSettingsPanel({
                         <div className="w-full space-y-4">
                           <div className="flex w-full items-center justify-between text-muted-foreground">
                             <span className="font-mono text-sm font-semibold">
-                              Environment
+                              环境
                             </span>
                             <span className="text-xs text-muted-foreground/80">
-                              (optional)
+                              （可选）
                             </span>
                           </div>
                           <span className="text-muted-foreground">
-                            The workflow&apos;s target execution environment.
-                            Defaults to &quot;default&quot;.
+                            工作流的目标执行环境，默认为“default”。
                           </span>
                         </div>
                       </HoverCardContent>
                     </HoverCard>
-                    <span>Environment</span>
+                    <span>环境</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -846,27 +838,26 @@ function WorkflowSettingsPanel({
                         <div className="w-full space-y-4">
                           <div className="flex w-full items-center justify-between text-muted-foreground">
                             <span className="font-mono text-sm font-semibold">
-                              Timeout
+                              超时时间
                             </span>
                             <span className="text-xs text-muted-foreground/80">
-                              (optional)
+                              （可选）
                             </span>
                           </div>
                           <span className="text-muted-foreground">
-                            The maximum number of seconds to wait for the
-                            workflow to complete. If set to 0, the workflow will
-                            not timeout. Defaults to 0 (unlimited).
+                            等待工作流完成的最长秒数。设为 0 时不超时，默认为
+                            0（不限制）。
                           </span>
                         </div>
                       </HoverCardContent>
                     </HoverCard>
-                    <span>Timeout (seconds)</span>
+                    <span>超时时间（秒）</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       type="number"
                       className="text-xs"
-                      placeholder="0 (unlimited)"
+                      placeholder={"0（不限制）"}
                       value={field.value || ""}
                       onChange={(e) =>
                         field.onChange(
@@ -895,7 +886,7 @@ function WorkflowSettingsPanel({
                     <WorkflowInputSchemaTooltip />
                   </HoverCardContent>
                 </HoverCard>
-                <span>Input schema</span>
+                <span>输入结构</span>
               </FormLabel>
               <ControlledYamlField fieldName="expects" hideType />
             </FormItem>
@@ -915,7 +906,7 @@ function WorkflowSettingsPanel({
                     <WorkflowReturnValueTooltip />
                   </HoverCardContent>
                 </HoverCard>
-                <span>Output schema</span>
+                <span>输出结构</span>
               </FormLabel>
               <ControlledYamlField fieldName="returns" hideType />
             </FormItem>
@@ -985,9 +976,9 @@ function WorkflowReadmePanel({
   )
 
   const toolbarStatus = isTooLong ? (
-    <span className="text-xs text-destructive">Max 1000 characters</span>
+    <span className="text-xs text-destructive">最多 1000 个字符</span>
   ) : isSaving ? (
-    <span className="text-xs text-muted-foreground">Saving...</span>
+    <span className="text-xs text-muted-foreground">保存中…</span>
   ) : null
 
   return (
@@ -997,9 +988,7 @@ function WorkflowReadmePanel({
       className="flex h-full flex-col overflow-auto p-4"
     >
       <div className="mb-4 space-y-1">
-        <h4 className="text-xs text-muted-foreground">
-          Edit workflow description
-        </h4>
+        <h4 className="text-xs text-muted-foreground">编辑工作流描述</h4>
       </div>
       <ReadOnlyFieldset
         readOnly={isReadOnly}
@@ -1010,7 +999,7 @@ function WorkflowReadmePanel({
           editable={!isReadOnly}
           onChange={setValue}
           onSave={() => void persistReadme()}
-          placeholder="Type some markdown here to start writing your README."
+          placeholder={"在此输入 Markdown，开始编写 README。"}
           toolbarStatus={toolbarStatus}
           className="h-full"
           style={{ height: "100%" }}
@@ -1024,16 +1013,13 @@ function WorkflowReturnValueTooltip() {
   return (
     <div className="flex w-full flex-col space-y-4">
       <div className="flex w-full items-center justify-between text-muted-foreground">
-        <span className="font-mono text-sm font-semibold">Output schema</span>
-        <span className="text-xs text-muted-foreground/80">(optional)</span>
+        <span className="font-mono text-sm font-semibold">输出结构</span>
+        <span className="text-xs text-muted-foreground/80">（可选）</span>
       </div>
       <span className="w-full text-muted-foreground">
-        Define the data returned by the workflow. Accepts static values and
-        expressions. Use expressions to reference specific action outputs.
+        定义工作流返回的数据，支持静态值和表达式。使用表达式引用特定动作的输出。
       </span>
-      <span className="w-full text-muted-foreground">
-        Usage example in expressions:
-      </span>
+      <span className="w-full text-muted-foreground">表达式用法示例：</span>
       <div className="rounded-md border bg-muted-foreground/10 p-2">
         <pre className="text-xs text-foreground/70">
           {"${{ ACTIONS.my_action.result }}"}
@@ -1061,17 +1047,16 @@ function WorkflowInputSchemaTooltip() {
   return (
     <div className="flex w-full flex-col space-y-4">
       <div className="flex w-full items-center justify-between text-muted-foreground">
-        <span className="font-mono text-sm font-semibold">Input schema</span>
-        <span className="text-xs text-muted-foreground/80">(optional)</span>
+        <span className="font-mono text-sm font-semibold">输入结构</span>
+        <span className="text-xs text-muted-foreground/80">（可选）</span>
       </div>
       <span className="w-full text-muted-foreground">
-        Define the workflow input schema. This will be used to validate the
-        trigger inputs to the workflow.
+        定义工作流输入结构，用于校验传入工作流的触发器输入。
       </span>
       <span className="w-full text-muted-foreground">
-        Passing a default value makes the field optional.
+        提供默认值后，该字段将变为可选。
       </span>
-      <span className="w-full text-muted-foreground">Usage example:</span>
+      <span className="w-full text-muted-foreground">用法示例：</span>
       <div className="rounded-md border bg-muted-foreground/10 p-2">
         <pre className="text-wrap text-xs text-foreground/70">
           {exampleExpects}

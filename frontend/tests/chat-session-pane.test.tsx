@@ -223,10 +223,8 @@ function mockPresetsError() {
 
 /** Add a registry tool through the Tools picker, then close the popover. */
 async function addToolFromPicker(label: string) {
-  fireEvent.click(screen.getByRole("button", { name: /^Tools/ }))
-  const search = await screen.findByPlaceholderText(
-    "Search capabilities & tools..."
-  )
+  fireEvent.click(screen.getByRole("button", { name: /^工具/ }))
+  const search = await screen.findByPlaceholderText("搜索能力和工具…")
   fireEvent.change(search, { target: { value: label } })
   const row = (await screen.findByText(label)).closest("label")
   if (!row) {
@@ -236,7 +234,7 @@ async function addToolFromPicker(label: string) {
   fireEvent.keyDown(search, { key: "Escape" })
   await waitFor(() =>
     expect(
-      screen.queryByPlaceholderText("Search capabilities & tools...")
+      screen.queryByPlaceholderText("搜索能力和工具…")
     ).not.toBeInTheDocument()
   )
 }
@@ -383,8 +381,8 @@ describe("ChatSessionPane", () => {
       </TooltipProvider>
     )
 
-    expect(screen.getByText("Interrupted")).toBeInTheDocument()
-    expect(screen.queryByText("Chat stopped")).not.toBeInTheDocument()
+    expect(screen.getByText("已中断")).toBeInTheDocument()
+    expect(screen.queryByText("对话 stopped")).not.toBeInTheDocument()
   })
 
   it("marks pending tool calls as interrupted in a cancelled turn", () => {
@@ -412,7 +410,7 @@ describe("ChatSessionPane", () => {
     expect(
       screen.getByText("Stopped core.table.list_tables")
     ).toBeInTheDocument()
-    expect(screen.queryByText(/^Running/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^运行中/)).not.toBeInTheDocument()
   })
 
   it("renders SDK abort errors as interrupted instead of leaking them", () => {
@@ -441,7 +439,7 @@ describe("ChatSessionPane", () => {
     expect(
       screen.getByText("Stopped core.table.list_tables")
     ).toBeInTheDocument()
-    expect(screen.queryByText(/^Failed to run/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^运行失败/)).not.toBeInTheDocument()
   })
 
   it("marks tool calls listed in the structured interrupt metadata as interrupted", () => {
@@ -473,7 +471,7 @@ describe("ChatSessionPane", () => {
     expect(
       screen.getByText("Stopped core.table.list_tables")
     ).toBeInTheDocument()
-    expect(screen.queryByText(/^Failed to run/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^运行失败/)).not.toBeInTheDocument()
   })
 
   it("marks structurally interrupted tool calls even without the turn flag", () => {
@@ -505,7 +503,7 @@ describe("ChatSessionPane", () => {
     expect(
       screen.getByText("Stopped core.table.list_tables")
     ).toBeInTheDocument()
-    expect(screen.queryByText(/^Failed to run/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^运行失败/)).not.toBeInTheDocument()
   })
 
   it("keeps genuine tool errors as errors in a cancelled turn", () => {
@@ -532,7 +530,7 @@ describe("ChatSessionPane", () => {
     )
 
     expect(
-      screen.getByText("Failed to run core.table.list_tables")
+      screen.getByText("运行失败 core.table.list_tables")
     ).toBeInTheDocument()
     expect(screen.queryByText(/^Stopped/)).not.toBeInTheDocument()
   })
@@ -595,9 +593,7 @@ describe("ChatSessionPane", () => {
       </QueryClientProvider>
     )
 
-    expect(
-      screen.getByText("What should we get done, Daryl?")
-    ).toBeInTheDocument()
+    expect(screen.getByText("Daryl，你想完成什么任务？")).toBeInTheDocument()
   })
 
   it("logs and recovers when sendMessage throws", async () => {
@@ -675,7 +671,7 @@ describe("ChatSessionPane", () => {
     )
 
     expect(screen.getByTestId("agent-running-line")).toHaveTextContent(
-      "Thinking..."
+      "思考中…"
     )
   })
 
@@ -724,8 +720,8 @@ describe("ChatSessionPane", () => {
 
       const lines = screen.getAllByTestId("agent-running-line")
       expect(lines).toHaveLength(1)
-      expect(lines[0]).toHaveTextContent("Working...")
-      expect(screen.queryByLabelText("Retry")).not.toBeInTheDocument()
+      expect(lines[0]).toHaveTextContent("处理中…")
+      expect(screen.queryByLabelText("重试")).not.toBeInTheDocument()
     } finally {
       mockVerbosity.mockReturnValue("verbose")
     }
@@ -938,7 +934,7 @@ describe("ChatSessionPane", () => {
     fireEvent.change(textarea, { target: { value: "Hello" } })
     const focusSpy = jest.spyOn(textarea, "focus")
 
-    const submitButton = screen.getByRole("button", { name: "Submit" })
+    const submitButton = screen.getByRole("button", { name: "提交" })
     expect(submitButton).toBeEnabled()
     fireEvent.pointerDown(submitButton)
     fireEvent.blur(textarea, { relatedTarget: null })
@@ -1011,14 +1007,14 @@ describe("ChatSessionPane", () => {
         .find((button) => button.textContent?.trim() === "Submit decisions")
     ).toBeUndefined()
 
-    fireEvent.click(screen.getByRole("button", { name: "Edit arguments" }))
+    fireEvent.click(screen.getByRole("button", { name: "编辑参数" }))
     const overrideEditor = screen.getByTestId("mock-code-editor")
     expect((overrideEditor as HTMLTextAreaElement).value).toContain(
       '"limit": 100'
     )
-    fireEvent.click(screen.getByRole("button", { name: "Discard edits" }))
+    fireEvent.click(screen.getByRole("button", { name: "放弃编辑" }))
 
-    fireEvent.click(screen.getByRole("button", { name: "Approve" }))
+    fireEvent.click(screen.getByRole("button", { name: "批准" }))
 
     await waitFor(() => {
       expect(clearError).toHaveBeenCalled()
@@ -1109,13 +1105,13 @@ describe("ChatSessionPane", () => {
 
     renderPaneWithPendingMessage()
 
-    expect(screen.getByRole("button", { name: "Approve" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "批准" })).toBeDisabled()
     expect(screen.getByText(AGENT_EXECUTE_REQUIRED_MESSAGE)).toBeInTheDocument()
     expect(
       screen.getByPlaceholderText(AGENT_EXECUTE_REQUIRED_MESSAGE)
     ).toBeDisabled()
     expect(
-      screen.queryByRole("button", { name: "Retry" })
+      screen.queryByRole("button", { name: "重试" })
     ).not.toBeInTheDocument()
     expect(sendMessage).not.toHaveBeenCalled()
   })
@@ -1148,7 +1144,7 @@ describe("ChatSessionPane", () => {
       </QueryClientProvider>
     )
 
-    expect(screen.getByRole("button", { name: "Stop" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "停止" })).toBeDisabled()
   })
 
   it("does not let a role without agent:execute remove a session's tools", () => {
@@ -1204,7 +1200,7 @@ describe("ChatSessionPane", () => {
       </QueryClientProvider>
     )
 
-    const remove = screen.getByRole("button", { name: /remove list cases/i })
+    const remove = screen.getByRole("button", { name: /移除 list cases/i })
     expect(remove).toBeDisabled()
     fireEvent.click(remove)
     expect(updateChat).not.toHaveBeenCalled()
@@ -1231,7 +1227,7 @@ describe("ChatSessionPane", () => {
 
     expect(screen.getByText("There are no open cases.")).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Retry" })
+      screen.queryByRole("button", { name: "重试" })
     ).not.toBeInTheDocument()
   })
 
@@ -1242,11 +1238,11 @@ describe("ChatSessionPane", () => {
 
     renderPaneWithPendingMessage()
 
-    expect(screen.getByRole("button", { name: "Approve" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "批准" })).toBeEnabled()
     expect(
       screen.queryByText(AGENT_EXECUTE_REQUIRED_MESSAGE)
     ).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: "Retry" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "重试" })).toBeInTheDocument()
     expect(sendMessage).toHaveBeenCalledWith({ text: "Queued message" })
   })
 
@@ -1308,10 +1304,8 @@ describe("ChatSessionPane", () => {
       renderPane()
 
       const alert = screen.getByRole("alert")
-      expect(within(alert).getByText("Connection dropped")).toBeInTheDocument()
-      expect(
-        within(alert).getByText("The reply stopped loading.")
-      ).toBeInTheDocument()
+      expect(within(alert).getByText("连接中断")).toBeInTheDocument()
+      expect(within(alert).getByText("回复已停止加载。")).toBeInTheDocument()
       expect(
         screen.getByText("Summarize the case").compareDocumentPosition(alert) &
           Node.DOCUMENT_POSITION_FOLLOWING
@@ -1320,7 +1314,7 @@ describe("ChatSessionPane", () => {
         screen.getByPlaceholderText("Ask about this case...")
       ).toBeEnabled()
 
-      fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+      fireEvent.click(screen.getByRole("button", { name: "重试" }))
       await waitFor(() => expect(retryTurn).toHaveBeenCalledWith("msg-user"))
     })
 
@@ -1329,7 +1323,7 @@ describe("ChatSessionPane", () => {
       const { retryTurn } = mockFailedTurn([], "Bad gateway", true)
 
       renderPane()
-      fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+      fireEvent.click(screen.getByRole("button", { name: "重试" }))
 
       await waitFor(() => expect(retryTurn).toHaveBeenCalledTimes(1))
     })
@@ -1349,11 +1343,11 @@ describe("ChatSessionPane", () => {
       )
 
       renderPane()
-      fireEvent.click(screen.getByRole("button", { name: "Retry" }))
-      fireEvent.click(screen.getByRole("button", { name: "Retry" }))
+      fireEvent.click(screen.getByRole("button", { name: "重试" }))
+      fireEvent.click(screen.getByRole("button", { name: "重试" }))
 
       await waitFor(() => expect(retryTurn).toHaveBeenCalledTimes(1))
-      expect(screen.getByText("Connection dropped")).toBeInTheDocument()
+      expect(screen.getByText("连接中断")).toBeInTheDocument()
     })
 
     it("names a failed run and its reason", () => {
@@ -1371,7 +1365,7 @@ describe("ChatSessionPane", () => {
       renderPane()
 
       const alert = screen.getByRole("alert")
-      expect(screen.queryByText("Last run failed")).not.toBeInTheDocument()
+      expect(screen.queryByText("上次运行失败")).not.toBeInTheDocument()
       expect(
         within(alert).getByText("Provider unavailable")
       ).toBeInTheDocument()
@@ -1415,7 +1409,7 @@ describe("ChatSessionPane", () => {
       expect(screen.getAllByText(error)).toHaveLength(1)
       expect(screen.getByText("There are no open cases.")).toBeInTheDocument()
       expect(screen.getByText("Reading the case now.")).toBeInTheDocument()
-      expect(screen.getAllByRole("button", { name: "Retry" })).toHaveLength(1)
+      expect(screen.getAllByRole("button", { name: "重试" })).toHaveLength(1)
     })
   })
 
@@ -1470,11 +1464,11 @@ describe("ChatSessionPane", () => {
     )
 
     const firstCard = screen.getByTestId("approval-card-tc-1")
-    const approvalSubmit = screen.getByRole("button", { name: "Submit" })
+    const approvalSubmit = screen.getByRole("button", { name: "提交" })
 
     expect(approvalSubmit).toBeDisabled()
 
-    fireEvent.click(within(firstCard).getByRole("button", { name: "Approve" }))
+    fireEvent.click(within(firstCard).getByRole("button", { name: "批准" }))
     expect(approvalSubmit).toBeEnabled()
 
     fireEvent.click(approvalSubmit)
@@ -1503,18 +1497,18 @@ describe("ChatSessionPane", () => {
     await waitFor(() =>
       expect(
         within(screen.getByTestId("approval-card-tc-1")).queryByRole("button", {
-          name: "Approve",
+          name: "批准",
         })
       ).not.toBeInTheDocument()
     )
     expect(
       within(screen.getByTestId("approval-card-tc-1")).getByText(
-        "Running core.http_request"
+        "运行中 core.http_request"
       )
     ).toBeInTheDocument()
     expect(
       within(screen.getByTestId("approval-card-tc-2")).getByRole("button", {
-        name: "Approve",
+        name: "批准",
       })
     ).toBeEnabled()
   })
@@ -1571,15 +1565,15 @@ describe("ChatSessionPane", () => {
 
     fireEvent.click(
       within(screen.getByTestId("approval-card-tc-1")).getByRole("button", {
-        name: "Approve",
+        name: "批准",
       })
     )
     fireEvent.click(
       within(screen.getByTestId("approval-card-tc-2")).getByRole("button", {
-        name: "Deny",
+        name: "拒绝",
       })
     )
-    fireEvent.click(screen.getByRole("button", { name: "Submit" }))
+    fireEvent.click(screen.getByRole("button", { name: "提交" }))
 
     await waitFor(() => {
       expect(sendMessage).toHaveBeenCalledTimes(1)
@@ -1593,11 +1587,11 @@ describe("ChatSessionPane", () => {
     )
     expect(
       within(screen.getByTestId("approval-card-tc-1")).getByText(
-        "Running core.http_request"
+        "运行中 core.http_request"
       )
     ).toBeInTheDocument()
     expect(
-      within(screen.getByTestId("approval-card-tc-2")).queryByText(/^Running/)
+      within(screen.getByTestId("approval-card-tc-2")).queryByText(/^运行中/)
     ).not.toBeInTheDocument()
   })
 
@@ -1656,13 +1650,13 @@ describe("ChatSessionPane", () => {
     const secondCard = screen.getByTestId("approval-card-tc-2")
 
     expect(
-      within(firstCard).queryByRole("button", { name: "Approve" })
+      within(firstCard).queryByRole("button", { name: "批准" })
     ).not.toBeInTheDocument()
     expect(
-      within(firstCard).getByText("Running core.http_request")
+      within(firstCard).getByText("运行中 core.http_request")
     ).toBeInTheDocument()
     expect(
-      within(secondCard).getByRole("button", { name: "Approve" })
+      within(secondCard).getByRole("button", { name: "批准" })
     ).toBeEnabled()
     // One call still waits, so it sends on click.
     expect(
@@ -1722,7 +1716,7 @@ describe("ChatSessionPane", () => {
     await addToolFromPicker("List cases")
 
     expect(
-      screen.getByRole("button", { name: /remove list cases/i })
+      screen.getByRole("button", { name: /移除 list cases/i })
     ).toBeInTheDocument()
 
     const textarea = screen.getByRole("textbox")
@@ -1806,7 +1800,7 @@ describe("ChatSessionPane", () => {
       update: { tools: ["core.cases.list_cases"] },
     })
 
-    fireEvent.click(screen.getByRole("button", { name: /remove list cases/i }))
+    fireEvent.click(screen.getByRole("button", { name: /移除 list cases/i }))
     expect(updateChat).toHaveBeenCalledTimes(1)
 
     firstWrite.resolve()
@@ -1942,7 +1936,7 @@ describe("ChatSessionPane", () => {
       </QueryClientProvider>
     )
 
-    fireEvent.click(screen.getByRole("button", { name: "Tools" }))
+    fireEvent.click(screen.getByRole("button", { name: "工具" }))
     fireEvent.click(await screen.findByText("RunReveal"))
 
     await waitFor(() => {
@@ -2023,16 +2017,16 @@ describe("ChatSessionPane", () => {
       </QueryClientProvider>
     )
 
-    fireEvent.click(screen.getByRole("button", { name: "Tools" }))
+    fireEvent.click(screen.getByRole("button", { name: "工具" }))
     fireEvent.click(await screen.findByText("RunReveal"))
     await waitFor(() => {
       expect(updateChat).toHaveBeenCalledTimes(1)
     })
 
-    fireEvent.click(screen.getByRole("button", { name: "Tools (1)" }))
+    fireEvent.click(screen.getByRole("button", { name: "工具（1）" }))
     fireEvent.click(await screen.findByText("Okta"))
     expect(
-      screen.getByRole("button", { name: "Tools (2)" })
+      screen.getByRole("button", { name: "工具（2）" })
     ).toBeInTheDocument()
     expect(updateChat).toHaveBeenCalledTimes(1)
 
@@ -2063,7 +2057,7 @@ describe("ChatSessionPane", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: "Tools (2)" })
+      screen.getByRole("button", { name: "工具（2）" })
     ).toBeInTheDocument()
 
     secondWrite.resolve()
@@ -2326,10 +2320,10 @@ describe("ChatSessionPane", () => {
     await addToolFromPicker("Get case")
 
     expect(
-      screen.getByRole("button", { name: /remove list cases/i })
+      screen.getByRole("button", { name: /移除 list cases/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: /remove get case/i })
+      screen.getByRole("button", { name: /移除 get case/i })
     ).toBeInTheDocument()
     expect(updateChat).toHaveBeenCalledTimes(1)
 
@@ -2354,10 +2348,10 @@ describe("ChatSessionPane", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: /remove list cases/i })
+      screen.getByRole("button", { name: /移除 list cases/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: /remove get case/i })
+      screen.getByRole("button", { name: /移除 get case/i })
     ).toBeInTheDocument()
 
     secondWrite.resolve()
@@ -2379,10 +2373,10 @@ describe("ChatSessionPane", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: /remove list cases/i })
+      screen.getByRole("button", { name: /移除 list cases/i })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: /remove get case/i })
+      screen.getByRole("button", { name: /移除 get case/i })
     ).toBeInTheDocument()
   })
 
@@ -2468,7 +2462,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2507,7 +2501,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2554,7 +2548,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2597,7 +2591,7 @@ describe("ChatSessionPane", () => {
       const { rerenderPane } = renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2678,7 +2672,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2725,7 +2719,7 @@ describe("ChatSessionPane", () => {
       const onBeforeSend = jest.fn().mockReturnValue(created.promise)
       const onSelect = jest.fn().mockResolvedValue(true)
       const presetSelector = {
-        label: "No preset",
+        label: "无预设",
         selectedPresetId: null,
         onSelect,
       }
@@ -2782,7 +2776,7 @@ describe("ChatSessionPane", () => {
         onBeforeSend,
         optimisticBeforeSend: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2825,7 +2819,7 @@ describe("ChatSessionPane", () => {
       const created = createDeferred<string>()
       const onBeforeSend = jest.fn().mockReturnValue(created.promise)
       const presetSelector = {
-        label: "No preset",
+        label: "无预设",
         selectedPresetId: null,
         onSelect,
       }
@@ -2883,7 +2877,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2925,7 +2919,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2959,7 +2953,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -2982,7 +2976,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3002,7 +2996,7 @@ describe("ChatSessionPane", () => {
       await waitFor(() =>
         expect(screen.queryByText("Triage agent")).not.toBeInTheDocument()
       )
-      expect(screen.queryByText("No agents found")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到智能体")).not.toBeInTheDocument()
     })
 
     it("sets the session preset from an @ mention and sends the text verbatim", async () => {
@@ -3010,7 +3004,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -3045,7 +3039,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3055,9 +3049,9 @@ describe("ChatSessionPane", () => {
       fireEvent.change(textarea, { target: { value: "@", selectionStart: 1 } })
 
       expect(
-        await screen.findByText("Could not load agents. Try again.")
+        await screen.findByText("无法加载智能体，请重试。")
       ).toBeInTheDocument()
-      expect(screen.queryByText("No agents found")).not.toBeInTheDocument()
+      expect(screen.queryByText("未找到智能体")).not.toBeInTheDocument()
     })
 
     it("does not send when the mentioned preset fails to persist", async () => {
@@ -3067,7 +3061,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect,
         },
@@ -3131,7 +3125,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3145,7 +3139,7 @@ describe("ChatSessionPane", () => {
       // `@` is the agent picker now: it says there is no matching agent rather
       // than offering the registry tool that used to match this query.
       expect(screen.queryByText("List cases")).not.toBeInTheDocument()
-      expect(await screen.findByText("No agents found")).toBeInTheDocument()
+      expect(await screen.findByText("未找到智能体")).toBeInTheDocument()
     })
 
     it("offers agent mentions without agent add-ons", async () => {
@@ -3153,7 +3147,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3164,7 +3158,7 @@ describe("ChatSessionPane", () => {
 
       expect(await screen.findByText("Triage agent")).toBeInTheDocument()
       expect(
-        screen.queryByText("Agent mentions are an Enterprise feature")
+        screen.queryByText("提及智能体属于企业版功能")
       ).not.toBeInTheDocument()
       expect(mockUseAgentPresets).toHaveBeenCalledWith(
         "workspace-1",
@@ -3177,7 +3171,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3193,7 +3187,7 @@ describe("ChatSessionPane", () => {
       renderPane({
         agentMentionsSupported: true,
         presetSelector: {
-          label: "No preset",
+          label: "无预设",
           selectedPresetId: null,
           onSelect: jest.fn().mockResolvedValue(true),
         },
@@ -3205,8 +3199,8 @@ describe("ChatSessionPane", () => {
       fireEvent.focus(textarea)
 
       const hint = screen.getByTestId("composer-hint")
-      expect(hint).toHaveTextContent("Mention agent")
-      expect(hint).not.toHaveTextContent("Run workflow")
+      expect(hint).toHaveTextContent("提及智能体")
+      expect(hint).not.toHaveTextContent("运行工作流")
 
       fireEvent.change(textarea, {
         target: { value: "hello", selectionStart: 5 },
@@ -3231,7 +3225,7 @@ describe("ChatSessionPane", () => {
 
       expect(screen.queryByText("Triage agent")).not.toBeInTheDocument()
       expect(
-        screen.queryByText("Agent mentions are an Enterprise feature")
+        screen.queryByText("提及智能体属于企业版功能")
       ).not.toBeInTheDocument()
       expect(textarea).toHaveValue("@")
     })
@@ -3254,10 +3248,10 @@ describe("ChatSessionPane", () => {
       expect(screen.getByText("Triage agent")).toBeInTheDocument()
       expect(screen.queryByTestId("composer-hint")).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: /^Tools/ })
+        screen.queryByRole("button", { name: /^工具/ })
       ).not.toBeInTheDocument()
 
-      fireEvent.click(screen.getByRole("button", { name: "Clear agent" }))
+      fireEvent.click(screen.getByRole("button", { name: "清除智能体" }))
 
       expect(onSelect).toHaveBeenCalledWith(null)
     })
@@ -3531,7 +3525,7 @@ describe("ChatSessionPane", () => {
       renderSubject()
 
       expect(screen.getAllByTestId("approval-waiting-tc-1")).toHaveLength(1)
-      expect(screen.getAllByText("Approve")).toHaveLength(1)
+      expect(screen.getAllByText("批准")).toHaveLength(1)
     })
 
     it("renders duplicated identical output copies once", () => {

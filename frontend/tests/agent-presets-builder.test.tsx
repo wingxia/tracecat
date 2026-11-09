@@ -22,7 +22,7 @@ describe("getAgentPresetErrorMessage", () => {
     })
 
     expect(getAgentPresetErrorMessage(error, "Save failed.")).toBe(
-      "This agent has 140 tools; the limit is 128."
+      "此智能体有 140 个工具，上限为 128 个。"
     )
   })
 
@@ -204,7 +204,7 @@ describe("canSubmitAgentPresetForm", () => {
       ["triage-agent"]
     )
 
-    expect(duplicated.name).toBe("Copy of Triage agent")
+    expect(duplicated.name).toBe("Triage agent 的副本")
     expect(duplicated.slug).toBe("copy-of-triage-agent")
     expect(duplicated.instructions).toBe("Investigate alerts")
     expect(duplicated.actions).toEqual(["core.http_request"])

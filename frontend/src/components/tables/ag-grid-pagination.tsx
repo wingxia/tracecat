@@ -53,15 +53,13 @@ export function AgGridPagination({
       <div className="flex-1 text-xs text-muted-foreground">
         {startItem && endItem && totalEstimate ? (
           <p className="text-xs text-muted-foreground">
-            Showing {startItem}-{endItem} of {totalEstimate}
+            显示 {startItem}-{endItem} / {totalEstimate}
           </p>
         ) : null}
       </div>
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-xs font-medium text-foreground/70">
-            Rows per page
-          </p>
+          <p className="text-xs font-medium text-foreground/70">每页行数</p>
           <Select
             value={`${pageSize}`}
             onValueChange={(value) => onPageSizeChange(Number(value))}
@@ -82,10 +80,10 @@ export function AgGridPagination({
         <div className="flex w-[100px] items-center justify-center text-xs font-medium text-foreground/70">
           {totalEstimate ? (
             <span>
-              Page {currentPage + 1} of {totalPages}
+              页 {currentPage + 1} / {totalPages}
             </span>
           ) : (
-            <span>Page {currentPage + 1}</span>
+            <span>页 {currentPage + 1}</span>
           )}
         </div>
         <div className="flex items-center space-x-2">
@@ -95,7 +93,7 @@ export function AgGridPagination({
             onClick={onFirstPage}
             disabled={!hasPreviousPage || isLoading}
           >
-            <span className="sr-only">Go to first page</span>
+            <span className="sr-only">前往首页</span>
             <DoubleArrowLeftIcon className="size-4" />
           </Button>
           <Button
@@ -104,7 +102,7 @@ export function AgGridPagination({
             onClick={onPreviousPage}
             disabled={!hasPreviousPage || isLoading}
           >
-            <span className="sr-only">Go to previous page</span>
+            <span className="sr-only">前往上一页</span>
             <ChevronLeftIcon className="size-4" />
           </Button>
           <Button
@@ -113,7 +111,7 @@ export function AgGridPagination({
             onClick={onNextPage}
             disabled={!hasNextPage || isLoading}
           >
-            <span className="sr-only">Go to next page</span>
+            <span className="sr-only">前往下一页</span>
             <ChevronRightIcon className="size-4" />
           </Button>
         </div>

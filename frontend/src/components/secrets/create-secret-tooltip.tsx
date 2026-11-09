@@ -22,8 +22,7 @@ export function CreateSecretTooltip() {
         >
           <div className="w-full space-y-4">
             <div className="w-full items-center text-start text-muted-foreground ">
-              Create a secret that can have multiple key-value credential pairs.
-              You can reference these secrets in your workflows through{" "}
+              创建可包含多个键值凭据对的密钥，在工作流中可通过以下表达式引用：{" "}
             </div>
             <div className="rounded-md border bg-muted-foreground/10 p-2">
               <pre className="text-xs text-foreground/70">
@@ -32,9 +31,8 @@ export function CreateSecretTooltip() {
             </div>
             <div className="w-full items-center text-start text-muted-foreground ">
               <span>
-                For example, if I have a secret called with key GH_ACCESS_TOKEN,
-                I can create a secret named `my_github_secret` and reference
-                this as{" "}
+                例如，凭据键名为 GH_ACCESS_TOKEN 时，可创建名为
+                `my_github_secret` 的密钥，并这样引用：{" "}
               </span>
             </div>
             <div className="flex w-full flex-col text-muted-foreground ">
@@ -48,7 +46,7 @@ export function CreateSecretTooltip() {
         </HoverCardContent>
       </HoverCard>
       <span className="text-sm text-muted-foreground">
-        Define a secret with one or more key-value pairs.
+        定义包含一个或多个键值对的密钥。
       </span>
     </div>
   )

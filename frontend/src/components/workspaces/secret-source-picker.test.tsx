@@ -53,7 +53,7 @@ test("lists each enabled store under its provider and selects one", async () => 
   expect(screen.getByRole("option", { name: /Tracecat/ })).toBeInTheDocument()
   expect(screen.queryByText("legacy-secrets")).not.toBeInTheDocument()
   expect(
-    screen.queryByPlaceholderText("Search stores or regions")
+    screen.queryByPlaceholderText("搜索存储或区域")
   ).not.toBeInTheDocument()
 
   await user.click(screen.getByRole("option", { name: /eu-secrets/ }))
@@ -85,10 +85,7 @@ test("searches by store name or region once the list is long", async () => {
   )
 
   await user.click(screen.getByRole("combobox"))
-  await user.type(
-    screen.getByPlaceholderText("Search stores or regions"),
-    "ap-"
-  )
+  await user.type(screen.getByPlaceholderText("搜索存储或区域"), "ap-")
 
   expect(screen.getByRole("option", { name: /team-3/ })).toBeInTheDocument()
   expect(
@@ -103,9 +100,7 @@ test("explains when no store is authorized", async () => {
   )
 
   await user.click(screen.getByRole("combobox"))
-  expect(
-    screen.getByText(/No stores are authorized for this workspace/)
-  ).toBeInTheDocument()
+  expect(screen.getByText(/此工作空间没有已授权的存储/)).toBeInTheDocument()
 })
 
 test("explains when authorized stores are disabled or in setup", async () => {
@@ -116,9 +111,7 @@ test("explains when authorized stores are disabled or in setup", async () => {
   )
 
   await user.click(screen.getByRole("combobox"))
-  expect(
-    screen.getByText(/No stores are enabled for this workspace/)
-  ).toBeInTheDocument()
+  expect(screen.getByText(/此工作空间没有已启用的存储/)).toBeInTheDocument()
   expect(screen.queryByText(/No stores are authorized/)).not.toBeInTheDocument()
 })
 

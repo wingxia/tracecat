@@ -50,7 +50,7 @@ function renderControls(version: number | null, forms: FormRead[]) {
       </QueryClientProvider>
     ),
   })
-  return screen.findByRole("switch", { name: "Enable form" })
+  return screen.findByRole("switch", { name: "启用表单" })
 }
 
 beforeEach(() => {
@@ -60,9 +60,7 @@ beforeEach(() => {
 
 it("stays off until the workflow is published", async () => {
   expect(await renderControls(null, [])).toBeDisabled()
-  expect(
-    screen.getByText("Publish the workflow to put its form online")
-  ).toBeInTheDocument()
+  expect(screen.getByText("发布工作流以将其表单上线")).toBeInTheDocument()
 })
 
 it("creates an online form for a workflow without one", async () => {
@@ -100,8 +98,8 @@ it("finds the workflow's form by its short ID and puts it online", async () => {
 
   const toggle = await renderControls(3, [FORM])
 
-  expect(await screen.findByLabelText("Requester link")).toHaveValue(FORM.url)
-  expect(screen.getByRole("link", { name: "Edit in Forms" })).toHaveAttribute(
+  expect(await screen.findByLabelText("填写者链接")).toHaveValue(FORM.url)
+  expect(screen.getByRole("link", { name: "在表单中编辑" })).toHaveAttribute(
     "href",
     "/workspaces/workspace-1/forms/form-1"
   )

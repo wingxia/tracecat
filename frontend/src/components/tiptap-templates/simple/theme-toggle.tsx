@@ -33,7 +33,7 @@ export function ThemeToggle() {
   return (
     <Button
       onClick={toggleDarkMode}
-      aria-label={`Switch to ${isDarkMode ? "light" : "dark"} mode`}
+      aria-label={`切换到 ${isDarkMode ? "light" : "dark"} 模式`}
       data-style="ghost"
     >
       {isDarkMode ? (

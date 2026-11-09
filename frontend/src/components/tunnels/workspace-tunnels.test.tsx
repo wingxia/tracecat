@@ -21,6 +21,6 @@ describe("parseTunnelTargets", () => {
   })
 
   it("requires at least one target", () => {
-    expect(() => parseTunnelTargets("  \n")).toThrow("Add at least one target")
+    expect(() => parseTunnelTargets("  \n")).toThrow("请至少添加一个目标")
   })
 })

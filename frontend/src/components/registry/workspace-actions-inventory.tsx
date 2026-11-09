@@ -3,6 +3,7 @@
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   ChevronRight,
   Clock3,
@@ -161,13 +162,13 @@ function getLastSyncedBadge(lastSyncedAt: string | null | undefined) {
         className="h-5 px-2 text-[10px] font-normal"
       >
         <Clock3 className="mr-1 size-3" />
-        Never synced
+        从未同步
       </Badge>
     )
   }
 
   const syncedAt = new Date(lastSyncedAt)
-  const relativeLabel = new Intl.RelativeTimeFormat("en", {
+  const relativeLabel = new Intl.RelativeTimeFormat("zh-CN", {
     numeric: "auto",
   })
 
@@ -194,7 +195,9 @@ function getLastSyncedBadge(lastSyncedAt: string | null | undefined) {
           {value}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent>{format(syncedAt, "PPpp")}</TooltipContent>
+      <TooltipContent>
+        {format(syncedAt, "PPpp", { locale: zhCN })}
+      </TooltipContent>
     </Tooltip>
   )
 }
@@ -212,15 +215,15 @@ function RegistryGroupMetadata({ group }: { group: RegistryActionGroup }) {
         {(() => {
           switch (group.currentVersionState?.status) {
             case "ready":
-              return `Version ${group.currentVersionState.version}`
+              return `版本 ${group.currentVersionState.version}`
             case "loading":
-              return "Version Loading..."
+              return "正在加载版本…"
             case "truncated":
-              return "Version outside recent history"
+              return "版本不在最近历史中"
             case "error":
             case "unavailable":
             default:
-              return "Version Unavailable"
+              return "版本不可用"
           }
         })()}
       </Badge>
@@ -527,19 +530,19 @@ export function WorkspaceActionsInventory() {
       key: "namespace",
       value: namespaceFilter,
       onValueChange: setNamespaceFilter,
-      placeholder: "Namespace",
+      placeholder: "命名空间",
       allValue: "all",
-      options: [{ value: "all", label: "All namespaces" }, ...namespaceOptions],
+      options: [{ value: "all", label: "所有命名空间" }, ...namespaceOptions],
       widthClassName: "w-[180px]",
     },
     {
       key: "type",
       value: typeFilter,
       onValueChange: (value) => setTypeFilter(value as ActionTypeFilter),
-      placeholder: "Type",
+      placeholder: "输入",
       allValue: "all",
       options: [
-        { value: "all", label: "All types" },
+        { value: "all", label: "所有类型" },
         {
           value: "template",
           label: actionTypeToLabel.template.label,
@@ -555,20 +558,20 @@ export function WorkspaceActionsInventory() {
       key: "origin",
       value: originFilter,
       onValueChange: setOriginFilter,
-      placeholder: "Origin",
+      placeholder: "来源",
       allValue: "all",
-      options: [{ value: "all", label: "All origins" }, ...originOptions],
+      options: [{ value: "all", label: "所有来源" }, ...originOptions],
       widthClassName: "w-[170px]",
     },
     {
       key: "sort-field",
       value: sortField,
       onValueChange: (value) => setSortField(value as ActionSortField),
-      placeholder: "Sort by",
+      placeholder: "排序方式",
       options: [
-        { value: "name", label: "Sort by Name" },
-        { value: "action", label: "Sort by Action name" },
-        { value: "namespace", label: "Sort by Namespace" },
+        { value: "name", label: "按名称排序" },
+        { value: "action", label: "按动作名称排序" },
+        { value: "namespace", label: "按命名空间排序" },
       ],
       widthClassName: "w-[180px]",
     },
@@ -576,10 +579,10 @@ export function WorkspaceActionsInventory() {
       key: "sort-direction",
       value: sortDirection,
       onValueChange: (value) => setSortDirection(value as ActionSortDirection),
-      placeholder: "Order",
+      placeholder: "顺序",
       options: [
-        { value: "asc", label: "A to Z" },
-        { value: "desc", label: "Z to A" },
+        { value: "asc", label: "A 到 Z" },
+        { value: "desc", label: "Z 到 A" },
       ],
       widthClassName: "w-[120px]",
     },
@@ -603,7 +606,7 @@ export function WorkspaceActionsInventory() {
         message={
           primaryError instanceof Error
             ? primaryError.message
-            : "Error loading actions."
+            : "加载动作出错。"
         }
       />
     )
@@ -618,7 +621,7 @@ export function WorkspaceActionsInventory() {
       <CatalogHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search actions..."
+        searchPlaceholder={"搜索动作…"}
         selectFilters={selectFilters}
         displayCount={filteredActions.length}
         countLabel="actions"
@@ -630,7 +633,7 @@ export function WorkspaceActionsInventory() {
       >
         {groupedActions.length === 0 ? (
           <div className="py-12 text-center text-sm text-muted-foreground">
-            No actions found matching your criteria.
+            没有符合条件的动作。
           </div>
         ) : (
           <div
@@ -767,7 +770,7 @@ const RegistryActionRow = memo(function RegistryActionRow({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="size-8 p-0">
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">打开菜单</span>
               <DotsHorizontalIcon className="size-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -779,20 +782,20 @@ const RegistryActionRow = memo(function RegistryActionRow({
                     value: action.action,
                   })
                   toast({
-                    title: "Action name copied",
+                    title: "已复制动作名称",
                     description: action.action,
                   })
                 } catch (error) {
                   console.error(error)
                   toast({
-                    title: "Failed to copy action name",
-                    description: "Please try again or copy manually",
+                    title: "复制动作名称失败",
+                    description: "请重试或手动复制",
                     variant: "destructive",
                   })
                 }
               }}
             >
-              Copy action name
+              复制动作名称
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

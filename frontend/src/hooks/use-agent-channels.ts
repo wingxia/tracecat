@@ -77,17 +77,17 @@ export function useCreateAgentChannelToken(workspaceId: string) {
         queryKey: ["agent-channel-tokens", workspaceId],
       })
       toast({
-        title: "Channel token created",
-        description: "Slack endpoint is ready.",
+        title: "已创建渠道令牌",
+        description: "Slack 端点已就绪。",
       })
     },
     onError: (error) => {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to create channel token."
+          : "创建渠道令牌失败。"
       toast({
-        title: "Create failed",
+        title: "创建失败",
         description: detail,
         variant: "destructive",
       })
@@ -124,17 +124,17 @@ export function useUpdateAgentChannelToken(workspaceId: string) {
         queryKey: ["agent-channel-tokens", workspaceId],
       })
       toast({
-        title: "Channel token updated",
-        description: "Slack channel settings saved.",
+        title: "已更新渠道令牌",
+        description: "已保存 Slack 渠道设置。",
       })
     },
     onError: (error) => {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to update channel token."
+          : "更新渠道令牌失败。"
       toast({
-        title: "Update failed",
+        title: "更新失败",
         description: detail,
         variant: "destructive",
       })
@@ -167,17 +167,17 @@ export function useRotateAgentChannelToken(workspaceId: string) {
           queryKey: ["agent-channel-tokens", workspaceId],
         })
         toast({
-          title: "Endpoint rotated",
-          description: "Use the new endpoint URL in Slack configuration.",
+          title: "已轮换端点",
+          description: "请在 Slack 配置中使用新的端点 URL。",
         })
       },
       onError: (error) => {
         const detail =
           typeof error.body?.detail === "string"
             ? error.body.detail
-            : "Failed to rotate channel token."
+            : "轮换渠道令牌失败。"
         toast({
-          title: "Rotate failed",
+          title: "轮换失败",
           description: detail,
           variant: "destructive",
         })
@@ -210,17 +210,17 @@ export function useDeleteAgentChannelToken(workspaceId: string) {
         queryKey: ["agent-channel-tokens", workspaceId],
       })
       toast({
-        title: "Channel token deleted",
-        description: "Slack endpoint has been revoked.",
+        title: "已删除渠道令牌",
+        description: "Slack 端点已撤销。",
       })
     },
     onError: (error) => {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to delete channel token."
+          : "删除渠道令牌失败。"
       toast({
-        title: "Delete failed",
+        title: "删除失败",
         description: detail,
         variant: "destructive",
       })
@@ -273,9 +273,9 @@ export function useStartSlackOAuth(workspaceId: string) {
       const detail =
         typeof error.body?.detail === "string"
           ? error.body.detail
-          : "Failed to start Slack connect flow."
+          : "启动 Slack 连接流程失败。"
       toast({
-        title: "Slack connect failed",
+        title: "连接 Slack 失败",
         description: detail,
         variant: "destructive",
       })

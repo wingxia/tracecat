@@ -77,7 +77,7 @@ const SECRET_TYPE_OPTIONS: Array<{
   value: CredentialSecretTypeFilter
   label: string
 }> = [
-  { value: "all", label: "All types" },
+  { value: "all", label: "所有类型" },
   ...Object.entries(workspaceSecretTypeLabels).map(([value, label]) => ({
     value: value as CredentialSecretTypeFilter,
     label,
@@ -183,14 +183,14 @@ export function WorkspaceCredentialsInventory() {
       value: connectionFilter,
       onValueChange: (value) =>
         setConnectionFilter(value as CredentialConnectionFilter),
-      placeholder: "Connection",
+      placeholder: "连接",
       allValue: "all",
       options: [
-        { value: "all", label: "All connections" },
-        { value: "connected", label: "Connected", icon: Link2 },
+        { value: "all", label: "所有连接" },
+        { value: "connected", label: "已连接", icon: Link2 },
         {
           value: "not_connected",
-          label: "Not connected",
+          label: "未连接",
           icon: Unlink2,
         },
       ],
@@ -199,11 +199,11 @@ export function WorkspaceCredentialsInventory() {
       key: "environment",
       value: environmentFilter,
       onValueChange: setEnvironmentFilter,
-      placeholder: "Environment",
+      placeholder: "环境",
       allValue: "all",
       widthClassName: "w-[190px]",
       options: [
-        { value: "all", label: "All environments" },
+        { value: "all", label: "所有环境" },
         ...availableEnvironments.map((environment) => ({
           value: environment,
           label: environment,
@@ -215,7 +215,7 @@ export function WorkspaceCredentialsInventory() {
       value: secretTypeFilter,
       onValueChange: (value) =>
         setSecretTypeFilter(value as CredentialSecretTypeFilter),
-      placeholder: "Secret type",
+      placeholder: "密钥类型",
       allValue: "all",
       widthClassName: "w-[170px]",
       options: SECRET_TYPE_OPTIONS,
@@ -233,7 +233,7 @@ export function WorkspaceCredentialsInventory() {
         message={
           secretDefinitionsError?.message ||
           secretsError?.message ||
-          "Error loading credentials."
+          "加载凭据出错。"
         }
       />
     )
@@ -253,13 +253,12 @@ export function WorkspaceCredentialsInventory() {
             {corruptedSecrets.length > 0 ? (
               <Alert className="mx-6 mb-4 mt-6">
                 <AlertTriangleIcon className="size-4 !text-amber-600" />
-                <AlertTitle>Some secrets could not be decrypted</AlertTitle>
+                <AlertTitle>部分密钥无法解密</AlertTitle>
                 <AlertDescription>
-                  Failed to decrypt key names and values for{" "}
-                  {corruptedSecrets.map((secret) => secret.name).join(", ")}.
-                  Secret names are still available, but you must re-enter all
-                  key names and values to recover these secrets. For SSH keys,
-                  delete and recreate the secret.
+                  无法解密键名和值，密钥为{" "}
+                  {corruptedSecrets.map((secret) => secret.name).join(", ")}
+                  。密钥名称仍可查看，但必须重新输入所有键名和值才能恢复。SSH
+                  密钥需要删除后重新创建。
                 </AlertDescription>
               </Alert>
             ) : null}
@@ -267,7 +266,7 @@ export function WorkspaceCredentialsInventory() {
             <CatalogHeader
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
-              searchPlaceholder="Search credentials..."
+              searchPlaceholder={"搜索凭据…"}
               selectFilters={selectFilters}
               displayCount={filteredGroups.length}
               countLabel="credentials"
@@ -311,7 +310,7 @@ export function WorkspaceCredentialsInventory() {
                                   label={
                                     credentialSecretTypeLabels[
                                       group.secretType
-                                    ] ?? "Credential"
+                                    ] ?? "凭据"
                                   }
                                   environments={group.environments}
                                   isConnected={group.isConnected}
@@ -334,7 +333,7 @@ export function WorkspaceCredentialsInventory() {
                                   label={
                                     credentialSecretTypeLabels[
                                       group.secretType
-                                    ] ?? "Credential"
+                                    ] ?? "凭据"
                                   }
                                   environments={group.environments}
                                   isConnected={group.isConnected}
@@ -361,7 +360,7 @@ export function WorkspaceCredentialsInventory() {
                                   setActiveTemplate(group.template)
                                 }}
                               >
-                                Configure
+                                配置
                               </Button>
                             ) : null}
                           </ItemActions>
@@ -423,7 +422,7 @@ export function WorkspaceCredentialsInventory() {
                                             variant="secondary"
                                             className="text-[10px] text-amber-700"
                                           >
-                                            Reconfigure required
+                                            需要重新配置
                                           </Badge>
                                         ) : null}
                                         {isAws && !secret.store_id ? (
@@ -431,7 +430,7 @@ export function WorkspaceCredentialsInventory() {
                                             variant="secondary"
                                             className="text-[10px] text-amber-700"
                                           >
-                                            Choose a store
+                                            选择存储
                                           </Badge>
                                         ) : null}
                                       </ItemTitle>
@@ -442,7 +441,7 @@ export function WorkspaceCredentialsInventory() {
                                             secret.remote_reference ?? undefined
                                           }
                                         >
-                                          {secret.store_name ?? "No store"}
+                                          {secret.store_name ?? "无存储"}
                                           {" · "}
                                           <code className="font-mono text-[11px]">
                                             {secret.remote_reference}
@@ -462,7 +461,7 @@ export function WorkspaceCredentialsInventory() {
                                             ))
                                           ) : (
                                             <span className="text-xs text-muted-foreground">
-                                              No keys available
+                                              暂无可用键
                                             </span>
                                           )}
                                         </div>
@@ -492,7 +491,7 @@ export function WorkspaceCredentialsInventory() {
                                                 setEditingAwsSecret(secret)
                                               }}
                                             >
-                                              Edit
+                                              编辑
                                             </Button>
                                           )
                                         : canUpdateSecrets && (
@@ -508,7 +507,7 @@ export function WorkspaceCredentialsInventory() {
                                                   setSelectedSecret(secret)
                                                 }}
                                               >
-                                                Edit
+                                                编辑
                                               </Button>
                                             </EditCredentialsDialogTrigger>
                                           )}
@@ -527,7 +526,7 @@ export function WorkspaceCredentialsInventory() {
                                               setSelectedSecret(secret)
                                             }}
                                           >
-                                            Delete
+                                            删除
                                           </Button>
                                         </DeleteSecretAlertDialogTrigger>
                                       )}
@@ -568,7 +567,7 @@ export function WorkspaceCredentialsInventory() {
               {filteredGroups.length === 0 ? (
                 <div className="py-12 text-center">
                   <p className="text-sm text-muted-foreground">
-                    No credentials found matching your criteria.
+                    没有符合条件的凭据。
                   </p>
                 </div>
               ) : null}
@@ -616,7 +615,7 @@ function ConnectedEnvironmentsHoverCard({
         <span
           role="img"
           className="flex items-center justify-center"
-          aria-label={`View configured environments for ${groupName}`}
+          aria-label={`查看 ${groupName} 已配置的环境`}
           onClick={(event) => event.stopPropagation()}
         >
           <SquareAsterisk className="icon-success size-3.5" />
@@ -629,9 +628,7 @@ function ConnectedEnvironmentsHoverCard({
         sideOffset={6}
       >
         <div className="space-y-2 text-xs">
-          <div className="font-medium text-foreground">
-            Configured environments
-          </div>
+          <div className="font-medium text-foreground">已配置的环境</div>
           <div className="flex flex-wrap gap-1">
             {environments.map((environment) => (
               <Badge
@@ -674,9 +671,9 @@ function CredentialGroupContent({
           <span className="text-xs text-muted-foreground">{label}</span>
         </ItemTitle>
         <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
-          <span>{isConnected ? "Connected" : "Not connected"}</span>
+          <span>{isConnected ? "已连接" : "未连接"}</span>
           {environments.length > 0 ? (
-            <span>{environments.length} environment(s)</span>
+            <span>{environments.length} 个环境</span>
           ) : null}
         </div>
       </ItemContent>

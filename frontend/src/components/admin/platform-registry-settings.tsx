@@ -68,21 +68,21 @@ export function PlatformRegistrySettings() {
           : null,
       })
       toast({
-        title: "Settings updated",
-        description: "Registry settings have been saved.",
+        title: "已更新设置",
+        description: "已保存注册表设置。",
       })
     } catch (error) {
       console.error("Failed to update settings", error)
       toast({
-        title: "Failed to update settings",
-        description: "Please try again.",
+        title: "更新设置失败",
+        description: "请重试。",
         variant: "destructive",
       })
     }
   }
 
   if (isLoading) {
-    return <div className="text-muted-foreground">Loading...</div>
+    return <div className="text-muted-foreground">加载中…</div>
   }
 
   return (
@@ -93,7 +93,7 @@ export function PlatformRegistrySettings() {
           name="git_repo_url"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Git repository URL</FormLabel>
+              <FormLabel>Git 仓库 URL</FormLabel>
               <FormControl>
                 <Input
                   placeholder="git+ssh://someuser@git.example.com/org/repo.git"
@@ -101,9 +101,7 @@ export function PlatformRegistrySettings() {
                   value={field.value ?? ""}
                 />
               </FormControl>
-              <FormDescription>
-                Default git repository URL for the registry.
-              </FormDescription>
+              <FormDescription>注册表的默认 Git 仓库 URL。</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -113,7 +111,7 @@ export function PlatformRegistrySettings() {
           name="git_repo_package_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Package name</FormLabel>
+              <FormLabel>包名称</FormLabel>
               <FormControl>
                 <Input
                   placeholder="my-registry"
@@ -121,9 +119,7 @@ export function PlatformRegistrySettings() {
                   value={field.value ?? ""}
                 />
               </FormControl>
-              <FormDescription>
-                Package name within the git repository.
-              </FormDescription>
+              <FormDescription>Git 仓库中的包名称。</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -133,7 +129,7 @@ export function PlatformRegistrySettings() {
           name="git_allowed_domains"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Allowed domains</FormLabel>
+              <FormLabel>允许的域名</FormLabel>
               <FormControl>
                 <Input
                   placeholder="github.com, gitlab.com"
@@ -142,14 +138,14 @@ export function PlatformRegistrySettings() {
                 />
               </FormControl>
               <FormDescription>
-                Comma-separated list of allowed git domains.
+                以逗号分隔的允许访问的 Git 域名列表。
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" disabled={updatePending}>
-          {updatePending ? "Saving..." : "Save settings"}
+          {updatePending ? "保存中…" : "保存设置"}
         </Button>
       </form>
     </Form>

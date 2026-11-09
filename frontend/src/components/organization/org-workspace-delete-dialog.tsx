@@ -48,42 +48,42 @@ export function OrgWorkspaceDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete workspace</AlertDialogTitle>
+          <AlertDialogTitle>删除工作空间</AlertDialogTitle>
           <AlertDialogDescription className="space-y-4">
             <p>
-              Are you sure you want to delete the workspace{" "}
-              <strong>{workspaceName}</strong>? This action cannot be undone.
+              确定要删除工作空间 <strong>{workspaceName}</strong>
+              吗？此操作无法撤销。
             </p>
-            <p>This will permanently delete:</p>
+            <p>此操作将永久删除：</p>
             <ul className="list-disc list-inside space-y-1 text-sm">
-              <li>All workflows in this workspace</li>
-              <li>All tables and data</li>
-              <li>All cases and case data</li>
-              <li>All credentials and integrations</li>
-              <li>All member access</li>
+              <li>此工作空间中的所有工作流</li>
+              <li>所有数据表及数据</li>
+              <li>所有事件及事件数据</li>
+              <li>所有凭据和集成</li>
+              <li>所有成员访问权限</li>
             </ul>
             <div className="space-y-2">
               <Label htmlFor="confirm-delete">
-                Type <strong>{workspaceName}</strong> to confirm:
+                输入 <strong>{workspaceName}</strong> 以确认：
               </Label>
               <Input
                 id="confirm-delete"
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                placeholder="Enter workspace name"
+                placeholder={"输入工作空间名称"}
                 disabled={isDeleting}
               />
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={!isConfirmValid || isDeleting}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {isDeleting ? "Deleting..." : "Delete"}
+            {isDeleting ? "删除中…" : "删除"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

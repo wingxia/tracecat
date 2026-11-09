@@ -105,7 +105,7 @@ export function SkillFileTree({
         {inMoveMode && onCommitMove ? (
           <RootDropTarget
             onClick={() => onCommitMove(null)}
-            label='Move to "/" (root)'
+            label={"移至“/”（根目录）"}
           />
         ) : null}
 
@@ -227,7 +227,7 @@ function FolderTreeNode({
           onBeginRenameFolder(node.path)
         }}
         className="ml-auto flex size-5 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity hover:bg-background hover:text-foreground group-hover:opacity-100"
-        aria-label={`Rename ${node.path}`}
+        aria-label={`重命名 ${node.path}`}
       >
         <PencilLine className="size-3" />
       </button>
@@ -303,13 +303,13 @@ function FileTreeNode({ node, moveSource }: FileTreeNodeProps) {
 
 function computeFileBadge(file: VisibleFileEntry): string | null {
   if (file.change?.kind === "delete") {
-    return "Deleted"
+    return "已删除"
   }
   if (file.change?.kind === "upload") {
-    return "Replace"
+    return "替换"
   }
   if (file.change?.kind === "text") {
-    return file.isNew ? "New" : "Edited"
+    return file.isNew ? "新建" : "Edited"
   }
   return null
 }
@@ -324,20 +324,20 @@ function MoveBanner({ moveSource, onCancel }: MoveBannerProps) {
     <div className="mb-2 flex items-center gap-2 rounded-md border border-dashed border-primary/40 bg-primary/5 px-2 py-1.5 text-xs">
       <FolderInput className="size-3.5 shrink-0 text-primary" />
       <span className="min-w-0 flex-1 truncate">
-        Move{" "}
+        移动{" "}
         <span className="font-medium">
           {moveSource.isFolder
             ? `${moveSource.fromPath}/`
             : moveSource.fromPath}
         </span>{" "}
-        to… click a folder.
+        到…点击一个文件夹。
       </span>
       <Button
         size="icon"
         variant="ghost"
         className="size-5 shrink-0"
         onClick={onCancel}
-        aria-label="Cancel move"
+        aria-label={"取消移动"}
       >
         <XIcon className="size-3.5" />
       </Button>

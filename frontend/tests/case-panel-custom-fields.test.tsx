@@ -81,7 +81,7 @@ describe("BOOLEAN clear option", () => {
 
     await user.click(screen.getByRole("combobox"))
     await user.click(
-      await screen.findByRole("option", { name: "Clear Is phishing field" })
+      await screen.findByRole("option", { name: "清除 Is phishing 字段" })
     )
 
     await waitFor(() => {
@@ -97,7 +97,7 @@ describe("BOOLEAN clear option", () => {
 
     await user.click(screen.getByRole("combobox"))
     await user.click(
-      await screen.findByRole("option", { name: "Clear is_phishing field" })
+      await screen.findByRole("option", { name: "清除 is_phishing 字段" })
     )
 
     await waitFor(() => {
@@ -110,10 +110,10 @@ describe("BOOLEAN clear option", () => {
     renderField(makeField({ id: "is_phishing", type: "BOOLEAN", value: null }))
 
     await user.click(screen.getByRole("combobox"))
-    await screen.findByRole("option", { name: "True" })
+    await screen.findByRole("option", { name: "真" })
 
     expect(
-      screen.queryByRole("option", { name: "Clear is_phishing field" })
+      screen.queryByRole("option", { name: "清除 is_phishing 字段" })
     ).not.toBeInTheDocument()
   })
 })
@@ -132,7 +132,7 @@ describe("SELECT clear option", () => {
 
     await user.click(screen.getByRole("combobox"))
     await user.click(
-      await screen.findByRole("button", { name: "Clear verdict field" })
+      await screen.findByRole("button", { name: "清除 verdict 字段" })
     )
 
     await waitFor(() => {
@@ -152,10 +152,10 @@ describe("SELECT clear option", () => {
     )
 
     await user.click(screen.getByRole("combobox"))
-    await screen.findByPlaceholderText("Search...")
+    await screen.findByPlaceholderText("搜索…")
 
     expect(
-      screen.queryByRole("button", { name: "Clear verdict field" })
+      screen.queryByRole("button", { name: "清除 verdict 字段" })
     ).not.toBeInTheDocument()
   })
 
@@ -188,13 +188,13 @@ describe("SELECT clear option", () => {
     )
 
     await user.click(screen.getByRole("combobox"))
-    await user.type(await screen.findByPlaceholderText("Search..."), "zzz")
+    await user.type(await screen.findByPlaceholderText("搜索…"), "zzz")
 
     expect(
       screen.queryByRole("option", { name: /malicious/ })
     ).not.toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Clear verdict field" })
+      screen.getByRole("button", { name: "清除 verdict 字段" })
     ).toBeInTheDocument()
   })
 })
@@ -213,7 +213,7 @@ describe("MULTI_SELECT clear option", () => {
 
     await user.click(screen.getByRole("combobox"))
     await user.click(
-      await screen.findByRole("button", { name: "Clear tactics field" })
+      await screen.findByRole("button", { name: "清除 tactics 字段" })
     )
 
     await waitFor(() => {
@@ -234,7 +234,7 @@ describe("MULTI_SELECT clear option", () => {
 
     await user.click(screen.getByRole("combobox"))
     await user.click(
-      await screen.findByRole("button", { name: "Clear tactics field" })
+      await screen.findByRole("button", { name: "清除 tactics 字段" })
     )
 
     await waitFor(() => {
@@ -254,10 +254,10 @@ describe("MULTI_SELECT clear option", () => {
     )
 
     await user.click(screen.getByRole("combobox"))
-    await screen.findByPlaceholderText("Search...")
+    await screen.findByPlaceholderText("搜索…")
 
     expect(
-      screen.queryByRole("button", { name: "Clear tactics field" })
+      screen.queryByRole("button", { name: "清除 tactics 字段" })
     ).not.toBeInTheDocument()
   })
 
@@ -290,13 +290,13 @@ describe("MULTI_SELECT clear option", () => {
     )
 
     await user.click(screen.getByRole("combobox"))
-    await user.type(await screen.findByPlaceholderText("Search..."), "zzz")
+    await user.type(await screen.findByPlaceholderText("搜索…"), "zzz")
 
     expect(
       screen.queryByRole("option", { name: "alpha" })
     ).not.toBeInTheDocument()
     expect(
-      screen.getByRole("button", { name: "Clear tactics field" })
+      screen.getByRole("button", { name: "清除 tactics 字段" })
     ).toBeInTheDocument()
   })
 })
@@ -314,7 +314,7 @@ describe("MULTI_SELECT toggling", () => {
     )
 
     await user.click(screen.getByRole("combobox"))
-    await screen.findByPlaceholderText("Search...")
+    await screen.findByPlaceholderText("搜索…")
     await user.click(screen.getByRole("option", { name: "alpha" }))
 
     await waitFor(() => {

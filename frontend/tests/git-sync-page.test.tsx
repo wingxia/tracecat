@@ -204,7 +204,7 @@ async function confirmAction(user: {
   const dialog = await screen.findByRole("alertdialog")
   const action = within(dialog)
     .getAllByRole("button")
-    .find((button) => button.textContent !== "Cancel")
+    .find((button) => button.textContent !== "取消")
   if (!action) throw new Error("Confirmation dialog has no action")
   await user.click(action)
 }
@@ -267,28 +267,28 @@ describe("GitSyncView connected", () => {
     )
 
     expect(screen.queryByRole("heading", { level: 2 })).not.toBeInTheDocument()
-    expect(screen.getByRole("tab", { name: "Push" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "推送" })).toHaveAttribute(
       "data-state",
       "active"
     )
     expect(screen.getByText("TracecatHQ/detections")).toBeInTheDocument()
-    expect(screen.getByText("Connected")).toBeInTheDocument()
+    expect(screen.getByText("已连接")).toBeInTheDocument()
 
     const header = screen.getByRole("banner")
     expect(within(header).getByRole("tablist")).toBeInTheDocument()
-    expect(within(header).getByText("Connected")).toBeInTheDocument()
+    expect(within(header).getByText("已连接")).toBeInTheDocument()
 
-    const bar = screen.getByRole("group", { name: "Push actions" })
-    expect(bar).toHaveTextContent(/^Into/)
+    const bar = screen.getByRole("group", { name: "推送操作" })
+    expect(bar).toHaveTextContent(/^目标/)
     expect(
-      within(bar).getByRole("button", { name: /^Branch/ })
-    ).toHaveTextContent(/^sync\/workspace-[0-9a-z]+new$/)
+      within(bar).getByRole("button", { name: /^分支/ })
+    ).toHaveTextContent(/^sync\/workspace-[0-9a-z]+新建$/)
+    expect(within(bar).getByRole("textbox", { name: "提交说明" })).toHaveValue(
+      "导出工作空间配置"
+    )
     expect(
-      within(bar).getByRole("textbox", { name: "Commit message" })
-    ).toHaveValue("Export workspace config")
-    expect(
-      within(screen.getByRole("tabpanel", { name: "Push" })).getByText(
-        "No preview yet"
+      within(screen.getByRole("tabpanel", { name: "推送" })).getByText(
+        "暂无预览"
       )
     ).toBeInTheDocument()
   })
@@ -299,18 +299,16 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("button", { name: "Edit connection" }))
+    await user.click(screen.getByRole("button", { name: "编辑连接" }))
     expect(
-      screen.getByRole("heading", { name: "Repository connection" })
+      screen.getByRole("heading", { name: "仓库连接" })
     ).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: "Back to changes" }))
+    await user.click(screen.getByRole("button", { name: "返回变更列表" }))
     expect(
-      screen.queryByRole("heading", { name: "Repository connection" })
+      screen.queryByRole("heading", { name: "仓库连接" })
     ).not.toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Edit connection" })
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "编辑连接" })).toBeInTheDocument()
   })
 
   it("hides Edit without workspace update access", () => {
@@ -319,7 +317,7 @@ describe("GitSyncView connected", () => {
     )
 
     expect(
-      screen.queryByRole("button", { name: "Edit connection" })
+      screen.queryByRole("button", { name: "编辑连接" })
     ).not.toBeInTheDocument()
     expect(screen.getByText("TracecatHQ/detections")).toBeInTheDocument()
   })
@@ -334,33 +332,33 @@ describe("GitSyncView connected", () => {
       />
     )
 
-    expect(screen.queryByText("Included in this push")).not.toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    expect(
+      screen.queryByText("包含在此次操作中： 推送")
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "预览" }))
     expect(mockRefetchExportPreview).toHaveBeenCalledTimes(1)
     expect(
-      await screen.findByText("1 modified · 1 deleted, compared with main")
+      await screen.findByText("与 main 相比，1 modified · 1 deleted")
     ).toBeInTheDocument()
-    expect(
-      screen.getByRole("button", { name: "Preview again" })
-    ).toBeInTheDocument()
-    expect(screen.getByText("Included in this push")).toBeInTheDocument()
-    expect(screen.getByText("2 files")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "再次预览" })).toBeInTheDocument()
+    expect(screen.getByText("包含在此次操作中： 推送")).toBeInTheDocument()
+    expect(screen.getByText("2 个文件")).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: /Workflows/ }))
-    expect(screen.getByRole("img", { name: "Modified" })).toBeInTheDocument()
-    expect(screen.getByRole("img", { name: "Deleted" })).toBeInTheDocument()
-    expect(screen.getByText("Unchanged")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: /工作流/ }))
+    expect(screen.getByRole("img", { name: "已修改" })).toBeInTheDocument()
+    expect(screen.getByRole("img", { name: "已删除" })).toBeInTheDocument()
+    expect(screen.getByText("未更改")).toBeInTheDocument()
 
     await user.click(screen.getByRole("button", { name: /Phishing triage/ }))
     expect(screen.getByText("+1")).toBeInTheDocument()
     expect(screen.getByText("−1")).toBeInTheDocument()
-    expect(screen.getByText("lines")).toBeInTheDocument()
+    expect(screen.getByText("行")).toBeInTheDocument()
     expect(screen.queryByRole("link")).not.toBeInTheDocument()
 
-    const bar = screen.getByRole("group", { name: "Push actions" })
+    const bar = screen.getByRole("group", { name: "推送操作" })
     expect(bar).toHaveClass("sticky", "bottom-0", "border-t", "bg-background")
     expect(
-      within(bar).getByRole("button", { name: "Push and open PR" })
+      within(bar).getByRole("button", { name: "推送并创建 PR" })
     ).toBeEnabled()
   })
 
@@ -374,7 +372,7 @@ describe("GitSyncView connected", () => {
         ref: "sync/workspace-test",
         base_ref: "main",
         pr_url: prUrl,
-        message: "Export workspace config",
+        message: "导出工作空间配置",
       },
       files: ["tracecat.json"],
     })
@@ -382,13 +380,13 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: "Push and open PR" })
+        screen.getByRole("button", { name: "推送并创建 PR" })
       ).toBeEnabled()
     )
-    await user.click(screen.getByRole("button", { name: "Push and open PR" }))
+    await user.click(screen.getByRole("button", { name: "推送并创建 PR" }))
     await confirmAction(user)
 
     await waitFor(() =>
@@ -398,7 +396,7 @@ describe("GitSyncView connected", () => {
     )
     await waitFor(() =>
       expect(toast).toHaveBeenCalledWith(
-        expect.objectContaining({ title: "PR ready" })
+        expect.objectContaining({ title: "PR 已就绪" })
       )
     )
     // The push changed the remote, so branches and commits are refetched.
@@ -414,7 +412,7 @@ describe("GitSyncView connected", () => {
         <ToastViewport />
       </ToastProvider>
     )
-    expect(screen.getByRole("link", { name: "View PR" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "查看 PR" })).toHaveAttribute(
       "href",
       prUrl
     )
@@ -429,7 +427,7 @@ describe("GitSyncView connected", () => {
         ref: "sync/workspace-test",
         base_ref: "main",
         pr_url: null,
-        message: "Export workspace config",
+        message: "导出工作空间配置",
       },
       files: ["tracecat.json"],
     })
@@ -441,13 +439,13 @@ describe("GitSyncView connected", () => {
       expect.objectContaining({ compareRef: "main" })
     )
 
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: "Push and open PR" })
+        screen.getByRole("button", { name: "推送并创建 PR" })
       ).toBeEnabled()
     )
-    await user.click(screen.getByRole("button", { name: "Push and open PR" }))
+    await user.click(screen.getByRole("button", { name: "推送并创建 PR" }))
     await confirmAction(user)
     await waitFor(() => expect(mockExportWorkspace).toHaveBeenCalled())
     const branch = jest
@@ -484,14 +482,16 @@ describe("GitSyncView connected", () => {
       })
     )
 
-    await user.click(screen.getByRole("button", { name: "Preview" }))
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
     await user.click(screen.getByRole("option", { name: /release/ }))
     await act(async () => {
       resolvePreview({ error: null })
     })
 
-    expect(screen.queryByText("Included in this push")).not.toBeInTheDocument()
+    expect(
+      screen.queryByText("包含在此次操作中： 推送")
+    ).not.toBeInTheDocument()
   })
 
   it("creates a named branch from the picker", async () => {
@@ -500,23 +500,21 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
-    expect(screen.getByText("New branch from main")).toBeInTheDocument()
-    const input = screen.getByLabelText("New branch from main")
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
+    expect(screen.getByText("新分支创建来源： main")).toBeInTheDocument()
+    const input = screen.getByLabelText("新分支创建来源： main")
     await user.clear(input)
     await user.type(input, "sync/oct-08")
-    await user.click(screen.getByRole("button", { name: "Create branch" }))
+    await user.click(screen.getByRole("button", { name: "创建分支" }))
 
-    expect(screen.getByRole("button", { name: /^Branch/ })).toHaveTextContent(
-      "sync/oct-08new"
+    expect(screen.getByRole("button", { name: /^分支/ })).toHaveTextContent(
+      "sync/oct-08新建"
     )
-    expect(
-      screen.getByRole("button", { name: "Push and open PR" })
-    ).toBeDisabled()
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    expect(screen.getByRole("button", { name: "推送并创建 PR" })).toBeDisabled()
+    await user.click(screen.getByRole("button", { name: "预览" }))
     await waitFor(() =>
       expect(
-        screen.getByRole("button", { name: "Push and open PR" })
+        screen.getByRole("button", { name: "推送并创建 PR" })
       ).toBeEnabled()
     )
   })
@@ -527,16 +525,16 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
-    const input = screen.getByLabelText("New branch from main")
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
+    const input = screen.getByLabelText("新分支创建来源： main")
     await user.clear(input)
     await user.type(input, "sync..oct")
 
     expect(
-      screen.getByText("Branch names can't contain .. or @{ or be @ alone.")
+      screen.getByText("分支名称不能包含 .. 或 @{，也不能仅为 @。")
     ).toBeInTheDocument()
     expect(input).toHaveAttribute("aria-invalid", "true")
-    expect(screen.getByRole("button", { name: "Create branch" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "创建分支" })).toBeDisabled()
   })
 
   it("names the selected branch and commit for screen readers", async () => {
@@ -546,12 +544,12 @@ describe("GitSyncView connected", () => {
     )
 
     expect(
-      screen.getByRole("button", { name: /^Branch: sync\/workspace-/ })
+      screen.getByRole("button", { name: /^分支：sync\/workspace-/ })
     ).toBeInTheDocument()
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
     expect(
       screen.getByRole("combobox", {
-        name: "Commit 1c52757: Update detections",
+        name: "提交 1c52757: Update detections",
       })
     ).toBeInTheDocument()
   })
@@ -580,10 +578,10 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={workspace} canSync canManageConnection />
     )
 
-    const bar = screen.getByRole("group", { name: "Push actions" })
+    const bar = screen.getByRole("group", { name: "推送操作" })
     const pushButtons = within(bar)
       .getAllByRole("button")
-      .filter((button) => /Push/.test(button.textContent ?? ""))
+      .filter((button) => /推送/.test(button.textContent ?? ""))
     expect(pushButtons.length).toBeGreaterThan(0)
     for (const button of pushButtons) {
       expect(button).toBeDisabled()
@@ -601,11 +599,11 @@ describe("GitSyncView connected", () => {
     const view = renderWithTooltips(
       <GitSyncView workspace={workspace} canSync canManageConnection />
     )
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    await user.click(screen.getByRole("combobox", { name: /^Commit/ }))
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    await user.click(screen.getByRole("combobox", { name: /^提交/ }))
     await user.click(screen.getByRole("option", { name: /Older change/ }))
     expect(
-      screen.getByRole("combobox", { name: "Commit 2222222: Older change" })
+      screen.getByRole("combobox", { name: "提交 2222222: Older change" })
     ).toBeInTheDocument()
 
     // The repository default moves from main to trunk while the page is open.
@@ -632,7 +630,7 @@ describe("GitSyncView connected", () => {
 
     expect(
       await screen.findByRole("combobox", {
-        name: "Commit 3333333: Trunk head",
+        name: "提交 3333333: Trunk head",
       })
     ).toBeInTheDocument()
   })
@@ -643,24 +641,20 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
     await user.click(screen.getByRole("option", { name: /main/ }))
 
-    expect(screen.getByRole("button", { name: /^Branch/ })).toHaveTextContent(
+    expect(screen.getByRole("button", { name: /^分支/ })).toHaveTextContent(
       "maindefault"
     )
     expect(
-      screen.getByText(
-        "Pushing to main directly is off. Pick or create another branch."
-      )
+      screen.getByText("直接推送到 main 已禁用。请选择或创建其他分支。")
     ).toBeInTheDocument()
-    const bar = screen.getByRole("group", { name: "Push actions" })
+    const bar = screen.getByRole("group", { name: "推送操作" })
     expect(
-      within(bar).getByRole("button", { name: "Pick another branch" })
+      within(bar).getByRole("button", { name: "选择其他分支" })
     ).toBeDisabled()
-    expect(
-      within(bar).getByRole("button", { name: "Push options" })
-    ).toBeDisabled()
+    expect(within(bar).getByRole("button", { name: "推送选项" })).toBeDisabled()
   })
 
   it("blocks pushing to the repository default when another branch is pinned", async () => {
@@ -680,17 +674,15 @@ describe("GitSyncView connected", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
     await user.click(screen.getByRole("option", { name: /main/ }))
 
     expect(
-      screen.getByText(
-        "Pushing to main directly is off. Pick or create another branch."
-      )
+      screen.getByText("直接推送到 main 已禁用。请选择或创建其他分支。")
     ).toBeInTheDocument()
-    const bar = screen.getByRole("group", { name: "Push actions" })
+    const bar = screen.getByRole("group", { name: "推送操作" })
     expect(
-      within(bar).getByRole("button", { name: "Pick another branch" })
+      within(bar).getByRole("button", { name: "选择其他分支" })
     ).toBeDisabled()
   })
 
@@ -703,7 +695,7 @@ describe("GitSyncView connected", () => {
         ref: "release",
         base_ref: "main",
         pr_url: null,
-        message: "Export workspace config",
+        message: "导出工作空间配置",
       },
       files: ["tracecat.json"],
     })
@@ -720,27 +712,25 @@ describe("GitSyncView connected", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: /^Branch/ }))
+    await user.click(screen.getByRole("button", { name: /^分支/ }))
     await user.click(screen.getByRole("option", { name: /release/ }))
 
-    await user.click(screen.getByRole("button", { name: "Push options" }))
-    await user.click(screen.getByRole("menuitemradio", { name: /Push only/ }))
+    await user.click(screen.getByRole("button", { name: "推送选项" }))
+    await user.click(screen.getByRole("menuitemradio", { name: /仅推送/ }))
 
     expect(
-      screen.getByText(
-        /Workspace Push can export new workflows from their current edits without publishing them/
-      )
+      screen.getByText(/工作空间推送可直接导出新工作流的当前编辑，无需先发布/)
     ).toBeInTheDocument()
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-    const bar = screen.getByRole("group", { name: "Push actions" })
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    const bar = screen.getByRole("group", { name: "推送操作" })
+    await user.click(screen.getByRole("button", { name: "预览" }))
     await waitFor(() =>
       expect(
-        within(bar).getByRole("button", { name: "Push to release" })
+        within(bar).getByRole("button", { name: "推送到 release" })
       ).toBeEnabled()
     )
     await user.click(
-      within(bar).getByRole("button", { name: "Push to release" })
+      within(bar).getByRole("button", { name: "推送到 release" })
     )
     await confirmAction(user)
     await waitFor(() =>
@@ -762,9 +752,9 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    await user.click(screen.getByRole("button", { name: "Preview" }))
-    await user.click(screen.getByRole("tab", { name: "Push" }))
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
+    await user.click(screen.getByRole("tab", { name: "推送" }))
     await act(async () => {
       resolvePreview({
         success: false,
@@ -790,9 +780,9 @@ describe("GitSyncView connected", () => {
     })
 
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
     expect(
-      await screen.findByRole("dialog", { name: "Match 1 reference to pull" })
+      await screen.findByRole("dialog", { name: "匹配 1 个引用 后拉取" })
     ).toBeInTheDocument()
   })
 
@@ -862,84 +852,83 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    const bar = screen.getByRole("group", { name: "Pull actions" })
-    expect(bar).toHaveTextContent(/^From/)
-    const pullPanel = screen.getByRole("tabpanel", { name: "Pull" })
-    expect(within(pullPanel).getByText("No preview yet")).toBeInTheDocument()
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    const bar = screen.getByRole("group", { name: "拉取操作" })
+    expect(bar).toHaveTextContent(/^来源/)
+    const pullPanel = screen.getByRole("tabpanel", { name: "拉取" })
+    expect(within(pullPanel).getByText("暂无预览")).toBeInTheDocument()
     await user.hover(
-      within(bar).getByRole("button", { name: "About overwriting schedules" })
+      within(bar).getByRole("button", { name: "关于覆盖定时计划" })
     )
     expect(
-      (
-        await screen.findAllByText(
-          "Existing resources with matching IDs are overwritten. Schedules are preserved."
-        )
-      ).length
+      (await screen.findAllByText("将覆盖 ID 匹配的现有资源，保留定时计划。"))
+        .length
     ).toBeGreaterThan(0)
     await user.unhover(
-      within(bar).getByRole("button", { name: "About overwriting schedules" })
+      within(bar).getByRole("button", { name: "关于覆盖定时计划" })
     )
-    const commitField = within(bar).getByRole("combobox", { name: /^Commit/ })
+    const commitField = within(bar).getByRole("combobox", { name: /^提交/ })
     expect(commitField).toHaveTextContent(
-      "1c52757Update detections· about 2 hours agolatest"
+      "1c52757Update detections· 约 2 小时前最新"
     )
     await user.click(commitField)
     await user.type(
-      screen.getByPlaceholderText("Search by message, author, or SHA"),
+      screen.getByPlaceholderText("按说明、作者或 SHA 搜索"),
       "Example"
     )
     expect(
       screen.getByRole("option", { name: /Update detections/ })
     ).toHaveTextContent(
-      "EAUpdate detectionslatest1c52757·Example Author·about 2 hours ago"
+      "EAUpdate detections最新1c52757·Example Author·约 2 小时前"
     )
     await user.keyboard("{Escape}")
     expect(bar).toHaveClass("sticky", "bottom-0")
     const applyButton = within(bar).getByRole("button", {
-      name: "Pull into Workspace 1",
+      name: "拉取到 Workspace 1",
     })
     expect(applyButton).toBeDisabled()
 
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
     // A preview that needs matches opens the dialog on its own.
     const dialog = await screen.findByRole("dialog", {
-      name: "Match 1 reference to pull",
+      name: "匹配 1 个引用 后拉取",
     })
     expect(
       screen.getByText(
-        "Pull is blocked: 1 reference in this commit needs a match in Workspace 1."
+        "拉取被阻止：此提交中的 1 个引用需要在 Workspace 1 中匹配。"
       )
     ).toBeInTheDocument()
     expect(applyButton).toBeDisabled()
     const save = within(dialog).getByRole("button", {
-      name: "Save and preview again",
+      name: "保存并再次预览",
     })
     expect(save).toBeDisabled()
-    expect(within(dialog).getByText("0 of 1 matched")).toBeInTheDocument()
+    expect(within(dialog).getByText("已匹配 0/1 项")).toBeInTheDocument()
 
     await user.click(
-      within(dialog).getByLabelText(/^Target model for shared-model/)
+      within(dialog).getByLabelText(
+        /^shared-model（custom-model-provider）的目标模型/
+      )
     )
     await user.click(
       screen.getByRole("option", {
         name: "Provider East · east.models.example.com",
       })
     )
-    expect(within(dialog).getByText("1 of 1 matched")).toBeInTheDocument()
+    expect(within(dialog).getByText("已匹配 1/1 项")).toBeInTheDocument()
     expect(applyButton).toBeDisabled()
 
     await user.click(save)
     expect(
-      await screen.findByText("Matches checked for shared-model.")
+      await screen.findByText("已检查匹配项，目标为 shared-model.")
     ).toBeInTheDocument()
     const pullButton = await within(bar).findByRole("button", {
-      name: "Pull into Workspace 1",
+      name: "拉取到 Workspace 1",
     })
     expect(pullButton).toBeEnabled()
-    expect(screen.getByText("Included in this pull")).toBeInTheDocument()
+    expect(screen.getByText("包含在此次操作中： 拉取")).toBeInTheDocument()
     expect(
-      screen.getByText("1 modified from 1c52757 on main")
+      screen.getByText("来自 main 上的 1c52757：1 modified")
     ).toBeInTheDocument()
 
     await user.click(pullButton)
@@ -959,13 +948,13 @@ describe("GitSyncView connected", () => {
       })
     )
     expect(
-      await screen.findByText("Pulled 1 into Workspace 1")
+      await screen.findByText("已拉取 1 项到 Workspace 1")
     ).toBeInTheDocument()
-    expect(screen.getByText("What changed")).toBeInTheDocument()
+    expect(screen.getByText("变更内容")).toBeInTheDocument()
     expect(screen.getByText("Phishing triage")).toBeInTheDocument()
-    expect(screen.getByText("1 of 1")).toBeInTheDocument()
+    expect(screen.getByText("1 / 1")).toBeInTheDocument()
     expect(
-      within(bar).getByRole("button", { name: "Preview again" })
+      within(bar).getByRole("button", { name: "再次预览" })
     ).toBeInTheDocument()
   })
   it("treats secret store matches as optional and sends the choice", async () => {
@@ -1020,43 +1009,41 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    const bar = screen.getByRole("group", { name: "Pull actions" })
-    await user.click(screen.getByRole("button", { name: "Preview" }))
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    const bar = screen.getByRole("group", { name: "拉取操作" })
+    await user.click(screen.getByRole("button", { name: "预览" }))
 
     // Optional: no dialog, no block, and pulling is already allowed.
     expect(
       await screen.findByText(
-        "Secret stores: 0 of 1 linked. Unlinked secrets import without a store and can be linked later in Credentials."
+        "密钥存储： 0 / 1 已关联。未关联的密钥将不带存储导入，之后可在凭据中关联。"
       )
     ).toBeInTheDocument()
     expect(
-      screen.getByText(
-        "Pulling installs 1 skill from the skills library: triage-notes."
-      )
+      screen.getByText("拉取会从技能库安装 1 个技能：triage-notes。")
     ).toBeInTheDocument()
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument()
     const pullButton = within(bar).getByRole("button", {
-      name: "Pull into Workspace 1",
+      name: "拉取到 Workspace 1",
     })
     expect(pullButton).toBeEnabled()
 
-    await user.click(screen.getByRole("button", { name: "Choose stores" }))
+    await user.click(screen.getByRole("button", { name: "选择存储" }))
     const dialog = await screen.findByRole("dialog", {
-      name: "Matches for this pull",
+      name: "此次拉取的匹配项",
     })
-    expect(within(dialog).getByText("Optional")).toBeInTheDocument()
+    expect(within(dialog).getByText("可选")).toBeInTheDocument()
     expect(
-      within(dialog).getByText("Used by vendor_api, vendor_app")
+      within(dialog).getByText("使用者 vendor_api, vendor_app")
     ).toBeInTheDocument()
     await user.click(
-      within(dialog).getByLabelText("Target store for source-production")
+      within(dialog).getByLabelText("source-production 的目标存储")
     )
     await user.click(
       screen.getByRole("option", { name: "target-production (us-east-1)" })
     )
     await user.click(
-      within(dialog).getByRole("button", { name: "Save and preview again" })
+      within(dialog).getByRole("button", { name: "保存并再次预览" })
     )
     const mapping = [
       { source_store: "source-production", target_store_id: "store-target" },
@@ -1072,11 +1059,11 @@ describe("GitSyncView connected", () => {
     )
     // The match is kept on screen even though the new preview stops listing it.
     expect(
-      await screen.findByText(/Secret stores: 1 of 1 linked/)
+      await screen.findByText(/密钥存储： 1 \/ 1 已关联/)
     ).toBeInTheDocument()
 
     await user.click(
-      within(bar).getByRole("button", { name: "Pull into Workspace 1" })
+      within(bar).getByRole("button", { name: "拉取到 Workspace 1" })
     )
     await confirmAction(user)
     await waitFor(() =>
@@ -1086,9 +1073,7 @@ describe("GitSyncView connected", () => {
       )
     )
     expect(
-      await screen.findByText(
-        "Installed from the skills library: triage-notes."
-      )
+      await screen.findByText("从技能库安装： triage-notes.")
     ).toBeInTheDocument()
   })
 
@@ -1124,27 +1109,25 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    await user.click(screen.getByRole("button", { name: "Preview" }))
-    await user.click(
-      await screen.findByRole("button", { name: "Choose stores" })
-    )
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
+    await user.click(await screen.findByRole("button", { name: "选择存储" }))
     const dialog = await screen.findByRole("dialog", {
-      name: "Matches for this pull",
+      name: "此次拉取的匹配项",
     })
-    await user.click(within(dialog).getByLabelText("Target store for store-a"))
+    await user.click(within(dialog).getByLabelText("store-a 的目标存储"))
     await user.click(screen.getByRole("option", { name: "target-production" }))
     await user.click(
-      within(dialog).getByRole("button", { name: "Save and preview again" })
+      within(dialog).getByRole("button", { name: "保存并再次预览" })
     )
 
     await waitFor(() => expect(mockPullWorkflows).toHaveBeenCalledTimes(2))
     expect(
-      await screen.findByText(/Secret stores: 1 of 2 linked/)
+      await screen.findByText(/密钥存储： 1 \/ 2 已关联/)
     ).toBeInTheDocument()
-    await user.click(screen.getByRole("button", { name: "Choose stores" }))
+    await user.click(screen.getByRole("button", { name: "选择存储" }))
     expect(
-      await screen.findByLabelText("Target store for store-a")
+      await screen.findByLabelText("store-a 的目标存储")
     ).toHaveTextContent("target-production")
   })
 
@@ -1179,25 +1162,27 @@ describe("GitSyncView connected", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: "Preview" }))
-    expect(await screen.findByText("Included in this push")).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "预览" }))
+    expect(
+      await screen.findByText("包含在此次操作中： 推送")
+    ).toBeInTheDocument()
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    const pullPanel = screen.getByRole("tabpanel", { name: "Pull" })
-    await user.click(within(pullPanel).getByRole("button", { name: "Preview" }))
-    const bar = screen.getByRole("group", { name: "Pull actions" })
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    const pullPanel = screen.getByRole("tabpanel", { name: "拉取" })
+    await user.click(within(pullPanel).getByRole("button", { name: "预览" }))
+    const bar = screen.getByRole("group", { name: "拉取操作" })
     await user.click(
       await within(bar).findByRole("button", {
-        name: "Pull into Workspace 1",
+        name: "拉取到 Workspace 1",
       })
     )
     await confirmAction(user)
     await waitFor(() => expect(mockPullWorkflows).toHaveBeenCalledTimes(2))
 
-    await user.click(screen.getByRole("tab", { name: "Push" }))
+    await user.click(screen.getByRole("tab", { name: "推送" }))
     await waitFor(() =>
       expect(
-        screen.queryByText("Included in this push")
+        screen.queryByText("包含在此次操作中： 推送")
       ).not.toBeInTheDocument()
     )
   })
@@ -1229,18 +1214,16 @@ describe("GitSyncView connected", () => {
       <GitSyncView workspace={setup()} canSync canManageConnection />
     )
 
-    await user.click(screen.getByRole("tab", { name: "Pull" }))
-    await user.click(screen.getByRole("button", { name: "Preview" }))
-    await user.click(
-      await screen.findByRole("button", { name: "Choose stores" })
-    )
+    await user.click(screen.getByRole("tab", { name: "拉取" }))
+    await user.click(screen.getByRole("button", { name: "预览" }))
+    await user.click(await screen.findByRole("button", { name: "选择存储" }))
     const dialog = await screen.findByRole("dialog")
     await user.click(
-      within(dialog).getByLabelText("Target store for source-production")
+      within(dialog).getByLabelText("source-production 的目标存储")
     )
-    await user.click(screen.getByRole("option", { name: "Leave unlinked" }))
+    await user.click(screen.getByRole("option", { name: "保持未关联" }))
     await user.click(
-      within(dialog).getByRole("button", { name: "Save and preview again" })
+      within(dialog).getByRole("button", { name: "保存并再次预览" })
     )
 
     await waitFor(() =>
@@ -1262,8 +1245,8 @@ it("clears an open push preview when an observed pull imports data", async () =>
   const view = renderWithTooltips(
     <GitSyncView workspace={workspace} canSync canManageConnection />
   )
-  await user.click(screen.getByRole("button", { name: "Preview" }))
-  expect(await screen.findByText("Included in this push")).toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "预览" }))
+  expect(await screen.findByText("包含在此次操作中： 推送")).toBeInTheDocument()
   mockImportRevision = 1
   view.rerender(
     <TooltipProvider>
@@ -1271,6 +1254,8 @@ it("clears an open push preview when an observed pull imports data", async () =>
     </TooltipProvider>
   )
   await waitFor(() =>
-    expect(screen.queryByText("Included in this push")).not.toBeInTheDocument()
+    expect(
+      screen.queryByText("包含在此次操作中： 推送")
+    ).not.toBeInTheDocument()
   )
 })

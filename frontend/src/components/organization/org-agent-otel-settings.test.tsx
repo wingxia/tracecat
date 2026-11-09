@@ -55,9 +55,9 @@ describe("OrgAgentOtelSettings edit gating", () => {
     render(<OrgAgentOtelSettings />)
 
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Editing is disabled to protect the saved configuration."
+      "为保护已保存的配置，已禁用编辑。"
     )
-    expect(screen.getByRole("button", { name: "Save config" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "保存配置" })).toBeDisabled()
   })
 
   it("stays editable when a background refetch fails with retained data", async () => {
@@ -69,7 +69,7 @@ describe("OrgAgentOtelSettings edit gating", () => {
 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument()
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Save config" })).toBeEnabled()
+      expect(screen.getByRole("button", { name: "保存配置" })).toBeEnabled()
     )
   })
 
@@ -79,9 +79,9 @@ describe("OrgAgentOtelSettings edit gating", () => {
     render(<OrgAgentOtelSettings />)
 
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Editing is disabled to protect the saved configuration."
+      "为保护已保存的配置，已禁用编辑。"
     )
-    expect(screen.getByRole("button", { name: "Save config" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "保存配置" })).toBeDisabled()
   })
 
   it("renders settings read-only without the update scope", async () => {
@@ -89,18 +89,16 @@ describe("OrgAgentOtelSettings edit gating", () => {
 
     render(<OrgAgentOtelSettings />)
 
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "you do not have permission to update them"
-    )
+    expect(screen.getByRole("alert")).toHaveTextContent("没有更新权限")
     await waitFor(() =>
       expect(
-        screen.getByRole("switch", { name: "Enable agent telemetry" })
+        screen.getByRole("switch", { name: "启用智能体遥测" })
       ).toBeChecked()
     )
     expect(
-      screen.getByRole("switch", { name: "Enable agent telemetry" })
+      screen.getByRole("switch", { name: "启用智能体遥测" })
     ).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Save config" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "保存配置" })).toBeDisabled()
   })
 
   it("keeps controls editable with loaded settings and the update scope", async () => {
@@ -108,13 +106,11 @@ describe("OrgAgentOtelSettings edit gating", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByRole("switch", { name: "Enable agent telemetry" })
+        screen.getByRole("switch", { name: "启用智能体遥测" })
       ).toBeChecked()
     )
-    expect(
-      screen.getByRole("switch", { name: "Enable agent telemetry" })
-    ).toBeEnabled()
-    expect(screen.getByRole("button", { name: "Save config" })).toBeEnabled()
+    expect(screen.getByRole("switch", { name: "启用智能体遥测" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "保存配置" })).toBeEnabled()
   })
 })
 
@@ -129,7 +125,7 @@ describe("OrgAgentOtelSettings server resync", () => {
   it("adopts a changed server endpoint while the form is pristine", async () => {
     const { rerender } = render(<OrgAgentOtelSettings />)
 
-    const endpoint = screen.getByLabelText("Collector endpoint")
+    const endpoint = screen.getByLabelText("收集器端点")
     await waitFor(() => expect(endpoint).toHaveValue("old-collector"))
 
     mockSettingsHook({
@@ -144,7 +140,7 @@ describe("OrgAgentOtelSettings server resync", () => {
     const user = userEvent.setup()
     const { rerender } = render(<OrgAgentOtelSettings />)
 
-    const endpoint = screen.getByLabelText("Collector endpoint")
+    const endpoint = screen.getByLabelText("收集器端点")
     await waitFor(() => expect(endpoint).toHaveValue("old-collector"))
 
     await user.clear(endpoint)
@@ -157,18 +153,16 @@ describe("OrgAgentOtelSettings server resync", () => {
     rerender(<OrgAgentOtelSettings />)
 
     await waitFor(() => expect(endpoint).toHaveValue("my-draft"))
-    expect(screen.getByRole("button", { name: "Reset" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "重置" })).toBeEnabled()
   })
 
   it("disables Reset until the form is edited", async () => {
     render(<OrgAgentOtelSettings />)
 
-    const reset = screen.getByRole("button", { name: "Reset" })
+    const reset = screen.getByRole("button", { name: "重置" })
     await waitFor(() => expect(reset).toBeDisabled())
 
-    await userEvent
-      .setup()
-      .type(screen.getByLabelText("Collector endpoint"), "x")
+    await userEvent.setup().type(screen.getByLabelText("收集器端点"), "x")
     expect(reset).toBeEnabled()
   })
 })
@@ -183,24 +177,24 @@ describe("OrgAgentOtelSettings save reseed guard", () => {
     const user = userEvent.setup()
     render(<OrgAgentOtelSettings />)
 
-    const endpoint = screen.getByLabelText("Collector endpoint")
+    const endpoint = screen.getByLabelText("收集器端点")
     await user.clear(endpoint)
     await user.type(endpoint, "https://new.example.com")
-    await user.click(screen.getByRole("button", { name: "Save config" }))
+    await user.click(screen.getByRole("button", { name: "保存配置" }))
 
     await waitFor(() => expect(updateAgentOtelSettings).toHaveBeenCalled())
     expect(endpoint).toHaveValue("https://new.example.com")
-    expect(screen.getByRole("button", { name: "Reset" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "重置" })).toBeDisabled()
   })
 
   it("adopts the canonical post-save read when the refetch lands", async () => {
     const user = userEvent.setup()
     const { rerender } = render(<OrgAgentOtelSettings />)
 
-    const endpoint = screen.getByLabelText("Collector endpoint")
+    const endpoint = screen.getByLabelText("收集器端点")
     await user.clear(endpoint)
     await user.type(endpoint, "https://new.example.com")
-    await user.click(screen.getByRole("button", { name: "Save config" }))
+    await user.click(screen.getByRole("button", { name: "保存配置" }))
     await waitFor(() => expect(updateAgentOtelSettings).toHaveBeenCalled())
 
     mockSettingsHook({

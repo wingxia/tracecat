@@ -166,7 +166,7 @@ export function AgGridTable({
 
   useEffect(() => {
     if (id) {
-      document.title = `Tables | ${name}`
+      document.title = `数据表 | ${name}`
     }
   }, [id, name])
 
@@ -264,7 +264,7 @@ export function AgGridTable({
     gridContent = (
       <div className="flex h-full items-center justify-center p-8">
         <p className="text-sm text-destructive">
-          Failed to load table rows. Please try refreshing the page.
+          加载数据表行失败，请刷新页面。
         </p>
       </div>
     )

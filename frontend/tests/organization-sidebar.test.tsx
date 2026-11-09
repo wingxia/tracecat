@@ -27,7 +27,7 @@ function renderSidebar() {
 }
 
 function gitProvidersItem() {
-  return screen.getByRole("link", { name: "Git providers" }).closest("li")
+  return screen.getByRole("link", { name: "Git 提供商" }).closest("li")
 }
 
 beforeEach(() => {
@@ -39,12 +39,12 @@ describe("OrganizationSidebar", () => {
   it("labels the VCS route as Git providers", () => {
     renderSidebar()
 
-    expect(screen.getByRole("link", { name: "Git providers" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Git 提供商" })).toHaveAttribute(
       "href",
       "/organization/vcs"
     )
-    expect(screen.queryByRole("link", { name: /git sync/i })).toBeNull()
-    expect(gitProvidersItem()).not.toHaveTextContent("Requires upgrade")
+    expect(screen.queryByRole("link", { name: /Git 同步/i })).toBeNull()
+    expect(gitProvidersItem()).not.toHaveTextContent("需要升级")
   })
 
   it("hides Git providers without org settings access", () => {
@@ -52,7 +52,7 @@ describe("OrganizationSidebar", () => {
 
     renderSidebar()
 
-    expect(screen.queryByRole("link", { name: "Git providers" })).toBeNull()
+    expect(screen.queryByRole("link", { name: "Git 提供商" })).toBeNull()
   })
 
   it("locks Git providers when the plan lacks Git Sync", () => {
@@ -60,6 +60,6 @@ describe("OrganizationSidebar", () => {
 
     renderSidebar()
 
-    expect(gitProvidersItem()).toHaveTextContent("Requires upgrade")
+    expect(gitProvidersItem()).toHaveTextContent("需要升级")
   })
 })

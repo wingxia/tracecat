@@ -78,7 +78,7 @@ export function buildSlackManifest({
   return {
     display_information: {
       name: appName,
-      description: "Tracecat external channel agent",
+      description: "Tracecat 外部渠道智能体",
       background_color: "#111827",
     },
     features: {
@@ -167,10 +167,8 @@ export function SlackChannelPanel({
     return (
       <div className="size-full p-6">
         <Alert>
-          <AlertTitle>Enterprise only</AlertTitle>
-          <AlertDescription>
-            Agent channels require the agent channels entitlement.
-          </AlertDescription>
+          <AlertTitle>仅限企业版</AlertTitle>
+          <AlertDescription>智能体渠道需要相应的功能权益。</AlertDescription>
         </Alert>
       </div>
     )
@@ -275,13 +273,13 @@ export function SlackChannelPanel({
     const message = url.searchParams.get("slack_message")
     if (slackConnectStatus === "success") {
       toast({
-        title: "Slack App connected",
-        description: "Your channel token is now active.",
+        title: "Slack 应用已连接",
+        description: "渠道令牌现已生效。",
       })
     } else {
       toast({
-        title: "Slack App connection failed",
-        description: message || "Unable to complete Slack OAuth flow.",
+        title: "连接 Slack 应用失败",
+        description: message || "无法完成 Slack OAuth 流程。",
         variant: "destructive",
       })
     }
@@ -293,7 +291,7 @@ export function SlackChannelPanel({
   if (!preset) {
     return (
       <div className="flex h-full items-center justify-center px-4 text-center text-sm text-muted-foreground">
-        Save this agent preset before configuring external channels.
+        请先保存智能体预设，再配置外部渠道。
       </div>
     )
   }
@@ -310,7 +308,7 @@ export function SlackChannelPanel({
     return (
       <div className="p-4">
         <Alert variant="destructive">
-          <AlertTitle>Unable to load channel settings</AlertTitle>
+          <AlertTitle>无法加载渠道设置</AlertTitle>
           <AlertDescription>{detail}</AlertDescription>
         </Alert>
       </div>
@@ -327,9 +325,8 @@ export function SlackChannelPanel({
     const signingSecret = slackSigningSecret.trim()
     if (!clientId || !clientSecret || !signingSecret) {
       toast({
-        title: "Missing fields",
-        description:
-          "Client ID, client secret, and signing secret are required.",
+        title: "缺少必填字段",
+        description: "客户端 ID、客户端密钥和签名密钥不能为空。",
         variant: "destructive",
       })
       return
@@ -382,7 +379,7 @@ export function SlackChannelPanel({
     }
     void copyToClipboard({
       value: manifestText,
-      message: "Slack manifest copied",
+      message: "已复制 Slack 应用清单",
     })
   }
 
@@ -438,13 +435,13 @@ export function SlackChannelPanel({
               <ProviderIcon providerId="slack" className="size-7 p-0.5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium">Custom Slack App</p>
+              <p className="text-sm font-medium">自定义 Slack 应用</p>
               <p className="text-xs text-muted-foreground">
-                Handle `app_mention` events and respond in-thread.
+                处理 `app_mention` 事件并在线程中回复。
               </p>
             </div>
             <Button type="button" size="sm" onClick={() => setDialogOpen(true)}>
-              {token ? "Manage" : "Connect"}
+              {token ? "管理" : "连接"}
             </Button>
           </div>
         </div>
@@ -468,17 +465,17 @@ export function SlackChannelPanel({
                 }
               >
                 {dialogStage === "choose"
-                  ? "How would you like to connect your Slack app to this agent?"
-                  : "Setup guide"}
+                  ? "你希望如何将 Slack 应用连接到此智能体？"
+                  : "设置指南"}
               </DialogTitle>
               {dialogStage === "guide" ? (
                 <DialogDescription>
-                  Follow these steps to create a new Slack app.
+                  按照以下步骤创建 Slack 应用。
                 </DialogDescription>
               ) : null}
               {dialogStage === "connect" ? (
                 <DialogDescription>
-                  Enter your Slack app credentials to start OAuth install.
+                  输入 Slack 应用凭据以开始 OAuth 安装。
                 </DialogDescription>
               ) : null}
             </DialogHeader>
@@ -496,14 +493,14 @@ export function SlackChannelPanel({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-base font-medium tracking-tight">
-                        Create app
+                        创建应用
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Create a new Slack App using a pre-filled manifest
+                        使用预填清单创建 Slack 应用
                       </p>
                     </div>
                     <span className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-                      Choose
+                      选择
                     </span>
                   </button>
 
@@ -518,14 +515,14 @@ export function SlackChannelPanel({
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-base font-medium tracking-tight">
-                        Existing App
+                        现有应用
                       </p>
                       <p className="mt-1 text-xs text-muted-foreground">
-                        Connect an existing Slack App to this agent
+                        将现有 Slack 应用连接到此智能体
                       </p>
                     </div>
                     <span className="text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-                      Choose
+                      选择
                     </span>
                   </button>
                 </div>
@@ -535,12 +532,12 @@ export function SlackChannelPanel({
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      In Tracecat
+                      在 Tracecat 中
                     </p>
                     <SetupListItem
                       index={1}
-                      title="Export app manifest"
-                      description="Copy the manifest generated for this agent preset."
+                      title={"导出应用清单"}
+                      description={"复制为此智能体预设生成的清单。"}
                       action={
                         <Button
                           type="button"
@@ -549,7 +546,7 @@ export function SlackChannelPanel({
                           onClick={handleCopyManifest}
                           disabled={!manifestText}
                         >
-                          Copy
+                          复制
                         </Button>
                       }
                     />
@@ -557,12 +554,14 @@ export function SlackChannelPanel({
 
                   <div className="space-y-2">
                     <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      In Slack
+                      在 Slack 中
                     </p>
                     <SetupListItem
                       index={2}
-                      title="Create app from manifest"
-                      description="Open Slack Apps, choose Create New App, then select From an app manifest."
+                      title={"从清单创建应用"}
+                      description={
+                        "打开 Slack Apps，选择 Create New App，再选择 From an app manifest。"
+                      }
                       action={
                         <Button
                           type="button"
@@ -576,26 +575,28 @@ export function SlackChannelPanel({
                             rel="noreferrer"
                           >
                             <ExternalLink className="mr-2 size-4" />
-                            Open
+                            打开
                           </a>
                         </Button>
                       }
                     />
                     <SetupListItem
                       index={3}
-                      title="Install the app"
-                      description="Install to your workspace. You will add Event Subscriptions after connecting app credentials in Tracecat."
+                      title={"安装应用"}
+                      description={
+                        "将应用安装到工作空间。在 Tracecat 中连接应用凭据后，再添加事件订阅。"
+                      }
                     />
                   </div>
 
                   <div className="space-y-2">
                     <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                      Back in Tracecat
+                      返回 Tracecat
                     </p>
                     <SetupListItem
                       index={4}
-                      title='Continue with "Next"'
-                      description="Proceed to connect your Client ID, client secret, and signing secret."
+                      title={"点击“下一步”继续"}
+                      description={"继续连接客户端 ID、客户端密钥和签名密钥。"}
                     />
                   </div>
                 </div>
@@ -604,39 +605,39 @@ export function SlackChannelPanel({
               {dialogStage === "connect" ? (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="text-xs font-medium">Endpoint URL</label>
+                    <label className="text-xs font-medium">端点 URL</label>
                     <Input
                       readOnly
                       value={endpointUrl}
-                      placeholder="Will appear after initial connect"
+                      placeholder={"初次连接后显示"}
                     />
                     {endpointUrl ? (
                       <CopyButton
                         value={endpointUrl}
-                        toastMessage="Endpoint URL copied"
-                        tooltipMessage="Copy endpoint URL"
+                        toastMessage="已复制端点 URL"
+                        tooltipMessage="复制端点 URL"
                       />
                     ) : null}
                   </div>
                   <div className="space-y-2">
                     <label className="text-xs font-medium">
-                      OAuth redirect URL
+                      OAuth 重定向 URL
                     </label>
                     <Input
                       readOnly
                       value={oauthRedirectUrl}
-                      placeholder="Will appear after initial connect"
+                      placeholder={"初次连接后显示"}
                     />
                     {oauthRedirectUrl ? (
                       <CopyButton
                         value={oauthRedirectUrl}
-                        toastMessage="OAuth redirect URL copied"
-                        tooltipMessage="Copy OAuth redirect URL"
+                        toastMessage="已复制 OAuth 重定向 URL"
+                        tooltipMessage="复制 OAuth 重定向 URL"
                       />
                     ) : null}
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-medium">Client ID</label>
+                    <label className="text-xs font-medium">客户端 ID</label>
                     <Input
                       value={slackClientId}
                       onChange={(event) => setSlackClientId(event.target.value)}
@@ -645,7 +646,7 @@ export function SlackChannelPanel({
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-medium">Client secret</label>
+                    <label className="text-xs font-medium">客户端密钥</label>
                     <Input
                       type="password"
                       value={slackClientSecret}
@@ -653,13 +654,11 @@ export function SlackChannelPanel({
                         setSlackClientSecret(event.target.value)
                       }
                       disabled={isBusy}
-                      placeholder="Slack App client secret"
+                      placeholder={"Slack 应用客户端密钥"}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-xs font-medium">
-                      Signing secret
-                    </label>
+                    <label className="text-xs font-medium">签名密钥</label>
                     <Input
                       type="password"
                       value={slackSigningSecret}
@@ -667,7 +666,7 @@ export function SlackChannelPanel({
                         setSlackSigningSecret(event.target.value)
                       }
                       disabled={isBusy}
-                      placeholder="Slack signing secret"
+                      placeholder={"Slack 签名密钥"}
                     />
                   </div>
                   {token ? (
@@ -679,7 +678,7 @@ export function SlackChannelPanel({
                         disabled={isBusy}
                       >
                         <RefreshCw className="mr-2 size-4" />
-                        Rotate endpoint
+                        轮换端点
                       </Button>
                       <Button
                         type="button"
@@ -687,7 +686,7 @@ export function SlackChannelPanel({
                         onClick={() => void handleDelete()}
                         disabled={isBusy}
                       >
-                        Disconnect
+                        断开连接
                       </Button>
                     </div>
                   ) : null}
@@ -715,7 +714,7 @@ export function SlackChannelPanel({
                       }}
                     >
                       <ArrowLeft className="mr-2 size-4" />
-                      Back
+                      返回
                     </Button>
                     <Button
                       type="button"
@@ -724,7 +723,7 @@ export function SlackChannelPanel({
                       {isBusy ? (
                         <Loader2 className="mr-2 size-4 animate-spin" />
                       ) : null}
-                      {dialogStage === "connect" ? "Connect to Slack" : "Next"}
+                      {dialogStage === "connect" ? "连接 Slack" : "下一页"}
                     </Button>
                   </div>
                 </>
@@ -736,7 +735,7 @@ export function SlackChannelPanel({
         {token?.is_active ? (
           <div className="flex items-center gap-2 text-xs text-emerald-600">
             <CheckCircle2 className="size-4" />
-            Slack integration connected.
+            Slack 集成已连接。
           </div>
         ) : null}
       </div>

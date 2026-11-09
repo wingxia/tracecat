@@ -71,7 +71,7 @@ type IntegrationSectionType = "oauth" | "custom_oauth"
 
 const integrationTypeLabels = {
   oauth: "OAuth",
-  custom_oauth: "Custom OAuth",
+  custom_oauth: "自定义 OAuth",
 } as const
 
 const integrationSectionOrder: IntegrationSectionType[] = [
@@ -81,7 +81,7 @@ const integrationSectionOrder: IntegrationSectionType[] = [
 
 const integrationSectionTitles: Record<IntegrationSectionType, string> = {
   oauth: "OAuth",
-  custom_oauth: "Custom OAuth",
+  custom_oauth: "自定义 OAuth",
 }
 
 function getIntegrationStatus(item: IntegrationItem): IntegrationStatus {
@@ -368,7 +368,7 @@ export default function IntegrationsPage() {
     return null
   }
   if (providersError) {
-    return <div>Error: {providersError.message}</div>
+    return <div>错误： {providersError.message}</div>
   }
 
   return (
@@ -520,14 +520,12 @@ export default function IntegrationsPage() {
                                         className="h-5 shrink-0 gap-1 border-amber-300 bg-amber-50 px-1.5 text-[10px] font-medium text-amber-700"
                                       >
                                         <TriangleAlert className="size-3" />
-                                        Reconnect required
+                                        需要重新连接
                                       </Badge>
                                     </TooltipTrigger>
                                     <TooltipContent>
                                       <p>
-                                        The access token expired and no refresh
-                                        token is available. Reconnect to restore
-                                        this integration.
+                                        访问令牌已过期且没有可用的刷新令牌。重新连接以恢复此集成。
                                       </p>
                                     </TooltipContent>
                                   </Tooltip>
@@ -542,7 +540,7 @@ export default function IntegrationsPage() {
                                       </span>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p>Configured</p>
+                                      <p>已配置</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -555,7 +553,7 @@ export default function IntegrationsPage() {
                                         variant="ghost"
                                         size="icon"
                                         className="h-6 w-6"
-                                        aria-label={`Reconnect ${item.name}`}
+                                        aria-label={`重新连接 ${item.name}`}
                                         onClick={(event) => {
                                           event.stopPropagation()
                                           handleReconnect(
@@ -569,7 +567,7 @@ export default function IntegrationsPage() {
                                       </Button>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p>Reconnect</p>
+                                      <p>重新连接</p>
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -599,7 +597,7 @@ export default function IntegrationsPage() {
                                     {isConnecting ? (
                                       <Loader2 className="mr-1.5 size-3 animate-spin" />
                                     ) : null}
-                                    {needsReauth ? "Reconnect" : "Connect"}
+                                    {needsReauth ? "重新连接" : "连接"}
                                   </Button>
                                 </>
                               )}
@@ -618,7 +616,7 @@ export default function IntegrationsPage() {
                                   }}
                                   disabled={isDisabled || isDisconnecting}
                                 >
-                                  Disconnect
+                                  断开连接
                                 </Button>
                               )}
                               {showDelete && (
@@ -636,7 +634,7 @@ export default function IntegrationsPage() {
                                   }}
                                   disabled={isDeleting}
                                 >
-                                  Delete
+                                  删除
                                 </Button>
                               )}
                             </ItemActions>
@@ -653,7 +651,7 @@ export default function IntegrationsPage() {
         {filteredIntegrations.length === 0 && (
           <div className="py-12 text-center">
             <p className="text-sm text-muted-foreground">
-              No integrations found matching your criteria.
+              没有符合条件的集成。
             </p>
           </div>
         )}
@@ -686,13 +684,13 @@ export default function IntegrationsPage() {
           if (!next) setDisconnectTarget(null)
         }}
         identifier={{
-          label: "Provider name",
+          label: "提供商名称",
           value: disconnectTarget?.name ?? "",
         }}
         confirmPhrase={disconnectTarget?.name ?? ""}
-        title="Disconnect integration"
-        description="Are you sure you want to disconnect this integration?"
-        confirmLabel="Disconnect"
+        title={"断开集成"}
+        description={"确定要断开此集成吗？"}
+        confirmLabel={"断开连接"}
         isPending={disconnectProviderMutation.isPending}
         onConfirm={async () => {
           if (!disconnectTarget) return
@@ -708,11 +706,13 @@ export default function IntegrationsPage() {
         onOpenChange={(next) => {
           if (!next) setDeleteTarget(null)
         }}
-        identifier={{ label: "Provider name", value: deleteTarget?.name ?? "" }}
+        identifier={{ label: "提供商名称", value: deleteTarget?.name ?? "" }}
         confirmPhrase={deleteTarget?.name ?? ""}
-        title="Delete custom provider"
-        description="Are you sure you want to delete this provider? This removes the provider definition and any stored credentials or connections."
-        confirmLabel="Delete"
+        title={"删除自定义提供商"}
+        description={
+          "确定要删除此提供商吗？此操作会删除提供商定义及所有已保存的凭据或连接。"
+        }
+        confirmLabel={"删除"}
         isPending={deleteProviderMutation.isPending}
         onConfirm={async () => {
           if (!deleteTarget) return

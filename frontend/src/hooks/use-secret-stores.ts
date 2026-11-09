@@ -74,12 +74,12 @@ export function useOrgSecretStores() {
           requestBody: params,
         }),
       onSuccess: () => {
-        toast({ title: "Secret store created" })
+        toast({ title: "已创建密钥存储" })
         return invalidateStoreAccess()
       },
       onError: (err: ApiError) => {
         toast({
-          title: "Failed to create secret store",
+          title: "创建密钥存储失败",
           description: describeApiError(err),
         })
       },
@@ -98,12 +98,12 @@ export function useOrgSecretStores() {
         requestBody: params,
       }),
     onSuccess: () => {
-      toast({ title: "Secret store updated" })
+      toast({ title: "已更新密钥存储" })
       return invalidateStoreAccess()
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to update secret store",
+        title: "更新密钥存储失败",
         description: describeApiError(err),
       })
     },
@@ -113,12 +113,12 @@ export function useOrgSecretStores() {
     mutationFn: async (storeId: string) =>
       await organizationSecretStoresDeleteSecretStore({ storeId }),
     onSuccess: () => {
-      toast({ title: "Secret store deleted" })
+      toast({ title: "已删除密钥存储" })
       return invalidateStoreAccess()
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to delete secret store",
+        title: "删除密钥存储失败",
         description: describeApiError(err),
       })
     },
@@ -137,7 +137,7 @@ export function useOrgSecretStores() {
         requestBody: { workspace_id: workspaceId },
       }),
     onSuccess: (_data, { workspaceId }) => {
-      toast({ title: "Workspace authorized" })
+      toast({ title: "已授权工作空间" })
       return Promise.all([
         invalidate(),
         queryClient.invalidateQueries({
@@ -147,7 +147,7 @@ export function useOrgSecretStores() {
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to authorize workspace",
+        title: "授权工作空间失败",
         description: describeApiError(err),
       })
     },
@@ -166,7 +166,7 @@ export function useOrgSecretStores() {
         workspaceId,
       }),
     onSuccess: (_data, { workspaceId }) => {
-      toast({ title: "Workspace authorization revoked" })
+      toast({ title: "已撤销工作空间授权" })
       return Promise.all([
         invalidate(),
         queryClient.invalidateQueries({
@@ -176,7 +176,7 @@ export function useOrgSecretStores() {
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to revoke workspace",
+        title: "撤销工作空间授权失败",
         description: describeApiError(err),
       })
     },
@@ -244,7 +244,7 @@ export function useAwsSecretReference(
       })
       const secret = secrets.find((item) => item.id === secretId)
       if (!secret || secret.source !== "aws_secrets_manager") {
-        throw new Error("AWS secret reference not found")
+        throw new Error("未找到 AWS 密钥引用")
       }
       return secret
     },
@@ -275,14 +275,14 @@ export function useAwsSecretReferences(workspaceId: string) {
       }),
     onSuccess: () => {
       toast({
-        title: "Added AWS-backed secret",
-        description: "The reference was saved. Values stay in AWS.",
+        title: "已添加 AWS 密钥引用",
+        description: "已保存引用，值仍保留在 AWS 中。",
       })
       invalidateSecrets()
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to add AWS-backed secret",
+        title: "添加 AWS 密钥引用失败",
         description: describeApiError(err),
       })
     },
@@ -302,12 +302,12 @@ export function useAwsSecretReferences(workspaceId: string) {
         requestBody: params,
       }),
     onSuccess: () => {
-      toast({ title: "Updated AWS-backed secret" })
+      toast({ title: "已更新 AWS 密钥引用" })
       invalidateSecrets()
     },
     onError: (err: ApiError) => {
       toast({
-        title: "Failed to update AWS-backed secret",
+        title: "更新 AWS 密钥引用失败",
         description: describeApiError(err),
       })
     },
@@ -328,12 +328,12 @@ export function useAwsSecretReferences(workspaceId: string) {
 }
 
 const VALIDATION_FIELD_LABELS: Record<string, string> = {
-  role_arn: "Role ARN",
-  region: "Region",
-  name: "Name",
-  remote_reference: "Secret name or ARN",
-  key: "Output key",
-  field: "JSON field",
+  role_arn: "角色 ARN",
+  region: "区域",
+  name: "名称",
+  remote_reference: "密钥名称或 ARN",
+  key: "输出键",
+  field: "JSON 字段",
 }
 
 /** Render one pydantic validation error without exposing its raw regex. */
@@ -343,7 +343,7 @@ function describeValidationError(error: RequestValidationError): string {
     .find((part) => Object.hasOwn(VALIDATION_FIELD_LABELS, part))
   const label = field ? VALIDATION_FIELD_LABELS[field] : null
   if (error.type === "string_pattern_mismatch") {
-    return `${label ?? "A field"} is not in the expected format.`
+    return `${label ?? "字段"} 的格式不符合要求。`
   }
   const message = error.msg.replace(/^Value error, /, "")
   return label ? `${label}: ${message}` : message

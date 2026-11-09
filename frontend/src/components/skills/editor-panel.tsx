@@ -74,7 +74,7 @@ const TOOLS_SPLIT_MIN_WIDTH = 720
 function FrontmatterEditorSkeleton() {
   return (
     <div role="status" className="w-full rounded-md border px-3 py-2">
-      <span className="sr-only">Loading frontmatter editor</span>
+      <span className="sr-only">正在加载元数据编辑器</span>
       <div aria-hidden="true" className="flex gap-4">
         <div className="flex shrink-0 flex-col gap-2 border-r pr-3">
           <Skeleton className="h-3 w-2" />
@@ -219,10 +219,8 @@ export function EditorPanel({
       <div className="flex h-full items-center justify-center px-8">
         <Alert variant="destructive" className="max-w-md">
           <AlertCircle className="size-4" />
-          <AlertTitle>Skill not found</AlertTitle>
-          <AlertDescription>
-            This skill may have been deleted or is unavailable.
-          </AlertDescription>
+          <AlertTitle>未找到技能</AlertTitle>
+          <AlertDescription>此技能可能已被删除或不可用。</AlertDescription>
         </Alert>
       </div>
     )
@@ -236,7 +234,7 @@ export function EditorPanel({
       >
         {!selectedFile ? (
           <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-            Select a file to start editing.
+            选择文件以开始编辑。
           </div>
         ) : draftFileLoading ? (
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col">
@@ -256,10 +254,9 @@ export function EditorPanel({
           <div className="flex flex-1 items-center justify-center">
             <Alert className="max-w-md">
               <Trash2 className="size-4" />
-              <AlertTitle>Marked for deletion</AlertTitle>
+              <AlertTitle>已标记为删除</AlertTitle>
               <AlertDescription>
-                Save the working copy to remove this file from the skill, or
-                click Reset to keep it.
+                保存工作副本会从技能中移除此文件，点击“重置”可保留。
               </AlertDescription>
             </Alert>
           </div>
@@ -267,10 +264,9 @@ export function EditorPanel({
           <div className="flex flex-1 items-center justify-center">
             <Alert className="max-w-md">
               <Upload className="size-4" />
-              <AlertTitle>Replacement pending</AlertTitle>
+              <AlertTitle>等待替换</AlertTitle>
               <AlertDescription>
-                Save the working copy to upload and attach the replacement, or
-                click Reset to keep the current file.
+                保存工作副本会上传并关联替换文件，点击“重置”可保留当前文件。
               </AlertDescription>
             </Alert>
           </div>
@@ -284,15 +280,15 @@ export function EditorPanel({
                 }}
               >
                 <div>
-                  <div className="text-sm font-medium">Frontmatter</div>
+                  <div className="text-sm font-medium">元数据</div>
                   <div className="text-xs text-muted-foreground">
-                    Metadata the agent uses to discover this skill. Requires{" "}
+                    智能体用于发现此技能的元数据。需要{" "}
                     <code className="rounded bg-muted px-1 py-0.5 text-[11px]">
-                      name
+                      名称
                     </code>{" "}
-                    and{" "}
+                    和{" "}
                     <code className="rounded bg-muted px-1 py-0.5 text-[11px]">
-                      description
+                      描述
                     </code>
                     .
                   </div>
@@ -329,10 +325,9 @@ export function EditorPanel({
               </div>
               <div className="flex flex-1 flex-col">
                 <div className="mb-2">
-                  <div className="text-sm font-medium">Instructions</div>
+                  <div className="text-sm font-medium">指令</div>
                   <div className="text-xs text-muted-foreground">
-                    Workflow, examples, and references the agent loads when the
-                    skill is triggered.
+                    技能被触发时，智能体加载的工作流、示例和参考资料。
                   </div>
                 </div>
                 <SimpleEditor
@@ -380,11 +375,10 @@ export function EditorPanel({
           <div className="flex flex-1 items-center justify-center">
             <Alert className="max-w-md">
               <Download className="size-4" />
-              <AlertTitle>Read-only file</AlertTitle>
+              <AlertTitle>只读文件</AlertTitle>
               <AlertDescription className="space-y-3">
                 <p>
-                  This file type is not editable inline in v1. You can replace
-                  it, delete it, or download the current blob.
+                  首版暂不支持在线编辑此文件类型。你可以替换、删除或下载当前文件。
                 </p>
                 {draftFile?.kind === "download" && draftFile.download_url ? (
                   // Downloading does not edit, so it stays usable on a
@@ -401,7 +395,7 @@ export function EditorPanel({
                       rel="noreferrer"
                     >
                       <Download className="mr-2 size-4" />
-                      Download current file
+                      下载当前文件
                     </a>
                   </Button>
                 ) : null}
@@ -433,7 +427,7 @@ export function EditorPanel({
               className="size-6 text-muted-foreground hover:text-foreground"
               onClick={onBeginCreate}
               disabled={readOnly}
-              aria-label="New file"
+              aria-label={"新建文件"}
             >
               <FilePlus2 className="size-3.5" />
             </Button>
@@ -446,7 +440,7 @@ export function EditorPanel({
                   variant="ghost"
                   className="size-6 text-muted-foreground hover:text-foreground"
                   onClick={() => onBeginMove(selectedFile.path, false)}
-                  aria-label="Move file"
+                  aria-label={"移动文件"}
                 >
                   <FolderOpen className="size-3.5" />
                 </Button>
@@ -455,7 +449,7 @@ export function EditorPanel({
                   variant="ghost"
                   className="size-6 text-muted-foreground hover:text-foreground"
                   onClick={() => onBeginRename(selectedFile.path, false)}
-                  aria-label="Rename file"
+                  aria-label={"重命名文件"}
                 >
                   <PencilLine className="size-3.5" />
                 </Button>
@@ -502,7 +496,7 @@ export function EditorPanel({
                 />
               ) : null}
               <span className="truncate">
-                {selectedFile?.path ?? "Select a file"}
+                {selectedFile?.path ?? "选择文件"}
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -514,7 +508,7 @@ export function EditorPanel({
                   onClick={onUndoSelectedFileChange}
                 >
                   <RefreshCcw className="mr-2 size-3.5" />
-                  Reset
+                  重置
                 </Button>
               ) : null}
               {!readOnly && selectedFile ? (
@@ -532,7 +526,7 @@ export function EditorPanel({
                     onClick={() => replaceInputRef.current?.click()}
                   >
                     <Upload className="mr-2 size-3.5" />
-                    Replace
+                    替换
                   </Button>
                   <Button
                     size="sm"
@@ -541,7 +535,7 @@ export function EditorPanel({
                     onClick={onDeleteSelectedFile}
                   >
                     <Trash2 className="mr-2 size-3.5" />
-                    Delete
+                    删除
                   </Button>
                 </>
               ) : null}

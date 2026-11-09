@@ -51,7 +51,7 @@ it.each<[FormsAccess, boolean | undefined, boolean]>([
 
     render(<TriggerPanel workflow={{ id: "wf_1" } as WorkflowRead} />)
 
-    expect(Boolean(screen.queryByRole("tab", { name: "Form" }))).toBe(shown)
+    expect(Boolean(screen.queryByRole("tab", { name: "表单" }))).toBe(shown)
     expect(Boolean(screen.queryByText("Form trigger controls"))).toBe(shown)
     expect(screen.getByRole("tab", { name: "Webhook" })).toBeInTheDocument()
   }

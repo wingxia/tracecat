@@ -33,17 +33,17 @@ export function RolloutDetailSheet({
               <SheetTitle>
                 {target
                   ? `${target.organization_name} / ${target.workspace_name}`
-                  : "Rollout"}
+                  : "部署"}
               </SheetTitle>
               <SheetDescription>
                 {rollout.tag ? (
                   <>
-                    Rollout of <span className="font-mono">{rollout.tag}</span>
+                    部署对象 <span className="font-mono">{rollout.tag}</span>
                     {rollout.commit_sha &&
                       ` at ${rollout.commit_sha.substring(0, 7)}`}
                   </>
                 ) : (
-                  "Unassign rollout"
+                  "取消分配部署"
                 )}
               </SheetDescription>
             </SheetHeader>
@@ -60,8 +60,8 @@ export function RolloutDetailSheet({
             ) : (
               <p className="text-sm text-muted-foreground">
                 {rollout.status === "previewing"
-                  ? "Preview is running..."
-                  : "No preview available."}
+                  ? "正在生成预览…"
+                  : "暂无预览。"}
               </p>
             )}
           </div>

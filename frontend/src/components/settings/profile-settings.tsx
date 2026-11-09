@@ -74,7 +74,7 @@ export function ProfileSettings() {
             htmlFor="settings-name"
             className="text-sm font-medium text-muted-foreground"
           >
-            Name
+            名称
           </label>
           <Input
             ref={inputRef}
@@ -89,18 +89,18 @@ export function ProfileSettings() {
       </div>
 
       <div className="grid gap-1.5">
-        <span className="text-sm font-medium text-muted-foreground">Email</span>
+        <span className="text-sm font-medium text-muted-foreground">邮箱</span>
         <span className="text-sm">{user?.email ?? userDefaults.email}</span>
       </div>
 
       <div className="grid gap-1.5">
         <span className="text-sm font-medium text-muted-foreground">
-          User ID
+          用户 ID
         </span>
         <div className="flex items-center gap-2">
           <span className="font-mono text-sm">{user?.id ?? "—"}</span>
           {user?.id && (
-            <CopyButton value={user.id} toastMessage="User ID copied" />
+            <CopyButton value={user.id} toastMessage="已复制用户 ID" />
           )}
         </div>
       </div>

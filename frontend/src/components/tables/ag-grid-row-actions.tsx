@@ -40,7 +40,7 @@ export function AgGridRowActions(params: CustomCellRendererProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="size-4 p-0">
-            <span className="sr-only">Open menu</span>
+            <span className="sr-only">打开菜单</span>
             <DotsHorizontalIcon className="size-4" />
           </Button>
         </DropdownMenuTrigger>
@@ -53,7 +53,7 @@ export function AgGridRowActions(params: CustomCellRendererProps) {
             }}
           >
             <CopyIcon className="mr-2 size-3 group-hover/item:text-accent-foreground" />
-            Copy ID
+            复制 ID
           </DropdownMenuItem>
           {canDeleteRow && (
             <>
@@ -66,7 +66,7 @@ export function AgGridRowActions(params: CustomCellRendererProps) {
                 }}
               >
                 <Trash2Icon className="mr-2 size-3 group-hover/item:text-destructive" />
-                Delete
+                删除
               </DropdownMenuItem>
             </>
           )}
@@ -116,17 +116,16 @@ function RowDeleteDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete row</AlertDialogTitle>
+          <AlertDialogTitle>删除行</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this row from the table? This action
-            cannot be undone.
+            确定要从数据表中删除此行吗？此操作无法撤销。
           </AlertDialogDescription>
-          <AlertDialogDescription>Row ID: {row.id}</AlertDialogDescription>
+          <AlertDialogDescription>行 ID： {row.id}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction variant="destructive" onClick={handleDeleteRow}>
-            Delete
+            删除
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

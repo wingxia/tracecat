@@ -20,8 +20,8 @@ export function formViewFromParam(tab: string | null | undefined): FormView {
 }
 
 const VIEWS = [
-  { view: "config", icon: SlidersHorizontalIcon, label: "Config" },
-  { view: "activity", icon: ActivityIcon, label: "Activity" },
+  { view: "config", icon: SlidersHorizontalIcon, label: "配置" },
+  { view: "activity", icon: ActivityIcon, label: "活动" },
 ] as const
 
 /**

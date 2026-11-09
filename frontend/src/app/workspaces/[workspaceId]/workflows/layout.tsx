@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Workflows",
+  title: "工作流",
 }
 
 export default async function WorkflowsLayout({

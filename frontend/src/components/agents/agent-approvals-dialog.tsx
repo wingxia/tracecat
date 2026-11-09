@@ -145,8 +145,8 @@ export function AgentApprovalsDialog({
       console.error("Failed to submit approvals", error)
       toast({
         variant: "destructive",
-        title: "Approval submission failed",
-        description: "Please try again.",
+        title: "提交审批失败",
+        description: "请重试。",
       })
       throw error
     }
@@ -155,8 +155,8 @@ export function AgentApprovalsDialog({
       workspaceId,
     })
     toast({
-      title: "Approvals submitted",
-      description: "The agent will resume once the workflow processes them.",
+      title: "已提交审批",
+      description: "工作流处理审批后，智能体将恢复运行。",
     })
     onSubmitted?.()
     if (decisions.length === pendingApprovals.length) {
@@ -169,11 +169,11 @@ export function AgentApprovalsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="lg" className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Pending approvals</DialogTitle>
+          <DialogTitle>待审批</DialogTitle>
           <DialogDescription>
             {workflowLabel
-              ? `Tool calls from ${session?.action_title ?? "this agent"} in ${workflowLabel}.`
-              : "Review the tool calls issued by this agent."}
+              ? `${session?.action_title ?? "此智能体"} 在 ${workflowLabel} 中的工具调用。`
+              : "审核此智能体发出的工具调用。"}
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -181,9 +181,7 @@ export function AgentApprovalsDialog({
             <div className="flex items-center gap-2 rounded-md border border-dashed border-muted-foreground/40 p-4 text-sm text-muted-foreground">
               <AlertTriangleIcon className="size-4" />
               <span>
-                {session
-                  ? "This session has no pending approvals."
-                  : "No agent session selected."}
+                {session ? "此会话没有待审批事项。" : "未选择智能体会话。"}
               </span>
             </div>
           ) : (

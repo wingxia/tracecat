@@ -25,7 +25,7 @@ export const filesSettingsSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        text: z.string().trim().min(1, "Cannot be empty"),
+        text: z.string().trim().min(1, "不能为空"),
       })
     )
     .optional(),
@@ -33,7 +33,7 @@ export const filesSettingsSchema = z.object({
     .array(
       z.object({
         id: z.string(),
-        text: z.string().trim().min(1, "Cannot be empty"),
+        text: z.string().trim().min(1, "不能为空"),
       })
     )
     .optional(),
@@ -133,7 +133,7 @@ export function WorkspaceFilesSettings({
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Allowed file extensions</FormLabel>
+                <FormLabel>允许的文件扩展名</FormLabel>
                 <Button
                   type="button"
                   variant="ghost"
@@ -155,7 +155,7 @@ export function WorkspaceFilesSettings({
               <FormControl>
                 <CustomTagInput
                   {...field}
-                  placeholder="Enter an extension..."
+                  placeholder={"输入扩展名…"}
                   tags={field.value || []}
                   setTags={(tags) => {
                     setInheritAttachmentExtensions(false)
@@ -164,8 +164,7 @@ export function WorkspaceFilesSettings({
                 />
               </FormControl>
               <FormDescription>
-                Add file extensions that users can upload as attachments (e.g.,
-                .pdf, .docx, .png)
+                添加允许作为附件上传的文件扩展名（如 .pdf、.docx、.png）
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -178,7 +177,7 @@ export function WorkspaceFilesSettings({
           render={({ field }) => (
             <FormItem>
               <div className="flex items-center justify-between">
-                <FormLabel>Allowed MIME types</FormLabel>
+                <FormLabel>允许的 MIME 类型</FormLabel>
                 <Button
                   type="button"
                   variant="ghost"
@@ -200,7 +199,7 @@ export function WorkspaceFilesSettings({
               <FormControl>
                 <CustomTagInput
                   {...field}
-                  placeholder="Enter a MIME type..."
+                  placeholder={"输入 MIME 类型…"}
                   tags={field.value || []}
                   setTags={(tags) => {
                     setInheritAttachmentMimeTypes(false)
@@ -209,8 +208,7 @@ export function WorkspaceFilesSettings({
                 />
               </FormControl>
               <FormDescription>
-                Add MIME types that are allowed for attachments (e.g.,
-                application/pdf, image/jpeg)
+                添加允许的附件 MIME 类型（如 application/pdf、image/jpeg）
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -223,11 +221,9 @@ export function WorkspaceFilesSettings({
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Validate file content</FormLabel>
+                <FormLabel>验证文件内容</FormLabel>
                 <FormDescription>
-                  Verify that uploaded files match their declared type by
-                  checking file signatures. Disabling this may allow malicious
-                  files disguised as other formats.
+                  通过检查文件签名，验证上传文件是否符合声明的类型。禁用此项可能允许伪装成其他格式的恶意文件。
                 </FormDescription>
               </div>
               <FormControl>
@@ -241,7 +237,7 @@ export function WorkspaceFilesSettings({
         />
 
         <Button type="submit" disabled={isUpdating} size="sm">
-          {isUpdating ? "Saving..." : "Save"}
+          {isUpdating ? "保存中…" : "保存"}
         </Button>
       </form>
     </Form>

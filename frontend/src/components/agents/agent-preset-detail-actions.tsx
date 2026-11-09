@@ -90,7 +90,7 @@ export function AgentPresetDetailActions({
           onClick={onDiscard}
           disabled={isSaving}
         >
-          Discard
+          放弃
         </Button>
       ) : null}
       {syncActions}
@@ -143,30 +143,30 @@ function getPublishCopy({
   submitLabel: string
 }): { label: string; tip: string } {
   if (!presetId) {
-    return { label: submitLabel, tip: "Creates the agent as v1." }
+    return { label: submitLabel, tip: "将智能体创建为 v1 版本。" }
   }
   if (!isDirty) {
     return {
-      label: "Publish",
+      label: "发布",
       tip:
         currentVersionNumber !== null
-          ? `No changes to publish. v${currentVersionNumber} is live.`
-          : "No changes to publish.",
+          ? `没有可发布的更改，v${currentVersionNumber} 已上线。`
+          : "没有可发布的更改。",
     }
   }
   if (!cutsVersion) {
     return {
-      label: "Publish",
-      tip: "Publishes name and description. The version does not change.",
+      label: "发布",
+      tip: "发布名称和描述，版本保持不变。",
     }
   }
   const next = currentVersionNumber !== null ? currentVersionNumber + 1 : null
   return {
-    label: "Publish",
+    label: "发布",
     tip:
       next !== null
-        ? `Publish v${next}. Chat and workflows run it right away.`
-        : "Publish a new version.",
+        ? `发布 v${next}，对话和工作流将立即使用此版本。`
+        : "发布新版本。",
   }
 }
 

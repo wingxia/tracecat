@@ -96,8 +96,8 @@ export function ActivityLayout({
       }
     } catch {
       toast({
-        title: "Failed to delete approval",
-        description: "Could not delete this approval. Please try again.",
+        title: "删除审批失败",
+        description: "无法删除此审批，请重试。",
         variant: "destructive",
       })
     }
@@ -114,7 +114,7 @@ export function ActivityLayout({
     content = (
       <div className="flex size-full items-center justify-center">
         <span className="text-sm text-red-500">
-          Failed to load activity: {error.message}
+          加载活动失败： {error.message}
         </span>
       </div>
     )

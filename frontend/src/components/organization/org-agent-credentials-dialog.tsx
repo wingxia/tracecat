@@ -65,9 +65,8 @@ function getCredentialLayoutSections(
   if (provider === "bedrock") {
     return [
       {
-        title: "Authentication",
-        description:
-          "Use either AWS access keys or a Bedrock bearer token for this provider.",
+        title: "身份验证",
+        description: "此提供商可使用 AWS 访问密钥或 Bedrock Bearer 令牌。",
         rows: [
           ["AWS_ROLE_ARN", "AWS_ROLE_SESSION_NAME"],
           ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"],
@@ -75,9 +74,8 @@ function getCredentialLayoutSections(
         ],
       },
       {
-        title: "Request defaults",
-        description:
-          "Set the required region and optional fallback targets for Bedrock routing.",
+        title: "请求默认值",
+        description: "为 Bedrock 路由设置必需的区域和可选的备用目标。",
         rows: [["AWS_REGION"], ["AWS_MODEL_ID", "AWS_INFERENCE_PROFILE_ID"]],
       },
     ]
@@ -199,8 +197,7 @@ export function AgentCredentialsDialog({
       await onSuccess()
       onClose()
     } catch (err) {
-      const message =
-        getApiErrorDetail(err) ?? "Couldn't save credentials. Please try again."
+      const message = getApiErrorDetail(err) ?? "无法保存凭据，请重试。"
       switch (getApiErrorCode(err)) {
         case "provider_key_invalid":
         case "provider_key_access_denied": {
@@ -251,7 +248,7 @@ export function AgentCredentialsDialog({
           onClearError={() => {
             form.clearErrors(field.key)
           }}
-          placeholder="Drag & drop the JSON key (.json) or choose a file"
+          placeholder={"拖放 JSON 密钥（.json）或选择文件"}
           existingConfigured={false}
           hasError={Boolean(form.formState.errors[field.key])}
         />
@@ -259,7 +256,7 @@ export function AgentCredentialsDialog({
     }
     return (
       <Input
-        placeholder={`Enter your ${field.label.toLowerCase()}`}
+        placeholder={`输入你的 ${field.label.toLowerCase()}`}
         type={field.type}
         {...formField}
       />
@@ -283,11 +280,10 @@ export function AgentCredentialsDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <KeyIcon className="size-5" />
-            <span>Configure {dialogLabel} credentials</span>
+            <span>配置 {dialogLabel} 凭据</span>
           </DialogTitle>
           <DialogDescription>
-            Enter your {dialogLabel} credentials to enable AI model access for
-            your organization.
+            输入你的 {dialogLabel} 凭据，以启用组织的 AI 模型访问。
           </DialogDescription>
         </DialogHeader>
 
@@ -298,8 +294,8 @@ export function AgentCredentialsDialog({
         ) : providerConfigError || !providerConfig ? (
           <p className="text-sm text-destructive">
             {providerConfigError
-              ? "Couldn't load credential settings. Please refresh and try again."
-              : `Credentials configuration for ${provider} is not available.`}
+              ? "无法加载凭据设置，请刷新后重试。"
+              : `${provider} 的凭据配置不可用。`}
           </p>
         ) : (
           <Form {...form}>
@@ -381,7 +377,7 @@ export function AgentCredentialsDialog({
               <DialogFooter>
                 <Button size="sm" type="submit" disabled={loading}>
                   {loading && <Spinner className="mr-2 size-4" />}
-                  {loading ? "Saving…" : "Save credentials"}
+                  {loading ? "保存中…" : "保存凭据"}
                 </Button>
               </DialogFooter>
             </form>

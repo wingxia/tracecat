@@ -17,9 +17,7 @@ function formatErrorCategory(category: string | null | undefined): string {
 export function getAuditWebhookTestTitle(
   result: AuditWebhookTestResult
 ): string {
-  return result.ok
-    ? "Audit webhook test succeeded"
-    : "Audit webhook test failed"
+  return result.ok ? "审计 Webhook 测试成功" : "审计 Webhook 测试失败"
 }
 
 /** Return the receiver status or categorized failure description. */
@@ -27,7 +25,7 @@ export function getAuditWebhookTestDescription(
   result: AuditWebhookTestResult
 ): string {
   if (result.receiver_status_code != null) {
-    return `Receiver returned ${result.receiver_status_code}.`
+    return `接收端返回 ${result.receiver_status_code}。`
   }
-  return `Tracecat could not reach the receiver: ${formatErrorCategory(result.error_category)}.`
+  return `Tracecat 无法连接接收端：${formatErrorCategory(result.error_category)}。`
 }

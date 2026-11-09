@@ -52,7 +52,7 @@ export function FormTriggerControls({
     return <CenteredSpinner />
   }
   if (formsError) {
-    return <p className="text-xs text-destructive">Couldn't load the form.</p>
+    return <p className="text-xs text-destructive">无法加载表单。</p>
   }
 
   const isPublished = typeof workflow.version === "number"
@@ -63,13 +63,13 @@ export function FormTriggerControls({
   const lacksScope = canUpdate === false || (!listed && canCreate === false)
   const isPending = createFormIsPending || updateFormIsPending
 
-  let hint = "Form is offline"
+  let hint = "表单已下线"
   if (!isPublished) {
-    hint = "Publish the workflow to put its form online"
+    hint = "发布工作流以将其表单上线"
   } else if (online) {
-    hint = "Form is online and accepting submissions"
+    hint = "表单已上线，正在接受提交"
   } else if (!listed) {
-    hint = "Turn on to create a form from this workflow's inputs"
+    hint = "启用后可根据此工作流的输入创建表单"
   }
 
   async function setOnline(next: boolean) {
@@ -82,13 +82,11 @@ export function FormTriggerControls({
       }
     } catch (error) {
       toast({
-        title: next
-          ? "Couldn't put the form online"
-          : "Couldn't take the form offline",
+        title: next ? "无法上线表单" : "无法下线表单",
         description:
           getFormErrorDetail(error)?.message ??
           getApiErrorDetail(error) ??
-          "Something went wrong.",
+          "出现了问题。",
         variant: "destructive",
       })
     }
@@ -102,7 +100,7 @@ export function FormTriggerControls({
             htmlFor="form-trigger-switch"
             className="text-xs font-semibold"
           >
-            Enable form
+            启用表单
           </Label>
           <p className="text-xs text-muted-foreground">{hint}</p>
         </div>
@@ -124,11 +122,11 @@ export function FormTriggerControls({
                   htmlFor="form-trigger-url"
                   className="text-xs font-medium"
                 >
-                  Requester link
+                  填写者链接
                 </Label>
                 <CopyButton
                   value={detail.url}
-                  toastMessage="Copied form link to clipboard"
+                  toastMessage="已将表单链接复制到剪贴板"
                 />
               </div>
               <Input
@@ -144,7 +142,7 @@ export function FormTriggerControls({
             className="flex w-fit items-center gap-1.5 text-xs font-medium text-primary hover:underline"
           >
             <ExternalLinkIcon className="size-3.5" />
-            Edit in Forms
+            在表单中编辑
           </Link>
         </>
       )}

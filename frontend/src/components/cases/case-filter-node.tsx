@@ -1,6 +1,7 @@
 "use client"
 
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { useRef, useState } from "react"
 import type { CaseFilterField, Condition, Filter } from "@/client"
 import { Button } from "@/components/ui/button"
@@ -99,14 +100,14 @@ export function FilterNode({
       if (inputType === "datetime-local" && value !== "") {
         const instant = new Date(value)
         if (!Number.isNaN(instant.getTime()))
-          return format(instant, "yyyy-MM-dd'T'HH:mm:ss.SSS")
+          return format(instant, "yyyy-MM-dd'T'HH:mm:ss.SSS", { locale: zhCN })
       }
       return value
     }
     return (
       <div className="flex flex-wrap items-center gap-2 py-1">
         <select
-          aria-label="Condition field"
+          aria-label={"条件字段"}
           className={SELECT_CLASS}
           value={field?.field ?? condition.field}
           onChange={(event) => {
@@ -136,7 +137,7 @@ export function FilterNode({
         >
           {!field && (
             <option value={condition.field}>
-              {condition.field} (unavailable)
+              {condition.field} （不可用）
             </option>
           )}
           {fields.map((item) => (
@@ -148,7 +149,7 @@ export function FilterNode({
         {field?.kind === "json_scalar" && (
           <Input
             required
-            aria-label="Payload path"
+            aria-label={"数据载荷路径"}
             className="h-8 w-64 text-xs"
             placeholder="metadata.product.vendor_name"
             value={condition.field.slice("payload.".length)}
@@ -158,7 +159,7 @@ export function FilterNode({
           />
         )}
         <select
-          aria-label="Condition operator"
+          aria-label={"条件运算符"}
           className={SELECT_CLASS}
           value={condition.op}
           onChange={(event) => {
@@ -189,7 +190,7 @@ export function FilterNode({
         >
           {(!field || !field.operators.includes(condition.op)) && (
             <option value={condition.op}>
-              {OP_LABELS[condition.op]} (unavailable)
+              {OP_LABELS[condition.op]} （不可用）
             </option>
           )}
           {field?.operators.map((op) => (
@@ -202,7 +203,7 @@ export function FilterNode({
           <>
             {field?.kind === "json_scalar" && (
               <select
-                aria-label="Payload value type"
+                aria-label={"数据载荷值类型"}
                 className={SELECT_CLASS}
                 value={valueType}
                 onChange={(event) => {
@@ -213,14 +214,14 @@ export function FilterNode({
                   update({ ...condition, value })
                 }}
               >
-                <option value="text">Text</option>
-                <option value="number">Number</option>
-                <option value="boolean">Boolean</option>
+                <option value="text">文本</option>
+                <option value="number">数字</option>
+                <option value="boolean">布尔值</option>
               </select>
             )}
             {choices ? (
               <select
-                aria-label="Condition value"
+                aria-label={"条件值"}
                 multiple={isList}
                 required
                 className={SELECT_CLASS}
@@ -251,7 +252,7 @@ export function FilterNode({
                   )
                   .map((value) => (
                     <option key={String(value)} value={String(value)}>
-                      {String(value)} (unavailable)
+                      {String(value)} （不可用）
                     </option>
                   ))}
                 {choices.map((value) => (
@@ -262,12 +263,12 @@ export function FilterNode({
               </select>
             ) : (
               <Input
-                aria-label="Condition value"
+                aria-label={"条件值"}
                 className="h-8 w-48 text-xs"
                 type={inputType}
                 step="any"
                 required={inputType !== "text"}
-                placeholder={isList ? "Comma-separated values" : "Value"}
+                placeholder={isList ? "以逗号分隔的值" : "值"}
                 value={displayValue(condition.value)}
                 onChange={(event) =>
                   update({
@@ -289,24 +290,24 @@ export function FilterNode({
                   disabled={!unsetCondition && (depth >= maxDepth || !canAdd)}
                   onChange={(event) => update(condition, event.target.checked)}
                 />
-                Include unset
+                包含未设置值
               </label>
             )}
           </>
         )}
         {!field && (
           <span className="text-xs text-destructive">
-            This field is unavailable. Edit or remove this condition.
+            此字段不可用，请编辑或移除此条件。
           </span>
         )}
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          aria-label="Remove condition"
+          aria-label={"移除条件"}
           onClick={onRemove}
         >
-          Remove
+          移除
         </Button>
       </div>
     )
@@ -325,10 +326,10 @@ export function FilterNode({
     <div className="space-y-2 border-l border-border pl-3">
       <div className="flex items-center gap-2">
         {mode === "not" ? (
-          <span className="text-xs">Not</span>
+          <span className="text-xs">取反</span>
         ) : (
           <select
-            aria-label="Group matching"
+            aria-label={"分组匹配方式"}
             className={SELECT_CLASS}
             value={mode}
             onChange={(event) =>
@@ -339,18 +340,18 @@ export function FilterNode({
               )
             }
           >
-            <option value="all">All conditions</option>
-            <option value="any">Any condition</option>
+            <option value="all">所有条件</option>
+            <option value="any">任一条件</option>
           </select>
         )}
         <Button
           type="button"
           variant="ghost"
           size="sm"
-          aria-label="Remove group"
+          aria-label={"移除分组"}
           onClick={onRemove}
         >
-          Remove group
+          移除分组
         </Button>
       </div>
       {children.map((child, index) => (
@@ -382,7 +383,7 @@ export function FilterNode({
             disabled={!canAdd || depth >= maxDepth}
             onClick={() => replaceChildren([...children, newCondition()])}
           >
-            Add condition
+            添加条件
           </Button>
           <Button
             type="button"
@@ -393,7 +394,7 @@ export function FilterNode({
               replaceChildren([...children, { and: [newCondition()] }])
             }
           >
-            Add group
+            添加分组
           </Button>
         </div>
       )}

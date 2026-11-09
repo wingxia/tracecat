@@ -95,16 +95,16 @@ describe("AgentTurn", () => {
   it("folds a finished turn's steps into one worked line", () => {
     renderTurn([PROMPT, THOUGHT, TOOL_CALL, ANSWER_MESSAGE])
 
-    expect(screen.getByText("Worked for 16s")).toBeInTheDocument()
+    expect(screen.getByText("已工作 16s")).toBeInTheDocument()
     expect(screen.getByText(ANSWER)).toBeInTheDocument()
     expect(
       screen.queryByText("Ran core.table.list_tables")
     ).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByText("Worked for 16s"))
+    fireEvent.click(screen.getByText("已工作 16s"))
 
     expect(screen.getByText("Ran core.table.list_tables")).toBeInTheDocument()
-    expect(screen.getByText("Thought for 3 seconds")).toBeInTheDocument()
+    expect(screen.getByText("思考了 3 秒")).toBeInTheDocument()
   })
 
   it("keeps a turn watched live open until the next prompt", () => {
@@ -128,7 +128,7 @@ describe("AgentTurn", () => {
     const { rerender } = render(renderAt(true, false))
     rerender(renderAt(false, false))
 
-    expect(screen.getByText("Worked for 16s")).toBeInTheDocument()
+    expect(screen.getByText("已工作 16s")).toBeInTheDocument()
     expect(screen.getByText("Ran core.table.list_tables")).toBeInTheDocument()
 
     rerender(renderAt(false, true))
@@ -146,7 +146,7 @@ describe("AgentTurn", () => {
     }
     renderTurn([PROMPT, THOUGHT, TOOL_CALL, ANSWER_MESSAGE, cancelled])
 
-    expect(screen.getByText("Worked for 16s")).toBeInTheDocument()
+    expect(screen.getByText("已工作 16s")).toBeInTheDocument()
   })
 
   it("times a thought from the tool result before it", () => {
@@ -175,9 +175,9 @@ describe("AgentTurn", () => {
     const answer: UIMessage = { ...ANSWER_MESSAGE, metadata: at(38) }
     renderTurn([PROMPT, THOUGHT, slowTool, nextThought, answer])
 
-    fireEvent.click(screen.getByText("Worked for 38s"))
+    fireEvent.click(screen.getByText("已工作 38s"))
 
-    expect(screen.getByText("Thought for 1 second")).toBeInTheDocument()
+    expect(screen.getByText("思考了 1 秒")).toBeInTheDocument()
   })
 
   it("ends a turn at its tool's result when nothing timed follows", () => {
@@ -204,7 +204,7 @@ describe("AgentTurn", () => {
     }
     renderTurn([PROMPT, THOUGHT, slowTool, cancelled])
 
-    expect(screen.getByText("Worked for 35s")).toBeInTheDocument()
+    expect(screen.getByText("已工作 35s")).toBeInTheDocument()
   })
 
   it("keeps an approval continuation in the turn it answers", () => {
@@ -263,7 +263,7 @@ describe("AgentTurn", () => {
     renderTurn([PROMPT, THOUGHT, ANSWER_MESSAGE])
 
     expect(screen.queryByText(/^Worked/)).not.toBeInTheDocument()
-    expect(screen.getByText("Thought for 3 seconds")).toBeInTheDocument()
+    expect(screen.getByText("思考了 3 秒")).toBeInTheDocument()
   })
 
   it("draws every step while the turn streams", () => {
@@ -329,11 +329,11 @@ describe("AgentTurn", () => {
       )
     }
     const { rerender } = render(tree(thought("streaming")))
-    expect(screen.getByText("Thinking...")).toBeInTheDocument()
+    expect(screen.getByText("思考中…")).toBeInTheDocument()
 
     rerender(tree(thought("done")))
-    expect(screen.queryByText("Thinking...")).not.toBeInTheDocument()
-    expect(screen.getByText(/^Thought/)).toBeInTheDocument()
+    expect(screen.queryByText("思考中…")).not.toBeInTheDocument()
+    expect(screen.getByText(/^思考/)).toBeInTheDocument()
   })
 
   it("says worked without a time when history has none", () => {

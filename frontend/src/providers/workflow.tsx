@@ -136,24 +136,24 @@ export function WorkflowProvider({
           queryKey: ["workflow-definitions", workspaceId, workflowId],
         })
         toast({
-          title: "Saved changes to workflow",
-          description: "New workflow version saved successfully.",
+          title: "已保存工作流更改",
+          description: "新工作流版本保存成功。",
         })
       } else {
         const errorCount = response.errors?.length ?? 1
         toast({
-          title: `Workflow validation failed with ${errorCount} ${errorCount === 1 ? "error" : "errors"}`,
-          description: "Please hover over the save button to view errors.",
+          title: `工作流校验失败，存在 ${errorCount} ${errorCount === 1 ? "个错误" : "个错误"}`,
+          description: "请悬停在保存按钮上查看错误。",
         })
       }
     },
     onError: (error: ApiError) => {
       console.warn("Failed to save workflow:", error)
       toast({
-        title: "Error saving workflow",
+        title: "保存工作流出错",
         description:
           (error.body as TracecatErrorMessage | undefined)?.message ||
-          "Could not save workflow. Please try again.",
+          "无法保存工作流，请重试。",
         variant: "destructive",
       })
     },
@@ -167,19 +167,19 @@ export function WorkflowProvider({
         requestBody: params,
       }),
     onSuccess: (response) => {
-      let title = "Workflow committed"
+      let title = "工作流已提交"
       if (response.status === "no_op") {
         if (response.pr_url && response.pr_reused) {
-          title = "No changes (PR reused)"
+          title = "无更改（复用 PR）"
         } else if (response.pr_url) {
-          title = "No changes (PR created)"
+          title = "无更改（已创建 PR）"
         } else {
-          title = "No changes to publish"
+          title = "没有可发布的更改"
         }
       } else if (response.pr_url && response.pr_reused) {
-        title = "Workflow committed (PR reused)"
+        title = "工作流已提交（复用 PR）"
       } else if (response.pr_url) {
-        title = "Workflow committed (PR created)"
+        title = "工作流已提交（已创建 PR）"
       }
 
       toast({
@@ -187,7 +187,7 @@ export function WorkflowProvider({
         description: response.message,
         action: response.pr_url ? (
           <ToastAction
-            altText="Open pull request"
+            altText="打开拉取请求"
             onClick={() =>
               window.open(
                 response.pr_url ?? "",
@@ -196,7 +196,7 @@ export function WorkflowProvider({
               )
             }
           >
-            View PR
+            查看拉取请求
           </ToastAction>
         ) : undefined,
       })
@@ -211,7 +211,7 @@ export function WorkflowProvider({
       if (getExportError(error)) {
         toast({
           variant: "destructive",
-          title: "Failed to publish workflow",
+          title: "发布工作流失败",
           description: (
             <ExportErrorMessage error={error} workspaceId={workspaceId} />
           ),
@@ -223,47 +223,38 @@ export function WorkflowProvider({
       switch (apiError.status) {
         case 400:
           toast({
-            title: "Failed to publish workflow",
-            description:
-              detail ||
-              "Invalid workflow configuration. Please check the logs for more details.",
+            title: "发布工作流失败",
+            description: detail || "工作流配置无效，请查看日志获取更多详情。",
           })
           break
         case 403:
           toast({
-            title: "Failed to publish workflow",
-            description:
-              detail || "You don't have permission to publish this workflow.",
+            title: "发布工作流失败",
+            description: detail || "你没有发布此工作流的权限。",
           })
           break
         case 404:
           toast({
-            title: "Workflow definition not found",
-            description:
-              detail || "Please save the workflow before publishing.",
+            title: "未找到工作流定义",
+            description: detail || "发布前请先保存工作流。",
           })
           break
         case 409:
           toast({
-            title: "Failed to publish workflow",
-            description:
-              detail ||
-              "There was a conflict publishing the workflow. Please try again.",
+            title: "发布工作流失败",
+            description: detail || "发布工作流时发生冲突，请重试。",
           })
           break
         case 422:
           toast({
-            title: "Failed to publish workflow",
-            description:
-              detail ||
-              "Workflow validation failed. Please check your configuration.",
+            title: "发布工作流失败",
+            description: detail || "工作流校验失败，请检查配置。",
           })
           break
         default:
           toast({
-            title: "Failed to publish workflow",
-            description:
-              detail || "Could not publish workflow. Please try again.",
+            title: "发布工作流失败",
+            description: detail || "无法发布工作流，请重试。",
             variant: "destructive",
           })
       }
@@ -297,18 +288,15 @@ export function WorkflowProvider({
       switch (error.status) {
         case 409:
           toast({
-            title: "Failed to update workflow",
-            description:
-              detail ??
-              "There was a conflict updating the workflow. Please try again.",
+            title: "更新工作流失败",
+            description: detail ?? "更新工作流时发生冲突，请重试。",
             variant: "destructive",
           })
           break
         default:
           toast({
-            title: "Failed to update workflow",
-            description:
-              detail ?? "Could not update workflow. Please check the logs.",
+            title: "更新工作流失败",
+            description: detail ?? "无法更新工作流，请查看日志。",
             variant: "destructive",
           })
       }
@@ -325,14 +313,14 @@ export function WorkflowProvider({
       } else {
         setValidationErrors(response.errors || null)
         setPublishError({
-          message: "Fix the workflow validation errors before publishing.",
+          message: "发布前请先修复工作流校验错误。",
           validationErrors: response.errors,
         })
       }
     } catch {
       // The commit mutation also shows the "Error saving workflow" toast.
       setPublishError({
-        message: "Could not publish this workflow. Please try again.",
+        message: "无法发布此工作流，请重试。",
       })
     }
   }

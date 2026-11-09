@@ -126,7 +126,7 @@ describe("ReasoningTrigger", () => {
         <ReasoningContent>{""}</ReasoningContent>
       </Reasoning>
     )
-    expect(screen.getByText("Thinking...")).toBeInTheDocument()
+    expect(screen.getByText("思考中…")).toBeInTheDocument()
     expect(screen.queryByRole("button")).not.toBeInTheDocument()
 
     rerender(
@@ -135,6 +135,6 @@ describe("ReasoningTrigger", () => {
         <ReasoningContent>{"Check the rule"}</ReasoningContent>
       </Reasoning>
     )
-    expect(screen.getByRole("button", { name: "Thinking..." })).toBeVisible()
+    expect(screen.getByRole("button", { name: "思考中…" })).toBeVisible()
   })
 })

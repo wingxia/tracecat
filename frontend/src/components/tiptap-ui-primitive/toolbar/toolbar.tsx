@@ -89,7 +89,7 @@ export const Toolbar = React.forwardRef<HTMLDivElement, ToolbarProps>(
       <div
         ref={composedRef}
         role="toolbar"
-        aria-label="toolbar"
+        aria-label={"工具栏"}
         data-variant={variant}
         className={cn("tiptap-toolbar", className)}
         {...props}

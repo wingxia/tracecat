@@ -23,15 +23,15 @@ export function BitbucketSettings() {
   const dataCenter = useBitbucketDataCenterTokenCredentialsStatus()
   const statuses = [cloud, dataCenter]
   const configured = statuses.some((s) => s.credentialsStatus?.exists)
-  let statusLabel = "Not connected"
+  let statusLabel = "未连接"
   if (statuses.some((s) => s.credentialsStatusIsLoading)) {
-    statusLabel = "Loading connections…"
+    statusLabel = "正在加载连接…"
   } else if (statuses.some((s) => s.credentialsStatusError)) {
-    statusLabel = "Unable to load all connections"
+    statusLabel = "无法加载全部连接"
   } else if (statuses.some((s) => s.credentialsStatus?.is_corrupted)) {
-    statusLabel = "A connection needs attention"
+    statusLabel = "有连接需要处理"
   } else if (configured) {
-    statusLabel = "Connected"
+    statusLabel = "已连接"
   }
 
   return (
@@ -50,17 +50,16 @@ export function BitbucketSettings() {
           onClick={() => setOpen(true)}
         >
           {configured || statuses.some((s) => s.credentialsStatusError)
-            ? "Manage"
-            : "Connect"}
+            ? "管理"
+            : "连接"}
         </Button>
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent size="sm" className="max-w-xl">
           <DialogHeader>
-            <DialogTitle>Bitbucket connections</DialogTitle>
+            <DialogTitle>Bitbucket 连接</DialogTitle>
             <DialogDescription>
-              Connect the Bitbucket service your repositories use. You can
-              configure both.
+              连接仓库使用的 Bitbucket 服务，两种服务可同时配置。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>

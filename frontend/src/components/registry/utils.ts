@@ -36,7 +36,7 @@ export function getRegistryOriginLabel(params: {
   }
 
   if (customOrigin && origin === customOrigin) {
-    return "Custom"
+    return "自定义"
   }
 
   return origin

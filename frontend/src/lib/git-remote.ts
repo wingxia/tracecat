@@ -128,8 +128,8 @@ function validateRawRemote(
     return {
       kind: "invalid",
       message: target.orgConfigured
-        ? `${raw.host} isn't set up for this organization. ${label} here is ${target.host}.`
-        : `${label} repositories here are on ${target.host}, not ${raw.host}.`,
+        ? `此组织尚未配置 ${raw.host}。这里的 ${label} 为 ${target.host}。`
+        : `此处的 ${label} 仓库位于 ${target.host}，而非 ${raw.host}。`,
     }
   }
   if (
@@ -139,8 +139,7 @@ function validateRawRemote(
   ) {
     return {
       kind: "invalid",
-      message:
-        "Remove the port. Bitbucket takes it from the organization's instance URL.",
+      message: "请移除端口，Bitbucket 会从组织的实例 URL 获取端口。",
     }
   }
   const { segments } = raw
@@ -166,7 +165,7 @@ function validateRawRemote(
 }
 
 function describeExpectedInput(target: GitRemoteTarget): string {
-  return `Paste the SSH clone URL, e.g. ${getSshCloneExample(target.provider, target.host)}.`
+  return `粘贴 SSH 克隆 URL，例如 ${getSshCloneExample(target.provider, target.host)}。`
 }
 
 /** Example SSH clone URL for a provider, on its host when known. */

@@ -82,7 +82,7 @@ export function OrgSettingsAppForm() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading App settings: ${appSettingsError?.message || "Unknown error"}`}
+        message={`加载应用设置出错：${appSettingsError?.message || "未知错误"}`}
       />
     )
   }
@@ -96,8 +96,8 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Enable registry validation</FormLabel>
-                <FormDescription>Enable registry validation.</FormDescription>
+                <FormLabel>启用注册表校验</FormLabel>
+                <FormDescription>启用注册表校验。</FormDescription>
               </div>
               <FormControl>
                 <Switch
@@ -115,10 +115,8 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Workflow executions query limit</FormLabel>
-                <FormDescription>
-                  Maximum number of executions that can be queried at once.
-                </FormDescription>
+                <FormLabel>工作流执行记录查询上限</FormLabel>
+                <FormDescription>单次最多可查询的执行记录数。</FormDescription>
               </div>
               <FormControl>
                 <Input
@@ -140,10 +138,9 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Enable workflow exports</FormLabel>
+                <FormLabel>启用工作流导出</FormLabel>
                 <FormDescription>
-                  Allow users to export workflows. When disabled, users will be
-                  unable to export workflows.
+                  允许用户导出工作流，禁用后用户无法导出。
                 </FormDescription>
               </div>
               <FormControl>
@@ -162,10 +159,9 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Create workspace on sign-up</FormLabel>
+                <FormLabel>注册时创建工作空间</FormLabel>
                 <FormDescription>
-                  Automatically create a workspace for new users when they sign
-                  up.
+                  新用户注册时自动创建工作空间。
                 </FormDescription>
               </div>
               <FormControl>
@@ -184,10 +180,9 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Enable action form mode</FormLabel>
+                <FormLabel>启用动作表单模式</FormLabel>
                 <FormDescription>
-                  Allow form mode for action inputs. When disabled, only YAML
-                  mode is available.
+                  允许通过表单输入动作参数，禁用后仅支持 YAML 模式。
                 </FormDescription>
               </div>
               <FormControl>
@@ -206,10 +201,9 @@ export function OrgSettingsAppForm() {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Compact run if conditions</FormLabel>
+                <FormLabel>紧凑显示运行条件</FormLabel>
                 <FormDescription>
-                  Show run if conditions on the workflow canvas as an icon.
-                  Hover or select an action to see the full condition.
+                  在工作流画布上以图标显示运行条件，悬停或选择动作以查看完整条件。
                 </FormDescription>
               </div>
               <FormControl>
@@ -223,7 +217,7 @@ export function OrgSettingsAppForm() {
         />
 
         <Button type="submit" disabled={updateAppSettingsIsPending}>
-          Update application settings
+          更新应用设置
         </Button>
       </form>
     </Form>

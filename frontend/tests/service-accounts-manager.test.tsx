@@ -325,30 +325,30 @@ describe("ServiceAccountsManager", () => {
 
     expect(screen.getByText("Alpha bot")).toBeInTheDocument()
     expect(screen.getByText("CI deploy access")).toBeInTheDocument()
-    expect(screen.getByText("Created by Alice Example")).toBeInTheDocument()
+    expect(screen.getByText("创建者：Alice Example")).toBeInTheDocument()
     expect(screen.getByText("Bravo bot")).toBeInTheDocument()
     expect(screen.getByText("Charlie bot")).toBeInTheDocument()
-    expect(screen.getAllByText("Active").length).toBeGreaterThan(1)
-    expect(screen.getAllByText("Disabled").length).toBeGreaterThan(1)
-    expect(screen.getAllByText("No active key").length).toBeGreaterThan(1)
+    expect(screen.getAllByText("已启用").length).toBeGreaterThan(1)
+    expect(screen.getAllByText("已禁用").length).toBeGreaterThan(1)
+    expect(screen.getAllByText("没有生效的密钥").length).toBeGreaterThan(1)
     expect(mockListApiKeys).not.toHaveBeenCalled()
 
-    fireEvent.click(screen.getByRole("button", { name: "Disabled" }))
+    fireEvent.click(screen.getByRole("button", { name: "已禁用" }))
 
     expect(screen.queryByText("Alpha bot")).not.toBeInTheDocument()
     expect(screen.getByText("Bravo bot")).toBeInTheDocument()
     expect(screen.queryByText("Charlie bot")).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole("button", { name: "All" }))
+    fireEvent.click(screen.getByRole("button", { name: "全部" }))
     fireEvent.click(screen.getByRole("button", { name: /Alpha bot/i }))
 
     await waitFor(() => {
       expect(mockListApiKeys).toHaveBeenCalledWith("sa-active")
     })
-    expect(screen.getByText("API keys")).toBeInTheDocument()
-    expect(screen.getByText("Scopes")).toBeInTheDocument()
+    expect(screen.getByText("API 密钥")).toBeInTheDocument()
+    expect(screen.getByText("权限范围")).toBeInTheDocument()
     expect(
-      await screen.findByRole("button", { name: "Revoke API key" })
+      await screen.findByRole("button", { name: "撤销 API 密钥" })
     ).toBeInTheDocument()
     expect(screen.getAllByText(/Alice Example/).length).toBeGreaterThan(1)
   })

@@ -384,7 +384,7 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     expect(
-      screen.getByRole("button", { name: "Link table" })
+      screen.getByRole("button", { name: "关联数据表" })
     ).toBeInTheDocument()
     expect(screen.queryByText("No linked table rows")).not.toBeInTheDocument()
     expect(screen.queryByTestId("rows-grid")).not.toBeInTheDocument()
@@ -396,7 +396,7 @@ describe("CaseLinkedRowsSection", () => {
 
     expect(container.querySelectorAll(".animate-pulse")).toHaveLength(3)
     expect(
-      screen.queryByRole("button", { name: "Link table" })
+      screen.queryByRole("button", { name: "关联数据表" })
     ).not.toBeInTheDocument()
   })
 
@@ -404,9 +404,9 @@ describe("CaseLinkedRowsSection", () => {
     setLinkedTables([], { error: new Error("nope") })
     renderSection()
 
-    expect(screen.getByText("Failed to load linked rows")).toBeInTheDocument()
+    expect(screen.getByText("加载关联行失败")).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Link table" })
+      screen.queryByRole("button", { name: "关联数据表" })
     ).not.toBeInTheDocument()
   })
 
@@ -414,12 +414,12 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     expect(screen.getByText("Alerts")).toBeInTheDocument()
-    expect(screen.getByText("2 rows")).toBeInTheDocument()
-    expect(screen.getByText("Table")).toBeInTheDocument()
-    expect(screen.getByText("1 row")).toBeInTheDocument()
+    expect(screen.getByText("2 行")).toBeInTheDocument()
+    expect(screen.getByText("数据表")).toBeInTheDocument()
+    expect(screen.getByText("1 行")).toBeInTheDocument()
     expect(screen.getAllByTestId("rows-grid")).toHaveLength(2)
     expect(
-      screen.getByRole("button", { name: "Link table" })
+      screen.getByRole("button", { name: "关联数据表" })
     ).toBeInTheDocument()
     expect(mockUseCaseRowsPagination).toHaveBeenCalledWith({
       caseId: "case-1",
@@ -437,7 +437,7 @@ describe("CaseLinkedRowsSection", () => {
     for (const call of mockUseCaseRowsPagination.mock.calls) {
       expect(call[0]).toMatchObject({ limit: 20 })
     }
-    expect(screen.queryByText(/rows per page/i)).not.toBeInTheDocument()
+    expect(screen.queryByText(/每页行数/i)).not.toBeInTheDocument()
     expect(screen.queryByText(/page 1 of/i)).not.toBeInTheDocument()
   })
 
@@ -445,12 +445,12 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     expect(
-      screen.queryByRole("button", { name: "Previous page" })
+      screen.queryByRole("button", { name: "上一页" })
     ).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Next page" })
+      screen.queryByRole("button", { name: "下一页" })
     ).not.toBeInTheDocument()
-    expect(screen.getByText("2 rows")).toBeInTheDocument()
+    expect(screen.getByText("2 行")).toBeInTheDocument()
   })
 
   it("shows the visible range and pages forward when there is more", async () => {
@@ -464,11 +464,11 @@ describe("CaseLinkedRowsSection", () => {
     })
     renderSection()
 
-    expect(screen.getByText("1–20 of 45")).toBeInTheDocument()
-    expect(screen.queryByText("2 rows")).not.toBeInTheDocument()
+    expect(screen.getByText("1–20 / 45")).toBeInTheDocument()
+    expect(screen.queryByText("2 行")).not.toBeInTheDocument()
 
-    const previous = screen.getByRole("button", { name: "Previous page" })
-    const next = screen.getByRole("button", { name: "Next page" })
+    const previous = screen.getByRole("button", { name: "上一页" })
+    const next = screen.getByRole("button", { name: "下一页" })
     expect(previous).toBeDisabled()
     expect(next).toBeEnabled()
 
@@ -495,7 +495,7 @@ describe("CaseLinkedRowsSection", () => {
     })
     renderSection()
 
-    expect(screen.getByText("1–20 of 37")).toBeInTheDocument()
+    expect(screen.getByText("1–20 / 37")).toBeInTheDocument()
     expect(screen.queryByText(/of 0/)).not.toBeInTheDocument()
   })
 
@@ -503,7 +503,7 @@ describe("CaseLinkedRowsSection", () => {
     setPage("table-1", { ...PENDING_NEXT_PAGE, isLoading: true })
     renderSection()
 
-    expect(screen.getByText("2 rows")).toBeInTheDocument()
+    expect(screen.getByText("2 行")).toBeInTheDocument()
     expect(screen.queryByText(/21–20/)).not.toBeInTheDocument()
     expect(screen.queryByText(/of 0/)).not.toBeInTheDocument()
   })
@@ -516,9 +516,9 @@ describe("CaseLinkedRowsSection", () => {
     })
     renderSection()
 
-    expect(screen.getByText("2 rows")).toBeInTheDocument()
+    expect(screen.getByText("2 行")).toBeInTheDocument()
     expect(screen.queryByText(/21–20/)).not.toBeInTheDocument()
-    expect(screen.getByText("Failed to load linked rows.")).toBeInTheDocument()
+    expect(screen.getByText("加载关联行失败。")).toBeInTheDocument()
   })
 
   it("disables both arrows while a page loads", () => {
@@ -532,8 +532,8 @@ describe("CaseLinkedRowsSection", () => {
     })
     renderSection()
 
-    expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "上一页" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "下一页" })).toBeDisabled()
   })
 
   it("keeps the previous rows up with paging blocked while the next ones load", () => {
@@ -549,8 +549,8 @@ describe("CaseLinkedRowsSection", () => {
     })
     renderSection()
 
-    expect(screen.getByRole("button", { name: "Previous page" })).toBeDisabled()
-    expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "上一页" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "下一页" })).toBeDisabled()
     expect(screen.getByTestId("row-r1")).toBeInTheDocument()
     expect(screen.getByTestId("row-r2")).toBeInTheDocument()
     expect(screen.getAllByTestId("rows-grid")[0]).toHaveAttribute(
@@ -558,7 +558,7 @@ describe("CaseLinkedRowsSection", () => {
       "true"
     )
     // The range would describe rows that are not on screen yet.
-    expect(screen.getByText("2 rows")).toBeInTheDocument()
+    expect(screen.getByText("2 行")).toBeInTheDocument()
     expect(screen.queryByText(/21–22/)).not.toBeInTheDocument()
   })
 
@@ -584,13 +584,13 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     expect(
-      screen.queryByRole("button", { name: "Unlink" })
+      screen.queryByRole("button", { name: "取消关联" })
     ).not.toBeInTheDocument()
 
     await user.click(screen.getByTestId("row-r1"))
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
+    expect(screen.getByText("1 已选择")).toBeInTheDocument()
 
-    await user.click(screen.getByRole("button", { name: "Unlink" }))
+    await user.click(screen.getByRole("button", { name: "取消关联" }))
 
     await waitFor(() => {
       expect(mockUnlinkCaseRows).toHaveBeenCalledWith({
@@ -600,13 +600,13 @@ describe("CaseLinkedRowsSection", () => {
     })
     await waitFor(() => {
       expect(
-        screen.queryByRole("button", { name: "Unlink" })
+        screen.queryByRole("button", { name: "取消关联" })
       ).not.toBeInTheDocument()
     })
     expect(screen.getByTestId("row-r1")).not.toBeChecked()
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Rows unlinked",
-      description: "Unlinked 1 row from this case.",
+      title: "已取消行关联",
+      description: "已从此事件取消关联 1 行。",
     })
   })
 
@@ -621,11 +621,11 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     await user.click(screen.getByTestId("row-r1"))
-    await user.click(screen.getByRole("button", { name: "Unlink" }))
+    await user.click(screen.getByRole("button", { name: "取消关联" }))
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
-        title: "Could not unlink rows",
+        title: "无法取消行关联",
         description: "Not allowed",
         variant: "destructive",
       })
@@ -649,19 +649,19 @@ describe("CaseLinkedRowsSection", () => {
 
     await user.click(screen.getByTestId("row-r1"))
     await user.click(screen.getByTestId("row-r2"))
-    await user.click(screen.getByRole("button", { name: "Unlink" }))
+    await user.click(screen.getByRole("button", { name: "取消关联" }))
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
-        title: "Some rows were not unlinked",
-        description: "Unlinked 1 row before a request failed. Not allowed",
+        title: "部分行未能取消关联",
+        description: "请求失败前已取消关联 1 行。Not allowed",
         variant: "destructive",
       })
     })
     // r1 committed, so only r2 is left for a retry.
     expect(screen.getByTestId("row-r1")).not.toBeChecked()
     expect(screen.getByTestId("row-r2")).toBeChecked()
-    expect(screen.getByText("1 selected")).toBeInTheDocument()
+    expect(screen.getByText("1 已选择")).toBeInTheDocument()
   })
 
   it("opens the dialog without a table from the link row", async () => {
@@ -671,7 +671,7 @@ describe("CaseLinkedRowsSection", () => {
     const dialog = screen.getByTestId("link-rows-dialog")
     expect(dialog).toHaveAttribute("data-open", "false")
 
-    await user.click(screen.getByRole("button", { name: "Link table" }))
+    await user.click(screen.getByRole("button", { name: "关联数据表" }))
 
     expect(dialog).toHaveAttribute("data-open", "true")
     expect(dialog).toHaveAttribute("data-initial-table-id", "")
@@ -681,7 +681,7 @@ describe("CaseLinkedRowsSection", () => {
     const user = userEvent.setup()
     renderSection()
 
-    const [firstLinkRows] = screen.getAllByRole("button", { name: "Link rows" })
+    const [firstLinkRows] = screen.getAllByRole("button", { name: "关联行" })
     await user.click(firstLinkRows)
 
     const dialog = screen.getByTestId("link-rows-dialog")
@@ -697,7 +697,7 @@ describe("CaseLinkedRowsSection", () => {
     const user = userEvent.setup()
     renderSection()
 
-    const [firstAddRow] = screen.getAllByRole("button", { name: "Insert row" })
+    const [firstAddRow] = screen.getAllByRole("button", { name: "插入行" })
     await user.click(firstAddRow)
 
     const insertDialog = screen.getByTestId("insert-row-dialog-table-1")
@@ -713,9 +713,7 @@ describe("CaseLinkedRowsSection", () => {
     renderSection()
 
     // table-2 has no name: its source table is gone, its links remain.
-    expect(screen.getAllByRole("button", { name: "Insert row" })).toHaveLength(
-      1
-    )
+    expect(screen.getAllByRole("button", { name: "插入行" })).toHaveLength(1)
     expect(
       screen.queryByTestId("insert-row-dialog-table-2")
     ).not.toBeInTheDocument()
@@ -724,8 +722,8 @@ describe("CaseLinkedRowsSection", () => {
   it("orders the header actions link, then add", () => {
     renderSection()
 
-    const [linkRows] = screen.getAllByRole("button", { name: "Link rows" })
-    const [addRow] = screen.getAllByRole("button", { name: "Insert row" })
+    const [linkRows] = screen.getAllByRole("button", { name: "关联行" })
+    const [addRow] = screen.getAllByRole("button", { name: "插入行" })
     expect(
       linkRows.compareDocumentPosition(addRow) &
         Node.DOCUMENT_POSITION_FOLLOWING
@@ -782,7 +780,7 @@ describe("CaseLinkedRowsSection", () => {
         "false"
       )
       expect(
-        screen.queryByRole("button", { name: "Edit r3" })
+        screen.queryByRole("button", { name: "编辑 r3" })
       ).not.toBeInTheDocument()
     } finally {
       LINKS_BY_TABLE["table-2"] = [makeLink("table-2", "r3")]
@@ -800,7 +798,7 @@ describe("CaseLinkedRowsSection", () => {
 
   describe("expanded table dialog", () => {
     async function expandFirstTable(user: ReturnType<typeof userEvent.setup>) {
-      const [expand] = screen.getAllByRole("button", { name: "Expand table" })
+      const [expand] = screen.getAllByRole("button", { name: "展开数据表" })
       await user.click(expand)
       // The link dialog is mocked to a marker, so this is the only dialog.
       return screen.findByRole("dialog")
@@ -810,9 +808,9 @@ describe("CaseLinkedRowsSection", () => {
       setPage("table-1", { hasNextPage: true, startItem: 1, endItem: 20 })
       renderSection()
 
-      const [addRow] = screen.getAllByRole("button", { name: "Insert row" })
-      const [expand] = screen.getAllByRole("button", { name: "Expand table" })
-      const previous = screen.getByRole("button", { name: "Previous page" })
+      const [addRow] = screen.getAllByRole("button", { name: "插入行" })
+      const [expand] = screen.getAllByRole("button", { name: "展开数据表" })
+      const previous = screen.getByRole("button", { name: "上一页" })
       expect(
         addRow.compareDocumentPosition(expand) &
           Node.DOCUMENT_POSITION_FOLLOWING
@@ -830,7 +828,7 @@ describe("CaseLinkedRowsSection", () => {
       const dialog = await expandFirstTable(user)
 
       expect(dialog).toHaveAccessibleName("Alerts")
-      expect(within(dialog).getByText("2 rows")).toBeInTheDocument()
+      expect(within(dialog).getByText("2 行")).toBeInTheDocument()
       const grid = within(dialog).getByTestId("rows-grid")
       expect(grid).toHaveAttribute("data-auto-height", "false")
       expect(grid).toHaveAttribute("data-content-sized", "true")
@@ -848,16 +846,16 @@ describe("CaseLinkedRowsSection", () => {
       const dialog = await expandFirstTable(user)
 
       expect(
-        within(dialog).getByRole("button", { name: "Link rows" })
+        within(dialog).getByRole("button", { name: "关联行" })
       ).toBeInTheDocument()
       expect(
-        within(dialog).getByRole("button", { name: "Insert row" })
+        within(dialog).getByRole("button", { name: "插入行" })
       ).toBeInTheDocument()
       expect(
-        within(dialog).queryByRole("button", { name: "Expand table" })
+        within(dialog).queryByRole("button", { name: "展开数据表" })
       ).not.toBeInTheDocument()
       expect(
-        within(dialog).queryByRole("button", { name: "Next page" })
+        within(dialog).queryByRole("button", { name: "下一页" })
       ).not.toBeInTheDocument()
       expect(
         within(dialog).getByRole("button", { name: "Set page size 50" })
@@ -888,14 +886,14 @@ describe("CaseLinkedRowsSection", () => {
       renderSection()
 
       await user.click(screen.getByTestId("row-r1"))
-      expect(screen.getByText("1 selected")).toBeInTheDocument()
+      expect(screen.getByText("1 已选择")).toBeInTheDocument()
 
       const dialog = await expandFirstTable(user)
       // Expanding drops the inline picks; the dialog starts with none.
-      expect(screen.queryByText("1 selected")).not.toBeInTheDocument()
+      expect(screen.queryByText("1 已选择")).not.toBeInTheDocument()
 
       await user.click(within(dialog).getByTestId("row-r2"))
-      await user.click(within(dialog).getByRole("button", { name: "Unlink" }))
+      await user.click(within(dialog).getByRole("button", { name: "取消关联" }))
 
       await waitFor(() => {
         expect(mockUnlinkCaseRows).toHaveBeenCalledWith({
@@ -926,9 +924,7 @@ describe("CaseLinkedRowsSection", () => {
       renderSection()
 
       const dialog = await expandFirstTable(user)
-      await user.click(
-        within(dialog).getByRole("button", { name: "Link rows" })
-      )
+      await user.click(within(dialog).getByRole("button", { name: "关联行" }))
 
       const linkDialog = screen.getByTestId("link-rows-dialog")
       expect(linkDialog).toHaveAttribute("data-open", "true")
@@ -958,10 +954,10 @@ describe("CaseLinkedRowsSection", () => {
       expect(grid).toHaveAttribute("data-editable", "false")
       expect(grid).toHaveAttribute("data-selectable", "false")
       expect(
-        within(dialog).queryByRole("button", { name: "Link rows" })
+        within(dialog).queryByRole("button", { name: "关联行" })
       ).not.toBeInTheDocument()
       expect(
-        within(dialog).queryByRole("button", { name: "Insert row" })
+        within(dialog).queryByRole("button", { name: "插入行" })
       ).not.toBeInTheDocument()
     })
   })
@@ -982,9 +978,7 @@ describe("CaseLinkedRowsSection", () => {
       expect(
         screen.queryByRole("button", { name: "Edit r1" })
       ).not.toBeInTheDocument()
-      expect(
-        screen.getAllByRole("button", { name: "Insert row" })
-      ).toHaveLength(1)
+      expect(screen.getAllByRole("button", { name: "插入行" })).toHaveLength(1)
     })
   })
 
@@ -1002,14 +996,12 @@ describe("CaseLinkedRowsSection", () => {
         { all: true }
       )
       expect(
-        screen.queryByRole("button", { name: "Insert row" })
+        screen.queryByRole("button", { name: "插入行" })
       ).not.toBeInTheDocument()
       expect(
         screen.queryByTestId("insert-row-dialog-table-1")
       ).not.toBeInTheDocument()
-      expect(screen.getAllByRole("button", { name: "Link rows" })).toHaveLength(
-        2
-      )
+      expect(screen.getAllByRole("button", { name: "关联行" })).toHaveLength(2)
       for (const grid of screen.getAllByTestId("rows-grid")) {
         expect(grid).toHaveAttribute("data-editable", "true")
       }
@@ -1042,21 +1034,21 @@ describe("CaseLinkedRowsSection", () => {
       }
 
       expect(screen.getByText("Alerts")).toBeInTheDocument()
-      expect(screen.getByText("2 rows")).toBeInTheDocument()
-      expect(screen.getByText("Table")).toBeInTheDocument()
-      expect(screen.getByText("1 row")).toBeInTheDocument()
+      expect(screen.getByText("2 行")).toBeInTheDocument()
+      expect(screen.getByText("数据表")).toBeInTheDocument()
+      expect(screen.getByText("1 行")).toBeInTheDocument()
 
       expect(
-        screen.queryByRole("button", { name: "Link table" })
+        screen.queryByRole("button", { name: "关联数据表" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Link rows" })
+        screen.queryByRole("button", { name: "关联行" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Insert row" })
+        screen.queryByRole("button", { name: "插入行" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Unlink" })
+        screen.queryByRole("button", { name: "取消关联" })
       ).not.toBeInTheDocument()
     })
 
@@ -1064,9 +1056,9 @@ describe("CaseLinkedRowsSection", () => {
       setLinkedTables([])
       renderSection()
 
-      expect(screen.getByText("No linked rows")).toBeInTheDocument()
+      expect(screen.getByText("暂无关联行")).toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Link table" })
+        screen.queryByRole("button", { name: "关联数据表" })
       ).not.toBeInTheDocument()
     })
   })
@@ -1087,17 +1079,19 @@ describe("CaseLinkedRowsSection", () => {
       }
 
       await user.click(screen.getByTestId("row-r1"))
-      expect(screen.getByText("1 selected")).toBeInTheDocument()
-      expect(screen.getByRole("button", { name: "Unlink" })).toBeInTheDocument()
+      expect(screen.getByText("1 已选择")).toBeInTheDocument()
+      expect(
+        screen.getByRole("button", { name: "取消关联" })
+      ).toBeInTheDocument()
 
       expect(
-        screen.queryByRole("button", { name: "Link table" })
+        screen.queryByRole("button", { name: "关联数据表" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Link rows" })
+        screen.queryByRole("button", { name: "关联行" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Insert row" })
+        screen.queryByRole("button", { name: "插入行" })
       ).not.toBeInTheDocument()
     })
 
@@ -1105,9 +1099,9 @@ describe("CaseLinkedRowsSection", () => {
       setLinkedTables([])
       renderSection()
 
-      expect(screen.getByText("No linked rows")).toBeInTheDocument()
+      expect(screen.getByText("暂无关联行")).toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Link table" })
+        screen.queryByRole("button", { name: "关联数据表" })
       ).not.toBeInTheDocument()
     })
   })
@@ -1127,16 +1121,14 @@ describe("CaseLinkedRowsSection", () => {
       })
       renderSection()
 
-      expect(screen.getByText("1–20 of 45")).toBeInTheDocument()
+      expect(screen.getByText("1–20 / 45")).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: "上一页" })).toBeInTheDocument()
+      expect(screen.getByRole("button", { name: "下一页" })).toBeEnabled()
       expect(
-        screen.getByRole("button", { name: "Previous page" })
-      ).toBeInTheDocument()
-      expect(screen.getByRole("button", { name: "Next page" })).toBeEnabled()
-      expect(
-        screen.queryByRole("button", { name: "Link rows" })
+        screen.queryByRole("button", { name: "关联行" })
       ).not.toBeInTheDocument()
       expect(
-        screen.queryByRole("button", { name: "Insert row" })
+        screen.queryByRole("button", { name: "插入行" })
       ).not.toBeInTheDocument()
       for (const grid of screen.getAllByTestId("rows-grid")) {
         expect(grid).toHaveAttribute("data-editable", "false")

@@ -153,22 +153,14 @@ function normalizeOptionalExpression(
 
 // These are YAML strings
 const actionFormSchema = z.object({
-  title: z
-    .string()
-    .max(100, "Title must be less than 100 characters")
-    .optional(),
-  description: z
-    .string()
-    .max(500, "Description must be less than 500 characters")
-    .optional(),
+  title: z.string().max(100, "标题必须少于 100 个字符").optional(),
+  description: z.string().max(500, "描述必须少于 500 个字符").optional(),
   // AI-TODO: Add validation for the inputs
   inputs: z.record(z.string(), z.unknown()),
   for_each: z
     .union([
-      z.string().max(1000, "For each must be less than 1000 characters"),
-      z.array(
-        z.string().max(1000, "For each must be less than 1000 characters")
-      ),
+      z.string().max(1000, "循环表达式必须少于 1000 个字符"),
+      z.array(z.string().max(1000, "循环表达式必须少于 1000 个字符")),
     ])
     .transform((val) => {
       if (Array.isArray(val)) {
@@ -184,7 +176,7 @@ const actionFormSchema = z.object({
     .optional(),
   run_if: z
     .string()
-    .max(1000, "Run if must be less than 1000 characters")
+    .max(1000, "运行条件必须少于 1000 个字符")
     .transform((val) => normalizeOptionalExpression(val))
     .optional(),
   // Retry policy fields
@@ -192,7 +184,7 @@ const actionFormSchema = z.object({
   timeout: z.number().int().safe().min(1).optional(),
   retry_until: z
     .string()
-    .max(1000, "Retry until must be less than 1000 characters")
+    .max(1000, "重试条件必须少于 1000 个字符")
     .transform((val) => normalizeOptionalExpression(val))
     .optional(),
   // Control flow options fields
@@ -200,12 +192,12 @@ const actionFormSchema = z.object({
   join_strategy: z.enum($JoinStrategy.enum).optional(),
   wait_until: z
     .string()
-    .max(1000, "Wait until must be less than 1000 characters")
+    .max(1000, "等待条件必须少于 1000 个字符")
     .transform((val) => normalizeOptionalExpression(val))
     .optional(),
   environment: z
     .string()
-    .max(1000, "Environment must be less than 1000 characters")
+    .max(1000, "环境名称必须少于 1000 个字符")
     .transform((val) => normalizeOptionalExpression(val))
     .optional(),
   tunnel: z.string().max(63).optional(),
@@ -713,7 +705,7 @@ function ActionPanelContent({
         setValidationResults([
           {
             status: "error",
-            msg: "Failed to save action",
+            msg: "保存动作失败",
             detail: [
               {
                 type: "general",
@@ -808,7 +800,7 @@ function ActionPanelContent({
     return (
       <div className="flex h-full items-center justify-center space-x-2 p-4">
         <ActionPanelNotFound
-          description={`Could not load action schema '${action?.type}'.`}
+          description={`无法加载动作结构“${action?.type}”。`}
         />
       </div>
     )
@@ -816,10 +808,7 @@ function ActionPanelContent({
   if (!action) {
     return (
       <div className="flex h-full items-center justify-center space-x-2 p-4">
-        <AlertNotification
-          level="error"
-          message={`Error orccurred loading action.`}
-        />
+        <AlertNotification level="error" message={"加载动作时出错。"} />
       </div>
     )
   }
@@ -868,7 +857,7 @@ function ActionPanelContent({
                               <Input
                                 variant="flat"
                                 className="h-auto w-full border-none p-0 text-xs font-medium leading-none focus-visible:border-input focus-visible:bg-background focus-visible:ring-0"
-                                placeholder="Name your action..."
+                                placeholder={"为动作命名…"}
                                 readOnly={isReadOnly}
                                 {...field}
                                 // Always provide a string value so this
@@ -892,7 +881,7 @@ function ActionPanelContent({
                                   <Input
                                     variant="flat"
                                     className="h-auto w-full max-w-xl overflow-x-auto whitespace-nowrap border-none bg-transparent p-0 text-xs leading-normal placeholder:italic placeholder:text-muted-foreground focus-visible:border-input focus-visible:bg-background focus-visible:ring-0"
-                                    placeholder="No description"
+                                    placeholder={"暂无描述"}
                                     readOnly={isReadOnly}
                                     {...field}
                                     // Keep description input controlled
@@ -906,7 +895,7 @@ function ActionPanelContent({
                                 sideOffset={10}
                                 className="max-w-xs break-words text-xs"
                               >
-                                {field.value || "No description"}
+                                {field.value || "暂无描述"}
                               </TooltipContent>
                             </Tooltip>
                           </FormItem>
@@ -921,7 +910,7 @@ function ActionPanelContent({
                             </div>
                           </TooltipTrigger>
                           <TooltipContent side="left" sideOffset={10}>
-                            Origin
+                            来源
                           </TooltipContent>
                         </Tooltip>
                         {registryAction.doc_url && (
@@ -949,7 +938,7 @@ function ActionPanelContent({
                               </div>
                             </TooltipTrigger>
                             <TooltipContent side="left" sideOffset={10}>
-                              Link to docs
+                              文档链接
                             </TooltipContent>
                           </Tooltip>
                         )}
@@ -969,28 +958,28 @@ function ActionPanelContent({
                     value="inputs"
                   >
                     <LayoutListIcon className="mr-2 size-4" />
-                    <span>Inputs</span>
+                    <span>输入</span>
                   </TabsTrigger>
                   <TabsTrigger
                     className="flex h-full min-w-24 items-center justify-center rounded-none py-0 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                     value="schema"
                   >
                     <ShapesIcon className="mr-2 size-4" />
-                    <span>Schema</span>
+                    <span>结构定义</span>
                   </TabsTrigger>
                   <TabsTrigger
                     className="flex h-full min-w-24 items-center justify-center rounded-none py-0 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                     value="control-flow"
                   >
                     <SplitIcon className="mr-2 size-4" />
-                    <span>Control flow</span>
+                    <span>控制流</span>
                   </TabsTrigger>
                   <TabsTrigger
                     className="flex h-full min-w-24 items-center justify-center rounded-none py-0 text-xs data-[state=active]:bg-transparent data-[state=active]:shadow-none"
                     value="history"
                   >
                     <HistoryIcon className="mr-2 size-4" />
-                    <span>History</span>
+                    <span>历史</span>
                   </TabsTrigger>
                   {registryAction.is_template && (
                     <TabsTrigger
@@ -998,7 +987,7 @@ function ActionPanelContent({
                       value="template-inputs"
                     >
                       <FileTextIcon className="mr-2 size-4" />
-                      <span>View template</span>
+                      <span>查看模板</span>
                     </TabsTrigger>
                   )}
                 </TabsList>
@@ -1020,7 +1009,7 @@ function ActionPanelContent({
                             <div className="flex items-center space-x-2">
                               <AlertTriangleIcon className="size-4 fill-rose-500 stroke-white" />
                               <span className="pointer-events-none text-xs text-rose-500">
-                                Hover to view errors.
+                                悬停以查看错误。
                               </span>
                             </div>
                           </ValidationErrorView>
@@ -1029,8 +1018,8 @@ function ActionPanelContent({
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-muted-foreground">
                             {inputMode === "form"
-                              ? "Define action inputs using form fields below."
-                              : "Define action inputs in YAML below."}
+                              ? "使用下方表单定义动作输入。"
+                              : "在下方使用 YAML 定义动作输入。"}
                           </span>
                           {formModeEnabled && (
                             <ToggleTabs
@@ -1041,11 +1030,11 @@ function ActionPanelContent({
                                     content: (
                                       <div className="flex items-center gap-1">
                                         <ListIcon className="size-3" />
-                                        <span className="text-xs">Form</span>
+                                        <span className="text-xs">表单</span>
                                       </div>
                                     ),
-                                    tooltip: "Use form fields",
-                                    ariaLabel: "Form mode",
+                                    tooltip: "使用表单字段",
+                                    ariaLabel: "表单模式",
                                   },
                                   {
                                     value: "yaml",
@@ -1055,8 +1044,8 @@ function ActionPanelContent({
                                         <span className="text-xs">YAML</span>
                                       </div>
                                     ),
-                                    tooltip: "Use YAML editor",
-                                    ariaLabel: "YAML mode",
+                                    tooltip: "使用 YAML 编辑器",
+                                    ariaLabel: "YAML 模式",
                                   },
                                 ] as ToggleTabOption<InputMode>[]
                               }
@@ -1071,7 +1060,7 @@ function ActionPanelContent({
                         {inputMode === "yaml" && (
                           /* YAML Mode - Preserve raw YAML */
                           <ControlledYamlField
-                            label="Inputs"
+                            label={"输入"}
                             fieldName="inputs"
                           />
                         )}
@@ -1092,7 +1081,7 @@ function ActionPanelContent({
                                       key={fieldName}
                                       label={label}
                                       fieldName={fullFieldName}
-                                      info="Please sync your base actions repository to get the latest field schema."
+                                      info="请同步基础动作仓库以获取最新字段结构。"
                                     />
                                   )
                                 }
@@ -1153,7 +1142,7 @@ function ActionPanelContent({
                                       className="w-full"
                                     >
                                       <Plus className="mr-2 size-4" />
-                                      Optional fields
+                                      可选字段
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent
@@ -1248,7 +1237,7 @@ function ActionPanelContent({
                                                     variant="outline"
                                                     className="h-5 px-1.5 text-[10px] uppercase text-muted-foreground"
                                                   >
-                                                    Deprecated
+                                                    已弃用
                                                   </Badge>
                                                 )}
                                               </div>
@@ -1287,7 +1276,7 @@ function ActionPanelContent({
                     <div className="mt-4 space-y-6 px-4">
                       {/* Action secrets */}
                       <div className="space-y-4">
-                        <h4 className="text-xs font-bold">Secrets</h4>
+                        <h4 className="text-xs font-bold">密钥</h4>
                         {registryAction.secrets &&
                         registryAction.secrets.length > 0 ? (
                           <RegistryActionSecrets
@@ -1295,15 +1284,15 @@ function ActionPanelContent({
                           />
                         ) : (
                           <span className="text-xs text-muted-foreground">
-                            No secrets required.
+                            无需密钥。
                           </span>
                         )}
                       </div>
                       {/* Action inputs schema */}
                       <div className="space-y-4">
-                        <h4 className="text-xs font-bold">Input schema</h4>
+                        <h4 className="text-xs font-bold">输入结构</h4>
                         <span className="text-xs text-muted-foreground">
-                          Hover over each row for details.
+                          悬停于各行以查看详情。
                         </span>
                         <JSONSchemaTable
                           schema={
@@ -1321,8 +1310,8 @@ function ActionPanelContent({
                       <div className="mt-4 space-y-8 px-4">
                         {/* Run if */}
                         <ControlFlowField
-                          label="Run if"
-                          description="Define a conditional expression that determines if the action executes."
+                          label={"运行条件"}
+                          description={"定义决定动作是否执行的条件表达式。"}
                           tooltip={<RunIfTooltip />}
                         >
                           <FormField
@@ -1344,8 +1333,8 @@ function ActionPanelContent({
 
                         {/* Loop */}
                         <ControlFlowField
-                          label="For each"
-                          description="Define one or more loop expressions for the action to iterate over."
+                          label={"遍历循环"}
+                          description={"定义供动作遍历的一个或多个循环表达式。"}
                           tooltip={<ForEachTooltip />}
                         >
                           <ForEachField />
@@ -1354,8 +1343,8 @@ function ActionPanelContent({
 
                         {/* Join strategy */}
                         <ControlFlowField
-                          label="Join strategy"
-                          description="Define how to handle results when the action runs in parallel."
+                          label={"汇合策略"}
+                          description={"定义动作并行运行时如何处理结果。"}
                           tooltip={<JoinStrategyTooltip />}
                         >
                           <FormField
@@ -1371,7 +1360,7 @@ function ActionPanelContent({
                                   >
                                     <SelectTrigger className="text-xs">
                                       <SelectValue
-                                        placeholder="Select strategy..."
+                                        placeholder={"选择策略…"}
                                         className="text-xs"
                                       />
                                     </SelectTrigger>
@@ -1396,8 +1385,10 @@ function ActionPanelContent({
 
                         {/* Environment */}
                         <ControlFlowField
-                          label="Environment"
-                          description="Override the environment for this action, otherwise the workflow's environment is used."
+                          label={"环境"}
+                          description={
+                            "为此动作覆盖环境，否则使用工作流的环境。"
+                          }
                         >
                           <FormField
                             name="environment"
@@ -1409,7 +1400,7 @@ function ActionPanelContent({
                                   <ExpressionInput
                                     value={field.value || ""}
                                     onChange={field.onChange}
-                                    placeholder="Type @ to begin an expression..."
+                                    placeholder={"输入 @ 开始编写表达式…"}
                                   />
                                 </FormControl>
                               </FormItem>
@@ -1418,8 +1409,10 @@ function ActionPanelContent({
                         </ControlFlowField>
 
                         <ControlFlowField
-                          label="Tunnel"
-                          description="Route this action's HTTP(S) traffic through a workspace tunnel, otherwise the workflow's default tunnel is used."
+                          label={"隧道"}
+                          description={
+                            "通过工作空间隧道路由此动作的 HTTP(S) 流量，否则使用工作流的默认隧道。"
+                          }
                         >
                           <FormField
                             name="tunnel"
@@ -1431,7 +1424,7 @@ function ActionPanelContent({
                                   <TunnelSelect
                                     value={field.value}
                                     onChange={field.onChange}
-                                    noneLabel="Workflow default"
+                                    noneLabel="工作流默认值"
                                   />
                                 </FormControl>
                               </FormItem>
@@ -1440,8 +1433,10 @@ function ActionPanelContent({
                         </ControlFlowField>
 
                         <ControlFlowField
-                          label="Mask output"
-                          description="Redact this action's result in workflow execution API responses while keeping downstream workflow data unchanged."
+                          label={"隐藏输出"}
+                          description={
+                            "在工作流执行 API 响应中脱敏此动作的结果，供下游工作流使用的数据保持不变。"
+                          }
                         >
                           <FormField
                             name="mask_output"
@@ -1457,7 +1452,7 @@ function ActionPanelContent({
                                     />
                                   </FormControl>
                                   <span className="text-xs text-muted-foreground">
-                                    {field.value ? "Enabled" : "Disabled"}
+                                    {field.value ? "已启用" : "已禁用"}
                                   </span>
                                 </div>
                               </FormItem>
@@ -1466,8 +1461,8 @@ function ActionPanelContent({
                         </ControlFlowField>
 
                         <ControlFlowField
-                          label="Start delay"
-                          description="Define a delay before the action starts."
+                          label={"启动延迟"}
+                          description={"定义动作开始前的延迟。"}
                           tooltip={<StartDelayTooltip />}
                         >
                           <FormField
@@ -1498,11 +1493,11 @@ function ActionPanelContent({
 
                         {/* Timeout */}
                         <ControlFlowField
-                          label="Timeout"
+                          label={"超时时间"}
                           description={
                             isAgentBackedAction
-                              ? "Define the maximum active runtime in seconds for the agent."
-                              : "Define the timeout in seconds for the action."
+                              ? "定义智能体的最长有效运行时间（秒）。"
+                              : "定义动作的超时时间（秒）。"
                           }
                           tooltip={
                             <TimeoutTooltip isAgent={isAgentBackedAction} />
@@ -1528,7 +1523,7 @@ function ActionPanelContent({
                                     min={1}
                                     placeholder={
                                       isAgentBackedAction
-                                        ? "Deployment default"
+                                        ? "部署默认值"
                                         : String(DEFAULT_ACTION_TIMEOUT_SECONDS)
                                     }
                                     className="text-xs"
@@ -1541,8 +1536,8 @@ function ActionPanelContent({
 
                         {/* Max attempts */}
                         <ControlFlowField
-                          label="Max attempts"
-                          description="Define the maximum number of retry attempts for the action."
+                          label={"最大尝试次数"}
+                          description={"定义动作的最大重试次数。"}
                           tooltip={<MaxAttemptsTooltip />}
                         >
                           <FormField
@@ -1573,8 +1568,8 @@ function ActionPanelContent({
 
                         {/* Retry until */}
                         <ControlFlowField
-                          label="Retry until"
-                          description="Define a conditional expression that determines when to stop retrying."
+                          label={"重试直到"}
+                          description={"定义决定何时停止重试的条件表达式。"}
                           tooltip={<RetryUntilTooltip />}
                         >
                           <FormField
@@ -1596,8 +1591,8 @@ function ActionPanelContent({
 
                         {/* Wait until */}
                         <ControlFlowField
-                          label="Wait until"
-                          description="Define a conditional expression that determines when the action can proceed."
+                          label={"等待直到"}
+                          description={"定义决定动作何时可以继续的条件表达式。"}
                           tooltip={<WaitUntilTooltip />}
                         >
                           <FormField
@@ -1632,13 +1627,13 @@ function ActionPanelContent({
                           <AccordionTrigger className="px-4 text-xs font-bold">
                             <div className="flex items-center">
                               <FileTextIcon className="mr-3 size-4" />
-                              <span>Template Definition</span>
+                              <span>模板定义</span>
                             </div>
                           </AccordionTrigger>
                           <AccordionContent className="space-y-4">
                             <div className="flex flex-col space-y-4 px-4">
                               <span className="text-xs text-muted-foreground">
-                                Template action definition in YAML format.
+                                YAML 格式的模板动作定义。
                               </span>
                               <YamlViewOnlyEditor
                                 value={stringifyYaml(
@@ -1711,26 +1706,26 @@ function SaveStateIcon({ saveState }: { saveState: SaveState }) {
             <path d="M29.5 11.5s5 5 4 5" />
             <path d="M9 3h6.2a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V15" />
           </svg>
-          <span className="text-xs text-muted-foreground">Unsaved</span>
+          <span className="text-xs text-muted-foreground">未保存</span>
           <SaveShortcut />
         </>
       )}
       {saveState === SaveState.SAVING && (
         <>
           <Loader2Icon className="size-3 animate-spin text-muted-foreground" />
-          <span className="text-xs text-muted-foreground">Saving</span>
+          <span className="text-xs text-muted-foreground">保存中</span>
         </>
       )}
       {saveState === SaveState.SAVED && (
         <>
           <CircleCheckIcon className="size-4 fill-emerald-500 stroke-white" />
-          <span className="text-xs text-emerald-600">Saved</span>
+          <span className="text-xs text-emerald-600">已保存</span>
         </>
       )}
       {saveState === SaveState.ERROR && (
         <>
           <AlertTriangleIcon className="size-4 fill-rose-500 stroke-white" />
-          <span className="text-xs text-rose-500">Error</span>
+          <span className="text-xs text-rose-500">错误</span>
         </>
       )}
     </div>
@@ -1764,10 +1759,10 @@ export interface ActionPanelEmptyProps
 }
 
 export function ActionPanelNotFound({
-  title = "This action could not be found",
-  description = "Please check the action type and try again.",
+  title = "无法找到此动作",
+  description = "请检查动作类型后重试。",
   action,
-  actionLabel = "Create item",
+  actionLabel = "创建条目",
   className,
   ...props
 }: ActionPanelEmptyProps) {
@@ -1822,20 +1817,18 @@ function RegistryActionSecrets({
       {/* Regular Secrets Table */}
       {customSecrets.length > 0 && (
         <div>
-          <span className="block mb-2">
-            This action requires the following secrets:
-          </span>
+          <span className="block mb-2">此动作需要以下密钥：</span>
           <Table>
             <TableHeader>
               <TableRow className="h-6 text-xs capitalize">
                 <TableHead className="min-w-28 whitespace-nowrap font-bold">
-                  Secret Name
+                  密钥名称
                 </TableHead>
                 <TableHead className="min-w-28 whitespace-nowrap font-bold">
-                  Required Keys
+                  必填键
                 </TableHead>
                 <TableHead className="min-w-28 whitespace-nowrap font-bold">
-                  Optional Keys
+                  可选键
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -1862,17 +1855,15 @@ function RegistryActionSecrets({
       {/* OAuth Secrets Table */}
       {oauthSecrets.length > 0 && (
         <div>
-          <span className="block mb-2">
-            This action requires the following OAuth integrations:
-          </span>
+          <span className="block mb-2">此动作需要以下 OAuth 集成：</span>
           <Table>
             <TableHeader>
               <TableRow className="h-6 text-xs capitalize">
                 <TableHead className="min-w-28 whitespace-nowrap font-bold">
-                  Provider ID
+                  提供商 ID
                 </TableHead>
                 <TableHead className="min-w-28 whitespace-nowrap font-bold">
-                  Grant Type
+                  授权类型
                 </TableHead>
               </TableRow>
             </TableHeader>

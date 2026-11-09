@@ -104,7 +104,7 @@ export function OrgRbacScopes() {
   if (error) {
     return (
       <div className="flex items-center justify-center py-12 text-sm text-destructive">
-        Failed to load scopes
+        加载权限范围失败
       </div>
     )
   }
@@ -125,7 +125,7 @@ export function OrgRbacScopes() {
                 <div className="relative">
                   <SearchIcon className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Search scopes..."
+                    placeholder={"搜索权限范围…"}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="h-9 w-[200px] pl-8"
@@ -138,12 +138,12 @@ export function OrgRbacScopes() {
                   }
                 >
                   <SelectTrigger className="h-9 w-[130px]">
-                    <SelectValue placeholder="Filter by source" />
+                    <SelectValue placeholder={"按来源筛选"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All sources</SelectItem>
-                    <SelectItem value="platform">Platform</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
+                    <SelectItem value="all">所有来源</SelectItem>
+                    <SelectItem value="platform">平台</SelectItem>
+                    <SelectItem value="custom">自定义</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -152,7 +152,7 @@ export function OrgRbacScopes() {
               <DialogTrigger asChild>
                 <Button size="sm">
                   <PlusIcon className="mr-2 size-4" />
-                  Create scope
+                  创建权限范围
                 </Button>
               </DialogTrigger>
             }
@@ -179,8 +179,8 @@ export function OrgRbacScopes() {
               <RbacListEmpty
                 message={
                   searchQuery || sourceFilter !== "all"
-                    ? "No scopes match your filters"
-                    : "No scopes found"
+                    ? "没有符合筛选条件的权限范围"
+                    : "未找到权限范围"
                 }
               />
             </RbacListContainer>
@@ -215,7 +215,7 @@ export function OrgRbacScopes() {
                           variant="ghost"
                           className="size-8 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
                         >
-                          <span className="sr-only">Open menu</span>
+                          <span className="sr-only">打开菜单</span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -225,14 +225,14 @@ export function OrgRbacScopes() {
                             navigator.clipboard.writeText(scope.name)
                           }
                         >
-                          Copy scope name
+                          复制权限范围名称
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() =>
                             navigator.clipboard.writeText(scope.id)
                           }
                         >
-                          Copy scope ID
+                          复制权限范围 ID
                         </DropdownMenuItem>
                         {scope.source === "custom" && (
                           <AlertDialogTrigger asChild>
@@ -240,7 +240,7 @@ export function OrgRbacScopes() {
                               className="text-rose-500 focus:text-rose-600"
                               onClick={() => setSelectedScope(scope)}
                             >
-                              Delete
+                              删除
                             </DropdownMenuItem>
                           </AlertDialogTrigger>
                         )}
@@ -249,22 +249,22 @@ export function OrgRbacScopes() {
                   }
                 >
                   <div className="space-y-3">
-                    <RbacDetailRow label="Name">
+                    <RbacDetailRow label={"名称"}>
                       <code className="rounded bg-muted/60 px-1.5 py-0.5 text-[11px] font-mono">
                         {scope.name}
                       </code>
                     </RbacDetailRow>
-                    <RbacDetailRow label="Resource">
+                    <RbacDetailRow label={"资源"}>
                       <span className="text-muted-foreground">
                         {scope.resource}
                       </span>
                     </RbacDetailRow>
-                    <RbacDetailRow label="Action">
+                    <RbacDetailRow label={"动作"}>
                       <span className="text-muted-foreground">
                         {scope.action}
                       </span>
                     </RbacDetailRow>
-                    <RbacDetailRow label="Source">
+                    <RbacDetailRow label={"来源"}>
                       <Badge
                         variant="secondary"
                         className={SCOPE_SOURCE_COLORS[scope.source]}
@@ -273,7 +273,7 @@ export function OrgRbacScopes() {
                       </Badge>
                     </RbacDetailRow>
                     {scope.description && (
-                      <RbacDetailRow label="Description">
+                      <RbacDetailRow label={"描述"}>
                         {scope.description}
                       </RbacDetailRow>
                     )}
@@ -286,23 +286,23 @@ export function OrgRbacScopes() {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete scope</AlertDialogTitle>
+            <AlertDialogTitle>删除权限范围</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the scope{" "}
+              确定要删除权限范围{" "}
               <code className="rounded bg-muted px-1 py-0.5">
                 {selectedScope?.name}
               </code>
-              ? This action cannot be undone.
+              吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDeleteScope}
               disabled={deleteScopeIsPending}
             >
-              {deleteScopeIsPending ? "Deleting..." : "Delete"}
+              {deleteScopeIsPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -340,36 +340,34 @@ function CreateScopeDialog({
   return (
     <DialogContent size="md">
       <DialogHeader>
-        <DialogTitle>Create custom scope</DialogTitle>
+        <DialogTitle>创建自定义权限范围</DialogTitle>
         <DialogDescription>
-          Create a custom scope for your organization. Scope names should follow
-          the format <code>resource:action</code> (e.g.,{" "}
-          <code>workflow:execute</code>).
+          为组织创建自定义权限范围。名称应采用以下格式：{" "}
+          <code>resource:action</code> （例如： <code>workflow:execute</code>).
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
         <DialogBody>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="scope-name">Scope name</Label>
+              <Label htmlFor="scope-name">权限范围名称</Label>
               <Input
                 id="scope-name"
-                placeholder="e.g., custom:my-scope:read"
+                placeholder={"例如：custom:my-scope:read"}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 pattern="^[a-z0-9:_.*-]+$"
                 required
               />
               <p className="text-xs text-muted-foreground">
-                Only lowercase letters, numbers, colons, underscores, dots,
-                asterisks, and hyphens allowed.
+                仅允许小写字母、数字、冒号、下划线、点、星号和连字符。
               </p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="scope-description">Description (optional)</Label>
+              <Label htmlFor="scope-description">描述（可选）</Label>
               <Textarea
                 id="scope-description"
-                placeholder="Describe what this scope grants access to"
+                placeholder={"描述此权限范围允许访问的内容"}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
@@ -379,7 +377,7 @@ function CreateScopeDialog({
         </DialogBody>
         <DialogFooter>
           <Button size="sm" type="submit" disabled={!name.trim() || isPending}>
-            {isPending ? "Creating..." : "Create scope"}
+            {isPending ? "创建中…" : "创建权限范围"}
           </Button>
         </DialogFooter>
       </form>

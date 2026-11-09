@@ -88,11 +88,11 @@ async function openMenu(name: string) {
 }
 
 async function openCreateDialog() {
-  const user = await openMenu("Add store")
+  const user = await openMenu("添加存储")
   await user.click(
     screen.getByRole("menuitem", { name: /AWS Secrets Manager/ })
   )
-  fireEvent.change(screen.getByLabelText("Name"), {
+  fireEvent.change(screen.getByLabelText("名称"), {
     target: { value: "prod" },
   })
   return user
@@ -112,14 +112,14 @@ describe("CreateSecretStoreDialog", () => {
     renderSettings()
     await openCreateDialog()
 
-    expect(screen.queryByLabelText("Role ARN")).not.toBeInTheDocument()
-    fireEvent.change(screen.getByLabelText("Region"), {
+    expect(screen.queryByLabelText("角色 ARN")).not.toBeInTheDocument()
+    fireEvent.change(screen.getByLabelText("区域"), {
       target: { value: "US East" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }))
+    fireEvent.click(screen.getByRole("button", { name: "继续" }))
 
     expect(
-      await screen.findByText(/Enter a region code such as us-east-1/)
+      await screen.findByText(/输入区域代码，如 us-east-1/)
     ).toBeInTheDocument()
     expect(mockCreateStore).not.toHaveBeenCalled()
   })
@@ -133,15 +133,15 @@ describe("CreateSecretStoreDialog", () => {
     mockUpdateStore.mockResolvedValue(undefined)
     renderSettings()
     await openCreateDialog()
-    fireEvent.change(screen.getByLabelText("Region"), {
+    fireEvent.change(screen.getByLabelText("区域"), {
       target: { value: "us-east-1" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }))
+    fireEvent.click(screen.getByRole("button", { name: "继续" }))
 
-    expect(await screen.findByLabelText("Trust policy")).toHaveTextContent(
+    expect(await screen.findByLabelText("信任策略")).toHaveTextContent(
       "tracecat-test-external-id"
     )
-    expect(screen.getByRole("dialog")).toHaveTextContent("Connect the AWS role")
+    expect(screen.getByRole("dialog")).toHaveTextContent("连接 AWS 角色")
     expect(mockCreateStore).toHaveBeenCalledWith({
       name: "prod",
       config: { provider: "aws_secrets_manager", region: "us-east-1" },
@@ -149,19 +149,19 @@ describe("CreateSecretStoreDialog", () => {
       all_workspaces: false,
     })
 
-    fireEvent.change(screen.getByLabelText("Role ARN"), {
+    fireEvent.change(screen.getByLabelText("角色 ARN"), {
       target: { value: "arn:aws:iam::{Account}:role/{RoleNameWithPath}" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Save and enable" }))
+    fireEvent.click(screen.getByRole("button", { name: "保存并启用" }))
     expect(
-      await screen.findByText(/Replace the placeholders such as \{Account\}/)
+      await screen.findByText(/请将 \{Account\} 等占位符替换为实际值/)
     ).toBeInTheDocument()
     expect(mockUpdateStore).not.toHaveBeenCalled()
 
-    fireEvent.change(screen.getByLabelText("Role ARN"), {
+    fireEvent.change(screen.getByLabelText("角色 ARN"), {
       target: { value: ROLE_ARN },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Save and enable" }))
+    fireEvent.click(screen.getByRole("button", { name: "保存并启用" }))
     await waitFor(() =>
       expect(mockUpdateStore).toHaveBeenCalledWith({
         storeId: "store-1",
@@ -179,17 +179,17 @@ describe("CreateSecretStoreDialog", () => {
     })
     renderSettings()
     await openCreateDialog()
-    fireEvent.change(screen.getByLabelText("Region"), {
+    fireEvent.change(screen.getByLabelText("区域"), {
       target: { value: "us-east-1" },
     })
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }))
+    fireEvent.click(screen.getByRole("button", { name: "继续" }))
 
     expect(
-      await screen.findByText(/permission to update secret stores/)
+      await screen.findByText(/需要更新密钥存储的权限/)
     ).toBeInTheDocument()
-    expect(screen.queryByLabelText("Role ARN")).not.toBeInTheDocument()
+    expect(screen.queryByLabelText("角色 ARN")).not.toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Save and enable" })
+      screen.queryByRole("button", { name: "保存并启用" })
     ).not.toBeInTheDocument()
   })
 })
@@ -202,12 +202,12 @@ describe("Store setup dialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "prod" }))
 
     const dialog = screen.getByRole("dialog")
-    expect(within(dialog).queryByLabelText("Role ARN")).not.toBeInTheDocument()
+    expect(within(dialog).queryByLabelText("角色 ARN")).not.toBeInTheDocument()
     expect(
-      within(dialog).queryByText(/permission to update secret stores/)
+      within(dialog).queryByText(/需要更新密钥存储的权限/)
     ).not.toBeInTheDocument()
     expect(
-      within(dialog).queryByRole("button", { name: "Save and enable" })
+      within(dialog).queryByRole("button", { name: "保存并启用" })
     ).not.toBeInTheDocument()
   })
 })
@@ -218,23 +218,23 @@ describe("Store list", () => {
     renderSettings()
 
     expect(
-      screen.getByRole("region", { name: "AWS Secrets Manager stores" })
-    ).toHaveTextContent("2 stores")
+      screen.getByRole("region", { name: "AWS Secrets Manager 个存储" })
+    ).toHaveTextContent("2 个存储")
   })
 
   it("opens the setup flow when a store in setup is clicked", () => {
     mockStores = [draftStore()]
     renderSettings()
 
-    expect(screen.getByText("Setup incomplete")).toBeInTheDocument()
+    expect(screen.getByText("设置未完成")).toBeInTheDocument()
     expect(
-      screen.queryByRole("button", { name: "Finish setup" })
+      screen.queryByRole("button", { name: "完成设置" })
     ).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole("button", { name: "prod" }))
 
     const dialog = screen.getByRole("dialog")
-    expect(within(dialog).getByLabelText("Role ARN")).toBeInTheDocument()
-    expect(within(dialog).getByLabelText("Trust policy")).toHaveTextContent(
+    expect(within(dialog).getByLabelText("角色 ARN")).toBeInTheDocument()
+    expect(within(dialog).getByLabelText("信任策略")).toHaveTextContent(
       "tracecat-test-external-id"
     )
   })
@@ -245,17 +245,17 @@ describe("Store list", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    expect(screen.getByLabelText("Trust policy")).toHaveTextContent(
+    expect(screen.getByLabelText("信任策略")).toHaveTextContent(
       "tracecat-test-external-id"
     )
-    await user.click(screen.getByRole("tab", { name: "Permissions policy" }))
-    expect(screen.getByLabelText("Permissions policy")).toHaveTextContent(
+    await user.click(screen.getByRole("tab", { name: "权限策略" }))
+    expect(screen.getByLabelText("权限策略")).toHaveTextContent(
       "secretsmanager:GetSecretValue"
     )
-    expect(screen.getByLabelText("Trust policy")).toBeEmptyDOMElement()
+    expect(screen.getByLabelText("信任策略")).toBeEmptyDOMElement()
     expect(
-      screen.getByRole("button", { name: "Copy permissions policy" })
-    ).toHaveTextContent("Copy")
+      screen.getByRole("button", { name: "复制 权限策略" })
+    ).toHaveTextContent("复制")
   })
 
   it("confirms when a policy is copied", async () => {
@@ -264,18 +264,18 @@ describe("Store list", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    await user.click(screen.getByRole("button", { name: "Copy trust policy" }))
+    await user.click(screen.getByRole("button", { name: "复制 信任策略" }))
     expect(
-      screen.getByRole("button", { name: "Copy trust policy" })
-    ).toHaveTextContent("Copied")
+      screen.getByRole("button", { name: "复制 信任策略" })
+    ).toHaveTextContent("已复制")
     expect(await navigator.clipboard.readText()).toContain(
       "tracecat-test-external-id"
     )
 
-    await user.click(screen.getByRole("tab", { name: "Permissions policy" }))
+    await user.click(screen.getByRole("tab", { name: "权限策略" }))
     expect(
-      screen.getByRole("button", { name: "Copy permissions policy" })
-    ).toHaveTextContent("Copy")
+      screen.getByRole("button", { name: "复制 权限策略" })
+    ).toHaveTextContent("复制")
   })
 
   it("ignores a copy that finishes after switching policy tabs", async () => {
@@ -291,31 +291,31 @@ describe("Store list", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    await user.click(screen.getByRole("button", { name: "Copy trust policy" }))
-    await user.click(screen.getByRole("tab", { name: "Permissions policy" }))
+    await user.click(screen.getByRole("button", { name: "复制 信任策略" }))
+    await user.click(screen.getByRole("tab", { name: "权限策略" }))
     await act(async () => finishCopy())
 
     expect(
-      screen.getByRole("button", { name: "Copy permissions policy" })
-    ).toHaveTextContent("Copy")
+      screen.getByRole("button", { name: "复制 权限策略" })
+    ).toHaveTextContent("复制")
     expect(
-      screen.getByRole("button", { name: "Copy permissions policy" })
-    ).not.toHaveTextContent("Copied")
+      screen.getByRole("button", { name: "复制 权限策略" })
+    ).not.toHaveTextContent("已复制")
   })
 
   it("offers finish setup and edit, but not enable, while setup is incomplete", async () => {
     mockStores = [draftStore()]
     renderSettings()
 
-    await openMenu("Actions for prod")
+    await openMenu("prod 的操作")
     expect(
-      screen.getByRole("menuitem", { name: "Finish setup" })
+      screen.getByRole("menuitem", { name: "完成设置" })
     ).toBeInTheDocument()
     expect(
-      screen.getByRole("menuitem", { name: "Edit store" })
+      screen.getByRole("menuitem", { name: "编辑存储" })
     ).toBeInTheDocument()
     expect(
-      screen.queryByRole("menuitem", { name: /Enable store|Disable store/ })
+      screen.queryByRole("menuitem", { name: /启用 store\|禁用存储/ })
     ).not.toBeInTheDocument()
   })
 
@@ -327,15 +327,15 @@ describe("Store list", () => {
       }
     )
     renderSettings()
-    expect(screen.getByText("Enabled")).toBeInTheDocument()
+    expect(screen.getByText("已启用")).toBeInTheDocument()
 
-    const user = await openMenu("Actions for prod")
-    await user.click(screen.getByRole("menuitem", { name: "Disable store" }))
+    const user = await openMenu("prod 的操作")
+    await user.click(screen.getByRole("menuitem", { name: "禁用存储" }))
     expect(
-      screen.getByText(/2 secrets stop resolving in every workflow/)
+      screen.getByText(/所有工作流和智能体中的 2 个密钥 将无法解析/)
     ).toBeInTheDocument()
     expect(mockUpdateStore).not.toHaveBeenCalled()
-    await user.click(screen.getByRole("button", { name: "Disable" }))
+    await user.click(screen.getByRole("button", { name: "禁用" }))
 
     expect(mockUpdateStore).toHaveBeenCalledWith({
       storeId: "store-1",
@@ -365,20 +365,17 @@ describe("Used by", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    expect(screen.getByText("10 secrets in 4 workspaces")).toBeInTheDocument()
-    expect(screen.getByRole("link", { name: "4 secrets" })).toHaveAttribute(
+    expect(screen.getByText("10 个密钥 位于 4 个工作空间")).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "4 个密钥" })).toHaveAttribute(
       "href",
       "/workspaces/alpha/credentials"
     )
     expect(screen.queryByText("Delta")).not.toBeInTheDocument()
 
     await user.click(
-      screen.getByRole("button", { name: "View all 4 workspaces" })
+      screen.getByRole("button", { name: "查看全部 4 个工作空间" })
     )
-    await user.type(
-      screen.getByLabelText("Search workspaces using this store"),
-      "del"
-    )
+    await user.type(screen.getByLabelText("搜索使用此存储的工作空间"), "del")
     expect(screen.getByRole("link", { name: /Delta/ })).toHaveAttribute(
       "href",
       "/workspaces/delta/credentials"
@@ -401,14 +398,14 @@ describe("Used by", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    expect(screen.getByRole("link", { name: "3 secrets" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "3 个密钥" })).toHaveAttribute(
       "href",
       "/workspaces/alpha/credentials"
     )
-    expect(screen.getByText("Unknown workspace")).toBeInTheDocument()
-    expect(screen.getByText("2 secrets")).toBeInTheDocument()
+    expect(screen.getByText("未知工作空间")).toBeInTheDocument()
+    expect(screen.getByText("2 个密钥")).toBeInTheDocument()
     expect(
-      screen.queryByRole("link", { name: "2 secrets" })
+      screen.queryByRole("link", { name: "2 个密钥" })
     ).not.toBeInTheDocument()
   })
 
@@ -425,7 +422,7 @@ describe("Used by", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    expect(screen.getByRole("link", { name: "3 secrets" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "3 个密钥" })).toHaveAttribute(
       "href",
       "/workspaces/alpha"
     )
@@ -437,7 +434,7 @@ describe("Used by", () => {
     renderSettings()
     await user.click(screen.getByRole("button", { name: "prod" }))
 
-    expect(screen.getByText("No secrets yet")).toBeInTheDocument()
+    expect(screen.getByText("暂无密钥")).toBeInTheDocument()
   })
 })
 
@@ -452,15 +449,15 @@ describe("Workspace picker", () => {
     renderSettings()
 
     await user.click(
-      screen.getByRole("button", { name: "Workspaces: Select workspaces" })
+      screen.getByRole("button", { name: "工作空间：选择工作空间" })
     )
-    await user.type(screen.getByLabelText("Search workspaces"), "incid")
+    await user.type(screen.getByLabelText("搜索工作空间"), "incid")
 
     expect(screen.getByText("Incident Response")).toBeInTheDocument()
     expect(screen.queryByText("Detection Engineering")).not.toBeInTheDocument()
 
-    await user.clear(screen.getByLabelText("Search workspaces"))
-    await user.type(screen.getByLabelText("Search workspaces"), "zzz")
-    expect(screen.getByText("No workspaces match.")).toBeInTheDocument()
+    await user.clear(screen.getByLabelText("搜索工作空间"))
+    await user.type(screen.getByLabelText("搜索工作空间"), "zzz")
+    expect(screen.getByText("没有匹配的工作空间。")).toBeInTheDocument()
   })
 })

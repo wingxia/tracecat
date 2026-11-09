@@ -35,10 +35,7 @@ export default function WorkspaceGitSyncPage() {
   if (workspaceError || !workspace) {
     return (
       <div className="container py-8">
-        <AlertNotification
-          level="error"
-          message="Error loading workspace info."
-        />
+        <AlertNotification level="error" message={"加载工作空间信息出错。"} />
       </div>
     )
   }
@@ -50,15 +47,15 @@ export default function WorkspaceGitSyncPage() {
         <div className="flex flex-1 items-center justify-center">
           <EntitlementRequiredEmptyState
             icon={<AlertTriangleIcon className="size-6" />}
-            title="Unable to check plan access"
-            description="Reload the page to try again."
+            title={"无法检查套餐权限"}
+            description={"请重新加载页面后重试。"}
           >
             <Button
               variant="outline"
               size="sm"
               onClick={() => window.location.reload()}
             >
-              Reload
+              重新加载
             </Button>
           </EntitlementRequiredEmptyState>
         </div>
@@ -71,8 +68,8 @@ export default function WorkspaceGitSyncPage() {
         <GitSyncHeader workspaceName={workspace.name} />
         <div className="flex flex-1 items-center justify-center">
           <EntitlementRequiredEmptyState
-            title="Upgrade required"
-            description="Git sync is unavailable on your current plan."
+            title={"需要升级"}
+            description={"当前套餐不支持 Git 同步。"}
           >
             <Button
               variant="link"
@@ -85,7 +82,7 @@ export default function WorkspaceGitSyncPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Learn more <ArrowUpRight className="size-4" />
+                了解更多 <ArrowUpRight className="size-4" />
               </a>
             </Button>
           </EntitlementRequiredEmptyState>
@@ -98,7 +95,7 @@ export default function WorkspaceGitSyncPage() {
       <div className="flex h-full flex-col">
         <GitSyncHeader workspaceName={workspace.name} />
         <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
-          You don&apos;t have permission to sync this workspace.
+          你没有同步此工作空间的权限。
         </div>
       </div>
     )

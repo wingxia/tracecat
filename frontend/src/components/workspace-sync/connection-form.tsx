@@ -29,7 +29,7 @@ export const syncSettingsSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["git_repo_url"],
-        message: "Use a Bitbucket Cloud repository on bitbucket.org.",
+        message: "请使用 bitbucket.org 上的 Bitbucket Cloud 仓库。",
       })
     }
   })

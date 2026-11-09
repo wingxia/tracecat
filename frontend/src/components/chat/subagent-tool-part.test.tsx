@@ -160,7 +160,7 @@ describe("subagent tool part", () => {
       )
 
       expect(screen.getByTestId("tool-state")).toHaveTextContent("output-error")
-      expect(screen.getByText("Subagent failed")).toBeInTheDocument()
+      expect(screen.getByText("子智能体运行失败")).toBeInTheDocument()
     }
   )
 
@@ -303,7 +303,7 @@ describe("subagent tool part", () => {
     expect(screen.getByTestId("tool-state")).toHaveTextContent(
       "output-interrupted"
     )
-    expect(screen.getByText("Stopped before completion")).toBeInTheDocument()
+    expect(screen.getByText("未完成即停止")).toBeInTheDocument()
     expect(screen.queryByText(/Subagent cancelled/)).not.toBeInTheDocument()
     // The child's transcript stays available as the detail.
     expect(mockUseGetChatVercel).toHaveBeenLastCalledWith(
@@ -366,7 +366,7 @@ describe("subagent tool part", () => {
       )
     )
 
-    expect(await screen.findByText("Interrupted")).toBeInTheDocument()
+    expect(await screen.findByText("已中断")).toBeInTheDocument()
     const states = screen
       .getAllByTestId("tool-state")
       .map((element) => element.textContent)
@@ -437,19 +437,19 @@ describe("subagent tool part", () => {
       name: "a history request failure",
       chat: undefined,
       chatError: new Error("History request failed"),
-      placeholder: "Could not load transcript",
+      placeholder: "无法加载对话记录",
     },
     {
       name: "a saved history without replies",
-      chat: { id: CHILD_ID, messages: [], last_error: "Subagent failed" },
+      chat: { id: CHILD_ID, messages: [], last_error: "子智能体运行失败" },
       chatError: null,
-      placeholder: "No transcript available",
+      placeholder: "暂无对话记录",
     },
     {
       name: "a history not saved yet",
       chat: { id: CHILD_ID, messages: [] },
       chatError: null,
-      placeholder: "Loading transcript...",
+      placeholder: "正在加载对话记录…",
     },
   ])("shows $placeholder for $name", ({ chat, chatError, placeholder }) => {
     mockUseGetChatVercel.mockReturnValue({
@@ -498,25 +498,15 @@ describe("subagent tool part", () => {
         )
       )
       act(() => jest.advanceTimersByTime(60_000))
-      expect(
-        screen.getByText("Transcript recovery paused.")
-      ).toBeInTheDocument()
-      expect(
-        screen.queryByText("Waiting for the agent to start...")
-      ).not.toBeInTheDocument()
+      expect(screen.getByText("对话记录恢复已暂停。")).toBeInTheDocument()
+      expect(screen.queryByText("等待智能体启动…")).not.toBeInTheDocument()
       expect(mockUseGetChatVercel).toHaveBeenLastCalledWith(
         expect.objectContaining({ chatId: CHILD_ID, enabled: false })
       )
 
-      fireEvent.click(
-        screen.getByRole("button", { name: "Retry transcript loading" })
-      )
-      expect(
-        screen.queryByText("Transcript recovery paused.")
-      ).not.toBeInTheDocument()
-      expect(
-        screen.getByText("Waiting for the agent to start...")
-      ).toBeInTheDocument()
+      fireEvent.click(screen.getByRole("button", { name: "重新加载对话记录" }))
+      expect(screen.queryByText("对话记录恢复已暂停。")).not.toBeInTheDocument()
+      expect(screen.getByText("等待智能体启动…")).toBeInTheDocument()
       expect(mockUseGetChatVercel).toHaveBeenLastCalledWith(
         expect.objectContaining({ chatId: CHILD_ID, enabled: true })
       )

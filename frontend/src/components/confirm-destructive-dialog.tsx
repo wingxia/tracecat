@@ -88,7 +88,7 @@ export function ConfirmDestructiveDialog({
   confirmPrompt,
   title,
   description,
-  confirmLabel = "Delete",
+  confirmLabel = "删除",
   finalStep,
   isPending = false,
   onConfirm,
@@ -137,14 +137,14 @@ export function ConfirmDestructiveDialog({
   let prompt: ReactNode = confirmPrompt
   if (prompt === undefined) {
     prompt = identifier ? (
-      `Type the ${lowerFirst(identifier.label)} to confirm`
+      `输入${lowerFirst(identifier.label)}以确认`
     ) : (
       <>
-        Type{" "}
+        输入{" "}
         <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs font-medium">
           {confirmPhrase}
         </code>{" "}
-        to confirm
+        以确认
       </>
     )
   }
@@ -183,8 +183,8 @@ export function ConfirmDestructiveDialog({
                 </div>
                 <CopyButton
                   value={identifier.value}
-                  toastMessage={`Copied ${lowerFirst(identifier.label)} to clipboard`}
-                  tooltipMessage={`Copy ${lowerFirst(identifier.label)}`}
+                  toastMessage={`已将${lowerFirst(identifier.label)}复制到剪贴板`}
+                  tooltipMessage={`复制${lowerFirst(identifier.label)}`}
                   className="size-7 shrink-0"
                   iconClassName="size-3.5"
                 />
@@ -214,7 +214,7 @@ export function ConfirmDestructiveDialog({
         )}
         <AlertDialogFooter>
           <AlertDialogCancel ref={cancelRef} disabled={isPending}>
-            Cancel
+            取消
           </AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"

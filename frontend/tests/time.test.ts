@@ -23,7 +23,7 @@ describe("time helpers", () => {
   })
 
   it("renders fractional-second durations without microseconds", () => {
-    expect(durationToHumanReadable("PT1M30.4S")).toBe("1 minute, 30 seconds")
+    expect(durationToHumanReadable("PT1M30.4S")).toBe("1 分钟，30 秒")
   })
 })
 
@@ -123,17 +123,17 @@ describe("formatDurationCompact", () => {
 describe("formatDurationLong", () => {
   it("renders every non-zero unit, pluralised", () => {
     expect(formatDurationLong({ days: 1, hours: 5, minutes: 15 })).toBe(
-      "1 day, 5 hours, 15 minutes"
+      "1 天，5 小时，15 分钟"
     )
-    expect(formatDurationLong({ seconds: 1 })).toBe("1 second")
+    expect(formatDurationLong({ seconds: 1 })).toBe("1 秒")
   })
 
   it("renders 0 seconds for an empty duration", () => {
-    expect(formatDurationLong({})).toBe("0 seconds")
+    expect(formatDurationLong({})).toBe("0 秒")
   })
 
   it("keeps weeks, which schedule intervals rely on", () => {
-    expect(formatDurationLong({ weeks: 2 })).toBe("2 weeks")
+    expect(formatDurationLong({ weeks: 2 })).toBe("2 周")
   })
 })
 

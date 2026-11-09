@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Agents",
+  title: "智能体",
 }
 
 export default function AgentsLayout({

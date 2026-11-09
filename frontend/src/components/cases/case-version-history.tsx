@@ -29,9 +29,9 @@ const CASE_VERSION_FILTERS: ReadonlyArray<{
   value: CaseVersionFilter
   label: string
 }> = [
-  { value: "all", label: "All" },
-  { value: "summary", label: "Title" },
-  { value: "description", label: "Description" },
+  { value: "all", label: "全部" },
+  { value: "summary", label: "标题" },
+  { value: "description", label: "描述" },
 ]
 
 /** Props for the case-specific version-history adapter. */
@@ -42,8 +42,8 @@ export interface CaseVersionHistoryProps {
   caseLabel: string
 }
 
-function fieldLabel(field: CaseVersionField): "Title" | "Description" {
-  return field === "summary" ? "Title" : "Description"
+function fieldLabel(field: CaseVersionField): "标题" | "描述" {
+  return field === "summary" ? "标题" : "描述"
 }
 
 function versionLabel(
@@ -53,8 +53,8 @@ function versionLabel(
 }
 
 function versionDescription(version: CaseVersionReadMinimal): string {
-  const actor = version.actor ? getDisplayName(version.actor) : "System"
-  return `${actor} · ${new Date(version.created_at).toLocaleString()}`
+  const actor = version.actor ? getDisplayName(version.actor) : "跟随系统"
+  return `${actor} · ${new Date(version.created_at).toLocaleString("zh-CN")}`
 }
 
 function loadMoreLabel({
@@ -65,12 +65,12 @@ function loadMoreLabel({
   hasError: boolean
 }): string {
   if (isFetching) {
-    return "Loading more…"
+    return "正在加载更多…"
   }
   if (hasError) {
-    return "Couldn't load more. Retry"
+    return "无法加载更多，重试"
   }
-  return "Load more"
+  return "加载更多"
 }
 
 function CaseVersionDiffContent({
@@ -89,7 +89,7 @@ function CaseVersionDiffContent({
     return (
       <div className="flex min-h-56 items-center justify-center gap-2 rounded-md border text-sm text-muted-foreground">
         <Loader2 className="size-4 animate-spin" />
-        Loading comparison…
+        正在加载比较结果…
       </div>
     )
   }
@@ -97,7 +97,7 @@ function CaseVersionDiffContent({
   if (comparisonError || !comparison) {
     return (
       <div className="flex min-h-56 items-center justify-center rounded-md border px-4 text-sm text-muted-foreground">
-        Couldn't load this version comparison.
+        无法加载此版本的比较结果。
       </div>
     )
   }
@@ -114,7 +114,7 @@ function CaseVersionDiffContent({
         <span className="font-medium">{selectedLabel}</span>
         <span className="text-muted-foreground">
           {isBaseline
-            ? "Baseline"
+            ? "基准"
             : `${versionLabel(predecessor)} → ${selectedLabel}`}
         </span>
       </div>
@@ -122,9 +122,8 @@ function CaseVersionDiffContent({
         <div className="space-y-4 p-4">
           {isBaseline ? (
             <p className="text-sm text-muted-foreground">
-              This is the first{" "}
-              {fieldLabel(comparison.selected.field).toLowerCase()} version and
-              has no predecessor.
+              这是第一个 {fieldLabel(comparison.selected.field).toLowerCase()}{" "}
+              版本，没有前一版本。
             </p>
           ) : null}
           <InlineDiffView
@@ -192,15 +191,15 @@ export function CaseVersionHistory({
   function comparisonDescription(entry: VersionHistoryEntry): string {
     const version = versionById.get(entry.id)
     if (!version || version.version === 1) {
-      return `${entry.label} is the baseline and has no predecessor.`
+      return `${entry.label} 是基线，没有前一版本。`
     }
-    return `Compare ${entry.label} with ${fieldLabel(version.field)} v${version.version - 1}.`
+    return `比较 ${entry.label} 与 ${fieldLabel(version.field)} v${version.version - 1}。`
   }
 
   function restoreDescription(entry: VersionHistoryEntry): string {
     const version = versionById.get(entry.id)
     const label = version ? fieldLabel(version.field).toLowerCase() : "field"
-    return `Restoring replaces the current persisted ${label} and any unsaved ${label} draft.`
+    return `恢复会替换当前已保存的${label}和所有未保存的${label}草稿。`
   }
 
   const listFooter =

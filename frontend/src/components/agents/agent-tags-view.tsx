@@ -47,7 +47,7 @@ export function AgentTagsView() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading tags: ${agentTagsError.message}`}
+        message={`加载标签出错：${agentTagsError.message}`}
       />
     )
   }
@@ -61,10 +61,8 @@ export function AgentTagsView() {
               <EmptyMedia variant="icon">
                 <TagIcon className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No tags defined yet</EmptyTitle>
-              <EmptyDescription>
-                Add your first tag using the button in the header
-              </EmptyDescription>
+              <EmptyTitle>尚未定义标签</EmptyTitle>
+              <EmptyDescription>使用顶部按钮添加第一个标签</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (

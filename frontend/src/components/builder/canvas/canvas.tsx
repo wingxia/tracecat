@@ -448,8 +448,8 @@ export const WorkflowCanvas = React.forwardRef<
         } else {
           console.error("Failed to add edge:", error)
           toast({
-            title: "Failed to connect nodes",
-            description: "Could not create the connection. Please try again.",
+            title: "连接节点失败",
+            description: "无法创建连接，请重试。",
           })
         }
       }
@@ -597,9 +597,8 @@ export const WorkflowCanvas = React.forwardRef<
       } else {
         console.error("An error occurred while deleting Action nodes:", error)
         toast({
-          title: "Failed to delete nodes",
-          description:
-            "Could not delete nodes. Please check the console logs for more information.",
+          title: "删除节点失败",
+          description: "无法删除节点，请查看控制台日志获取更多信息。",
         })
       }
     } finally {
@@ -973,11 +972,11 @@ export const WorkflowCanvas = React.forwardRef<
 
         updateStateFromGraph(result)
         toast({
-          title: actions.length === 1 ? "Action added" : "Actions added",
+          title: actions.length === 1 ? "已添加动作" : "已添加多个动作",
           description:
             actions.length === 1
-              ? `Added "${actions[0].default_title ?? actions[0].action}" to the workflow.`
-              : `Added ${actions.length} actions to the workflow.`,
+              ? `已将“${actions[0].default_title ?? actions[0].action}”添加到工作流。`
+              : `已向工作流添加 ${actions.length} 个动作。`,
         })
       } catch (error) {
         const apiError = error as { status?: number }
@@ -992,15 +991,15 @@ export const WorkflowCanvas = React.forwardRef<
           } catch (retryError) {
             console.error("Failed to add action after retry:", retryError)
             toast({
-              title: "Failed to add action",
-              description: "Could not add action. Please try again.",
+              title: "添加动作失败",
+              description: "无法添加动作，请重试。",
             })
           }
         } else {
           console.error("Failed to add action:", error)
           toast({
-            title: "Failed to add action",
-            description: "Could not add action. Please try again.",
+            title: "添加动作失败",
+            description: "无法添加动作，请重试。",
           })
         }
       }
@@ -1069,7 +1068,7 @@ export const WorkflowCanvas = React.forwardRef<
               variant="outline"
               className="select-none bg-background text-xs font-normal hover:cursor-default"
             >
-              Layout
+              布局
             </Badge>
             <Button
               variant="outline"

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "MCP servers",
+  title: "MCP 服务器",
 }
 
 /** Applies shared metadata and renders the nested MCP servers route content. */

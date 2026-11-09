@@ -72,21 +72,21 @@ export function isMarkdownPath(path: string): boolean {
  */
 export function validateSkillDraftPath(path: string): string | null {
   if (path.includes("\\")) {
-    return "Use forward slashes instead of backslashes."
+    return "请使用正斜杠，不要使用反斜杠。"
   }
 
   const normalized = normalizePosixPath(path)
   if (normalized === ".") {
-    return "File path is required."
+    return "文件路径不能为空。"
   }
   if (path.startsWith("/")) {
-    return "Use a relative path inside the skill."
+    return "请使用技能目录内的相对路径。"
   }
   if (path.split("/").includes("..")) {
-    return "File path cannot escape the skill root."
+    return "文件路径不能超出技能根目录。"
   }
   if (normalized !== path) {
-    return "Use a normalized path without duplicate, leading, or trailing separators."
+    return "请使用规范化路径，不包含重复、开头或结尾的分隔符。"
   }
   return null
 }
@@ -109,7 +109,7 @@ export const skillNameSchema = z
     if (name.length === 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Name is required.",
+        message: "名称不能为空。",
       })
       return
     }
@@ -117,7 +117,7 @@ export const skillNameSchema = z
     if (name.length > SKILL_NAME_MAX_LENGTH) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Name must be ${SKILL_NAME_MAX_LENGTH} characters or fewer.`,
+        message: `名称不能超过 ${SKILL_NAME_MAX_LENGTH} 个字符。`,
       })
       return
     }
@@ -125,7 +125,7 @@ export const skillNameSchema = z
     if (name.endsWith("-")) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Name cannot end with a hyphen.",
+        message: "名称不能以连字符结尾。",
       })
       return
     }
@@ -133,8 +133,7 @@ export const skillNameSchema = z
     if (!SKILL_NAME_PATTERN.test(name)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message:
-          "Use lowercase letters, numbers, and single hyphens (e.g. threat-intel).",
+        message: "使用小写字母、数字和单个连字符（如 threat-intel）。",
       })
     }
   })
@@ -390,9 +389,7 @@ export function describeVersion(version: {
   version: number
   file_count: number
 }): string {
-  return `v${version.version} · ${version.file_count} file${
-    version.file_count === 1 ? "" : "s"
-  }`
+  return `v${version.version} · ${version.file_count} 个文件`
 }
 
 /**
@@ -494,7 +491,7 @@ export function renderValidationState(
     return (
       <Badge variant="outline" className="gap-1">
         <CheckCircle2 className="size-3.5" />
-        Ready to publish
+        可以发布
       </Badge>
     )
   }
@@ -502,7 +499,7 @@ export function renderValidationState(
   return (
     <Badge variant="secondary" className="gap-1">
       <AlertCircle className="size-3.5" />
-      {errorCount} publish blocker{errorCount === 1 ? "" : "s"}
+      {errorCount} 个发布阻塞项{errorCount === 1 ? "" : ""}
     </Badge>
   )
 }

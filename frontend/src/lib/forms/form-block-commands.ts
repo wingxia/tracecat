@@ -9,6 +9,7 @@ import type { EditorView } from "@codemirror/view"
 /** A layout entry the slash menu inserts, with the text selected after it. */
 export interface FormBlockTemplate {
   label: string
+  displayLabel?: string
   detail: string
   /** YAML for the entry without the leading `- `, one line per element. */
   lines: string[]
@@ -19,25 +20,29 @@ export interface FormBlockTemplate {
 export const FORM_BLOCK_TEMPLATES: FormBlockTemplate[] = [
   {
     label: "heading",
-    detail: "Section title",
+    displayLabel: "标题",
+    detail: "章节标题",
     lines: ["heading: Section title"],
     select: "Section title",
   },
   {
     label: "text",
-    detail: "Paragraph, Markdown",
+    displayLabel: "文本",
+    detail: "段落、Markdown",
     lines: ["text: Write some text"],
     select: "Write some text",
   },
   {
     label: "notice",
-    detail: "Callout box",
+    displayLabel: "提示",
+    detail: "提示框",
     lines: ["notice: Something to know", "tone: info"],
     select: "Something to know",
   },
   {
     label: "divider",
-    detail: "Horizontal rule",
+    displayLabel: "分隔线",
+    detail: "水平分隔线",
     lines: ["divider: true"],
   },
 ]
@@ -45,7 +50,8 @@ export const FORM_BLOCK_TEMPLATES: FormBlockTemplate[] = [
 export function fieldBlockTemplate(name: string): FormBlockTemplate {
   return {
     label: `field: ${name}`,
-    detail: "Workflow input",
+    displayLabel: `字段：${name}`,
+    detail: "工作流输入",
     lines: [`field: ${name}`],
   }
 }
@@ -176,7 +182,7 @@ export function formBlockCompletions(
     ]
     const options: Completion[] = templates.map((template, index) => ({
       label: `/${template.label}`,
-      displayLabel: template.label,
+      displayLabel: template.displayLabel ?? template.label,
       detail: template.detail,
       type: template.label.startsWith("field:") ? "variable" : "keyword",
       boost: -index,

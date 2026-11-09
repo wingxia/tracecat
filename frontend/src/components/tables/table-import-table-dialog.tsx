@@ -46,16 +46,16 @@ const tableImportSchema = z.object({
       return file.type === "text/csv" || lowerName.endsWith(".csv")
     },
     (file) => ({
-      message: `Please upload a CSV file under 5MB. Current file size: ${(file.size / BYTES_PER_MB).toFixed(2)}MB`,
+      message: `请上传小于 5MB 的 CSV 文件，当前文件大小为 ${(file.size / BYTES_PER_MB).toFixed(2)}MB`,
     })
   ),
   tableName: z
     .string()
     .trim()
-    .max(100, "Name cannot exceed 100 characters")
+    .max(100, "名称不能超过 100 个字符")
     .regex(
       /^[a-zA-Z_][a-zA-Z0-9_]*$/,
-      "Name must contain only letters, numbers, and underscores, and start with a letter or underscore"
+      "名称只能包含字母、数字和下划线，且必须以字母或下划线开头"
     )
     .optional()
     .or(z.literal(""))
@@ -105,7 +105,7 @@ export function TableImportTableDialog({
       console.error("Failed to parse CSV preview:", error)
       form.setError("file", {
         type: "manual",
-        message: "Unable to read CSV file. Please check the file format.",
+        message: "无法读取 CSV 文件，请检查文件格式。",
       })
     } finally {
       setIsParsing(false)
@@ -118,7 +118,7 @@ export function TableImportTableDialog({
       if (!file) {
         form.setError("file", {
           type: "manual",
-          message: "Please select a CSV file to import.",
+          message: "请选择要导入的 CSV 文件。",
         })
         return
       }
@@ -149,21 +149,20 @@ export function TableImportTableDialog({
           detail?.includes("already exists")
         ) {
           message =
-            "A column in your CSV conflicts with an existing column. Check for protected names like id, created_at, or updated_at."
+            "CSV 中的列与现有列冲突，请检查是否使用了 id、created_at 或 updated_at 等受保护名称。"
         } else if (detail?.includes("already exists")) {
-          message = "A table with this name already exists."
+          message = "已存在同名数据表。"
         } else if (detail && error.status !== 500) {
           message = detail
         } else {
-          message =
-            "Failed to import table. Please check your CSV file and try again."
+          message = "导入数据表失败，请检查 CSV 文件后重试。"
         }
         form.setError("file", { type: "manual", message })
       } else {
         console.error("Unexpected error importing table:", error)
         form.setError("file", {
           type: "manual",
-          message: "Failed to import table",
+          message: "导入数据表失败",
         })
       }
     }
@@ -173,10 +172,9 @@ export function TableImportTableDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md" className="max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Import table from CSV</DialogTitle>
+          <DialogTitle>从 CSV 导入数据表</DialogTitle>
           <DialogDescription>
-            Upload a CSV file to create a new table. Columns and data types will
-            be inferred automatically.
+            上传 CSV 文件以创建数据表，系统会自动推断列和数据类型。
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
@@ -191,7 +189,7 @@ export function TableImportTableDialog({
                 name="file"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>CSV file</FormLabel>
+                    <FormLabel>CSV 文件</FormLabel>
                     <FormControl>
                       <Input
                         type="file"
@@ -213,7 +211,7 @@ export function TableImportTableDialog({
                       />
                     </FormControl>
                     <FormDescription>
-                      CSV files up to {FILE_SIZE_LIMIT_MB}MB are supported.
+                      支持的 CSV 文件大小上限为 {FILE_SIZE_LIMIT_MB}MB。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -224,8 +222,7 @@ export function TableImportTableDialog({
                 <div className="space-y-2">
                   <CsvPreview csvData={csvPreview} />
                   <p className="text-xs text-muted-foreground">
-                    Column names will be sanitised automatically. Duplicate or
-                    invalid column names are adjusted to remain unique.
+                    列名称会自动规范化，重复或无效的列名会被调整以保持唯一。
                   </p>
                 </div>
               )}
@@ -234,7 +231,7 @@ export function TableImportTableDialog({
             </DialogBody>
             <DialogFooter>
               <div className="text-xs text-muted-foreground">
-                Leave the table name blank to derive it from the file name.
+                数据表名称留空时，将根据文件名生成。
               </div>
               <div className="flex gap-2">
                 <Button
@@ -245,10 +242,10 @@ export function TableImportTableDialog({
                   {importTableIsPending || isParsing ? (
                     <>
                       <Spinner className="mr-2" />
-                      Importing...
+                      导入中…
                     </>
                   ) : (
-                    "Import table"
+                    "导入数据表"
                   )}
                 </Button>
               </div>
@@ -269,10 +266,10 @@ function TableNameField() {
       name="tableName"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>Table name (optional)</FormLabel>
+          <FormLabel>数据表名称（可选）</FormLabel>
           <FormControl>
             <Input
-              placeholder="Enter table name or leave blank"
+              placeholder={"输入数据表名称或留空"}
               {...field}
               value={field.value ?? ""}
             />

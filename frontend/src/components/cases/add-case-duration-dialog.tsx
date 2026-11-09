@@ -66,8 +66,8 @@ export function AddCaseDurationDialog({
       })
 
       toast({
-        title: "Duration created",
-        description: "The case duration definition was added successfully.",
+        title: "已创建时长指标",
+        description: "已成功添加事件时长定义。",
       })
 
       onOpenChange(false)
@@ -75,11 +75,11 @@ export function AddCaseDurationDialog({
     onError: (error: unknown) => {
       console.error("Failed to create case duration definition", error)
       toast({
-        title: "Error creating duration",
+        title: "创建时长指标出错",
         description:
           error instanceof Error
             ? error.message
-            : "Failed to create the case duration definition. Please try again.",
+            : "创建事件时长定义失败，请重试。",
         variant: "destructive",
       })
     },
@@ -93,9 +93,9 @@ export function AddCaseDurationDialog({
     <CaseDurationDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Create duration"
-      description="Define a duration metric using matching case events."
-      submitLabel={isPending ? "Creating..." : "Create duration"}
+      title={"创建时长指标"}
+      description={"使用匹配的事件变更定义时长指标。"}
+      submitLabel={isPending ? "创建中…" : "创建时长指标"}
       isSubmitting={isPending}
       onSubmit={onSubmit}
     />

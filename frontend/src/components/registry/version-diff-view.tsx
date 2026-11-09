@@ -40,13 +40,13 @@ export function DiffView({
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium">Base version</label>
+          <label className="mb-1 block text-sm font-medium">基准版本</label>
           <Select
             value={compareBaseId ?? undefined}
             onValueChange={onBaseChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select version" />
+              <SelectValue placeholder={"选择版本"} />
             </SelectTrigger>
             <SelectContent>
               {versions.map((v) => (
@@ -58,15 +58,13 @@ export function DiffView({
           </Select>
         </div>
         <div className="flex-1">
-          <label className="mb-1 block text-sm font-medium">
-            Compare to version
-          </label>
+          <label className="mb-1 block text-sm font-medium">比较目标版本</label>
           <Select
             value={compareToId ?? undefined}
             onValueChange={onCompareChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select version" />
+              <SelectValue placeholder={"选择版本"} />
             </SelectTrigger>
             <SelectContent>
               {versions.map((v) => (
@@ -92,31 +90,31 @@ export function DiffView({
               <span className="text-green-600">
                 +{diff.actions_added?.length ?? 0}
               </span>
-              <span>added</span>
+              <span>已添加</span>
             </Badge>
             <Badge variant="secondary" className="gap-1">
               <span className="text-red-600">
                 -{diff.actions_removed?.length ?? 0}
               </span>
-              <span>removed</span>
+              <span>已移除</span>
             </Badge>
             <Badge variant="secondary" className="gap-1">
               <span className="text-amber-600">
                 ~{diff.actions_modified?.length ?? 0}
               </span>
-              <span>modified</span>
+              <span>已修改</span>
             </Badge>
           </div>
 
           {diff.total_changes === 0 && (
             <div className="py-4 text-center text-muted-foreground">
-              No changes between these versions
+              这些版本之间没有变更
             </div>
           )}
 
           {(diff.actions_added?.length ?? 0) > 0 && (
             <div>
-              <h4 className="mb-2 font-medium text-green-600">Added actions</h4>
+              <h4 className="mb-2 font-medium text-green-600">新增动作</h4>
               <ul className="space-y-1 font-mono text-sm">
                 {diff.actions_added?.map((action) => (
                   <li key={action} className="text-muted-foreground">
@@ -129,7 +127,7 @@ export function DiffView({
 
           {(diff.actions_removed?.length ?? 0) > 0 && (
             <div>
-              <h4 className="mb-2 font-medium text-red-600">Removed actions</h4>
+              <h4 className="mb-2 font-medium text-red-600">移除动作</h4>
               <ul className="space-y-1 font-mono text-sm">
                 {diff.actions_removed?.map((action) => (
                   <li key={action} className="text-muted-foreground">
@@ -142,9 +140,7 @@ export function DiffView({
 
           {(diff.actions_modified?.length ?? 0) > 0 && (
             <div>
-              <h4 className="mb-2 font-medium text-amber-600">
-                Modified actions
-              </h4>
+              <h4 className="mb-2 font-medium text-amber-600">修改动作</h4>
               <ul className="space-y-2 font-mono text-sm">
                 {diff.actions_modified?.map((change) => (
                   <li
@@ -153,7 +149,7 @@ export function DiffView({
                   >
                     <div>~ {change.action_name}</div>
                     {change.description_changed && (
-                      <div className="ml-4 text-xs">Description changed</div>
+                      <div className="ml-4 text-xs">描述已更改</div>
                     )}
                     {change.interface_changes?.map((ic, idx) => (
                       <div key={idx} className="ml-4 text-xs">

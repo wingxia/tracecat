@@ -23,14 +23,14 @@ import {
   useScimMappings,
 } from "@/hooks/use-scim"
 
-const DESCRIPTION = "Sync users and groups from your identity provider."
+const DESCRIPTION = "从身份提供商同步用户和用户组。"
 // The review and apply endpoints each accept at most this many changes.
 const MAX_MAPPING_CHANGES = 100
 
 function warnChangeLimit() {
   toast({
-    title: "Too many pending changes",
-    description: `Review up to ${MAX_MAPPING_CHANGES} additions and ${MAX_MAPPING_CHANGES} removals at a time.`,
+    title: "待处理更改过多",
+    description: `每次最多审核 ${MAX_MAPPING_CHANGES} 项添加和 ${MAX_MAPPING_CHANGES} 项移除。`,
   })
 }
 
@@ -39,9 +39,7 @@ export function ScimPageHeader() {
   return (
     <div className="flex w-full items-start">
       <div className="items-start space-y-3 text-left">
-        <h2 className="text-2xl font-semibold tracking-tight">
-          SCIM provisioning
-        </h2>
+        <h2 className="text-2xl font-semibold tracking-tight">SCIM 用户配置</h2>
         <p className="text-base text-muted-foreground">{DESCRIPTION}</p>
       </div>
     </div>
@@ -92,8 +90,8 @@ export function OrgSettingsScim() {
       <>
         <ScimPageHeader />
         <EntitlementRequiredEmptyState
-          title="You lack permission"
-          description="You need permission to manage SCIM provisioning."
+          title={"权限不足"}
+          description={"你需要管理 SCIM 用户配置的权限。"}
         />
       </>
     )
@@ -217,7 +215,7 @@ export function OrgSettingsScim() {
               disabled={!canManage || reviewIsPending}
               onClick={() => openReview(true)}
             >
-              Review and activate
+              审核并激活
             </Button>
           </div>
         )}

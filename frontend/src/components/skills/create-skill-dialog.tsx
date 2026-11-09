@@ -77,9 +77,9 @@ export function CreateSkillDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Create skill</DialogTitle>
+          <DialogTitle>创建技能</DialogTitle>
           <DialogDescription>
-            Start with an empty working copy seeded with a root SKILL.md file.
+            创建初始包含根目录 SKILL.md 文件的工作副本。
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -99,7 +99,7 @@ export function CreateSkillDialog({
                   name="name"
                   render={({ field, fieldState }) => (
                     <FormItem>
-                      <FormLabel>Name</FormLabel>
+                      <FormLabel>名称</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -117,8 +117,7 @@ export function CreateSkillDialog({
                         />
                       </FormControl>
                       <FormDescription>
-                        Lowercase letters, numbers, and single hyphens. Max 64
-                        characters.
+                        使用小写字母、数字和单个连字符，最多 64 个字符。
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -129,11 +128,11 @@ export function CreateSkillDialog({
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description</FormLabel>
+                      <FormLabel>描述</FormLabel>
                       <FormControl>
                         <Textarea
                           {...field}
-                          placeholder="Optional description"
+                          placeholder={"可选描述"}
                           rows={3}
                         />
                       </FormControl>
@@ -147,7 +146,7 @@ export function CreateSkillDialog({
                 {pending ? (
                   <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : null}
-                Create skill
+                创建技能
               </Button>
             </DialogFooter>
           </form>

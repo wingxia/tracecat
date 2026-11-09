@@ -1,6 +1,7 @@
 "use client"
 
 import { format, isValid as isValidDate } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import { FlagTriangleRight, Hourglass } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import type { CaseDurationDefinitionRead, CaseDurationRead } from "@/client"
@@ -38,20 +39,20 @@ function parseCaseTimestamp(value?: string | null): Date | null {
 }
 
 /** Shared so the local and UTC timestamps always read the same shape. */
-const DATE_TIME_PATTERN = "MMM d yyyy '·' p"
+const DATE_TIME_PATTERN = "yyyy年M月d日 '·' HH:mm"
 
 function formatLocalDateTime(date: Date): string {
-  return format(date, DATE_TIME_PATTERN)
+  return format(date, DATE_TIME_PATTERN, { locale: zhCN })
 }
 
-const UTC_DATE_TIME_PARTS = new Intl.DateTimeFormat("en-US", {
+const UTC_DATE_TIME_PARTS = new Intl.DateTimeFormat("zh-CN", {
   timeZone: "UTC",
-  month: "short",
+  month: "numeric",
   day: "numeric",
   year: "numeric",
   hour: "numeric",
   minute: "2-digit",
-  hour12: true,
+  hour12: false,
 })
 
 /**
@@ -73,8 +74,7 @@ function formatUtcDateTime(date: Date): string {
   const year = parts.get("year") ?? ""
   const hour = parts.get("hour") ?? ""
   const minute = parts.get("minute") ?? ""
-  const dayPeriod = parts.get("dayPeriod") ?? ""
-  return `${month} ${day} ${year} · ${hour}:${minute} ${dayPeriod} UTC`
+  return `${year}年${month}月${day}日 · ${hour}:${minute} UTC`
 }
 
 interface CaseDurationMetric {
@@ -124,7 +124,7 @@ export function CaseDurationMetrics({
         const definition = definitionById.get(duration.definition_id)
         const name =
           definition?.name ??
-          `Duration ${duration.definition_id.slice(0, 8).toUpperCase()}`
+          `时长指标 ${duration.definition_id.slice(0, 8).toUpperCase()}`
         const description = definition?.description
 
         // Parse once, render twice: the pill gets the truncated form and the
@@ -240,13 +240,13 @@ export function CaseDurationMetrics({
                 <div className="space-y-3">
                   <div>
                     <p className="font-medium text-muted-foreground">
-                      {metric.state === "ongoing" ? "Elapsed" : "Duration"}
+                      {metric.state === "ongoing" ? "已用时间" : "时长"}
                     </p>
                     <p className="mt-1">{metric.preciseValue}</p>
                   </div>
                   <div>
                     <p className="font-medium text-muted-foreground">
-                      Started at
+                      开始时间
                     </p>
                     <p className="mt-1">
                       {formatLocalDateTime(metric.startedAt)}
@@ -257,7 +257,7 @@ export function CaseDurationMetrics({
                   </div>
                   <div>
                     <p className="font-medium text-muted-foreground">
-                      Ended at
+                      结束时间
                     </p>
                     {metric.endedAt ? (
                       <>
@@ -269,9 +269,7 @@ export function CaseDurationMetrics({
                         </p>
                       </>
                     ) : (
-                      <p className="mt-1 text-muted-foreground">
-                        Not triggered
-                      </p>
+                      <p className="mt-1 text-muted-foreground">未触发</p>
                     )}
                   </div>
                 </div>

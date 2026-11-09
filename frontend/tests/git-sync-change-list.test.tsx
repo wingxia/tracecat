@@ -77,7 +77,7 @@ describe("GitSyncChangeList", () => {
       />
     )
 
-    await user.click(screen.getByRole("button", { name: /Skills/ }))
+    await user.click(screen.getByRole("button", { name: /技能/ }))
     await user.click(screen.getByRole("button", { name: /Triage/ }))
 
     // The row shows skill.yml, so the diff names the file it is for.
@@ -122,7 +122,7 @@ describe("CatalogMappingRequirements", () => {
     expect(screen.getByText("Needs a match")).toBeInTheDocument()
     expect(
       screen.getByRole("combobox", {
-        name: "Target model for shared-model (custom-model-provider)",
+        name: "shared-model（custom-model-provider）的目标模型",
       })
     ).toBeInTheDocument()
   })
@@ -137,7 +137,7 @@ describe("CatalogMappingRequirements", () => {
       />
     )
 
-    expect(screen.getByText("Matched")).toBeInTheDocument()
+    expect(screen.getByText("已匹配")).toBeInTheDocument()
   })
 })
 
@@ -154,10 +154,10 @@ it("lists a paginated operation preview's files in grouped rows", async () => {
       diffCount={3}
     />
   )
-  expect(screen.getByText("3 files")).toBeInTheDocument()
+  expect(screen.getByText("3 个文件")).toBeInTheDocument()
   expect(screen.queryByText("0 files")).not.toBeInTheDocument()
   const user = userEvent.setup()
-  await user.click(await screen.findByRole("button", { name: /Variables/ }))
+  await user.click(await screen.findByRole("button", { name: /变量/ }))
   expect(workflowsListSyncDiffs).toHaveBeenCalledWith({
     workspaceId: "workspace-1",
     operationId: "synthetic-operation",

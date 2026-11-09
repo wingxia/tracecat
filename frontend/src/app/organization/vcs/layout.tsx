@@ -1,9 +1,8 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "VCS Settings",
-  description:
-    "Configure version control system integrations for your organization",
+  title: "版本控制设置",
+  description: "配置组织的版本控制系统集成",
 }
 
 export default function VCSSettingsLayout({

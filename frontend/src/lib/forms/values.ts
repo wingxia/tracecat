@@ -105,11 +105,11 @@ export function validateFormValues(
     const files =
       field.widget === "file" ? ((value ?? []) as FormFileItem[]) : []
     if (files.some((item) => item.status === "uploading")) {
-      errors[field.name] = "Wait for the uploads to finish"
+      errors[field.name] = "请等待上传完成"
     } else if (files.some((item) => item.status === "failed")) {
-      errors[field.name] = "Remove the files that failed to upload"
+      errors[field.name] = "移除上传失败的文件"
     } else if (field.required && isEmptyFormValue(value)) {
-      errors[field.name] = "This field is required"
+      errors[field.name] = "此字段为必填项"
     }
   }
   return errors

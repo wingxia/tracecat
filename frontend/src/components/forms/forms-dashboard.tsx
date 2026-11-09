@@ -2,6 +2,7 @@
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   ClipboardListIcon,
   CopyIcon,
@@ -95,11 +96,11 @@ export function CreateFormDialog({
     useCreateForm(workspaceId)
   const taken = new Set(forms.map((form) => form.workflow_id))
   const isLoading = workflowsLoading || formsIsLoading
-  let emptyMessage = "No workflows found."
+  let emptyMessage = "未找到工作流。"
   if (workflowsError) {
-    emptyMessage = "Couldn't load workflows."
+    emptyMessage = "无法加载工作流。"
   } else if (isLoading) {
-    emptyMessage = "Loading workflows..."
+    emptyMessage = "正在加载工作流…"
   }
 
   async function handleSelect(workflow: WorkflowReadMinimal) {
@@ -109,11 +110,11 @@ export function CreateFormDialog({
       router.push(`/workspaces/${workspaceId}/forms/${form.id}`)
     } catch (error) {
       toast({
-        title: "Couldn't create the form",
+        title: "无法创建表单",
         description:
           getFormErrorDetail(error)?.message ??
           getApiErrorDetail(error) ??
-          "Something went wrong.",
+          "出现了问题。",
         variant: "destructive",
       })
     }
@@ -123,14 +124,13 @@ export function CreateFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent size="md">
         <DialogHeader>
-          <DialogTitle>Create form</DialogTitle>
+          <DialogTitle>创建表单</DialogTitle>
           <DialogDescription>
-            Pick the workflow this form starts. Its inputs become the form's
-            fields.
+            选择此表单要启动的工作流，工作流输入将成为表单字段。
           </DialogDescription>
         </DialogHeader>
         <Command className="min-h-0 flex-1 rounded-none">
-          <CommandInput placeholder="Search workflows..." />
+          <CommandInput placeholder={"搜索工作流…"} />
           <CommandList className="max-h-none flex-1">
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             {!isLoading && (workflows ?? []).length > 0 && (
@@ -138,9 +138,9 @@ export function CreateFormDialog({
                 {(workflows ?? []).map((workflow) => {
                   let hint: string | null = null
                   if (taken.has(workflow.id)) {
-                    hint = "Already has a form"
+                    hint = "已有关联表单"
                   } else if (typeof workflow.version !== "number") {
-                    hint = "Offline until the workflow is published"
+                    hint = "工作流发布前保持下线"
                   }
                   return (
                     <CommandItem
@@ -190,15 +190,14 @@ function DeleteFormDialog({
     <AlertDialog open onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete form</AlertDialogTitle>
+          <AlertDialogTitle>删除表单</AlertDialogTitle>
           <AlertDialogDescription>
-            Delete {form.title}? Its submissions and activity are deleted with
-            it. The workflow and its past runs are not affected. This cannot be
-            undone.
+            删除 {form.title}
+            吗？提交记录和活动会一并删除，工作流及其历史运行不受影响。此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={deleteFormIsPending}
@@ -208,7 +207,7 @@ function DeleteFormDialog({
               deleteForm(form.id).then(onClose, () => {})
             }}
           >
-            Delete
+            删除
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -218,12 +217,12 @@ function DeleteFormDialog({
 
 async function copyFormLink(formId: string) {
   const url = `${window.location.origin}/forms/${formId}`
-  if (await copyToClipboard({ value: url, message: "Form link copied" })) {
-    toast({ title: "Form link copied", description: url })
+  if (await copyToClipboard({ value: url, message: "已复制表单链接" })) {
+    toast({ title: "已复制表单链接", description: url })
   } else {
     // The link stays in the toast so it can be copied by hand.
     toast({
-      title: "Couldn't copy the link",
+      title: "无法复制链接",
       description: url,
       variant: "destructive",
     })
@@ -260,7 +259,7 @@ export function FormsDashboard() {
   if (formsError) {
     return (
       <div className="p-6">
-        <AlertNotification level="error" message="Error loading forms." />
+        <AlertNotification level="error" message={"加载表单出错。"} />
       </div>
     )
   }
@@ -276,7 +275,7 @@ export function FormsDashboard() {
       <CatalogHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search forms..."
+        searchPlaceholder={"搜索表单…"}
         displayCount={filteredForms.length}
         countLabel={filteredForms.length === 1 ? "form" : "forms"}
       />
@@ -288,13 +287,11 @@ export function FormsDashboard() {
                 <EmptyMedia variant="icon">
                   <ClipboardListIcon className="size-5 text-muted-foreground/60" />
                 </EmptyMedia>
-                <EmptyTitle>
-                  {search ? "No forms found" : "No forms yet"}
-                </EmptyTitle>
+                <EmptyTitle>{search ? "未找到表单" : "暂无表单"}</EmptyTitle>
                 <EmptyDescription>
                   {search
-                    ? "No forms match your search."
-                    : "Create a form to let people start a workflow by filling in its inputs."}
+                    ? "没有匹配的表单。"
+                    : "创建表单，让用户通过填写输入来启动工作流。"}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -354,13 +351,13 @@ export function FormsDashboard() {
                             : "bg-muted-foreground/40"
                         )}
                       />
-                      {form.status === "online" ? "Online" : "Offline"}
+                      {form.status === "online" ? "已上线" : "已下线"}
                     </Badge>
                     {typeof form.submission_count === "number" && (
                       <Badge variant="secondary" className={BADGE_CLASS}>
                         {form.submission_count === 1
-                          ? "1 submission"
-                          : `${form.submission_count.toLocaleString()} submissions`}
+                          ? "1 次提交"
+                          : `${form.submission_count.toLocaleString("zh-CN")} 次提交`}
                       </Badge>
                     )}
                     {lastSubmittedAt && (
@@ -374,7 +371,8 @@ export function FormsDashboard() {
                           </Badge>
                         </TooltipTrigger>
                         <TooltipContent>
-                          Last submitted {format(lastSubmittedAt, "PPpp")}
+                          最近提交{" "}
+                          {format(lastSubmittedAt, "PPpp", { locale: zhCN })}
                         </TooltipContent>
                       </Tooltip>
                     )}
@@ -386,7 +384,7 @@ export function FormsDashboard() {
                           className="size-7 p-0"
                         >
                           <span className="sr-only">
-                            Open menu for {form.title}
+                            打开菜单： {form.title}
                           </span>
                           <DotsHorizontalIcon className="size-4" />
                         </Button>
@@ -399,7 +397,7 @@ export function FormsDashboard() {
                             rel="noopener noreferrer"
                           >
                             <ExternalLinkIcon className="mr-2 size-3" />
-                            Open form
+                            打开表单
                           </a>
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -407,7 +405,7 @@ export function FormsDashboard() {
                           onClick={() => copyFormLink(form.id)}
                         >
                           <CopyIcon className="mr-2 size-3" />
-                          Copy link
+                          复制链接
                         </DropdownMenuItem>
                         {canDelete && (
                           <DropdownMenuItem
@@ -415,7 +413,7 @@ export function FormsDashboard() {
                             onClick={() => setFormToDelete(form)}
                           >
                             <Trash2Icon className="mr-2 size-3" />
-                            Delete
+                            删除
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>

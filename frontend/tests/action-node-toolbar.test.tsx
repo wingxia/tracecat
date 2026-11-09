@@ -97,13 +97,13 @@ describe("ActionNodeToolbar", () => {
 
   it("lists Open subflow first without a group heading", () => {
     renderToolbar()
-    expect(screen.getAllByRole("option")[0]).toHaveTextContent("Open subflow")
-    expect(screen.queryByText("Subflow")).toBeNull()
+    expect(screen.getAllByRole("option")[0]).toHaveTextContent("打开子工作流")
+    expect(screen.queryByText("子工作流")).toBeNull()
   })
 
   it("opens the subflow from anywhere on the row", () => {
     renderToolbar()
-    const item = screen.getByRole("option", { name: "Open subflow" })
+    const item = screen.getByRole("option", { name: "打开子工作流" })
     expect(item).toHaveAttribute("aria-disabled", "false")
     expect(item.querySelector("a")).toHaveAttribute(
       "href",
@@ -116,7 +116,7 @@ describe("ActionNodeToolbar", () => {
 
   it("does not navigate twice when the link itself is clicked", () => {
     renderToolbar()
-    fireEvent.click(screen.getByText("Open subflow"))
+    fireEvent.click(screen.getByText("打开子工作流"))
     expect(mockPush).not.toHaveBeenCalled()
   })
 
@@ -128,7 +128,7 @@ describe("ActionNodeToolbar", () => {
         isDynamicChildWorkflowAlias: false,
       },
     })
-    fireEvent.click(screen.getByRole("option", { name: "Open subflow" }))
+    fireEvent.click(screen.getByRole("option", { name: "打开子工作流" }))
     expect(mockPush).toHaveBeenCalledWith("/workspaces/ws-1/workflows/wf_by_id")
   })
 
@@ -140,7 +140,7 @@ describe("ActionNodeToolbar", () => {
         isDynamicChildWorkflowAlias: false,
       },
     })
-    const item = screen.getByRole("option", { name: "Open subflow" })
+    const item = screen.getByRole("option", { name: "打开子工作流" })
     expect(item).toHaveAttribute("aria-disabled", "true")
     expect(item.querySelector("a")).toBeNull()
     fireEvent.click(item)
@@ -163,9 +163,9 @@ describe("ActionNodeToolbar", () => {
         isLoading: false,
       },
     })
-    expect(screen.queryByText("Open subflow")).toBeNull()
-    expect(screen.getAllByRole("option")[0]).toHaveTextContent("Open table")
-    fireEvent.click(screen.getByRole("option", { name: "Open table" }))
+    expect(screen.queryByText("打开子工作流")).toBeNull()
+    expect(screen.getAllByRole("option")[0]).toHaveTextContent("打开数据表")
+    fireEvent.click(screen.getByRole("option", { name: "打开数据表" }))
     expect(mockPush).toHaveBeenCalledWith("/workspaces/ws-1/tables/tbl-1")
   })
 })

@@ -42,8 +42,8 @@ export function CaseActions({
         })
         const tag = caseTags?.find((t) => t.id === tagId)
         toast({
-          title: "Tag removed",
-          description: `Successfully removed tag "${tag?.name}" from case`,
+          title: "已移除标签",
+          description: `已从事件移除标签“${tag?.name}”`,
         })
       } else {
         // Add tag
@@ -56,8 +56,8 @@ export function CaseActions({
         })
         const tag = caseTags?.find((t) => t.id === tagId)
         toast({
-          title: "Tag added",
-          description: `Successfully added tag "${tag?.name}" to case`,
+          title: "已添加标签",
+          description: `已为事件添加标签“${tag?.name}”`,
         })
       }
 
@@ -66,8 +66,8 @@ export function CaseActions({
     } catch (error) {
       console.error("Failed to modify tag:", error)
       toast({
-        title: "Error",
-        description: `Failed to ${hasTag ? "remove" : "add"} tag ${hasTag ? "from" : "to"} case`,
+        title: "错误",
+        description: `${hasTag ? "移除" : "添加"}事件标签失败（${hasTag ? "来自" : "更改为"}）`,
         variant: "destructive",
       })
     }
@@ -86,7 +86,7 @@ export function CaseActions({
           rel="noopener noreferrer"
         >
           <ExternalLink className="mr-2 size-3.5" />
-          Open in new tab
+          在新标签页中打开
         </Link>
       </DropdownMenuItem>
 
@@ -97,7 +97,7 @@ export function CaseActions({
             onClick={(e) => e.stopPropagation()}
           >
             <TagsIcon className="mr-2 size-3.5" />
-            Tags
+            标签
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent>
@@ -132,7 +132,7 @@ export function CaseActions({
           onClick={(e) => e.stopPropagation()}
         >
           <TagsIcon className="mr-2 size-3.5" />
-          <span>No tags available</span>
+          <span>暂无可用标签</span>
         </DropdownMenuItem>
       )}
 
@@ -143,29 +143,29 @@ export function CaseActions({
           try {
             await navigator.clipboard.writeText(item.id)
             toast({
-              title: "Case ID copied",
+              title: "已复制事件 ID",
               description: (
                 <div className="flex flex-col space-y-2">
                   <span>
-                    Case ID copied for{" "}
+                    已复制事件 ID：{" "}
                     <b className="inline-block">{item.short_id}</b>
                   </span>
-                  <span className="text-muted-foreground">ID: {item.id}</span>
+                  <span className="text-muted-foreground">ID： {item.id}</span>
                 </div>
               ),
             })
           } catch (error) {
             console.error("Failed to copy to clipboard:", error)
             toast({
-              title: "Failed to copy",
-              description: "Could not copy case ID to clipboard",
+              title: "复制失败",
+              description: "无法将事件 ID 复制到剪贴板",
               variant: "destructive",
             })
           }
         }}
       >
         <Copy className="mr-2 size-3.5" />
-        Copy case ID
+        复制事件 ID
       </DropdownMenuItem>
 
       {/* Danger zone */}
@@ -178,7 +178,7 @@ export function CaseActions({
           }}
         >
           <Trash2 className="mr-2 size-3.5" />
-          Delete
+          删除
         </DropdownMenuItem>
       </DeleteCaseAlertDialogTrigger>
     </DropdownMenuGroup>

@@ -204,8 +204,8 @@ export function WorkspaceChatView({ chatId }: { chatId?: string }) {
       <div className="size-full overflow-auto">
         <div className="mx-auto flex h-full w-full max-w-3xl flex-1 items-center justify-center py-12">
           <EntitlementRequiredEmptyState
-            title="Upgrade required"
-            description="Chat is unavailable on your current plan."
+            title={"需要升级"}
+            description={"当前套餐不支持对话。"}
           />
         </div>
       </div>
@@ -233,7 +233,7 @@ export function WorkspaceChatView({ chatId }: { chatId?: string }) {
             entityType="copilot"
             entityId={workspaceId}
             bodyClassName="min-h-0"
-            placeholder="Ask Tracecat..."
+            placeholder={"向 Tracecat 提问…"}
             surface="workspace-chat"
             onMessagesChange={setMessages}
             onData={handleStreamData}
@@ -248,12 +248,12 @@ export function WorkspaceChatView({ chatId }: { chatId?: string }) {
                       variant="ghost"
                       className="size-6 p-0"
                       onClick={expandPanel}
-                      aria-label="Show artifacts"
+                      aria-label={"显示产物"}
                     >
                       <PanelLeftIcon className="size-4 -scale-x-100" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent side="bottom">Show artifacts</TooltipContent>
+                  <TooltipContent side="bottom">显示产物</TooltipContent>
                 </Tooltip>
               ) : null
             }

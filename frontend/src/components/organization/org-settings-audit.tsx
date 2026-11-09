@@ -52,14 +52,14 @@ const auditDialogFormSchema = z
     audit_webhook_url: z
       .string()
       .trim()
-      .url({ message: "Enter a valid URL (https://...)" })
+      .url({ message: "请输入有效的 URL（https://…）" })
       .max(2048)
       .or(z.literal("")),
     headers: z.array(headerFormSchema),
     audit_webhook_payload_attribute: z
       .string()
       .trim()
-      .max(128, "Payload attribute must be 128 characters or fewer")
+      .max(128, "数据载荷属性不能超过 128 个字符")
       .or(z.literal("")),
     custom_payload_json: z.string(),
     audit_webhook_verify_ssl: z.boolean(),
@@ -77,7 +77,7 @@ const auditDialogFormSchema = z
       if (headerKey === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Header name is required",
+          message: "请求头名称不能为空",
           path: ["headers", index, "key"],
         })
         return
@@ -85,7 +85,7 @@ const auditDialogFormSchema = z
       if (headerValue.trim() === "") {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Header value is required",
+          message: "请求头值不能为空",
           path: ["headers", index, "value"],
         })
         return
@@ -96,7 +96,7 @@ const auditDialogFormSchema = z
       if (existingHeaderIndex !== undefined) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Duplicate header name",
+          message: "请求头名称重复",
           path: ["headers", index, "key"],
         })
         return
@@ -121,8 +121,7 @@ const auditDialogFormSchema = z
     } catch {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message:
-          'Custom payload must be a JSON object, e.g. { "event": "audit" }',
+        message: '自定义数据载荷必须是 JSON 对象，例如 { "event": "audit" }',
         path: ["custom_payload_json"],
       })
     }
@@ -205,7 +204,7 @@ function parseCustomPayload(
     parsedPayload === null ||
     Array.isArray(parsedPayload)
   ) {
-    throw new Error("Custom payload must be a JSON object")
+    throw new Error("自定义载荷必须为 JSON 对象")
   }
   return parsedPayload as Record<string, unknown>
 }
@@ -253,7 +252,7 @@ export function AuditSettingsForm({
   updateAuditSettingsIsPending,
   testAuditWebhook,
   testAuditWebhookIsPending,
-  decryptFailureTitle = "Unable to decrypt organization settings",
+  decryptFailureTitle = "无法解密组织设置",
 }: AuditSettingsFormProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -308,8 +307,7 @@ export function AuditSettingsForm({
       customPayload = parseCustomPayload(data.custom_payload_json)
     } catch {
       form.setError("custom_payload_json", {
-        message:
-          'Custom payload must be a JSON object, e.g. { "event": "audit" }',
+        message: '自定义数据载荷必须是 JSON 对象，例如 { "event": "audit" }',
       })
       return null
     }
@@ -372,7 +370,7 @@ export function AuditSettingsForm({
     return (
       <AlertNotification
         level="error"
-        message={`Error loading audit settings: ${auditSettingsError?.message || "Unknown error"}`}
+        message={`加载审计设置出错：${auditSettingsError?.message || "未知错误"}`}
       />
     )
   }
@@ -396,7 +394,7 @@ export function AuditSettingsForm({
 
   const connectionDescription = (() => {
     if (!isConnected) {
-      return "Not connected"
+      return "未连接"
     }
 
     const details = [maskWebhookUrl(currentWebhookUrl)]
@@ -405,13 +403,13 @@ export function AuditSettingsForm({
       details.push(`${customHeaderCount} custom ${suffix}`)
     }
     if (hasCustomPayload) {
-      details.push("Custom payload")
+      details.push("自定义载荷")
     }
     if (currentPayloadAttribute !== "") {
-      details.push(`Payload key: ${currentPayloadAttribute}`)
+      details.push(`载荷键：${currentPayloadAttribute}`)
     }
     if (!currentVerifySsl) {
-      details.push("SSL verify off")
+      details.push("SSL 验证已关闭")
     }
     return details.join(" · ")
   })()
@@ -438,8 +436,8 @@ export function AuditSettingsForm({
             {decryptFailureTitle}
           </AlertTitle>
           <AlertDescription>
-            Failed to decrypt existing values for {failedKeys.join(", ")}.
-            Please reconfigure and save these settings again.
+            无法解密现有值，所属设置为 {failedKeys.join(", ")}
+            。请重新配置并保存这些设置。
           </AlertDescription>
         </Alert>
       )}
@@ -452,7 +450,7 @@ export function AuditSettingsForm({
             <LogsIcon className="size-5 text-muted-foreground" />
           )}
           <div>
-            <p className="text-sm font-medium">Audit logs endpoint</p>
+            <p className="text-sm font-medium">审计日志端点</p>
             <p className="text-xs text-muted-foreground">
               {connectionDescription}
             </p>
@@ -461,7 +459,7 @@ export function AuditSettingsForm({
         {isConnected ? (
           <div className="flex flex-wrap items-center gap-2">
             <Button size="sm" onClick={() => handleDialogOpenChange(true)}>
-              Update
+              更新
             </Button>
             <Button
               type="button"
@@ -471,12 +469,12 @@ export function AuditSettingsForm({
               disabled={updateAuditSettingsIsPending}
             >
               <UnlinkIcon className="size-3.5" />
-              <span className="sr-only">Disconnect audit logs endpoint</span>
+              <span className="sr-only">断开审计日志端点</span>
             </Button>
           </div>
         ) : (
           <Button size="sm" onClick={() => handleDialogOpenChange(true)}>
-            Connect
+            连接
           </Button>
         )}
       </div>
@@ -485,11 +483,10 @@ export function AuditSettingsForm({
         <DialogContent size="xl" className="sm:max-w-xl">
           <DialogHeader>
             <DialogTitle>
-              {isConnected ? "Update audit webhook" : "Connect audit webhook"}
+              {isConnected ? "更新审计 Webhook" : "连接审计 Webhook"}
             </DialogTitle>
             <DialogDescription>
-              Configure where audit events are delivered and set optional
-              request options.
+              配置审计事件的接收位置及可选请求参数。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
@@ -505,9 +502,9 @@ export function AuditSettingsForm({
                     name="audit_webhook_url"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel>Audit webhook URL</FormLabel>
+                        <FormLabel>审计 Webhook URL</FormLabel>
                         <FormDescription className="text-xs">
-                          Provide an HTTPS endpoint to receive audit events.
+                          提供用于接收审计事件的 HTTPS 端点。
                         </FormDescription>
                         <FormControl>
                           <Input
@@ -523,15 +520,15 @@ export function AuditSettingsForm({
 
                   <div className="space-y-3">
                     <div className="space-y-1.5">
-                      <p className="text-sm font-medium">Custom headers</p>
+                      <p className="text-sm font-medium">自定义请求头</p>
                       <p className="text-xs text-muted-foreground">
-                        POST request headers.
+                        POST 请求头。
                       </p>
                     </div>
 
                     {headerFields.length === 0 && (
                       <p className="text-xs text-muted-foreground">
-                        No custom headers configured.
+                        尚未配置自定义请求头。
                       </p>
                     )}
 
@@ -565,7 +562,7 @@ export function AuditSettingsForm({
                                 <Input
                                   {...valueField}
                                   type="password"
-                                  placeholder="Header value"
+                                  placeholder={"请求头值"}
                                   autoComplete="off"
                                 />
                               </FormControl>
@@ -581,7 +578,7 @@ export function AuditSettingsForm({
                           className="mt-0.5"
                         >
                           <Trash2Icon className="size-4" />
-                          <span className="sr-only">Remove header</span>
+                          <span className="sr-only">移除请求头</span>
                         </Button>
                       </div>
                     ))}
@@ -594,7 +591,7 @@ export function AuditSettingsForm({
                       className="gap-2"
                     >
                       <PlusIcon className="size-4" />
-                      Add header
+                      添加请求头
                     </Button>
                   </div>
 
@@ -603,10 +600,9 @@ export function AuditSettingsForm({
                     name="custom_payload_json"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel>Custom payload (optional)</FormLabel>
+                        <FormLabel>自定义数据载荷（可选）</FormLabel>
                         <FormDescription>
-                          JSON object merged into the default audit event
-                          payload.
+                          合并到默认审计事件数据中的 JSON 对象。
                         </FormDescription>
                         <FormControl>
                           <CodeEditor
@@ -627,9 +623,9 @@ export function AuditSettingsForm({
                     name="audit_webhook_payload_attribute"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel>Payload attribute (optional)</FormLabel>
+                        <FormLabel>数据载荷属性（可选）</FormLabel>
                         <FormDescription className="text-xs">
-                          Wrap payload under this key (e.g. <code>event</code>).
+                          将数据载荷包装在此键下（例如 <code>event</code>).
                         </FormDescription>
                         <FormControl>
                           <Input
@@ -648,7 +644,7 @@ export function AuditSettingsForm({
                     name="audit_webhook_verify_ssl"
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                        <FormLabel>Verify SSL certificate</FormLabel>
+                        <FormLabel>验证 SSL 证书</FormLabel>
                         <FormControl>
                           <Switch
                             checked={field.value}
@@ -676,7 +672,7 @@ export function AuditSettingsForm({
               className="gap-2"
             >
               <SendIcon className="size-3.5" />
-              {testAuditWebhookIsPending ? "Testing..." : "Test"}
+              {testAuditWebhookIsPending ? "测试中…" : "测试"}
             </Button>
             <Button
               size="sm"
@@ -686,7 +682,7 @@ export function AuditSettingsForm({
                 updateAuditSettingsIsPending || testAuditWebhookIsPending
               }
             >
-              {updateAuditSettingsIsPending ? "Saving..." : "Save changes"}
+              {updateAuditSettingsIsPending ? "保存中…" : "保存更改"}
             </Button>
           </DialogFooter>
         </DialogContent>

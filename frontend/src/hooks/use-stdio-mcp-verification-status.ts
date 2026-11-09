@@ -89,7 +89,7 @@ export function useStdioMcpVerificationStatus({
       // badge remains responsible for failures loaded after a refresh.
       if (statusRead.status === "failed" && previousStatus === "verifying") {
         toast({
-          title: "MCP server verification failed",
+          title: "MCP 服务器验证失败",
           description: verificationFailureToastDescription(statusRead.error),
           variant: "destructive",
         })
@@ -109,7 +109,7 @@ function verificationFailureToastDescription(
   error: string | null | undefined
 ): string {
   if (!error) {
-    return "Stdio MCP verification failed. Open the failure badge for details."
+    return "Stdio MCP 验证失败，点击失败徽标查看详情。"
   }
 
   const meaningfulLine = error
@@ -118,14 +118,14 @@ function verificationFailureToastDescription(
     .reverse()
     .find((line) => line && !isStdioProbeStartupNoise(line))
   if (!meaningfulLine) {
-    return "Stdio MCP verification failed. Open the failure badge for details."
+    return "Stdio MCP 验证失败，点击失败徽标查看详情。"
   }
 
   const detail =
     meaningfulLine.length > MCP_VERIFICATION_TOAST_DETAIL_MAX_LENGTH
       ? `${meaningfulLine.slice(0, MCP_VERIFICATION_TOAST_DETAIL_MAX_LENGTH - 1)}…`
       : meaningfulLine
-  return `${detail} — Open the failure badge for details.`
+  return `${detail} — 打开失败标记以查看详情。`
 }
 
 function isStdioProbeStartupNoise(line: string): boolean {

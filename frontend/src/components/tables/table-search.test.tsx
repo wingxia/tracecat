@@ -74,9 +74,9 @@ jest.mock("@/hooks/use-entitlements", () => ({
   }),
 }))
 
-const ENABLE = "Enable vector search"
-const DISABLE = "Disable vector search"
-const RETRY = "Retry failed rows on this page"
+const ENABLE = "启用向量搜索"
+const DISABLE = "禁用向量搜索"
+const RETRY = "重试此页失败的行"
 
 const column: TableColumnRead = {
   id: "body-id",
@@ -140,7 +140,7 @@ function menus(columns = [column]) {
 
 function openMenu(position = 0) {
   fireEvent.keyDown(
-    screen.getAllByRole("button", { name: "Configure column" })[position],
+    screen.getAllByRole("button", { name: "配置列" })[position],
     { key: "ArrowDown" }
   )
 }
@@ -155,7 +155,7 @@ async function chooseSearchItem(name: string, position = 0) {
 }
 
 function openDetails() {
-  fireEvent.pointerEnter(screen.getByLabelText(/^Semantic search:/))
+  fireEvent.pointerEnter(screen.getByLabelText(/^语义搜索：/))
 }
 
 beforeEach(() => {
@@ -213,7 +213,7 @@ test("read permissions gate all authenticated status requests", async () => {
   expect(searchGetEmbeddingConfiguration).not.toHaveBeenCalled()
   expect(screen.queryByLabelText(/Semantic search/)).not.toBeInTheDocument()
   openMenu()
-  await screen.findByText("Delete unique index")
+  await screen.findByText("删除唯一索引")
   expect(screen.queryByText(/vector search/)).not.toBeInTheDocument()
 })
 
@@ -221,27 +221,25 @@ test("a managed table's column menu hides schema changes", async () => {
   managedTableIds.add("table-synthetic")
   setup(menus())
   openMenu()
-  await screen.findByRole("menuitem", { name: "Copy ID" })
-  expect(screen.getByRole("menuitem", { name: "Copy name" })).toBeVisible()
-  expect(screen.queryByText("Delete unique index")).not.toBeInTheDocument()
+  await screen.findByRole("menuitem", { name: "复制 ID" })
+  expect(screen.getByRole("menuitem", { name: "复制名称" })).toBeVisible()
+  expect(screen.queryByText("删除唯一索引")).not.toBeInTheDocument()
   expect(screen.queryByText(/vector search/)).not.toBeInTheDocument()
   expect(
-    screen.queryByRole("menuitem", { name: "Delete" })
+    screen.queryByRole("menuitem", { name: "删除" })
   ).not.toBeInTheDocument()
 })
 
 test("without the entitlement the badge opens the Enterprise only dialog", async () => {
   mockHasEntitlement.mockReturnValue(false)
   setup(provide(<TableSearchBadge />))
-  const badge = await screen.findByLabelText("Semantic search: Enterprise only")
+  const badge = await screen.findByLabelText("语义搜索：仅限企业版")
   fireEvent.pointerEnter(badge)
-  expect(screen.queryByText(/Model:/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/模型：/)).not.toBeInTheDocument()
   fireEvent.click(badge)
   const dialog = await screen.findByRole("dialog")
-  expect(dialog).toHaveTextContent("Enterprise only")
-  expect(dialog).toHaveTextContent(
-    "Semantic search is only available on enterprise plans."
-  )
+  expect(dialog).toHaveTextContent("仅限企业版")
+  expect(dialog).toHaveTextContent("语义搜索仅适用于企业版套餐。")
   expect(tablesGetTableSearch).not.toHaveBeenCalled()
   expect(searchGetEmbeddingConfiguration).not.toHaveBeenCalled()
 })
@@ -255,7 +253,7 @@ test("without the entitlement the column menu item opens the Enterprise only dia
   expect(item).not.toHaveAttribute("data-disabled")
   fireEvent.click(item)
   const dialog = await screen.findByRole("dialog")
-  expect(dialog).toHaveTextContent("Enterprise only")
+  expect(dialog).toHaveTextContent("仅限企业版")
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
   expect(tablesSelectTableSearchColumn).not.toHaveBeenCalled()
   expect(tablesGetTableSearch).not.toHaveBeenCalled()
@@ -276,9 +274,9 @@ test("read-only users see the status but cannot change selection or retry", asyn
       {menus()}
     </>
   )
-  await screen.findByLabelText("Semantic search: Needs attention")
+  await screen.findByLabelText("语义搜索：需要处理")
   openDetails()
-  await screen.findByText(/0 ready · 0 pending · 1 failed · 0 empty/)
+  await screen.findByText(/0 就绪 · 0 等待 · 1 失败 · 0 空/)
   expect(tablesGetTableSearchProgress).not.toHaveBeenCalled()
   expect(screen.queryByRole("button", { name: RETRY })).not.toBeInTheDocument()
   openMenu()
@@ -300,14 +298,14 @@ test("missing provider disables enabling and keeps existing table controls", asy
       {menus()}
     </>
   )
-  await screen.findByLabelText("Semantic search: Unavailable")
+  await screen.findByLabelText("语义搜索：不可用")
   openDetails()
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "No embedding provider is configured."
+    "尚未配置嵌入模型提供商。"
   )
   openMenu()
-  await screen.findByText("Delete unique index")
-  expect(screen.getByRole("menuitem", { name: "Delete" })).toBeInTheDocument()
+  await screen.findByText("删除唯一索引")
+  expect(screen.getByRole("menuitem", { name: "删除" })).toBeInTheDocument()
   const item = screen.getByRole("menuitem", { name: ENABLE })
   expect(item).toHaveAttribute("data-disabled")
   fireEvent.click(item)
@@ -318,7 +316,7 @@ test("non-text columns have no vector search item", async () => {
   setup(menus([{ ...column, type: "INTEGER" }]))
   await waitFor(() => expect(tablesGetTableSearch).toHaveBeenCalled())
   openMenu()
-  await screen.findByText("Delete unique index")
+  await screen.findByText("删除唯一索引")
   expect(screen.queryByText(/vector search/)).not.toBeInTheDocument()
 })
 
@@ -330,13 +328,13 @@ test("the badge shows a spinner only while work is pending and details on hover"
     index: { ...configuration.index, state: "active", ready: 3, pending: 2 },
   }
   setup(provide(<TableSearchBadge />))
-  const badge = await screen.findByLabelText("Semantic search: Indexing")
+  const badge = await screen.findByLabelText("语义搜索：正在建立索引")
   expect(badge.querySelector("svg")).toHaveClass("animate-spin")
   openDetails()
-  await screen.findByText("Model: openai / text-embedding-3-small")
-  expect(screen.getByText("Columns: body")).toBeInTheDocument()
+  await screen.findByText("模型： openai / text-embedding-3-small")
+  expect(screen.getByText("列： body")).toBeInTheDocument()
   expect(
-    screen.getByText("3 ready · 2 pending · 0 failed · 0 empty")
+    screen.getByText("3 就绪 · 2 等待 · 0 失败 · 0 空")
   ).toBeInTheDocument()
   expect(screen.queryByRole("alert")).not.toBeInTheDocument()
   expect(tablesGetTableSearchProgress).not.toHaveBeenCalled()
@@ -351,7 +349,7 @@ test("the badge shows a spinner only while work is pending and details on hover"
       queryKey: tableSearchKey("workspace-synthetic", "table-synthetic"),
     })
   })
-  await waitFor(() => expect(badge).toHaveTextContent("1 semantic"))
+  await waitFor(() => expect(badge).toHaveTextContent("1 语义搜索"))
   expect(badge.querySelector("svg")).not.toHaveClass("animate-spin")
   expect(badge).not.toHaveClass("bg-green-100")
 })
@@ -363,11 +361,11 @@ test("the badge counts selected columns and skips unresolved names", async () =>
     status: "ready",
   }
   setup(provide(<TableSearchBadge />))
-  expect(
-    await screen.findByLabelText("Semantic search: Ready")
-  ).toHaveTextContent("3 semantic")
+  expect(await screen.findByLabelText("语义搜索：就绪")).toHaveTextContent(
+    "3 语义搜索"
+  )
   openDetails()
-  expect(await screen.findByText("Columns: body, summary")).toBeInTheDocument()
+  expect(await screen.findByText("列： body, summary")).toBeInTheDocument()
 })
 
 test("the column header shows Semantic next to Index for a selected column", async () => {
@@ -378,8 +376,8 @@ test("the column header shows Semantic next to Index for a selected column", asy
     column: { getSort: () => null },
   } as ComponentProps<typeof AgGridColumnHeader>
   setup(provide(<AgGridColumnHeader {...props} />))
-  const semantic = await screen.findByText("Semantic")
-  expect(screen.getByText("Index")).toBeInTheDocument()
+  const semantic = await screen.findByText("语义")
+  expect(screen.getByText("索引")).toBeInTheDocument()
   expect(semantic).toHaveClass("bg-primary/10", "text-primary")
   expect(semantic.querySelector("svg")).toHaveClass("mr-1", "size-3")
 })
@@ -404,7 +402,7 @@ test("opening the badge without a pointer moves focus into the retry controls", 
     .mockResolvedValue({ generation: 2, items: [failedRow] })
   setup(provide(<TableSearchBadge />))
   const badge = await screen.findByRole("button", {
-    name: "Semantic search: Needs attention",
+    name: "语义搜索：需要处理",
   })
   fireEvent.click(badge)
   const retry = await screen.findByRole("button", { name: RETRY })
@@ -420,12 +418,12 @@ test("opening the badge without a pointer moves focus into the retry controls", 
 
 test("an unselected table reads Off with no index counts", async () => {
   setup(provide(<TableSearchBadge />))
-  const badge = await screen.findByLabelText("Semantic search: Off")
+  const badge = await screen.findByLabelText("语义搜索：关闭")
   expect(badge).toHaveClass("text-muted-foreground")
   openDetails()
-  await screen.findByText("Model: openai / text-embedding-3-small")
-  expect(screen.queryByText(/ready ·/)).not.toBeInTheDocument()
-  expect(screen.queryByText(/^Columns:/)).not.toBeInTheDocument()
+  await screen.findByText("模型： openai / text-embedding-3-small")
+  expect(screen.queryByText(/就绪 ·/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/^列：/)).not.toBeInTheDocument()
 })
 
 test("two text selections coexist with uniqueness and use confirmed generations", async () => {
@@ -476,7 +474,7 @@ test("two text selections coexist with uniqueness and use confirmed generations"
   })
   expect(toast).toHaveBeenCalledTimes(2)
   expect(toast).toHaveBeenLastCalledWith(
-    expect.objectContaining({ title: "Enabled vector search" })
+    expect.objectContaining({ title: "已启用向量搜索" })
   )
   expect(column.is_index).toBe(true)
 })
@@ -491,15 +489,15 @@ test("the confirm dialogs name the column and the embedding destination", async 
   )
   const enable = await chooseSearchItem(ENABLE, 0)
   expect(enable).toHaveTextContent(
-    "Text in column body will be indexed for vector search. Text is sent to openai / text-embedding-3-small."
+    "将为列 body 中的文本建立向量搜索索引。 文本将发送至 openai / text-embedding-3-small。"
   )
-  fireEvent.click(within(enable).getByRole("button", { name: "Cancel" }))
+  fireEvent.click(within(enable).getByRole("button", { name: "取消" }))
   await waitFor(() =>
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
   )
   const disable = await chooseSearchItem(DISABLE, 1)
   expect(disable).toHaveTextContent(
-    "Column summary is removed from vector search and the index is rebuilt for the remaining columns."
+    "将从向量搜索中移除列 summary，并为其余列重建索引。"
   )
   expect(disable).not.toHaveTextContent("openai")
   expect(tablesSelectTableSearchColumn).not.toHaveBeenCalled()
@@ -512,7 +510,7 @@ test("conflicts refresh and preserve confirmed selection without a success toast
   fireEvent.click(within(dialog).getByRole("button", { name: ENABLE }))
   await waitFor(() =>
     expect(toast).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Search settings changed" })
+      expect.objectContaining({ title: "搜索设置已更改" })
     )
   )
   await waitFor(() => expect(tablesGetTableSearch).toHaveBeenCalledTimes(2))
@@ -534,23 +532,23 @@ test("the confirm shows a loading state while its write is pending and a failure
   const dialog = await chooseSearchItem(ENABLE)
   fireEvent.click(within(dialog).getByRole("button", { name: ENABLE }))
   const pending = await within(dialog).findByRole("button", {
-    name: "Enabling...",
+    name: "启用中…",
   })
   expect(pending).toBeDisabled()
-  expect(within(dialog).getByRole("button", { name: "Cancel" })).toBeDisabled()
+  expect(within(dialog).getByRole("button", { name: "取消" })).toBeDisabled()
   fireEvent.keyDown(dialog, { key: "Escape" })
   expect(screen.getByRole("alertdialog")).toBeInTheDocument()
   await act(async () => rejectWrite({ status: 503 }))
   await waitFor(() =>
     expect(toast).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: "Could not update semantic search",
-        description: "Try again in a moment.",
+        title: "无法更新语义搜索",
+        description: "请稍后重试。",
       })
     )
   )
   expect(toast).toHaveBeenCalledTimes(1)
-  fireEvent.click(await within(dialog).findByRole("button", { name: "Cancel" }))
+  fireEvent.click(await within(dialog).findByRole("button", { name: "取消" }))
   await waitFor(() =>
     expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
   )
@@ -589,15 +587,13 @@ test("long-row progress does not claim ready after backfill and retries only dis
     ],
   })
   setup(provide(<TableSearchBadge />))
-  const badge = await screen.findByLabelText("Semantic search: Needs attention")
+  const badge = await screen.findByLabelText("语义搜索：需要处理")
   expect(badge).toHaveClass("border-amber-500")
   expect(badge).not.toHaveClass("bg-amber-100")
   expect(tablesGetTableSearchProgress).not.toHaveBeenCalled()
   openDetails()
-  await screen.findByText(/The total is still being discovered/)
-  expect(
-    screen.getByText(/Check the AI provider credentials/)
-  ).toBeInTheDocument()
+  await screen.findByText(/仍在统计总数/)
+  expect(screen.getByText(/请检查 AI 提供商凭据/)).toBeInTheDocument()
   fireEvent.click(screen.getByRole("button", { name: RETRY }))
   await waitFor(() =>
     expect(tablesRetryTableSearch).toHaveBeenCalledWith({
@@ -632,9 +628,9 @@ test.each(["provider", "index", "rebuild"] as const)(
       .mocked(tablesGetTableSearchProgress)
       .mockResolvedValue({ generation: 2, items: [failedRow] })
     setup(provide(<TableSearchBadge />))
-    let label = "Semantic search: Needs attention"
-    if (blockedSource === "provider") label = "Semantic search: Unavailable"
-    else if (blockedSource === "rebuild") label = "Semantic search: Indexing"
+    let label = "语义搜索：需要处理"
+    if (blockedSource === "provider") label = "语义搜索：不可用"
+    else if (blockedSource === "rebuild") label = "语义搜索：正在建立索引"
     await screen.findByLabelText(label)
     openDetails()
     const retry = await screen.findByRole("button", { name: RETRY })
@@ -670,9 +666,9 @@ test("provider failures show attention with one short line", async () => {
     status: "ready",
   }
   setup(provide(<TableSearchBadge />))
-  await screen.findByLabelText("Semantic search: Ready")
+  await screen.findByLabelText("语义搜索：就绪")
   openDetails()
-  await screen.findByText("Model: openai / text-embedding-3-small")
+  await screen.findByText("模型： openai / text-embedding-3-small")
   expect(screen.queryByRole("alert")).not.toBeInTheDocument()
   jest
     .mocked(searchGetEmbeddingConfiguration)
@@ -683,13 +679,9 @@ test("provider failures show attention with one short line", async () => {
     })
   })
   await waitFor(() =>
-    expect(screen.getByRole("alert")).toHaveTextContent(
-      "Could not load the search status."
-    )
+    expect(screen.getByRole("alert")).toHaveTextContent("无法加载搜索状态。")
   )
-  expect(
-    screen.getAllByLabelText("Semantic search: Needs attention")
-  ).toHaveLength(1)
+  expect(screen.getAllByLabelText("语义搜索：需要处理")).toHaveLength(1)
   expect(toast).not.toHaveBeenCalled()
 })
 
@@ -728,7 +720,7 @@ test("polling runs while chunks remain and stops at ready and on unmount", async
     await act(async () => {
       await jest.advanceTimersByTimeAsync(3100)
     })
-    expect(screen.getByLabelText("Semantic search: Ready")).toBeInTheDocument()
+    expect(screen.getByLabelText("语义搜索：就绪")).toBeInTheDocument()
     const calls = jest.mocked(tablesGetTableSearch).mock.calls.length
     await act(async () => {
       await jest.advanceTimersByTimeAsync(10000)
@@ -803,7 +795,7 @@ test("table artifact events refresh ready search status and counts", async () =>
     },
   }
   setup(provide(<TableSearchBadge />))
-  await screen.findByLabelText("Semantic search: Ready")
+  await screen.findByLabelText("语义搜索：就绪")
   expect(searchPollInterval(configuration, available)).toBe(false)
   const calls = jest.mocked(tablesGetTableSearch).mock.calls.length
   configuration = {
@@ -819,7 +811,7 @@ test("table artifact events refresh ready search status and counts", async () =>
     })
   })
   expect(tablesGetTableSearch).toHaveBeenCalledTimes(calls)
-  expect(screen.getByLabelText("Semantic search: Ready")).toBeInTheDocument()
+  expect(screen.getByLabelText("语义搜索：就绪")).toBeInTheDocument()
   await act(async () => {
     invalidateArtifactQueries(client, "workspace-synthetic", {
       type: "table",
@@ -827,9 +819,9 @@ test("table artifact events refresh ready search status and counts", async () =>
       title: "Synthetic table",
     })
   })
-  await screen.findByLabelText("Semantic search: Indexing")
+  await screen.findByLabelText("语义搜索：正在建立索引")
   openDetails()
-  expect(await screen.findByText(/0 ready · 1 pending/)).toBeInTheDocument()
+  expect(await screen.findByText(/0 就绪 · 1 等待/)).toBeInTheDocument()
   expect(tablesGetTableSearch).toHaveBeenCalledTimes(calls + 1)
 })
 
@@ -845,10 +837,8 @@ test("deleting a selected column explains the consequence", async () => {
     ).toEqual(configuration)
   )
   openMenu()
-  fireEvent.click(await screen.findByRole("menuitem", { name: "Delete" }))
-  expect(
-    await screen.findByText(/Deleting it removes it from search/)
-  ).toBeInTheDocument()
+  fireEvent.click(await screen.findByRole("menuitem", { name: "删除" }))
+  expect(await screen.findByText(/删除后会将其移出搜索/)).toBeInTheDocument()
 })
 
 test("a provider reindex marker overrides stale Ready", async () => {
@@ -870,7 +860,7 @@ test("a provider reindex marker overrides stale Ready", async () => {
     .mocked(searchGetEmbeddingConfiguration)
     .mockResolvedValue({ ...available, reindex_required: true })
   setup(provide(<TableSearchBadge />))
-  const badge = await screen.findByLabelText("Semantic search: Indexing")
+  const badge = await screen.findByLabelText("语义搜索：正在建立索引")
   expect(badge.querySelector("svg")).toHaveClass("animate-spin")
 })
 
@@ -906,7 +896,7 @@ test("provider failure allows removing selected columns but prevents new selecti
   )
   await waitFor(() =>
     expect(toast).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Disabled vector search" })
+      expect.objectContaining({ title: "已禁用向量搜索" })
     )
   )
 })

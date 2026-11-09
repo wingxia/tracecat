@@ -18,7 +18,7 @@ interface ToggleableDropdownItemProps
 }
 export function ToggleableDropdownItem({
   children,
-  disabledMessage = "This option is currently disabled",
+  disabledMessage = "此选项当前已禁用",
   enabled = true,
   onSelect,
   ...props

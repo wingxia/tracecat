@@ -16,20 +16,17 @@ describe("validateAwsRoleArn", () => {
   })
 
   it.each([
-    ["", /Enter the IAM role ARN/],
-    [
-      "arn:aws:iam::{Account}:role/{RoleNameWithPath}",
-      /Replace the placeholders/,
-    ],
-    ["my-role", /Enter an IAM role ARN/],
-    ["arn:aws:iam::123456789012:user/reader", /Enter an IAM role ARN/],
+    ["", /输入 IAM 角色 ARN/],
+    ["arn:aws:iam::{Account}:role/{RoleNameWithPath}", /等占位符替换为实际值/],
+    ["my-role", /输入 IAM 角色 ARN/],
+    ["arn:aws:iam::123456789012:user/reader", /输入 IAM 角色 ARN/],
     [
       "arn:aws:secretsmanager:us-east-1:123456789012:secret:x",
-      /Enter an IAM role ARN/,
+      /输入 IAM 角色 ARN/,
     ],
-    ["arn:aws:iam::my-account:role/reader", /12 digits/],
-    ["arn:aws:iam::12345:role/reader", /12 digits/],
-    ["arn:aws:iam::123456789012:role/bad name", /Check the role ARN format/],
+    ["arn:aws:iam::my-account:role/reader", /12 位数字/],
+    ["arn:aws:iam::12345:role/reader", /12 位数字/],
+    ["arn:aws:iam::123456789012:role/bad name", /请检查角色 ARN 格式/],
   ])("explains %s", (value, message) => {
     expect(validateAwsRoleArn(value)).toMatch(message)
   })
@@ -44,7 +41,7 @@ describe("validateAwsRegion", () => {
   it.each(["US East (N. Virginia)", "us-east", "useast1"])(
     "rejects %s",
     (value) => {
-      expect(validateAwsRegion(value)).toMatch(/region code such as us-east-1/)
+      expect(validateAwsRegion(value)).toMatch(/区域代码，如 us-east-1/)
     }
   )
 })
@@ -56,13 +53,13 @@ describe("validateSecretName", () => {
   })
 
   it.each([
-    ["SECRETS.hello_world.hello", /Enter only the name/],
-    ["hello_world.hello", /Enter only the name/],
-    ["SECRETS", /Enter only the name/],
-    ["Hello", /lowercase/],
-    ["1password", /Start with a letter or underscore/],
-    ["hello-world", /no spaces or hyphens/],
-    ["", /Enter a name/],
+    ["SECRETS.hello_world.hello", /仅输入名称/],
+    ["hello_world.hello", /仅输入名称/],
+    ["SECRETS", /仅输入名称/],
+    ["Hello", /小写/],
+    ["1password", /以字母或下划线开头/],
+    ["hello-world", /不含空格或连字符/],
+    ["", /输入名称/],
   ])("explains %s", (value, message) => {
     expect(validateSecretName(value)).toMatch(message)
   })
@@ -77,12 +74,12 @@ describe("validateAwsSecretId", () => {
   })
 
   it.each([
-    ["", /Enter the secret name or ARN/],
-    ["arn:aws:secretsmanager:us-east-1:secret:x", /full Secrets Manager/],
-    ["prod app key", /no spaces/],
+    ["", /输入密钥名称或 ARN/],
+    ["arn:aws:secretsmanager:us-east-1:secret:x", /完整的 Secrets Manager/],
+    ["prod app key", /不能包含空格/],
     [
       `arn:aws:secretsmanager:us-east-1:123456789012:secret:${"a".repeat(2048)}`,
-      /at most 2048 characters/,
+      /最多 2048 个字符/,
     ],
   ])("explains %s", (value, message) => {
     expect(validateAwsSecretId(value)).toMatch(message)
@@ -95,7 +92,7 @@ describe("validateSecretKey", () => {
   })
 
   it("explains invalid keys", () => {
-    expect(validateSecretKey("")).toMatch(/Enter a key name/)
-    expect(validateSecretKey("api-token")).toMatch(/starting with a letter/)
+    expect(validateSecretKey("")).toMatch(/输入键名/)
+    expect(validateSecretKey("api-token")).toMatch(/以字母或下划线开头/)
   })
 })

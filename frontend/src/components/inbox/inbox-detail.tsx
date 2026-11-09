@@ -128,8 +128,8 @@ export function InboxDetail({
         console.error("Failed to fork session:", error)
         toast({
           variant: "destructive",
-          title: "Failed to start conversation",
-          description: "Could not create a new session. Please try again.",
+          title: "启动对话失败",
+          description: "无法创建新会话，请重试。",
         })
         forkingRef.current = false
         return null
@@ -157,7 +157,7 @@ export function InboxDetail({
   if (chatError || !chat) {
     return (
       <div className="flex h-full items-center justify-center">
-        <span className="text-sm text-red-500">Failed to load session</span>
+        <span className="text-sm text-red-500">加载会话失败</span>
       </div>
     )
   }
@@ -181,10 +181,10 @@ export function InboxDetail({
       entityId={chat.entity_id ?? undefined}
       placeholder={
         isForking
-          ? "Starting conversation..."
+          ? "正在启动对话…"
           : isForkedSession
-            ? "Continue the conversation..."
-            : "Type to ask follow-up questions..."
+            ? "继续对话…"
+            : "输入后续问题…"
       }
       className="h-full"
       modelInfo={modelInfo ?? undefined}
@@ -196,7 +196,7 @@ export function InboxDetail({
       inputDisabledPlaceholder={
         modelUnavailable
           ? getModelUnavailableMessage(chatReadyReason)
-          : "Make an approval decision to continue..."
+          : "请作出审批决定以继续…"
       }
       // Re-arm the SDK reconnect when an externally resolved approval moves
       // the session from PENDING_APPROVAL to RUNNING.

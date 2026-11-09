@@ -83,7 +83,7 @@ export function TunnelSelect({
               variant="ghost"
               size="icon"
               className="size-8 shrink-0"
-              aria-label="Clear tunnel"
+              aria-label={"清除隧道"}
               onClick={() => onChange(undefined)}
             >
               <XIcon className="size-3.5" />
@@ -93,8 +93,8 @@ export function TunnelSelect({
         <LockedFeatureModal
           open={lockedOpen}
           onOpenChange={setLockedOpen}
-          title="Upgrade to use tunnels"
-          description="Tunnels let actions and agents reach private hosts in your network through Pangolin."
+          title={"升级以使用隧道"}
+          description={"隧道通过 Pangolin 让动作和智能体访问私有网络中的主机。"}
         />
       </>
     )
@@ -125,12 +125,12 @@ export function TunnelSelect({
             className="text-xs"
           >
             {tunnel.name}
-            {tunnel.enabled ? "" : " (disabled)"}
+            {tunnel.enabled ? "" : "（已禁用）"}
           </SelectItem>
         ))}
         {missing ? (
           <SelectItem value={missing} className="text-xs">
-            {by === "id" ? "Deleted tunnel" : missing} (not found)
+            {by === "id" ? "已删除的隧道" : missing} （未找到）
           </SelectItem>
         ) : null}
       </SelectContent>

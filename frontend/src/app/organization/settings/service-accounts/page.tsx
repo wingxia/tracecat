@@ -19,11 +19,9 @@ export default function OrganizationServiceAccountsPage() {
       <div className="container flex h-full max-w-[1000px] flex-col space-y-12">
         <div className="flex w-full">
           <div className="items-start space-y-3 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight">
-              Service accounts
-            </h2>
+            <h2 className="text-2xl font-semibold tracking-tight">服务账号</h2>
             <p className="text-base text-muted-foreground">
-              Create and manage organization-scoped machine identities.
+              创建和管理组织范围内的机器身份。
             </p>
           </div>
           {canCreateServiceAccounts === true && pathname ? (
@@ -44,7 +42,7 @@ export default function OrganizationServiceAccountsPage() {
                 }}
               >
                 <Plus className="mr-1 h-3.5 w-3.5" />
-                Create service account
+                创建服务账号
               </Button>
             </div>
           ) : null}

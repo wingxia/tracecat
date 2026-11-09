@@ -26,14 +26,9 @@ export function DeleteTableDialog({
     <ConfirmDestructiveDialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Delete table"
-      description={
-        <>
-          Permanently delete this table and all of its rows? This cannot be
-          undone.
-        </>
-      }
-      identifier={{ label: "Table name", value: table.name }}
+      title={"删除数据表"}
+      description={<>永久删除此数据表及其所有行吗？此操作无法撤销。</>}
+      identifier={{ label: "数据表名称", value: table.name }}
       confirmPhrase={table.name}
       isPending={deleteTableIsPending}
       onConfirm={async () => {

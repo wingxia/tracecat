@@ -48,7 +48,7 @@ export function RedirectUriDisplay({
         </Button>
       </div>
       <p className="text-xs text-muted-foreground">
-        Add this redirect URI to your OAuth app settings
+        将此重定向 URI 添加到 OAuth 应用设置中
       </p>
     </div>
   )

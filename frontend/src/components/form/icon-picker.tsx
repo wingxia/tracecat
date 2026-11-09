@@ -49,7 +49,7 @@ export interface IconPickerProps {
 export function IconPicker({
   value,
   onValueChange,
-  placeholder = "Select icon",
+  placeholder = "选择图标",
   className,
 }: IconPickerProps) {
   const [open, setOpen] = useState(false)
@@ -113,7 +113,7 @@ export function IconPicker({
             <div className="flex items-center border-b px-3">
               <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
               <Input
-                placeholder="Search icons..."
+                placeholder={"搜索图标…"}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="h-10 border-0 focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
@@ -122,7 +122,7 @@ export function IconPicker({
             <div className="h-[300px] overflow-y-auto overscroll-contain">
               {visibleIcons.length === 0 ? (
                 <div className="py-6 text-center text-sm text-muted-foreground">
-                  No icons found
+                  未找到图标
                 </div>
               ) : (
                 <div className="grid grid-cols-7 gap-1 p-2">
@@ -155,7 +155,7 @@ export function IconPicker({
               )}
               {isTruncated && (
                 <div className="px-2 pb-2 text-center text-xs text-muted-foreground">
-                  Type to search for more icons
+                  输入以搜索更多图标
                 </div>
               )}
             </div>
@@ -167,7 +167,7 @@ export function IconPicker({
                   className="w-full justify-start text-xs"
                   onClick={() => handleSelect("")}
                 >
-                  Clear selection
+                  清除选择
                 </Button>
               </div>
             )}

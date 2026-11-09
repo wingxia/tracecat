@@ -94,10 +94,10 @@ export function SecretSourcePicker({
       >
         <Command>
           {enabledStores.length > SEARCH_THRESHOLD && (
-            <CommandInput placeholder="Search stores or regions" />
+            <CommandInput placeholder={"搜索存储或区域"} />
           )}
           <CommandList className="max-h-72">
-            <CommandEmpty>No stores match.</CommandEmpty>
+            <CommandEmpty>没有匹配的存储。</CommandEmpty>
             <CommandItem
               value="tracecat"
               onSelect={() => choose(null)}
@@ -135,19 +135,19 @@ export function SecretSourcePicker({
               ))}
               {isLoading && (
                 <p className="py-1.5 pl-7 pr-2 text-xs text-muted-foreground">
-                  Loading stores…
+                  正在加载存储…
                 </p>
               )}
               {error && (
                 <p className="py-1.5 pl-7 pr-2 text-xs text-destructive">
-                  Could not load secret stores. Reopen this dialog to try again.
+                  无法加载密钥存储，请重新打开对话框以重试。
                 </p>
               )}
               {!isLoading && !error && enabledStores.length === 0 && (
                 <p className="py-1.5 pl-7 pr-2 text-xs text-muted-foreground">
                   {stores?.length
-                    ? "No stores are enabled for this workspace. Ask an organization admin to enable one or finish its setup."
-                    : "No stores are authorized for this workspace. Ask an organization admin to add one."}
+                    ? "此工作空间没有已启用的存储，请联系组织管理员启用或完成设置。"
+                    : "此工作空间没有已授权的存储，请联系组织管理员添加。"}
                 </p>
               )}
             </CommandGroup>

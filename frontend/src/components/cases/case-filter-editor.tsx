@@ -105,7 +105,7 @@ export function CaseFilterEditor({
           setOpen(true)
         }}
       >
-        Conditions{value ? ` (${conditionCount(value)})` : ""}
+        条件{value ? ` (${conditionCount(value)})` : ""}
       </Button>
       {value && (
         <Button
@@ -114,16 +114,15 @@ export function CaseFilterEditor({
           className="h-6 text-xs"
           onClick={() => onChange(null)}
         >
-          Clear conditions
+          清除条件
         </Button>
       )}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent size="xl">
           <DialogHeader>
-            <DialogTitle>Case conditions</DialogTitle>
+            <DialogTitle>事件筛选条件</DialogTitle>
             <DialogDescription>
-              Match all or any conditions. These also combine with the quick
-              filters.
+              匹配所有条件或任一条件，这些条件还会与快捷筛选组合使用。
             </DialogDescription>
           </DialogHeader>
           <form
@@ -138,28 +137,24 @@ export function CaseFilterEditor({
           >
             <DialogBody className="space-y-4">
               <p className="text-xs text-muted-foreground">
-                Unset scalar fields do not match comparisons or exclusions.
-                Select “Include unset” to also match missing values. Payload
-                equality distinguishes text, numbers, and booleans. Use
-                dot-separated keys, for example
-                payload.metadata.product.vendor_name. For payloads, unset means
-                a missing path; an explicit JSON null is present.
+                未设置的标量字段不匹配比较或排除条件。选择“包含未设置值”以匹配缺失值。数据载荷的相等比较区分文本、数字和布尔值。使用点分隔的键，如
+                payload.metadata.product.vendor_name。对于数据载荷，“未设置”指路径不存在；显式
+                JSON null 视为已存在。
               </p>
               {tooManyValues && (
                 <p role="alert" className="text-xs text-destructive">
-                  Conditions can contain at most {maxValues} values in total.
-                  Remove values before applying.
+                  所有条件合计最多包含 {maxValues} 个值。请移除部分值后再应用。
                 </p>
               )}
               {invalidRangeChoice && (
                 <p role="alert" className="text-xs text-destructive">
-                  Choose an available comparison value before applying.
+                  应用前请选择可用的比较值。
                 </p>
               )}
-              {metadata.isLoading && <p className="text-xs">Loading fields…</p>}
+              {metadata.isLoading && <p className="text-xs">正在加载字段…</p>}
               {metadata.error && (
                 <p role="alert" className="text-xs text-destructive">
-                  Could not load filter fields. Reopen to retry.
+                  无法加载筛选字段，请重新打开以重试。
                 </p>
               )}
               {draft && metadata.data && (
@@ -188,7 +183,7 @@ export function CaseFilterEditor({
                   size="sm"
                   onClick={() => setDraft({ and: [newCondition()] })}
                 >
-                  Add conditions
+                  添加条件
                 </Button>
               )}
             </DialogBody>
@@ -198,7 +193,7 @@ export function CaseFilterEditor({
                 size="sm"
                 disabled={!metadata.data || invalidDraft}
               >
-                Apply conditions
+                应用条件
               </Button>
             </DialogFooter>
           </form>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "SSO | Organization",
+  title: "SSO | 组织",
 }
 
 export default function SSOLayout({ children }: { children: React.ReactNode }) {

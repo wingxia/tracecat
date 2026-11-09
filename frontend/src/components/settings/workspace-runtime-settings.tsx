@@ -33,7 +33,7 @@ export const runtimeSettingsSchema = z
 
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
-      message: "Timeout must be at least 1 second",
+      message: "超时时间至少为 1 秒",
       path: ["workflow_default_timeout_seconds"],
     })
   })
@@ -84,10 +84,9 @@ export function WorkspaceRuntimeSettings({
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Unlimited workflow timeout</FormLabel>
+                <FormLabel>工作流不限制超时</FormLabel>
                 <FormDescription>
-                  Force all workflows to run indefinitely without timeout
-                  constraints.
+                  强制所有工作流无限运行，不受超时限制。
                 </FormDescription>
               </div>
               <FormControl>
@@ -106,10 +105,9 @@ export function WorkspaceRuntimeSettings({
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
-                <FormLabel>Default workflow timeout</FormLabel>
+                <FormLabel>默认工作流超时时间</FormLabel>
                 <FormDescription>
-                  Default timeout in seconds for workflows in this workspace.
-                  Disabled if unlimited timeout is enabled.
+                  此工作空间中工作流的默认超时秒数。启用不限制超时后，此设置不生效。
                 </FormDescription>
               </div>
               <FormControl>
@@ -133,7 +131,7 @@ export function WorkspaceRuntimeSettings({
         />
 
         <Button type="submit" disabled={isUpdating} size="sm">
-          {isUpdating ? "Saving..." : "Save"}
+          {isUpdating ? "保存中…" : "保存"}
         </Button>
       </form>
     </Form>

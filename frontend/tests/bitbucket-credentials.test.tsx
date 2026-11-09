@@ -34,16 +34,10 @@ describe("Bitbucket Cloud credentials", () => {
   it("saves the account email and API token", async () => {
     const user = userEvent.setup()
     render(<BitbucketTokenSetup />)
-    await user.click(screen.getByRole("button", { name: "Connect" }))
-    await user.type(
-      screen.getByLabelText("Account email"),
-      "example@example.com"
-    )
-    await user.type(
-      screen.getByLabelText("Credential token"),
-      "synthetic-token"
-    )
-    await user.click(screen.getByRole("button", { name: "Save" }))
+    await user.click(screen.getByRole("button", { name: "连接" }))
+    await user.type(screen.getByLabelText("账号邮箱"), "example@example.com")
+    await user.type(screen.getByLabelText("凭据令牌"), "synthetic-token")
+    await user.click(screen.getByRole("button", { name: "保存" }))
     await waitFor(() =>
       expect(mockSave).toHaveBeenCalledWith({
         email: "example@example.com",
@@ -59,12 +53,8 @@ describe("Bitbucket Cloud credentials", () => {
       refetchCredentialsStatus: mockRefetch,
     })
     render(<BitbucketTokenSetup />)
-    expect(
-      screen.getByRole("button", { name: "Reconnect" })
-    ).toBeInTheDocument()
-    expect(
-      screen.getByLabelText("Delete Bitbucket credentials")
-    ).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "重新连接" })).toBeInTheDocument()
+    expect(screen.getByLabelText("删除 Bitbucket 凭据")).toBeInTheDocument()
   })
 
   it("shows a status failure without claiming the provider is disconnected", () => {
@@ -73,11 +63,9 @@ describe("Bitbucket Cloud credentials", () => {
       refetchCredentialsStatus: mockRefetch,
     })
     render(<BitbucketTokenSetup />)
+    expect(screen.getByText(/无法加载 Bitbucket 凭据/)).toBeInTheDocument()
     expect(
-      screen.getByText(/Unable to load Bitbucket credentials/)
-    ).toBeInTheDocument()
-    expect(
-      screen.queryByRole("button", { name: "Connect" })
+      screen.queryByRole("button", { name: "连接" })
     ).not.toBeInTheDocument()
   })
 })

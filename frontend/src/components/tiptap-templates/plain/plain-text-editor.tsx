@@ -107,7 +107,7 @@ export function PlainTextEditor({
         autocomplete: "off",
         autocorrect: "off",
         autocapitalize: "off",
-        "aria-label": "Plain text editor",
+        "aria-label": "纯文本编辑器",
         class: "plain-text-editor",
         ...(placeholder ? { "data-placeholder": placeholder } : {}),
       },
@@ -186,8 +186,8 @@ export function PlainTextEditor({
             onClick={() => {
               editor?.chain().focus().undo().run()
             }}
-            aria-label="Undo"
-            title="Undo"
+            aria-label={"撤销"}
+            title={"撤销"}
           >
             <Undo2 className="size-4" />
           </Button>
@@ -200,15 +200,15 @@ export function PlainTextEditor({
             onClick={() => {
               editor?.chain().focus().redo().run()
             }}
-            aria-label="Redo"
-            title="Redo"
+            aria-label={"重做"}
+            title={"重做"}
           >
             <Redo2 className="size-4" />
           </Button>
         </div>
         <div className="text-xs tabular-nums text-muted-foreground">
-          {wordCount} {wordCount === 1 ? "word" : "words"} · {charCount}{" "}
-          {charCount === 1 ? "char" : "chars"}
+          {wordCount} {wordCount === 1 ? "词" : "词"} · {charCount}{" "}
+          {charCount === 1 ? "字符" : "字符"}
         </div>
       </div>
       <EditorContent

@@ -52,7 +52,7 @@ interface OAuthIntegrationDetailsDialogProps {
 }
 
 function maskValue(value?: string | null) {
-  if (!value) return "Not configured"
+  if (!value) return "未配置"
   const trimmed = value.trim()
   if (trimmed.length <= 6) return trimmed
   const suffix = trimmed.length > 10 ? trimmed.slice(-4) : ""
@@ -102,9 +102,8 @@ export function OAuthIntegrationDetailsDialog({
   const credentialInputs = getProviderCredentialInputs(provider)
   const clientIdLabel =
     credentialInputs?.clientId.label ??
-    (isServiceAccountProvider ? "Service account email" : "Client ID")
-  const clientSecretLabel =
-    credentialInputs?.clientSecret.label ?? "Client secret"
+    (isServiceAccountProvider ? "服务账号邮箱" : "客户端 ID")
+  const clientSecretLabel = credentialInputs?.clientSecret.label ?? "客户端密钥"
 
   const requestedScopes = integration?.requested_scopes ?? []
   const grantedScopes = integration?.granted_scopes ?? []
@@ -113,19 +112,18 @@ export function OAuthIntegrationDetailsDialog({
   const tokenExpires = useMemo(() => {
     if (!integration?.expires_at) return null
     try {
-      return new Date(integration.expires_at).toLocaleString()
+      return new Date(integration.expires_at).toLocaleString("zh-CN")
     } catch {
       return integration.expires_at
     }
   }, [integration?.expires_at])
 
   const lastUpdatedRelative = formatRelative(integration?.updated_at)
-  let connectionStatusDescription = "Connected"
+  let connectionStatusDescription = "已连接"
   if (needsReauth) {
-    connectionStatusDescription =
-      "The access token expired. Reconnect to restore this integration."
+    connectionStatusDescription = "访问令牌已过期，请重新连接以恢复此集成。"
   } else if (lastUpdatedRelative) {
-    connectionStatusDescription = `Last updated ${lastUpdatedRelative}`
+    connectionStatusDescription = `上次更新 ${lastUpdatedRelative}`
   }
 
   if (!open) {
@@ -159,8 +157,7 @@ export function OAuthIntegrationDetailsDialog({
               <DialogDescription className="text-sm" asChild>
                 {provider?.metadata ? (
                   <span>
-                    {provider.metadata.description ??
-                      "Connection details for this integration."}
+                    {provider.metadata.description ?? "此集成的连接详情。"}
                   </span>
                 ) : providerIsLoading ? (
                   <span className="block space-y-1.5 pt-1">
@@ -168,7 +165,7 @@ export function OAuthIntegrationDetailsDialog({
                     <Skeleton className="h-3 w-1/2" />
                   </span>
                 ) : (
-                  <span>Connection details for this integration.</span>
+                  <span>此集成的连接详情。</span>
                 )}
               </DialogDescription>
             </div>
@@ -182,7 +179,7 @@ export function OAuthIntegrationDetailsDialog({
               !integrationIsLoading &&
               (providerError || integrationError) && (
                 <div className="px-6 py-4 text-sm text-destructive">
-                  Failed to load integration details.
+                  加载集成详情失败。
                 </div>
               )}
 
@@ -192,7 +189,7 @@ export function OAuthIntegrationDetailsDialog({
               integration && (
                 <div className="flex flex-col">
                   <section className="space-y-3 px-6 py-5">
-                    <h3 className="text-sm font-semibold">Connection</h3>
+                    <h3 className="text-sm font-semibold">连接</h3>
                     {hasConnection ? (
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -215,14 +212,14 @@ export function OAuthIntegrationDetailsDialog({
                                   variant="outline"
                                   className="h-4 border-amber-300 bg-amber-50 px-1.5 text-[10px] uppercase text-amber-700"
                                 >
-                                  Reconnect required
+                                  需要重新连接
                                 </Badge>
                               ) : isExpired ? (
                                 <Badge
                                   variant="outline"
                                   className="h-4 border-amber-300 bg-amber-50 px-1.5 text-[10px] uppercase text-amber-700"
                                 >
-                                  Expired
+                                  已过期
                                 </Badge>
                               ) : null}
                             </div>
@@ -239,7 +236,7 @@ export function OAuthIntegrationDetailsDialog({
                                 size="icon"
                                 className="size-8 shrink-0 text-muted-foreground"
                                 disabled={anyActionPending}
-                                aria-label="Connection actions"
+                                aria-label={"连接操作"}
                               >
                                 {anyActionPending ? (
                                   <Loader2 className="size-4 animate-spin" />
@@ -257,7 +254,7 @@ export function OAuthIntegrationDetailsDialog({
                                   disabled={reauthorizeMutation.isPending}
                                 >
                                   <Link2 className="mr-2 size-4 text-muted-foreground" />
-                                  Reauthorize
+                                  重新授权
                                 </DropdownMenuItem>
                               ) : null}
                               {supportsTest ? (
@@ -271,7 +268,7 @@ export function OAuthIntegrationDetailsDialog({
                                   disabled={testMutation.isPending}
                                 >
                                   <PlayCircle className="mr-2 size-4 text-muted-foreground" />
-                                  Test
+                                  测试
                                 </DropdownMenuItem>
                               ) : null}
                               <DropdownMenuSeparator />
@@ -283,7 +280,7 @@ export function OAuthIntegrationDetailsDialog({
                                 }}
                               >
                                 <Trash2 className="mr-2 size-4" />
-                                Disconnect
+                                断开连接
                               </DropdownMenuItem>
                               {showDelete ? (
                                 <DropdownMenuItem
@@ -294,7 +291,7 @@ export function OAuthIntegrationDetailsDialog({
                                   }}
                                 >
                                   <Trash2 className="mr-2 size-4" />
-                                  Delete provider
+                                  删除提供商
                                 </DropdownMenuItem>
                               ) : null}
                             </DropdownMenuContent>
@@ -303,13 +300,13 @@ export function OAuthIntegrationDetailsDialog({
                       </div>
                     ) : (
                       <p className="text-sm text-muted-foreground">
-                        Not connected yet.
+                        尚未连接。
                       </p>
                     )}
                   </section>
 
                   <section className="space-y-4 border-t px-6 py-5">
-                    <h3 className="text-sm font-semibold">Configuration</h3>
+                    <h3 className="text-sm font-semibold">配置</h3>
                     <div className="grid grid-cols-2 gap-x-12 gap-y-4 text-sm">
                       <div className="flex flex-col gap-1.5">
                         <span className="font-medium text-muted-foreground">
@@ -325,34 +322,34 @@ export function OAuthIntegrationDetailsDialog({
                         </span>
                         <span className="text-xs text-foreground">
                           {integration.status !== "not_configured"
-                            ? "Configured"
-                            : "Not configured"}
+                            ? "已配置"
+                            : "未配置"}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1.5">
                         <span className="font-medium text-muted-foreground">
-                          Authorization endpoint
+                          授权端点
                         </span>
                         <span className="text-xs text-foreground break-all">
                           {integration.authorization_endpoint ||
                             provider.default_authorization_endpoint ||
-                            "Not configured"}
+                            "未配置"}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1.5">
                         <span className="font-medium text-muted-foreground">
-                          Token endpoint
+                          令牌端点
                         </span>
                         <span className="text-xs text-foreground break-all">
                           {integration.token_endpoint ||
                             provider.default_token_endpoint ||
-                            "Not configured"}
+                            "未配置"}
                         </span>
                       </div>
                       {tokenExpires && (
                         <div className="flex flex-col gap-1.5">
                           <span className="font-medium text-muted-foreground">
-                            Expires
+                            到期时间
                           </span>
                           <span className="text-xs text-foreground">
                             {tokenExpires}
@@ -363,14 +360,14 @@ export function OAuthIntegrationDetailsDialog({
                   </section>
 
                   <section className="space-y-4 border-t px-6 py-5">
-                    <h3 className="text-sm font-semibold">Scopes</h3>
+                    <h3 className="text-sm font-semibold">权限范围</h3>
                     <div className="space-y-4">
                       {hasScopes ? (
                         <>
                           {requestedScopes.length > 0 && (
                             <div className="flex flex-col gap-2">
                               <span className="text-xs font-medium text-muted-foreground">
-                                Requested
+                                已请求
                               </span>
                               <div className="flex flex-wrap gap-1">
                                 {requestedScopes.map((scope) => (
@@ -388,7 +385,7 @@ export function OAuthIntegrationDetailsDialog({
                           {grantedScopes.length > 0 && (
                             <div className="flex flex-col gap-2">
                               <span className="text-xs font-medium text-muted-foreground">
-                                Granted
+                                已授予
                               </span>
                               <div className="flex flex-wrap gap-1">
                                 {grantedScopes.map((scope) => (
@@ -406,7 +403,7 @@ export function OAuthIntegrationDetailsDialog({
                         </>
                       ) : (
                         <p className="text-xs text-muted-foreground">
-                          No scopes configured for this integration.
+                          此集成尚未配置权限范围。
                         </p>
                       )}
                     </div>
@@ -418,11 +415,11 @@ export function OAuthIntegrationDetailsDialog({
           <ConfirmDestructiveDialog
             open={confirmDisconnectOpen}
             onOpenChange={setConfirmDisconnectOpen}
-            identifier={{ label: "Provider name", value: providerName }}
+            identifier={{ label: "提供商名称", value: providerName }}
             confirmPhrase={providerName}
-            title="Disconnect integration"
-            description="Are you sure you want to disconnect this integration?"
-            confirmLabel="Disconnect"
+            title={"断开集成"}
+            description={"确定要断开此集成吗？"}
+            confirmLabel={"断开连接"}
             isPending={disconnectMutation.isPending}
             onConfirm={async () => {
               await disconnectMutation.mutateAsync({ providerId, grantType })
@@ -434,11 +431,13 @@ export function OAuthIntegrationDetailsDialog({
           <ConfirmDestructiveDialog
             open={confirmDeleteOpen}
             onOpenChange={setConfirmDeleteOpen}
-            identifier={{ label: "Provider name", value: providerName }}
+            identifier={{ label: "提供商名称", value: providerName }}
             confirmPhrase={providerName}
-            title="Delete custom provider"
-            description="Are you sure you want to delete this provider? This removes the provider definition and any stored credentials or connections."
-            confirmLabel="Delete"
+            title={"删除自定义提供商"}
+            description={
+              "确定要删除此提供商吗？此操作会删除提供商定义及所有已保存的凭据或连接。"
+            }
+            confirmLabel={"删除"}
             isPending={deleteMutation.isPending}
             onConfirm={async () => {
               await deleteMutation.mutateAsync({ providerId, grantType })

@@ -129,7 +129,7 @@ async function renderDialog(onCloseAutoFocus?: (event: Event) => void) {
   )
   await waitFor(() =>
     expect(
-      screen.queryByText("Loading roles and group access…")
+      screen.queryByText("正在加载角色和用户组权限…")
     ).not.toBeInTheDocument()
   )
   return { ...view, client, user: userEvent.setup() }
@@ -140,12 +140,12 @@ async function addRole(
   workspaceName?: string
 ) {
   if (workspaceName) {
-    await user.click(screen.getByRole("combobox", { name: "Scope" }))
+    await user.click(screen.getByRole("combobox", { name: "范围" }))
     await user.click(screen.getByRole("option", { name: workspaceName }))
   }
-  await user.click(screen.getByRole("combobox", { name: "Role" }))
+  await user.click(screen.getByRole("combobox", { name: "角色" }))
   await user.click(screen.getByRole("option", { name: roleName }))
-  await user.click(screen.getByRole("button", { name: "Add role" }))
+  await user.click(screen.getByRole("button", { name: "添加角色" }))
 }
 
 beforeEach(() => {
@@ -237,21 +237,21 @@ beforeAll(() => {
 it("shows the baseline role and stages edits until Done; closing writes nothing", async () => {
   const { user } = await renderDialog()
   expect(screen.getByText("Organization Member")).toBeInTheDocument()
-  await user.click(screen.getByRole("combobox", { name: "Role" }))
+  await user.click(screen.getByRole("combobox", { name: "角色" }))
   expect(
     screen.getByRole("option", { name: "Organization Member" })
   ).toBeInTheDocument()
   await user.click(screen.getByRole("option", { name: "Organization Admin" }))
-  await user.click(screen.getByRole("button", { name: "Add role" }))
+  await user.click(screen.getByRole("button", { name: "添加角色" }))
   expect(screen.getByText("Organization Admin")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Close" }))
+  await user.click(screen.getByRole("button", { name: "关闭" }))
   expect(onOpenChange).toHaveBeenCalledWith(false)
   expect(operationOrder).toEqual([])
 })
 
 it("offers only roles valid for the selected scope", async () => {
   const { user } = await renderDialog()
-  await user.click(screen.getByRole("combobox", { name: "Role" }))
+  await user.click(screen.getByRole("combobox", { name: "角色" }))
   expect(
     screen.getByRole("option", { name: "Organization Admin" })
   ).toBeInTheDocument()
@@ -259,9 +259,9 @@ it("offers only roles valid for the selected scope", async () => {
     screen.getByRole("option", { name: "Workspace Editor" })
   ).toBeInTheDocument()
   await user.keyboard("{Escape}")
-  await user.click(screen.getByRole("combobox", { name: "Scope" }))
+  await user.click(screen.getByRole("combobox", { name: "范围" }))
   await user.click(screen.getByRole("option", { name: "Workspace B" }))
-  await user.click(screen.getByRole("combobox", { name: "Role" }))
+  await user.click(screen.getByRole("combobox", { name: "角色" }))
   expect(
     screen.getByRole("option", { name: "Workspace Editor" })
   ).toBeInTheDocument()
@@ -277,7 +277,7 @@ it("promotes the hidden baseline by update with update-only permission", async (
   const { user } = await renderDialog()
   await addRole(user, "Organization Admin")
   expect(operationOrder).toEqual([])
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   await waitFor(() =>
     expect(rbacReplaceUserAssignments).toHaveBeenCalledWith({
       requestBody: expect.objectContaining({
@@ -298,18 +298,18 @@ it("saves the whole draft in one request after confirmation", async () => {
   await addRole(user, "Workspace Editor", "Workspace B")
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-  expect(screen.queryByText(/This will remove/)).not.toBeInTheDocument()
+  expect(screen.queryByText(/此操作将移除/)).not.toBeInTheDocument()
   expect(operationOrder).toEqual([])
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(screen.getByRole("alertdialog")).toHaveTextContent(
-    "Your other role changes will also be saved."
+    "其他角色更改也会一并保存。"
   )
   expect(operationOrder).toEqual([])
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   await waitFor(() => expect(operationOrder).toEqual(["replace"]))
 })
 
@@ -326,7 +326,7 @@ it("refreshes cached workspace member lists after saving organization roles", as
   client.setQueryData(workspaceKey, { name: "Workspace A" })
 
   await addRole(user, "Organization Admin")
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
 
   for (const queryKey of memberKeys) {
@@ -347,18 +347,18 @@ it("saves an empty final set and warns the member stays on the baseline", async 
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   expect(screen.queryByRole("alert")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   const confirmation = screen.getByRole("alertdialog")
   expect(confirmation).toHaveTextContent(
-    "This leaves the user with no roles. They stay a member with baseline access. Use Remove member to remove them."
+    "此后该用户将没有角色，但仍作为成员保留基本访问权限。若要移除用户，请使用“移除成员”。"
   )
   expect(operationOrder).toEqual([])
   await user.click(
-    within(confirmation).getByRole("button", { name: "Confirm changes" })
+    within(confirmation).getByRole("button", { name: "确认更改" })
   )
   await waitFor(() =>
     expect(rbacReplaceUserAssignments).toHaveBeenCalledTimes(1)
@@ -368,7 +368,7 @@ it("saves an empty final set and warns the member stays on the baseline", async 
 it("keeps a baseline-only member unchanged when Done has no edits", async () => {
   savedAssignments = [baseline]
   const { user } = await renderDialog()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(onOpenChange).toHaveBeenCalledWith(false)
   expect(operationOrder).toEqual([])
 })
@@ -377,29 +377,29 @@ it("confirms removal after Done; Cancel preserves the draft without writes", asy
   savedAssignments = [workspaceRole]
   setupGroup()
   const { user } = await renderDialog()
-  expect(await screen.findByText("via Operators")).toBeInTheDocument()
+  expect(await screen.findByText("通过 Operators")).toBeInTheDocument()
   expect(rbacListAssignments).toHaveBeenCalledWith({ userId: "user-1" })
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-  expect(screen.queryByText(/This will remove/)).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  expect(screen.queryByText(/此操作将移除/)).not.toBeInTheDocument()
+  await user.click(screen.getByRole("button", { name: "完成" }))
   const confirmation = screen.getByRole("alertdialog")
   expect(confirmation).toHaveTextContent(
-    "This will remove Workspace Editor in Workspace A from member@example.com."
+    "此操作将移除 member@example.com 的以下角色：Workspace A中的 Workspace Editor。"
   )
-  expect(confirmation).toHaveTextContent("Access from groups is unchanged.")
+  expect(confirmation).toHaveTextContent("通过用户组获得的权限保持不变。")
   expect(operationOrder).toEqual([])
-  await user.click(within(confirmation).getByRole("button", { name: "Cancel" }))
+  await user.click(within(confirmation).getByRole("button", { name: "取消" }))
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
-  expect(screen.getByText("No direct roles")).toBeInTheDocument()
+  expect(screen.getByText("没有直接分配的角色")).toBeInTheDocument()
   expect(onOpenChange).not.toHaveBeenCalled()
   expect(operationOrder).toEqual([])
-  await user.click(screen.getByRole("button", { name: "Done" }))
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   await waitFor(() =>
     expect(rbacReplaceUserAssignments).toHaveBeenCalledTimes(1)
   )
@@ -408,18 +408,18 @@ it("confirms removal after Done; Cancel preserves the draft without writes", asy
 it("surfaces a conflict when group access changes during the save", async () => {
   setupGroup()
   const { user } = await renderDialog()
-  await screen.findByText("via Operators")
+  await screen.findByText("通过 Operators")
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   groupAssignments = []
   jest.mocked(rbacReplaceUserAssignments).mockRejectedValueOnce({ status: 409 })
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Roles or group access changed"
+    "角色或用户组权限已更改"
   )
   expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument()
   expect(operationOrder).toEqual([])
@@ -430,16 +430,16 @@ it("confirms organization-role removal while workspace access remains", async ()
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Organization Admin from organization",
+      name: "从 organization 移除 Organization Admin",
     })
   )
   expect(screen.queryByRole("alert")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(screen.getByRole("alertdialog")).toHaveTextContent(
-    "Organization Admin in the organization"
+    "组织中的 Organization Admin"
   )
   expect(operationOrder).toEqual([])
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   await waitFor(() =>
     expect(rbacReplaceUserAssignments).toHaveBeenCalledTimes(1)
   )
@@ -453,11 +453,11 @@ it("clears the final role without member-remove permission", async () => {
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   // Clearing roles is not a removal, so it needs only the delete scope.
-  expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
+  expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
 })
 
 it("rejects a stale draft when group access changes before Done", async () => {
@@ -465,15 +465,15 @@ it("rejects a stale draft when group access changes before Done", async () => {
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   setupGroup()
   jest.mocked(rbacReplaceUserAssignments).mockRejectedValueOnce({ status: 409 })
-  await user.click(screen.getByRole("button", { name: "Done" }))
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Roles or group access changed while this dialog was open"
+    "此对话框打开期间，角色或用户组权限已更改"
   )
   expect(operationOrder).toEqual([])
 })
@@ -486,9 +486,9 @@ it("rejects a stale draft when direct assignments change before Done", async () 
     assignment("other-assignment", "editor", "B"),
   ]
   jest.mocked(rbacReplaceUserAssignments).mockRejectedValueOnce({ status: 409 })
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Roles or group access changed while this dialog was open"
+    "此对话框打开期间，角色或用户组权限已更改"
   )
   expect(operationOrder).toEqual([])
 })
@@ -500,17 +500,15 @@ it("still saves the final role removal when group membership cannot be loaded", 
   const { user } = await renderDialog()
   await waitFor(() =>
     expect(
-      screen.getByText(
-        "Group access cannot be checked. Only direct roles are shown."
-      )
+      screen.getByText("无法检查用户组权限，仅显示直接分配的角色。")
     ).toBeInTheDocument()
   )
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
-  expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
+  expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
 })
 
 it("reloads current state after a failed save without retrying automatically", async () => {
@@ -519,21 +517,19 @@ it("reloads current state after a failed save without retrying automatically", a
   await addRole(user, "Workspace Editor", "Workspace B")
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   jest
     .mocked(rbacReplaceUserAssignments)
     .mockRejectedValueOnce(new Error("Unavailable"))
-  await user.click(screen.getByRole("button", { name: "Done" }))
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
-  expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Changes could not be confirmed"
-  )
+  await user.click(screen.getByRole("button", { name: "完成" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
+  expect(await screen.findByRole("alert")).toHaveTextContent("无法确认更改")
   expect(deleteUserAssignment).not.toHaveBeenCalled()
   expect(screen.queryByText("Organization Admin")).not.toBeInTheDocument()
   expect(screen.getByText("Workspace A")).toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(rbacReplaceUserAssignments).toHaveBeenCalledTimes(1)
 })
 
@@ -542,12 +538,12 @@ it("undoes a staged baseline promotion without deleting its persisted source", a
   await addRole(user, "Organization Admin")
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Organization Admin from organization",
+      name: "从 organization 移除 Organization Admin",
     })
   )
   expect(screen.getByText("Organization Member")).toBeInTheDocument()
   expect(screen.queryByRole("alert")).not.toBeInTheDocument()
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(operationOrder).toEqual([])
 })
 
@@ -559,15 +555,15 @@ it("allows undoing newly staged additions without delete permission", async () =
   await addRole(user, "Workspace Editor", "Workspace B")
   expect(
     screen.queryByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   ).not.toBeInTheDocument()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace B",
+      name: "从 Workspace B 移除 Workspace Editor",
     })
   )
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   expect(operationOrder).toEqual([])
 })
 
@@ -579,7 +575,7 @@ it("keeps basic promotion available without RBAC addons and does not fetch group
   })
   const { user } = await renderDialog()
   await addRole(user, "Organization Admin")
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   await waitFor(() =>
     expect(rbacReplaceUserAssignments).toHaveBeenCalledWith({
       requestBody: expect.objectContaining({
@@ -604,13 +600,11 @@ it("does not infer absent group paths without RBAC addons", async () => {
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
-  expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
-  expect(screen.getByRole("status")).toHaveTextContent(
-    "Group access cannot be checked"
-  )
+  expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
+  expect(screen.getByRole("status")).toHaveTextContent("无法检查用户组权限")
 })
 
 it("refreshes group paths when initial group loading finishes after editing starts", async () => {
@@ -628,19 +622,19 @@ it("refreshes group paths when initial group loading finishes after editing star
   const { user } = await renderDialog()
   await user.click(
     screen.getByRole("button", {
-      name: "Remove Workspace Editor from Workspace A",
+      name: "从 Workspace A 移除 Workspace Editor",
     })
   )
   await act(async () => finishGroupRead({ items: [], total: 0 }))
   await waitFor(() =>
-    expect(screen.getByRole("button", { name: "Done" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "完成" })).toBeEnabled()
   )
   setupGroup()
   jest.mocked(rbacReplaceUserAssignments).mockRejectedValueOnce({ status: 409 })
-  await user.click(screen.getByRole("button", { name: "Done" }))
-  await user.click(screen.getByRole("button", { name: "Confirm changes" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
+  await user.click(screen.getByRole("button", { name: "确认更改" }))
   expect(await screen.findByRole("alert")).toHaveTextContent(
-    "Roles or group access changed"
+    "角色或用户组权限已更改"
   )
   expect(operationOrder).toEqual([])
 })
@@ -648,12 +642,12 @@ it("refreshes group paths when initial group loading finishes after editing star
 it("does not depend on another group read when saving ordinary role changes", async () => {
   setupGroup()
   const { user } = await renderDialog()
-  await screen.findByText("via Operators")
+  await screen.findByText("通过 Operators")
   await addRole(user, "Organization Admin")
   jest
     .mocked(rbacListAssignments)
     .mockRejectedValueOnce(new Error("Unavailable"))
-  await user.click(screen.getByRole("button", { name: "Done" }))
+  await user.click(screen.getByRole("button", { name: "完成" }))
   await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false))
   expect(rbacListAssignments).toHaveBeenCalledTimes(1)
   expect(rbacReplaceUserAssignments).toHaveBeenCalledTimes(1)

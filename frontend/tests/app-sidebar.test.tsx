@@ -188,8 +188,8 @@ describe("AppSidebar", () => {
 
       const titles = screen.getAllByRole("link").map((link) => link.textContent)
       // Right after Workflows.
-      expect(titles.indexOf("Forms")).toBe(
-        shown ? titles.indexOf("Workflows") + 1 : -1
+      expect(titles.indexOf("表单")).toBe(
+        shown ? titles.indexOf("工作流") + 1 : -1
       )
     }
   )
@@ -203,8 +203,8 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.queryByText("Chat")).not.toBeInTheDocument()
-    expect(screen.getByText("Workflows")).toBeInTheDocument()
+    expect(screen.queryByText("对话")).not.toBeInTheDocument()
+    expect(screen.getByText("工作流")).toBeInTheDocument()
   })
 
   it("shows Chat when the user can execute and read agents", () => {
@@ -215,7 +215,7 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.getByText("Chat")).toBeInTheDocument()
+    expect(screen.getByText("对话")).toBeInTheDocument()
   })
 
   it("does not show entitlement locks while entitlements are loading", () => {
@@ -229,9 +229,9 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.getByText("Chat")).toBeInTheDocument()
-    expect(screen.queryByRole("link", { name: /Chat/ })).not.toBeInTheDocument()
-    expect(screen.getByRole("button", { name: /Chat/ })).toBeDisabled()
+    expect(screen.getByText("对话")).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /对话/ })).not.toBeInTheDocument()
+    expect(screen.getByRole("button", { name: /对话/ })).toBeDisabled()
     expect(screen.queryByText("Locked")).not.toBeInTheDocument()
   })
 
@@ -248,7 +248,7 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.getByText("Chat")).toBeInTheDocument()
+    expect(screen.getByText("对话")).toBeInTheDocument()
     expect(screen.getAllByText("Locked")).toHaveLength(1)
   })
 
@@ -257,7 +257,7 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.getByRole("link", { name: "Git sync" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Git 同步" })).toHaveAttribute(
       "href",
       "/workspaces/workspace-1/git-sync"
     )
@@ -270,7 +270,7 @@ describe("AppSidebar", () => {
 
     render(<AppSidebar />)
 
-    expect(screen.getByRole("link", { name: "Git sync" })).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Git 同步" })).toBeInTheDocument()
     expect(screen.queryByText("Requires upgrade")).not.toBeInTheDocument()
   })
 
@@ -280,7 +280,7 @@ describe("AppSidebar", () => {
     render(<AppSidebar />)
 
     expect(
-      screen.queryByRole("link", { name: "Git sync" })
+      screen.queryByRole("link", { name: "Git 同步" })
     ).not.toBeInTheDocument()
     expect(screen.queryByText("Requires upgrade")).not.toBeInTheDocument()
   })
@@ -295,9 +295,9 @@ describe("AppSidebar", () => {
     render(<AppSidebar />)
 
     expect(
-      screen.getByRole("link", { name: "MCP servers" }).closest("[data-active]")
+      screen.getByRole("link", { name: "MCP 服务器" }).closest("[data-active]")
     ).toHaveAttribute("data-active", "true")
-    expect(screen.getByRole("link", { name: "MCP access" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "MCP 访问" })).toHaveAttribute(
       "data-active",
       "false"
     )

@@ -70,16 +70,14 @@ export function useSkillFolders(
     onSuccess: () => {
       invalidateSkillOrganizationQueries(queryClient, workspaceId)
       toast({
-        title: "Created folder",
-        description: "Folder created successfully.",
+        title: "已创建文件夹",
+        description: "文件夹创建成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to create folder",
-        description:
-          getApiErrorDetail(error) ??
-          "An error occurred while creating the folder.",
+        title: "创建文件夹失败",
+        description: getApiErrorDetail(error) ?? "创建文件夹时出错。",
         variant: "destructive",
       })
     },
@@ -99,16 +97,14 @@ export function useSkillFolders(
     onSuccess: () => {
       invalidateSkillOrganizationQueries(queryClient, workspaceId)
       toast({
-        title: "Updated folder",
-        description: "Folder updated successfully.",
+        title: "已更新文件夹",
+        description: "文件夹更新成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to update folder",
-        description:
-          getApiErrorDetail(error) ??
-          "An error occurred while updating the folder.",
+        title: "更新文件夹失败",
+        description: getApiErrorDetail(error) ?? "更新文件夹时出错。",
         variant: "destructive",
       })
     },
@@ -128,16 +124,14 @@ export function useSkillFolders(
     onSuccess: () => {
       invalidateSkillOrganizationQueries(queryClient, workspaceId)
       toast({
-        title: "Moved folder",
-        description: "Folder moved successfully.",
+        title: "已移动文件夹",
+        description: "文件夹移动成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to move folder",
-        description:
-          getApiErrorDetail(error) ??
-          "An error occurred while moving the folder.",
+        title: "移动文件夹失败",
+        description: getApiErrorDetail(error) ?? "移动文件夹时出错。",
         variant: "destructive",
       })
     },
@@ -157,16 +151,14 @@ export function useSkillFolders(
     onSuccess: () => {
       invalidateSkillOrganizationQueries(queryClient, workspaceId)
       toast({
-        title: "Deleted folder",
-        description: "Folder deleted successfully.",
+        title: "已删除文件夹",
+        description: "文件夹删除成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to delete folder",
-        description:
-          getApiErrorDetail(error) ??
-          "An error occurred while deleting the folder.",
+        title: "删除文件夹失败",
+        description: getApiErrorDetail(error) ?? "删除文件夹时出错。",
         variant: "destructive",
       })
     },
@@ -238,14 +230,14 @@ export function useMoveSkill(workspaceId: string) {
     onSuccess: () => {
       invalidateSkillOrganizationQueries(queryClient, workspaceId)
       toast({
-        title: "Moved skill",
-        description: "Skill moved successfully.",
+        title: "已移动技能",
+        description: "技能移动成功。",
       })
     },
     onError: (error) => {
       toast({
-        title: "Move failed",
-        description: getApiErrorDetail(error) ?? "Failed to move skill.",
+        title: "移动失败",
+        description: getApiErrorDetail(error) ?? "移动技能失败。",
         variant: "destructive",
       })
     },

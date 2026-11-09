@@ -164,7 +164,7 @@ describe("skill tool index", () => {
       section: "tracecat",
     })
     expect(index.byKey.get("mcp.slack")).toMatchObject({
-      title: "All tools",
+      title: "所有工具",
       description: "Send and read Slack messages.",
       namespace: "slack",
       section: "mcp",
@@ -229,7 +229,7 @@ it.each([
 ])("requires raw editing for aliased values: %s", (source) => {
   expect(readSkillFrontmatterTools(source).valid).toBe(false)
   expect(() => updateSkillFrontmatterTools(source, ["core.new"])).toThrow(
-    "Edit tools in the YAML editor"
+    "请在 YAML 编辑器中编辑工具"
   )
 })
 
@@ -248,7 +248,7 @@ it.each([
 ])("blocks structured edits of merged metadata", (source) => {
   expect(readSkillFrontmatterTools(source)).toMatchObject({ valid: false })
   expect(() => updateSkillFrontmatterTools(source, ["core.new"])).toThrow(
-    "merge keys"
+    "合并键"
   )
 })
 
@@ -270,7 +270,7 @@ it("checks the raw declaration count before deduplicating", () => {
   const source = `metadata: { tools: ${JSON.stringify(Array(65).fill("core.example"))} }`
   expect(readSkillFrontmatterTools(source)).toMatchObject({
     valid: false,
-    message: "metadata.tools supports at most 64 tool IDs.",
+    message: "metadata.tools 最多支持 64 个工具 ID。",
   })
 })
 
@@ -343,7 +343,7 @@ it.each([
   ).toEqual({ valid: true, tools: ["core.ok"] })
   expect(() =>
     updateSkillFrontmatterTools(source, [id, "core.ok", "core.new"])
-  ).toThrow("Invalid tool IDs")
+  ).toThrow("工具 ID 无效")
 })
 
 it("allows removing malformed IDs one at a time", () => {
@@ -371,7 +371,7 @@ it.each([
     valid: false,
     canRemove: true,
     tools: [id, "core.cases.get_case"],
-    message: expect.stringContaining(`Unavailable tool IDs: ${id}`),
+    message: expect.stringContaining(`工具 ID 不可用：${id}`),
   })
 })
 

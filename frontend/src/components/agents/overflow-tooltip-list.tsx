@@ -18,7 +18,7 @@ export function OverflowTooltipList({
         ))}
       </ul>
       {hiddenCount > 0 ? (
-        <p className="mt-1 opacity-70">and {hiddenCount} more</p>
+        <p className="mt-1 opacity-70">另有 {hiddenCount} 项</p>
       ) : null}
     </div>
   )

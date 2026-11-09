@@ -73,14 +73,14 @@ export function DataTableColumnHeader<TData, TValue>({
             className="text-xs"
           >
             <ArrowUpIcon className="mr-2 size-3.5 text-muted-foreground/70" />
-            Ascending
+            升序
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => column.toggleSorting(true)}
             className="text-xs"
           >
             <ArrowDownIcon className="mr-2 size-3.5 text-muted-foreground/70" />
-            Descending
+            降序
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -89,7 +89,7 @@ export function DataTableColumnHeader<TData, TValue>({
             disabled={!column.getCanHide()}
           >
             <EyeNoneIcon className="mr-2 size-3.5 text-muted-foreground/70" />
-            Hide
+            隐藏
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

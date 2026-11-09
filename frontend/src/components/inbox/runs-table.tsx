@@ -2,6 +2,7 @@
 
 import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { format } from "date-fns"
+import { zhCN } from "date-fns/locale"
 import {
   AnvilIcon,
   ArrowDownIcon,
@@ -64,23 +65,23 @@ interface SourceConfig {
 
 const SOURCE_CONFIGS: Record<SourceType, SourceConfig> = {
   workflow: {
-    label: "Workflow",
+    label: "工作流",
     icon: WorkflowIcon,
   },
   case: {
-    label: "Case",
+    label: "事件",
     icon: LayersIcon,
   },
   chat: {
-    label: "Chat",
+    label: "对话",
     icon: MessageSquareIcon,
   },
   test: {
-    label: "Test",
+    label: "测试",
     icon: FlaskConicalIcon,
   },
   assistant: {
-    label: "Build",
+    label: "构建信息",
     icon: AnvilIcon,
   },
 }
@@ -95,22 +96,22 @@ interface StatusGroupConfig {
 
 const STATUS_GROUPS: Record<StatusGroup, StatusGroupConfig> = {
   review_required: {
-    label: "Review required",
+    label: "需要审核",
     icon: CirclePauseIcon,
     iconColor: "text-primary",
   },
   running: {
-    label: "In progress",
+    label: "处理中",
     icon: LoaderCircleIcon,
     iconColor: "text-muted-foreground",
   },
   error: {
-    label: "Error",
+    label: "错误",
     icon: XCircleIcon,
     iconColor: "text-red-600",
   },
   completed: {
-    label: "Completed",
+    label: "已完成",
     icon: CheckCircle2Icon,
     iconColor: "text-green-600",
   },
@@ -188,11 +189,11 @@ function SortableHead({
   // aria-pressed plus a descriptive label conveys the same state and intent.
   // aria-label replaces the visible text, so keep the column name in both
   // states or screen-reader users lose track of which column this sorts.
-  let actionDescription = `Sort by ${label}`
+  let actionDescription = `按 ${label} 排序`
   if (isActive) {
     const current = direction === "asc" ? "ascending" : "descending"
     const nextDirection = direction === "asc" ? "descending" : "ascending"
-    actionDescription = `${label}, sorted ${current}. Activate to sort ${nextDirection}.`
+    actionDescription = `${label}，当前为${current === "ascending" ? "升序" : "降序"}。点击切换为${nextDirection === "ascending" ? "升序" : "降序"}。`
   }
 
   return (
@@ -233,9 +234,9 @@ function PlainHead({
 function formatTimestamp(date: Date): string {
   const now = new Date()
   if (date.getFullYear() === now.getFullYear()) {
-    return format(date, "MMM d, HH:mm")
+    return format(date, "M月d日 HH:mm", { locale: zhCN })
   }
-  return format(date, "MMM d, yyyy")
+  return format(date, "yyyy年M月d日", { locale: zhCN })
 }
 
 function TimestampCell({ value, label }: { value: string; label: string }) {
@@ -249,7 +250,7 @@ function TimestampCell({ value, label }: { value: string; label: string }) {
           </span>
         </TooltipTrigger>
         <TooltipContent>
-          {label}: {date.toLocaleString()}
+          {label}: {date.toLocaleString("zh-CN")}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -324,8 +325,8 @@ function RunRow({
           <span className="text-xs text-muted-foreground">—</span>
         )}
       </div>
-      <TimestampCell value={session.created_at} label="Created" />
-      <TimestampCell value={session.updated_at} label="Updated" />
+      <TimestampCell value={session.created_at} label={"创建时间"} />
+      <TimestampCell value={session.updated_at} label={"更新时间"} />
       {showActions && (
         <div className="flex justify-end">
           {onRequestDelete && session.pendingApprovalCount > 0 && (
@@ -342,7 +343,7 @@ function RunRow({
                 "hover:bg-destructive/10 hover:text-destructive",
                 isDeleting && "cursor-not-allowed opacity-50"
               )}
-              aria-label="Delete approval"
+              aria-label={"删除审批"}
             >
               <Trash2Icon className="size-3.5" />
             </button>
@@ -422,18 +423,18 @@ export function RunsTable({
           showActions ? GRID_COLS_WITH_ACTIONS : GRID_COLS
         )}
       >
-        <PlainHead label="Title" className="pl-10" />
-        <PlainHead label="Source" />
-        <PlainHead label="Created by" />
+        <PlainHead label={"标题"} className="pl-10" />
+        <PlainHead label={"来源"} />
+        <PlainHead label={"创建者"} />
         <SortableHead
-          label="Created"
+          label={"创建时间"}
           sortKey="created_at"
           activeKey={activeKey}
           direction={sort}
           onSort={onSort}
         />
         <SortableHead
-          label="Updated"
+          label={"更新时间"}
           sortKey="updated_at"
           activeKey={activeKey}
           direction={sort}
@@ -445,7 +446,9 @@ export function RunsTable({
       <ScrollArea className={cn("min-h-0 flex-1", GRID_SCROLL)}>
         {visibleGroups.length === 0 && (
           <div className="flex h-32 items-center justify-center">
-            <span className="text-sm text-muted-foreground">No agent runs</span>
+            <span className="text-sm text-muted-foreground">
+              暂无智能体运行记录
+            </span>
           </div>
         )}
         <AccordionPrimitive.Root
@@ -539,10 +542,10 @@ export function RunsTable({
                       {groupState.isLoadingMore ? (
                         <>
                           <LoaderCircleIcon className="size-3.5 animate-spin" />
-                          Loading…
+                          加载中…
                         </>
                       ) : (
-                        "Show more"
+                        "显示更多"
                       )}
                     </button>
                   )}
@@ -563,14 +566,13 @@ export function RunsTable({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete approval</AlertDialogTitle>
+            <AlertDialogTitle>删除审批</AlertDialogTitle>
             <AlertDialogDescription>
-              This will deny all pending tool calls and remove this approval
-              from the inbox.
+              此操作将拒绝所有待处理工具调用，并从收件箱中移除此审批。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
@@ -580,7 +582,7 @@ export function RunsTable({
                 setConfirmDeleteId(null)
               }}
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

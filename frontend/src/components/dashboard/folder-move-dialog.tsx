@@ -74,8 +74,8 @@ export function FolderMoveDialog({
   const handleMove = async () => {
     if (!selectedFolder || !workspaceId) {
       toast({
-        title: "Error",
-        description: "No folder selected or workspace context missing.",
+        title: "错误",
+        description: "未选择文件夹，或缺少工作空间上下文。",
         variant: "destructive",
       })
       return
@@ -87,9 +87,8 @@ export function FolderMoveDialog({
       destinationPath.startsWith(`${selectedFolder.path}/`)
     ) {
       toast({
-        title: "Invalid destination",
-        description:
-          "Cannot move a folder into itself or one of its subfolders.",
+        title: "目标位置无效",
+        description: "无法将文件夹移入自身或其子文件夹。",
         variant: "destructive",
       })
       return
@@ -103,8 +102,8 @@ export function FolderMoveDialog({
       })
 
       toast({
-        title: "Folder moved",
-        description: `Successfully moved "${selectedFolder.name}" to ${destinationPath === "/" ? "root" : destinationPath}`,
+        title: "已移动文件夹",
+        description: `已将“${selectedFolder.name}”移至 ${destinationPath === "/" ? "根目录" : destinationPath}`,
       })
 
       handleClose()
@@ -134,12 +133,12 @@ export function FolderMoveDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent size="sm" className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Move Folder</DialogTitle>
+          <DialogTitle>移动文件夹</DialogTitle>
           <DialogDescription>
-            Select a new destination folder for{" "}
+            选择新的目标文件夹，移动对象：{" "}
             <span className="font-medium">{selectedFolder?.name}</span>.
             <div className="mt-2 text-xs">
-              Current location:{" "}
+              当前位置：{" "}
               <span className="font-medium break-words">
                 {currentParentPath === "/"
                   ? ROOT_FOLDER_NAME
@@ -181,9 +180,7 @@ export function FolderMoveDialog({
                       </span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      Select a folder...
-                    </div>
+                    <div className="flex items-center gap-2">选择文件夹…</div>
                   )}
                   <ChevronDownIcon className="ml-2 size-4 shrink-0 opacity-50" />
                 </Button>
@@ -202,7 +199,7 @@ export function FolderMoveDialog({
         </DialogBody>
         <DialogFooter>
           <Button size="sm" onClick={handleMove} disabled={isMoving}>
-            {isMoving ? "Moving..." : "Move Folder"}
+            {isMoving ? "移动中…" : "移动文件夹"}
           </Button>
         </DialogFooter>
       </DialogContent>

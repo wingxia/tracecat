@@ -49,7 +49,7 @@ describe("integration OAuth callback failures", () => {
     expect(url.pathname).toBe("/integrations/error")
     expect(url.searchParams.get("error")).toBe("insufficient_scope")
     expect(url.searchParams.get("error_description")).toContain(
-      "permission to connect integrations"
+      "连接集成的权限"
     )
   })
 
@@ -73,7 +73,7 @@ describe("integration OAuth callback failures", () => {
 
     expect(url.pathname).toBe("/integrations/error")
     expect(url.searchParams.get("error_description")).toBe(
-      "Failed to complete the OAuth connection. Please try again."
+      "无法完成 OAuth 连接，请重试。"
     )
   })
 

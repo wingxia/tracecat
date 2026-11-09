@@ -42,7 +42,7 @@ export function CaseEditRowDialog({
   async function handleSubmit(data: TableRowFormData) {
     if (!row) return
     await updateCaseRow({ tableId, rowId: row.id, data })
-    toast({ title: "Row updated" })
+    toast({ title: "已更新行" })
   }
 
   return (
@@ -52,9 +52,7 @@ export function CaseEditRowDialog({
       columns={columns}
       tableName={tableName}
       description={
-        tableName
-          ? `Edit this row of the "${tableName}" table.`
-          : "Edit this row."
+        tableName ? `编辑“${tableName}”数据表中的此行。` : "编辑此行。"
       }
       onSubmit={handleSubmit}
       isPending={updateCaseRowIsPending}

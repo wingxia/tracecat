@@ -138,7 +138,7 @@ export function CaseTaskFieldPicker({
             onValueChange={setQuery}
           />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>未找到结果。</CommandEmpty>
             <CommandGroup>
               {items.map((item) => {
                 const Icon = item.icon
@@ -161,7 +161,7 @@ export function CaseTaskFieldPicker({
                     <span className="truncate">{item.label}</span>
                     {/* cmdk owns `aria-selected` for highlight, so current
                         state rides on the accessible name instead. */}
-                    {selected && <span className="sr-only">{", current"}</span>}
+                    {selected && <span className="sr-only">{"，当前"}</span>}
                   </CommandItem>
                 )
               })}

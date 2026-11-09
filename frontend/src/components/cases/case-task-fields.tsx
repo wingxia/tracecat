@@ -168,7 +168,7 @@ export function buildAssigneeItems(
   return [
     {
       value: UNASSIGNED,
-      label: "No assignee",
+      label: "无负责人",
       icon: CircleSlash,
       iconClassName: "text-muted-foreground/70",
     },

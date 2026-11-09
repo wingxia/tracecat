@@ -64,10 +64,10 @@ function useScimBaseUrl(): string | null {
 
 function tokenUsage(connection: ScimConnectionRead): string {
   if (connection.revoked_at) {
-    return `Revoked ${formatRelative(connection.revoked_at) ?? ""}`.trim()
+    return `已撤销 ${formatRelative(connection.revoked_at) ?? ""}`.trim()
   }
   const lastUsed = formatRelative(connection.last_used_at)
-  return lastUsed ? `Last used ${lastUsed}` : "Never used"
+  return lastUsed ? `上次使用 ${lastUsed}` : "从未使用"
 }
 
 type ConnectionState = "pending" | "active" | "disabled" | "revoked"
@@ -79,10 +79,10 @@ function connectionState(connection: ScimConnectionRead): ConnectionState {
 }
 
 const STATE_COPY: Record<ConnectionState, { label: string; dot: string }> = {
-  pending: { label: "Pending", dot: "bg-muted-foreground" },
-  active: { label: "Active", dot: "bg-green-500" },
-  disabled: { label: "Disconnected", dot: "bg-muted-foreground" },
-  revoked: { label: "Token revoked", dot: "bg-rose-500" },
+  pending: { label: "待处理", dot: "bg-muted-foreground" },
+  active: { label: "已启用", dot: "bg-green-500" },
+  disabled: { label: "已断开", dot: "bg-muted-foreground" },
+  revoked: { label: "令牌已撤销", dot: "bg-rose-500" },
 }
 
 function ConnectionDetails({
@@ -102,21 +102,21 @@ function ConnectionDetails({
   const state = STATE_COPY[connectionState(connection)]
   return (
     <dl className="grid grid-cols-[140px_1fr] items-center gap-x-6 gap-y-3 px-5 py-4 text-sm">
-      <dt className="text-muted-foreground">SCIM base URL</dt>
+      <dt className="text-muted-foreground">SCIM 基础 URL</dt>
       <dd className="flex min-w-0 items-center gap-2">
         <code className="min-w-0 truncate rounded bg-muted px-2 py-1 font-mono text-xs select-all">
-          {baseUrl ?? "Loading…"}
+          {baseUrl ?? "加载中…"}
         </code>
         {baseUrl && (
           <CopyButton
             value={baseUrl}
-            toastMessage="SCIM base URL copied"
-            tooltipMessage="Copy base URL"
+            toastMessage="已复制 SCIM 基础 URL"
+            tooltipMessage="复制基础 URL"
           />
         )}
       </dd>
 
-      <dt className="text-muted-foreground">Bearer token</dt>
+      <dt className="text-muted-foreground">Bearer 令牌</dt>
       <dd className="flex min-w-0 items-center gap-3">
         <code className="font-mono text-xs">{connection.preview}</code>
         <span className="text-xs text-muted-foreground">
@@ -124,7 +124,7 @@ function ConnectionDetails({
         </span>
       </dd>
 
-      <dt className="text-muted-foreground">Directory</dt>
+      <dt className="text-muted-foreground">目录</dt>
       <dd className="flex min-w-0 flex-wrap items-center gap-x-2">
         <span className="flex items-center gap-1.5">
           <span className={cn("size-1.5 rounded-full", state.dot)} />
@@ -134,28 +134,28 @@ function ConnectionDetails({
           <>
             <span className="text-muted-foreground">·</span>
             <span>
-              {users.total} {users.total === 1 ? "user" : "users"}{" "}
+              {users.total} {users.total === 1 ? "个用户" : "个用户"}{" "}
               <span className="text-muted-foreground">
-                ({users.inactive} inactive)
+                （{users.inactive} 个已停用）
               </span>
             </span>
             <span className="text-muted-foreground">·</span>
             <span>
-              {groups.total} {groups.total === 1 ? "group" : "groups"}
+              {groups.total} {groups.total === 1 ? "用户组" : "个用户组"}
             </span>
           </>
         ) : null}
         {!directorySummary && directorySummaryError ? (
           <>
             <span className="text-muted-foreground">·</span>
-            <span className="text-muted-foreground">Counts unavailable</span>
+            <span className="text-muted-foreground">计数不可用</span>
             <Button
               variant="link"
               size="sm"
               className="h-auto p-0 text-xs"
               onClick={() => void refetchDirectorySummary()}
             >
-              Retry
+              重试
             </Button>
           </>
         ) : null}
@@ -223,18 +223,16 @@ export function OrgSettingsScimConnection({
     <div className="space-y-4">
       {connectionError && (
         <Alert>
-          <AlertTitle>Could not load SCIM connection</AlertTitle>
+          <AlertTitle>无法加载 SCIM 连接</AlertTitle>
           <AlertDescription>
-            <p>
-              Retry to check your existing connection before making changes.
-            </p>
+            <p>请先重试并检查现有连接，再进行更改。</p>
             <Button
               variant="outline"
               className="mt-3"
               disabled={connectionIsFetching}
               onClick={() => void refetchConnection()}
             >
-              Retry
+              重试
             </Button>
           </AlertDescription>
         </Alert>
@@ -243,14 +241,14 @@ export function OrgSettingsScimConnection({
       {!connectionError && connection && (
         <div className="rounded-lg border">
           <div className="flex items-center gap-3 border-b px-5 py-3">
-            <h3 className="flex-1 text-sm font-semibold">Connection</h3>
+            <h3 className="flex-1 text-sm font-semibold">连接</h3>
             <a
               href={SCIM_DOCS_URL}
               target="_blank"
               rel="noreferrer"
               className="text-sm underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground"
             >
-              Setup guide
+              设置指南
             </a>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -258,7 +256,7 @@ export function OrgSettingsScimConnection({
                   variant="outline"
                   size="icon"
                   className="size-8"
-                  aria-label="Connection actions"
+                  aria-label={"连接操作"}
                   disabled={canManage !== true}
                 >
                   {issueTokenIsPending || disconnectIsPending ? (
@@ -273,7 +271,7 @@ export function OrgSettingsScimConnection({
                   disabled={issueTokenIsPending}
                   onSelect={() => setRotateOpen(true)}
                 >
-                  {isDisconnected ? "Generate new token" : "Rotate token"}
+                  {isDisconnected ? "生成新令牌" : "轮换令牌"}
                 </DropdownMenuItem>
                 {isDisconnected ? null : (
                   <DropdownMenuItem
@@ -281,7 +279,7 @@ export function OrgSettingsScimConnection({
                     disabled={disconnectIsPending}
                     onSelect={() => setDisconnectOpen(true)}
                   >
-                    Disconnect
+                    断开连接
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -297,10 +295,9 @@ export function OrgSettingsScimConnection({
             <EmptyMedia variant="icon">
               <KeyRoundIcon className="size-6" />
             </EmptyMedia>
-            <EmptyTitle>SCIM is not configured</EmptyTitle>
+            <EmptyTitle>尚未配置 SCIM</EmptyTitle>
             <EmptyDescription>
-              Generate a token, then paste it along with the SCIM base URL into
-              your identity provider.
+              生成令牌后，将令牌和 SCIM 基础 URL 填入身份提供商。
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
@@ -311,7 +308,7 @@ export function OrgSettingsScimConnection({
               {issueTokenIsPending ? (
                 <Loader2 className="mr-2 size-4 animate-spin" />
               ) : null}
-              Generate token
+              生成令牌
             </Button>
           </EmptyContent>
         </Empty>
@@ -327,17 +324,16 @@ export function OrgSettingsScimConnection({
       >
         <DialogContent size="sm" className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Copy SCIM credentials</DialogTitle>
+            <DialogTitle>复制 SCIM 凭据</DialogTitle>
             <DialogDescription>
-              Paste both into your identity provider. The token is only shown
-              once.
+              将两项都粘贴到身份提供商中。令牌只显示一次。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             {issuedToken ? (
               <div className="space-y-3">
-                <CredentialRow label="SCIM base URL" value={baseUrl ?? ""} />
-                <CredentialRow label="Bearer token" value={issuedToken} />
+                <CredentialRow label={"SCIM 基础 URL"} value={baseUrl ?? ""} />
+                <CredentialRow label={"Bearer 令牌"} value={issuedToken} />
               </div>
             ) : null}
           </DialogBody>
@@ -347,26 +343,23 @@ export function OrgSettingsScimConnection({
       <AlertDialog open={disconnectOpen} onOpenChange={setDisconnectOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Disconnect your identity provider?
-            </AlertDialogTitle>
+            <AlertDialogTitle>断开身份提供商？</AlertDialogTitle>
             <AlertDialogDescription>
-              The token is revoked, and group mappings and synced IdP users and
-              groups are removed. Members of mapped groups stay as manual
-              members, so nobody loses access. To reconnect, generate a new
-              token and push users and groups from your IdP again.
+              令牌将被撤销，用户组映射及已同步的 IdP
+              用户和用户组将被移除。映射组成员会保留为手动成员，因此不会失去访问权限。重新连接时，生成新令牌并从
+              IdP 再次推送用户和用户组。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={disconnectIsPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <Button
               variant="destructive"
               disabled={disconnectIsPending}
               onClick={() => void handleDisconnect().catch(() => {})}
             >
-              Disconnect
+              断开连接
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -375,22 +368,21 @@ export function OrgSettingsScimConnection({
       <AlertDialog open={rotateOpen} onOpenChange={setRotateOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Rotate SCIM token</AlertDialogTitle>
+            <AlertDialogTitle>轮换 SCIM 令牌</AlertDialogTitle>
             <AlertDialogDescription>
-              The current token stops working immediately. Provisioning fails
-              until you paste the new token into your identity provider.
+              当前令牌将立即失效。在将新令牌填入身份提供商之前，用户配置同步会失败。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={issueTokenIsPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <Button
               variant="destructive"
               disabled={issueTokenIsPending}
               onClick={() => void handleRotate().catch(() => {})}
             >
-              Rotate token
+              轮换令牌
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -410,7 +402,7 @@ function CredentialRow({ label, value }: { label: string; value: string }) {
         <CopyButton
           value={value}
           toastMessage={`${label} copied`}
-          tooltipMessage={`Copy ${label.toLowerCase()}`}
+          tooltipMessage={`复制${label.toLowerCase()}`}
           className="size-6 shrink-0"
           iconClassName="size-4 text-foreground/70"
         />

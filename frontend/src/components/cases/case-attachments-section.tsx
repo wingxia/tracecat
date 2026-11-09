@@ -131,7 +131,7 @@ function AddAttachmentRow({
       <span className="flex size-6 shrink-0 items-center justify-center">
         {isUploading ? <Spinner /> : <Plus className="size-4" />}
       </span>
-      {isUploading ? "Uploading…" : "Upload attachment"}
+      {isUploading ? "上传中…" : "上传附件"}
     </button>
   )
 }
@@ -176,7 +176,7 @@ function AttachmentRow({
     // reports failure (e.g. no clipboard API over plain HTTP) as `false`.
     const copied = await copyToClipboard({
       value: attachment.sha256,
-      message: "SHA-256 copied",
+      message: "已复制 SHA-256",
     })
     if (!copied) {
       return
@@ -220,7 +220,7 @@ function AttachmentRow({
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label="Copy SHA-256"
+                    aria-label={"复制 SHA-256"}
                     onClick={copySha}
                     className={cn(
                       TASK_HOVER_REVEAL_CLASS,
@@ -231,7 +231,7 @@ function AttachmentRow({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="font-mono text-xs">
-                  {shaCopied ? "Copied" : attachment.sha256}
+                  {shaCopied ? "已复制" : attachment.sha256}
                 </TooltipContent>
               </Tooltip>
               {isImage && (
@@ -239,7 +239,7 @@ function AttachmentRow({
                   <TooltipTrigger asChild>
                     <button
                       type="button"
-                      aria-label={`Preview ${attachment.file_name}`}
+                      aria-label={`预览 ${attachment.file_name}`}
                       onClick={() => onPreview(attachment)}
                       className={cn(
                         TASK_ICON_TRIGGER_CLASS,
@@ -251,7 +251,7 @@ function AttachmentRow({
                     </button>
                   </TooltipTrigger>
                   <TooltipContent side="top" className="text-xs">
-                    Preview
+                    预览
                   </TooltipContent>
                 </Tooltip>
               )}
@@ -259,7 +259,7 @@ function AttachmentRow({
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label={`Download ${attachment.file_name}`}
+                    aria-label={`下载 ${attachment.file_name}`}
                     onClick={() => onDownload(attachment)}
                     className={cn(
                       TASK_ICON_TRIGGER_CLASS,
@@ -271,14 +271,14 @@ function AttachmentRow({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
-                  Download
+                  下载
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     type="button"
-                    aria-label={`Delete ${attachment.file_name}`}
+                    aria-label={`删除 ${attachment.file_name}`}
                     onClick={() => onDelete(attachment)}
                     className={cn(
                       TASK_ICON_TRIGGER_CLASS,
@@ -290,7 +290,7 @@ function AttachmentRow({
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
-                  Delete
+                  删除
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
@@ -300,7 +300,7 @@ function AttachmentRow({
                   </span>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="text-xs">
-                  {createdAtDate.toLocaleString()}
+                  {createdAtDate.toLocaleString("zh-CN")}
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -314,7 +314,7 @@ function AttachmentRow({
             onClick={() => onPreview(attachment)}
           >
             <Eye className="mr-2 size-3.5" />
-            Preview
+            预览
           </ContextMenuItem>
         )}
         <ContextMenuItem
@@ -322,11 +322,11 @@ function AttachmentRow({
           onClick={() => onDownload(attachment)}
         >
           <Download className="mr-2 size-3.5" />
-          Download
+          下载
         </ContextMenuItem>
         <ContextMenuItem className="text-xs" onClick={copySha}>
           <Copy className="mr-2 size-3.5" />
-          Copy SHA-256
+          复制 SHA-256
         </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem
@@ -334,7 +334,7 @@ function AttachmentRow({
           onClick={() => onDelete(attachment)}
         >
           <Trash2 className="mr-2 size-3.5" />
-          Delete
+          删除
         </ContextMenuItem>
       </ContextMenuContent>
     </ContextMenu>
@@ -357,7 +357,7 @@ function AttachmentPreviewBody({
   if (isError) {
     return (
       <div className="flex h-40 w-72 items-center justify-center text-xs text-white/70">
-        Preview unavailable
+        无法预览
       </div>
     )
   }
@@ -435,8 +435,8 @@ export function CaseAttachmentsSection({
       })
       invalidateCaseActivityQueries(queryClient, caseId, workspaceId)
       toast({
-        title: "Attachment uploaded successfully",
-        description: `${file.name} has been added to the case`,
+        title: "附件上传成功",
+        description: `已将 ${file.name} 添加到事件`,
       })
     },
     onError: (error: unknown, file) => {
@@ -458,14 +458,14 @@ export function CaseAttachmentsSection({
       invalidateCaseActivityQueries(queryClient, caseId, workspaceId)
       setDeleteDialogOpen(false)
       toast({
-        title: "Attachment deleted",
-        description: "The attachment has been removed from the case",
+        title: "已删除附件",
+        description: "已从事件移除附件",
       })
     },
     onError: (error: ApiError) => {
       toast({
-        title: "Delete failed",
-        description: `Failed to delete attachment. ${error.message || "Unknown error"}`,
+        title: "删除失败",
+        description: `删除附件失败。${error.message || "未知错误"}`,
       })
     },
   })
@@ -473,8 +473,8 @@ export function CaseAttachmentsSection({
   const validateFile = useCallback((file: File): boolean => {
     if (file.size > MAX_FILE_SIZE_BYTES) {
       toast({
-        title: "File too large",
-        description: `${file.name} is ${formatFileSize(file.size)}. Maximum file size is 20MB.`,
+        title: "文件过大",
+        description: `${file.name} 的大小为 ${formatFileSize(file.size)}。文件大小上限为 20MB。`,
       })
       return false
     }
@@ -573,8 +573,8 @@ export function CaseAttachmentsSection({
     } catch (error) {
       console.error("Failed to download attachment:", error)
       toast({
-        title: "Download failed",
-        description: `Failed to download ${attachment.file_name}`,
+        title: "下载失败",
+        description: `下载 ${attachment.file_name} 失败`,
       })
     }
   }
@@ -605,9 +605,7 @@ export function CaseAttachmentsSection({
   if (attachmentsError) {
     return (
       <div className={CASE_ATTACHMENTS_CONTAINER_CLASS}>
-        <p className="px-3 py-2 text-sm text-muted-foreground">
-          Failed to load attachments
-        </p>
+        <p className="px-3 py-2 text-sm text-muted-foreground">加载附件失败</p>
       </div>
     )
   }
@@ -660,7 +658,7 @@ export function CaseAttachmentsSection({
         }}
       >
         <DialogContent
-          title={previewAttachment?.file_name ?? "Attachment preview"}
+          title={previewAttachment?.file_name ?? "附件预览"}
           className="h-fit w-fit max-w-[95vw] overflow-hidden border-0 bg-transparent p-0 shadow-none [&>button]:hidden"
         >
           <div className="group relative inline-flex overflow-hidden rounded-md bg-black/80">
@@ -672,7 +670,7 @@ export function CaseAttachmentsSection({
               </div>
               <button
                 type="button"
-                aria-label="Close preview"
+                aria-label={"关闭预览"}
                 onClick={() => setPreviewAttachment(null)}
                 className="rounded-full bg-black/70 p-2 text-white backdrop-blur-sm transition-colors duration-200 hover:bg-black/80"
               >
@@ -693,23 +691,22 @@ export function CaseAttachmentsSection({
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete attachment</AlertDialogTitle>
+            <AlertDialogTitle>删除附件</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "
-              {attachmentPendingDelete?.file_name}"? This action cannot be
-              undone.
+              确定要删除“
+              {attachmentPendingDelete?.file_name}”吗？此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={deleteMutation.isPending}>
-              Cancel
+              取消
             </AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleConfirmDelete}
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+              {deleteMutation.isPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

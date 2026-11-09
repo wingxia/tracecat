@@ -35,14 +35,13 @@ export function DeleteOrgSecretAlertDialog({
       {children}
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete secret</AlertDialogTitle>
+          <AlertDialogTitle>删除密钥</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this secret from the organization?
-            This action cannot be undone.
+            确定要从组织中删除此密钥吗？此操作无法撤销。
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>取消</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             onClick={async () => {
@@ -53,7 +52,7 @@ export function DeleteOrgSecretAlertDialog({
               setSelectedSecret(null)
             }}
           >
-            Confirm
+            确认
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

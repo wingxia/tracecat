@@ -45,7 +45,7 @@ export function ForEachTooltip({ forEach }: { forEach: string }) {
     <span className="flex items-center space-x-1 text-xs text-foreground/70">
       <AlertTriangle className="size-3 fill-red-500 stroke-white" />
       <span className="inline-block font-mono tracking-tight text-foreground/70">
-        Invalid For Loop
+        For 循环无效
       </span>
     </span>
   )
@@ -83,7 +83,7 @@ export function ForEachEffect({
         <div className="w-full border-b bg-muted-foreground/5 px-3 py-[2px]">
           <div className="flex items-center justify-between">
             <Label className="flex items-center text-xs text-muted-foreground">
-              <span className="font-medium">For Loop</span>
+              <span className="font-medium">For 循环</span>
             </Label>
             <span className="my-px ml-auto flex items-center space-x-2">
               <Tooltip>
@@ -96,16 +96,16 @@ export function ForEachEffect({
                     }}
                   />
                 </TooltipTrigger>
-                <TooltipContent>Open editor</TooltipContent>
+                <TooltipContent>打开编辑器</TooltipContent>
               </Tooltip>
             </span>
           </div>
         </div>
         <div className="flex flex-col gap-2 p-2">
           <div className="flex items-center space-x-1 text-xs text-foreground/70">
-            <span>Collection</span>
+            <span>集合</span>
             <ArrowRight className="size-3" />
-            <span>Loop variable</span>
+            <span>循环变量</span>
           </div>
 
           {typeof forEach === "string" ? (
@@ -120,7 +120,7 @@ export function ForEachEffect({
             <span className="flex items-center space-x-1 text-xs text-foreground/70">
               <AlertTriangle className="size-3" />
               <span className="inline-block font-mono tracking-tight text-foreground/70">
-                Invalid For Loop Type
+                For 循环类型无效
               </span>
             </span>
           )}

@@ -116,6 +116,6 @@ export function RailSectionHeader({
 }
 
 /** Muted "None" line under an empty rail section. */
-export function RailEmpty({ children = "None" }: { children?: ReactNode }) {
+export function RailEmpty({ children = "无" }: { children?: ReactNode }) {
   return <p className="px-2 text-[13px] text-muted-foreground/70">{children}</p>
 }

@@ -81,39 +81,38 @@ function AssignTargetForm({
     try {
       const target = await assignTarget.mutateAsync({ workspaceId, pinnedTag })
       toast({
-        title: "Target assigned",
-        description: `${target.workspace_name} is pinned to ${target.pinned_tag}. Preview and apply to roll it out.`,
+        title: "已分配目标",
+        description: `${target.workspace_name} 已固定到 ${target.pinned_tag}。预览并应用以部署该版本。`,
       })
       onDone()
     } catch (err) {
-      toastApiError("Failed to assign target", err)
+      toastApiError("分配目标失败", err)
     }
   }
 
-  let workspacePlaceholder = "Select a workspace"
+  let workspacePlaceholder = "选择工作空间"
   if (!organizationId) {
-    workspacePlaceholder = "Select an organization first"
+    workspacePlaceholder = "请先选择组织"
   } else if (candidatesLoading) {
-    workspacePlaceholder = "Loading workspaces..."
+    workspacePlaceholder = "正在加载工作空间…"
   } else if (candidatesError) {
-    workspacePlaceholder = "Could not load workspaces"
+    workspacePlaceholder = "无法加载工作空间"
   } else if (available.length === 0) {
-    workspacePlaceholder = "No available workspaces"
+    workspacePlaceholder = "没有可用的工作空间"
   }
 
   return (
     <>
       <DialogHeader>
-        <DialogTitle>Assign target</DialogTitle>
+        <DialogTitle>分配目标</DialogTitle>
         <DialogDescription>
-          Pin a customer workspace to a release. Nothing is applied until you
-          preview and apply a rollout.
+          将客户工作空间固定到指定版本。预览并应用部署后才会生效。
         </DialogDescription>
       </DialogHeader>
       <DialogBody>
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label>Organization</Label>
+            <Label>组织</Label>
             <Select
               value={organizationId ?? undefined}
               onValueChange={(value) => {
@@ -125,9 +124,7 @@ function AssignTargetForm({
               <SelectTrigger>
                 <SelectValue
                   placeholder={
-                    organizationsLoading
-                      ? "Loading organizations..."
-                      : "Select an organization"
+                    organizationsLoading ? "正在加载组织…" : "选择组织"
                   }
                 />
               </SelectTrigger>
@@ -141,7 +138,7 @@ function AssignTargetForm({
             </Select>
           </div>
           <div className="space-y-2">
-            <Label>Workspace</Label>
+            <Label>工作空间</Label>
             <Select
               value={workspaceId ?? undefined}
               onValueChange={setWorkspaceId}
@@ -162,11 +159,11 @@ function AssignTargetForm({
               </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground">
-              The source workspace and existing targets are hidden.
+              已隐藏源工作空间和现有目标。
             </p>
           </div>
           <div className="space-y-2">
-            <Label>Pinned tag</Label>
+            <Label>固定标签</Label>
             <Select
               value={pinnedTag ?? undefined}
               onValueChange={setPinnedTag}
@@ -174,9 +171,7 @@ function AssignTargetForm({
             >
               <SelectTrigger>
                 <SelectValue
-                  placeholder={
-                    tags.length === 0 ? "No tags yet" : "Select a tag"
-                  }
+                  placeholder={tags.length === 0 ? "暂无标签" : "选择标签"}
                 />
               </SelectTrigger>
               <SelectContent>
@@ -196,7 +191,7 @@ function AssignTargetForm({
           onClick={handleAssign}
           disabled={!workspaceId || !pinnedTag || assignTarget.isPending}
         >
-          {assignTarget.isPending ? "Assigning..." : "Assign"}
+          {assignTarget.isPending ? "分配中…" : "分配"}
         </Button>
       </DialogFooter>
     </>

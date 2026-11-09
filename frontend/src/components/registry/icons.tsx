@@ -6,11 +6,11 @@ export const actionTypeToLabel: Record<
   { label: string; icon: LucideIcon }
 > = {
   udf: {
-    label: "User defined function",
+    label: "用户定义函数",
     icon: SquareFunctionIcon,
   },
   template: {
-    label: "Template action",
+    label: "模板动作",
     icon: ToyBrickIcon,
   },
 }

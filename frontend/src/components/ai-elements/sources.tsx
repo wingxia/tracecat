@@ -39,7 +39,7 @@ export const SourcesTrigger = ({
           <GlobeIcon />
         </TraceIcon>
         <TraceTitle>
-          Used {count} {count === 1 ? "source" : "sources"}
+          已使用 {count} {count === 1 ? "个来源" : "个来源"}
         </TraceTitle>
       </TraceLine>
     )}
@@ -65,7 +65,7 @@ export const Source = ({ href, title, children, ...props }: SourceProps) => (
         </TraceIcon>
         <TraceTitle>
           {title}
-          <span className="sr-only"> (opens in a new tab)</span>
+          <span className="sr-only"> （在新标签页中打开）</span>
         </TraceTitle>
         <TraceIcon>
           <ArrowUpRightIcon />

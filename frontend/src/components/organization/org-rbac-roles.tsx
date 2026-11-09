@@ -115,7 +115,7 @@ export function OrgRbacRoles() {
   if (error) {
     return (
       <div className="flex items-center justify-center py-12 text-sm text-destructive">
-        Failed to load roles
+        加载角色失败
       </div>
     )
   }
@@ -148,7 +148,7 @@ export function OrgRbacRoles() {
               <div className="relative">
                 <SearchIcon className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search roles..."
+                  placeholder={"搜索角色…"}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="h-9 w-[250px] pl-8"
@@ -160,7 +160,7 @@ export function OrgRbacRoles() {
                 <DialogTrigger asChild>
                   <Button size="sm" onClick={() => setIsCreateOpen(true)}>
                     <PlusIcon className="mr-2 size-4" />
-                    Create role
+                    创建角色
                   </Button>
                 </DialogTrigger>
               ) : null
@@ -186,9 +186,7 @@ export function OrgRbacRoles() {
           ) : filteredRoles.length === 0 ? (
             <RbacListContainer>
               <RbacListEmpty
-                message={
-                  searchQuery ? "No roles match your search" : "No roles found"
-                }
+                message={searchQuery ? "没有匹配的角色" : "未找到角色"}
               />
             </RbacListContainer>
           ) : (
@@ -219,22 +217,21 @@ export function OrgRbacRoles() {
 
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete role</AlertDialogTitle>
+            <AlertDialogTitle>删除角色</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the role{" "}
-              <span className="font-semibold">{selectedRole?.name}</span>? This
-              action cannot be undone. All group assignments using this role
-              will be removed.
+              确定要删除角色{" "}
+              <span className="font-semibold">{selectedRole?.name}</span>
+              吗？此操作无法撤销，将移除使用此角色的所有用户组授权。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={handleDeleteRole}
               disabled={deleteRoleIsPending}
             >
-              {deleteRoleIsPending ? "Deleting..." : "Delete"}
+              {deleteRoleIsPending ? "删除中…" : "删除"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -242,8 +239,10 @@ export function OrgRbacRoles() {
 
       {isCreateOpen && (
         <RoleFormDialog
-          title="Create role"
-          description="Create a new role with specific scopes. Roles can be assigned to groups to grant permissions."
+          title={"创建角色"}
+          description={
+            "创建具有特定权限范围的角色，并通过向用户组分配角色来授予权限。"
+          }
           scopes={scopes ?? []}
           onSubmit={handleCreateRole}
           isPending={createRoleIsPending}
@@ -255,8 +254,8 @@ export function OrgRbacRoles() {
 
       {isEditOpen && selectedRole && (
         <RoleFormDialog
-          title="Edit role"
-          description="Update the role's name, description, and assigned scopes."
+          title={"编辑角色"}
+          description={"更新角色的名称、描述和权限范围。"}
           scopes={scopes ?? []}
           initialData={selectedRole}
           onSubmit={(name, description, scopeIds) =>
@@ -301,11 +300,11 @@ function RoleListItem({
         <>
           {role.is_system && (
             <Badge variant="outline" className="text-[10px]">
-              Preset
+              预设
             </Badge>
           )}
           <Badge variant="secondary" className="text-[10px]">
-            {scopeCount} scope{scopeCount !== 1 && "s"}
+            {scopeCount} 项权限范围{scopeCount !== 1 && "s"}
           </Badge>
           {role.description && (
             <span
@@ -326,7 +325,7 @@ function RoleListItem({
               variant="ghost"
               className="size-8 p-0 opacity-0 transition-opacity group-hover:opacity-100 data-[state=open]:opacity-100"
             >
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">打开菜单</span>
               <DotsHorizontalIcon className="size-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -334,7 +333,7 @@ function RoleListItem({
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(role.id)}
             >
-              Copy role ID
+              复制角色 ID
             </DropdownMenuItem>
             {!role.is_system && (
               <>
@@ -342,7 +341,7 @@ function RoleListItem({
                 {canUpdateRole && (
                   <DialogTrigger asChild>
                     <DropdownMenuItem onClick={onEdit}>
-                      Edit role
+                      编辑角色
                     </DropdownMenuItem>
                   </DialogTrigger>
                 )}
@@ -352,7 +351,7 @@ function RoleListItem({
                       className="text-rose-500 focus:text-rose-600"
                       onClick={onDelete}
                     >
-                      Delete
+                      删除
                     </DropdownMenuItem>
                   </AlertDialogTrigger>
                 )}
@@ -374,7 +373,7 @@ function RoleDetails({ role }: { role: RoleReadWithScopes }) {
   )
 
   if (!role.scopes || role.scopes.length === 0) {
-    return <div className="text-xs text-muted-foreground">No scopes</div>
+    return <div className="text-xs text-muted-foreground">暂无权限范围</div>
   }
 
   return (

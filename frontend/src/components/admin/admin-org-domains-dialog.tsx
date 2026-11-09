@@ -102,15 +102,15 @@ export function AdminOrgDomainsDialog({
         is_primary: setPrimaryOnCreate,
       })
       toast({
-        title: "Domain added",
-        description: `${domain} was assigned.`,
+        title: "已添加域名",
+        description: `已分配 ${domain}。`,
       })
       setNewDomain("")
       setSetPrimaryOnCreate(false)
     } catch (error) {
       toast({
-        title: "Failed to add domain",
-        description: getErrorDetail(error, "Please try again."),
+        title: "添加域名失败",
+        description: getErrorDetail(error, "请重试。"),
         variant: "destructive",
       })
     }
@@ -123,13 +123,13 @@ export function AdminOrgDomainsDialog({
         data: { is_primary: true },
       })
       toast({
-        title: "Primary domain updated",
-        description: `${domain} is now primary.`,
+        title: "已更新主域名",
+        description: `${domain} 现为主域名。`,
       })
     } catch (error) {
       toast({
-        title: "Failed to set primary domain",
-        description: getErrorDetail(error, "Please try again."),
+        title: "设置主域名失败",
+        description: getErrorDetail(error, "请重试。"),
         variant: "destructive",
       })
     }
@@ -147,13 +147,13 @@ export function AdminOrgDomainsDialog({
         data: { is_active: nextActive },
       })
       toast({
-        title: nextActive ? "Domain activated" : "Domain deactivated",
-        description: `${domain} was ${nextActive ? "activated" : "deactivated"}.`,
+        title: nextActive ? "已启用域名" : "已停用域名",
+        description: `${domain} 已${nextActive ? "启用" : "停用"}。`,
       })
     } catch (error) {
       toast({
-        title: "Failed to update domain",
-        description: getErrorDetail(error, "Please try again."),
+        title: "更新域名失败",
+        description: getErrorDetail(error, "请重试。"),
         variant: "destructive",
       })
     }
@@ -163,13 +163,13 @@ export function AdminOrgDomainsDialog({
     try {
       await deleteDomain(domainId)
       toast({
-        title: "Domain deleted",
-        description: `${domain} was removed.`,
+        title: "已删除域名",
+        description: `已移除 ${domain}。`,
       })
     } catch (error) {
       toast({
-        title: "Failed to delete domain",
-        description: getErrorDetail(error, "Please try again."),
+        title: "删除域名失败",
+        description: getErrorDetail(error, "请重试。"),
         variant: "destructive",
       })
     }
@@ -180,9 +180,9 @@ export function AdminOrgDomainsDialog({
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent size="md" className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Organization domains</DialogTitle>
+          <DialogTitle>组织域名</DialogTitle>
           <DialogDescription>
-            Manage domains for {organization?.name ?? "organization"}.
+            管理域名，所属组织： {organization?.name ?? "组织"}.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -199,7 +199,7 @@ export function AdminOrgDomainsDialog({
                   onClick={handleAddDomain}
                   disabled={isBusy || newDomain.trim().length === 0}
                 >
-                  {createPending ? "Adding..." : "Add domain"}
+                  {createPending ? "添加中…" : "添加域名"}
                 </Button>
               </div>
               <label className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -210,7 +210,7 @@ export function AdminOrgDomainsDialog({
                   }
                   disabled={isBusy}
                 />
-                Set as primary domain
+                设为主域名
               </label>
             </div>
 
@@ -218,24 +218,24 @@ export function AdminOrgDomainsDialog({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Domain</TableHead>
-                    <TableHead>Normalized</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Verification</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>域名</TableHead>
+                    <TableHead>规范化域名</TableHead>
+                    <TableHead>状态</TableHead>
+                    <TableHead>验证</TableHead>
+                    <TableHead className="text-right">动作</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
                       <TableCell className="text-muted-foreground" colSpan={5}>
-                        Loading...
+                        加载中…
                       </TableCell>
                     </TableRow>
                   ) : !hasDomains ? (
                     <TableRow>
                       <TableCell className="text-muted-foreground" colSpan={5}>
-                        No domains assigned.
+                        未分配域名。
                       </TableCell>
                     </TableRow>
                   ) : (
@@ -250,12 +250,12 @@ export function AdminOrgDomainsDialog({
                         <TableCell>
                           <div className="flex items-center gap-2">
                             {domain.is_primary ? (
-                              <Badge variant="secondary">Primary</Badge>
+                              <Badge variant="secondary">主要</Badge>
                             ) : null}
                             {domain.is_active ? (
-                              <Badge variant="outline">Active</Badge>
+                              <Badge variant="outline">已启用</Badge>
                             ) : (
-                              <Badge variant="outline">Inactive</Badge>
+                              <Badge variant="outline">已停用</Badge>
                             )}
                           </div>
                         </TableCell>
@@ -274,7 +274,7 @@ export function AdminOrgDomainsDialog({
                                 handleSetPrimary(domain.id, domain.domain)
                               }
                             >
-                              Set primary
+                              设为主要
                             </Button>
                             <Button
                               variant="outline"
@@ -288,7 +288,7 @@ export function AdminOrgDomainsDialog({
                                 )
                               }
                             >
-                              {domain.is_active ? "Deactivate" : "Activate"}
+                              {domain.is_active ? "停用" : "启用"}
                             </Button>
                             <Button
                               variant="ghost"
@@ -299,7 +299,7 @@ export function AdminOrgDomainsDialog({
                                 handleDeleteDomain(domain.id, domain.domain)
                               }
                             >
-                              Delete
+                              删除
                             </Button>
                           </div>
                         </TableCell>

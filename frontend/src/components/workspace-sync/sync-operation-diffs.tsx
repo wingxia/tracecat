@@ -36,19 +36,19 @@ export const CHANGE_META: Record<
   { label: string; icon: LucideIcon; className: string; order: number }
 > = {
   added: {
-    label: "New",
+    label: "新建",
     icon: SquarePlusIcon,
     className: "text-green-700 dark:text-green-500",
     order: 0,
   },
   modified: {
-    label: "Modified",
+    label: "已修改",
     icon: SquareDotIcon,
     className: "text-amber-700 dark:text-amber-500",
     order: 1,
   },
   deleted: {
-    label: "Deleted",
+    label: "已删除",
     icon: SquareMinusIcon,
     className: "text-red-700 dark:text-red-500",
     order: 2,
@@ -170,19 +170,19 @@ export function FileDiff({
         )}
         {lineTotal > 0 && (
           <span className="text-muted-foreground">
-            {lineTotal === 1 ? "line" : "lines"}
+            {lineTotal === 1 ? "行" : "行"}
           </span>
         )}
       </div>
       {isLoading && (
         <p className="flex items-center gap-2 px-2.5 py-2 text-xs text-muted-foreground">
           <Loader2Icon className="size-3.5 animate-spin" />
-          Loading diff...
+          正在加载差异…
         </p>
       )}
       {error && (
         <p className="px-2.5 py-2 text-xs text-destructive">
-          Could not load this diff. Preview again to refresh it.
+          无法加载此差异，请再次预览以刷新。
         </p>
       )}
       {text && (
@@ -192,7 +192,7 @@ export function FileDiff({
       )}
       {(needsContents ? loaded?.truncated : diff.truncated) && (
         <p className="border-t px-2.5 py-1 text-[11px] text-muted-foreground">
-          Diff truncated for preview.
+          差异预览已截断。
         </p>
       )}
     </div>
@@ -217,7 +217,7 @@ export function LoadMoreDiffsButton({
       onClick={onClick}
     >
       {isLoading && <Loader2Icon className="size-3.5 animate-spin" />}
-      Show more files
+      显示更多文件
     </Button>
   )
 }
@@ -261,14 +261,14 @@ function OperationDiffList({
   return (
     <div className="flex flex-col gap-2">
       <p className="text-xs text-muted-foreground">
-        {count} changed {count === 1 ? "file" : "files"}
+        {count} 更改了 {count === 1 ? "文件" : "个文件"}
       </p>
       {isLoading && (
-        <p className="text-xs text-muted-foreground">Loading changes...</p>
+        <p className="text-xs text-muted-foreground">正在加载变更…</p>
       )}
       {error && (
         <p className="text-xs text-destructive">
-          Could not load changes. Preview again to refresh them.
+          无法加载变更，请再次预览以刷新。
         </p>
       )}
       {diffs.length > 0 && (
@@ -291,7 +291,7 @@ function OperationDiffList({
                     {diff.source_path}
                   </span>
                   <span className="shrink-0 text-xs text-muted-foreground">
-                    {isOpen ? "Hide diff" : "View diff"}
+                    {isOpen ? "隐藏差异" : "查看差异"}
                   </span>
                 </button>
                 {isOpen && (

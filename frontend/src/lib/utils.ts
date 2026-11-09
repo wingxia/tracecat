@@ -88,7 +88,7 @@ export const copyToClipboard = async ({
   try {
     let copyValue = ""
     if (!navigator.clipboard) {
-      throw new Error("Browser doesn't have support for native clipboard.")
+      throw new Error("浏览器不支持原生剪贴板。")
     }
     if (target) {
       const node = document.querySelector(target)
@@ -167,22 +167,22 @@ export function shortTimeAgo(date: Date) {
   const diffMs = Math.max(Date.now() - date.getTime(), 0)
   const diffSec = Math.floor(diffMs / 1000)
 
-  if (diffSec < 60) return "just now"
+  if (diffSec < 60) return "刚刚"
 
   const diffMin = Math.floor(diffSec / 60)
-  if (diffMin < 60) return `${diffMin}m ago`
+  if (diffMin < 60) return `${diffMin} 分钟前`
 
   const diffHour = Math.floor(diffMin / 60)
-  if (diffHour < 24) return `${diffHour}h ago`
+  if (diffHour < 24) return `${diffHour} 小时前`
 
   const diffDay = Math.floor(diffHour / 24)
-  if (diffDay < 7) return `${diffDay}d ago`
+  if (diffDay < 7) return `${diffDay} 天前`
 
-  if (diffDay < 30) return `${Math.floor(diffDay / 7)}w ago`
+  if (diffDay < 30) return `${Math.floor(diffDay / 7)} 周前`
 
-  if (diffDay < 365) return `${Math.floor(diffDay / 30)}mo ago`
+  if (diffDay < 365) return `${Math.floor(diffDay / 30)} 个月前`
 
-  return `${Math.floor(diffDay / 365)}y ago`
+  return `${Math.floor(diffDay / 365)} 年前`
 }
 
 /**

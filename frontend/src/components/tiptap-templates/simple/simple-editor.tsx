@@ -216,28 +216,28 @@ const getTableButtonGroups = (
     insertButtons.push(
       {
         key: "add-column-before",
-        tooltip: "Insert column to the left",
+        tooltip: "在左侧插入列",
         disabled: !editor.can().addColumnBefore(),
         onClick: () => editor.chain().focus().addColumnBefore().run(),
         icon: <PanelRightOpen className="tiptap-button-icon" />,
       },
       {
         key: "add-column-after",
-        tooltip: "Insert column to the right",
+        tooltip: "在右侧插入列",
         disabled: !editor.can().addColumnAfter(),
         onClick: () => editor.chain().focus().addColumnAfter().run(),
         icon: <PanelLeftOpen className="tiptap-button-icon" />,
       },
       {
         key: "add-row-before",
-        tooltip: "Insert row above",
+        tooltip: "在上方插入行",
         disabled: !editor.can().addRowBefore(),
         onClick: () => editor.chain().focus().addRowBefore().run(),
         icon: <PanelBottomOpen className="tiptap-button-icon" />,
       },
       {
         key: "add-row-after",
-        tooltip: "Insert row below",
+        tooltip: "在下方插入行",
         disabled: !editor.can().addRowAfter(),
         onClick: () => editor.chain().focus().addRowAfter().run(),
         icon: <PanelTopOpen className="tiptap-button-icon" />,
@@ -254,14 +254,14 @@ const getTableButtonGroups = (
     ? [
         {
           key: "move-column-left",
-          tooltip: "Move column left",
+          tooltip: "向左移动列",
           disabled: !canMoveTableColumnLeft(editor.state),
           onClick: () => editor.chain().focus().moveTableColumnLeft().run(),
           icon: <ArrowLeftToLine className="tiptap-button-icon" />,
         },
         {
           key: "move-column-right",
-          tooltip: "Move column right",
+          tooltip: "向右移动列",
           disabled: !canMoveTableColumnRight(editor.state),
           onClick: () => editor.chain().focus().moveTableColumnRight().run(),
           icon: <ArrowRightToLine className="tiptap-button-icon" />,
@@ -273,21 +273,21 @@ const getTableButtonGroups = (
     ? [
         {
           key: "delete-column",
-          tooltip: "Delete column",
+          tooltip: "删除列",
           disabled: !editor.can().deleteColumn(),
           onClick: () => editor.chain().focus().deleteColumn().run(),
           icon: <BookmarkX className="tiptap-button-icon" />,
         },
         {
           key: "delete-row",
-          tooltip: "Delete row",
+          tooltip: "删除行",
           disabled: !editor.can().deleteRow(),
           onClick: () => editor.chain().focus().deleteRow().run(),
           icon: <DeleteIcon className="tiptap-button-icon" />,
         },
         {
           key: "delete-table",
-          tooltip: "Delete table",
+          tooltip: "删除数据表",
           disabled: !editor.can().deleteTable(),
           onClick: () => editor.chain().focus().deleteTable().run(),
           icon: <Trash2 className="tiptap-button-icon" />,
@@ -421,8 +421,8 @@ const MainToolbarContent = ({
             data-style="ghost"
             data-disabled={!canInsertTable}
             disabled={!canInsertTable}
-            tooltip="Insert table"
-            aria-label="Insert table"
+            tooltip={"插入表格"}
+            aria-label={"插入表格"}
             onClick={handleInsertTable}
           >
             <TableIcon className="tiptap-button-icon" />
@@ -476,7 +476,7 @@ const MainToolbarContent = ({
           <ToolbarSeparator />
 
           <ToolbarGroup>
-            <ImageUploadButton text="Add" />
+            <ImageUploadButton text={"添加"} />
           </ToolbarGroup>
         </>
       )}
@@ -730,7 +730,7 @@ export function SimpleEditor({
         autocomplete: "off",
         autocorrect: "off",
         autocapitalize: "off",
-        "aria-label": "Main content area, start typing to enter text.",
+        "aria-label": "主内容区域，开始输入以添加文本。",
         class: cn("simple-editor", !editable && "simple-editor--readonly"),
         ...(placeholder ? { "data-placeholder": placeholder } : {}),
       },

@@ -63,16 +63,15 @@ export function RenameDialog({
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <DialogHeader>
             <DialogTitle>
-              Rename {target.isFolder ? "folder" : "file"}
+              重命名 {target.isFolder ? "文件夹" : "文件"}
             </DialogTitle>
             <DialogDescription>
-              Update the relative path. Folders will be renamed by moving every
-              file inside them.
+              更新相对路径。重命名文件夹时，会移动其中的所有文件。
             </DialogDescription>
           </DialogHeader>
           <DialogBody>
             <div className="space-y-2">
-              <Label htmlFor="rename-path">Relative path</Label>
+              <Label htmlFor="rename-path">相对路径</Label>
               <Input
                 id="rename-path"
                 autoFocus
@@ -90,7 +89,7 @@ export function RenameDialog({
               type="submit"
               disabled={!value.trim() || value.trim() === target.fromPath}
             >
-              Rename
+              重命名
             </Button>
           </DialogFooter>
         </form>

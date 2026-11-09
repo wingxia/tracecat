@@ -23,7 +23,7 @@ import { useWorkspaceSettings } from "@/lib/hooks"
 import { OrgWorkspaceDeleteDialog } from "../organization/org-workspace-delete-dialog"
 
 export const generalSettingsSchema = z.object({
-  name: z.string().trim().min(1, "Workspace name is required"),
+  name: z.string().trim().min(1, "工作空间名称不能为空"),
 })
 
 type GeneralSettingsForm = z.infer<typeof generalSettingsSchema>
@@ -71,23 +71,21 @@ export function WorkspaceGeneralSettings({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Workspace name</FormLabel>
+                <FormLabel>工作空间名称</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter workspace name"
+                    placeholder={"输入工作空间名称"}
                     className="max-w-md"
                   />
                 </FormControl>
-                <FormDescription>
-                  Change the name of this workspace.
-                </FormDescription>
+                <FormDescription>更改此工作空间的名称。</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
           <Button type="submit" disabled={isUpdating} size="sm">
-            {isUpdating ? "Saving..." : "Save"}
+            {isUpdating ? "保存中…" : "保存"}
           </Button>
         </form>
       </Form>
@@ -96,18 +94,17 @@ export function WorkspaceGeneralSettings({
 
       <div className="space-y-4">
         <div>
-          <h3 className="text-lg font-medium text-destructive">Danger zone</h3>
+          <h3 className="text-lg font-medium text-destructive">危险操作</h3>
           <p className="text-sm text-muted-foreground">
-            Permanently delete this workspace and all of its data.
+            永久删除此工作空间及其全部数据。
           </p>
         </div>
         <div className="rounded-md border border-destructive p-4">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
-              <p className="text-sm font-medium">Delete this workspace</p>
+              <p className="text-sm font-medium">删除此工作空间</p>
               <p className="text-sm text-muted-foreground">
-                Once deleted, this workspace and all its data cannot be
-                recovered.
+                删除后，此工作空间及其全部数据均无法恢复。
               </p>
             </div>
             <Button
@@ -115,7 +112,7 @@ export function WorkspaceGeneralSettings({
               onClick={() => setDeleteDialogOpen(true)}
               disabled={isDeleting}
             >
-              Delete workspace
+              删除工作空间
             </Button>
           </div>
         </div>

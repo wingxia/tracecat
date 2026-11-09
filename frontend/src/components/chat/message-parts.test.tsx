@@ -104,11 +104,9 @@ describe("MessageParts", () => {
   it("draws each step as a collapsed line at default", async () => {
     await streamTurn("default")
 
-    expect(screen.getByText(/^Thought/)).toBeInTheDocument()
+    expect(screen.getByText(/^思考/)).toBeInTheDocument()
     expect(screen.getByText("Ran core.cases.list_cases")).toBeInTheDocument()
-    expect(
-      screen.getByText("Failed to run core.http_request")
-    ).toBeInTheDocument()
+    expect(screen.getByText("运行失败 core.http_request")).toBeInTheDocument()
     expect(screen.queryByText("limit")).not.toBeInTheDocument()
     expect(
       screen.queryByText("Check the detection rule before the logs.")
@@ -159,14 +157,12 @@ describe("MessageParts", () => {
   it("keeps only the answer and failures at minimal", async () => {
     await streamTurn("minimal")
 
-    expect(screen.queryByText(/^Thought/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/^思考/)).not.toBeInTheDocument()
     expect(
       screen.queryByText("Ran core.cases.list_cases")
     ).not.toBeInTheDocument()
-    expect(
-      screen.getByText("Failed to run core.http_request")
-    ).toBeInTheDocument()
-    expect(screen.queryByText("Working...")).not.toBeInTheDocument()
+    expect(screen.getByText("运行失败 core.http_request")).toBeInTheDocument()
+    expect(screen.queryByText("处理中…")).not.toBeInTheDocument()
   })
 
   it("shows one working line at minimal while steps run", async () => {
@@ -175,7 +171,7 @@ describe("MessageParts", () => {
     )
     fireEvent.click(screen.getByRole("button", { name: "Send" }))
 
-    const working = await screen.findByText("Working...")
+    const working = await screen.findByText("处理中…")
     expect(working.closest("[data-slot=trace-line]")).toHaveAttribute(
       "data-status",
       "running"
@@ -185,7 +181,7 @@ describe("MessageParts", () => {
     ).not.toBeInTheDocument()
 
     await screen.findByText(ANSWER)
-    expect(screen.queryByText("Working...")).not.toBeInTheDocument()
+    expect(screen.queryByText("处理中…")).not.toBeInTheDocument()
   })
 
   it("marks a running tool line while it waits for output", async () => {
@@ -194,7 +190,7 @@ describe("MessageParts", () => {
     )
     fireEvent.click(screen.getByRole("button", { name: "Send" }))
 
-    const running = await screen.findByText("Running core.cases.list_cases")
+    const running = await screen.findByText("运行中 core.cases.list_cases")
     expect(running.closest("[data-slot=trace-line]")).toHaveAttribute(
       "data-status",
       "running"
@@ -234,12 +230,12 @@ describe("MessageParts", () => {
     await streamTurn("default", chat)
 
     expect(screen.getByText("Ran rg -l ThemeProvider app")).toBeInTheDocument()
-    expect(screen.getByText("Read app/page.tsx")).toBeInTheDocument()
+    expect(screen.getByText("读取 app/page.tsx")).toBeInTheDocument()
 
     fireEvent.click(screen.getByText("Ran rg -l ThemeProvider app"))
 
     expect(screen.getByText("app/layout.tsx")).toBeInTheDocument()
-    expect(screen.queryByText("description")).not.toBeInTheDocument()
+    expect(screen.queryByText("描述")).not.toBeInTheDocument()
   })
 
   it("shows a multi-line command whole once opened", async () => {
@@ -339,7 +335,7 @@ describe("getRunningLineLabel", () => {
   it("keeps a working line at minimal once a continuation merges away", () => {
     const thread = transformMessages([prompt, opened, continued])
     expect(thread.map(({ id }) => id)).toEqual(["u1", "a1"])
-    expect(getRunningLineLabel("streaming", thread, minimal)).toBe("Working...")
+    expect(getRunningLineLabel("streaming", thread, minimal)).toBe("处理中…")
   })
 
   it("leaves a running tool's own line to show progress at default", () => {
@@ -349,16 +345,12 @@ describe("getRunningLineLabel", () => {
 
   it("thinks while a hidden tool runs at default", () => {
     const thread = [prompt, running("ToolSearch")]
-    expect(getRunningLineLabel("streaming", thread, defaults)).toBe(
-      "Thinking..."
-    )
+    expect(getRunningLineLabel("streaming", thread, defaults)).toBe("思考中…")
   })
 
   it("thinks while a hidden tool streams its input at default", () => {
     const thread = [prompt, running("ToolSearch", "input-streaming")]
-    expect(getRunningLineLabel("streaming", thread, defaults)).toBe(
-      "Thinking..."
-    )
+    expect(getRunningLineLabel("streaming", thread, defaults)).toBe("思考中…")
   })
 
   it("keeps a working line at minimal after an in-chat approval", () => {
@@ -373,7 +365,7 @@ describe("getRunningLineLabel", () => {
       ],
     }
     const thread = transformMessages([prompt, opened, submitted, continued])
-    expect(getRunningLineLabel("streaming", thread, minimal)).toBe("Working...")
+    expect(getRunningLineLabel("streaming", thread, minimal)).toBe("处理中…")
   })
 
   it("draws nothing while an approval waits", () => {
@@ -407,13 +399,11 @@ describe("getRunningLineLabel", () => {
     // An empty thought that ended draws nothing running, so the line returns.
     expect(
       getRunningLineLabel("streaming", [prompt, thought("", "done")], defaults)
-    ).toBe("Thinking...")
+    ).toBe("思考中…")
   })
 
   it("thinks until the first step at minimal", () => {
-    expect(getRunningLineLabel("submitted", [prompt], minimal)).toBe(
-      "Thinking..."
-    )
+    expect(getRunningLineLabel("submitted", [prompt], minimal)).toBe("思考中…")
     const answering: UIMessage = {
       id: "a3",
       role: "assistant",
@@ -450,7 +440,7 @@ describe("approval submit", () => {
 
   it("waits for the paused stream to close before submitting", () => {
     const { rerender } = renderCard("streaming")
-    expect(screen.getByRole("button", { name: "Approve" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "批准" })).toBeDisabled()
 
     rerender(
       <MessageParts
@@ -460,6 +450,6 @@ describe("approval submit", () => {
         onSubmitApprovals={jest.fn()}
       />
     )
-    expect(screen.getByRole("button", { name: "Approve" })).toBeEnabled()
+    expect(screen.getByRole("button", { name: "批准" })).toBeEnabled()
   })
 })

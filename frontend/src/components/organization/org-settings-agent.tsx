@@ -117,7 +117,7 @@ const CURSOR_PAGE_SIZE = 100
 
 const customProviderSchema = z
   .object({
-    displayName: z.string().trim().min(1, "Name is required"),
+    displayName: z.string().trim().min(1, "名称不能为空"),
     baseUrl: z.union([z.string().url(), z.literal(""), z.undefined()]),
     apiKeyHeader: z.string().trim().optional(),
     apiKey: z.string().optional(),
@@ -135,7 +135,7 @@ const customProviderSchema = z
       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Custom headers must be a JSON object.",
+          message: "自定义请求头必须是 JSON 对象。",
           path: ["customHeadersJson"],
         })
         return
@@ -144,7 +144,7 @@ const customProviderSchema = z
         if (typeof key !== "string" || typeof headerValue !== "string") {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Custom headers must map string keys to string values.",
+            message: "自定义请求头的键和值必须都是字符串。",
             path: ["customHeadersJson"],
           })
           return
@@ -153,7 +153,7 @@ const customProviderSchema = z
     } catch {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Custom headers must be valid JSON.",
+        message: "自定义请求头必须是有效的 JSON。",
         path: ["customHeadersJson"],
       })
     }
@@ -187,7 +187,7 @@ function isCloudCatalogProvider(
 
 const bedrockCloudModelSchema = z.object({
   provider: z.literal("bedrock"),
-  model_name: z.string().trim().min(1, "Model name is required"),
+  model_name: z.string().trim().min(1, "模型名称不能为空"),
   display_name: z.string().trim().optional(),
   inference_profile_id: z.string().trim().optional(),
   model_id: z.string().trim().optional(),
@@ -196,26 +196,23 @@ const bedrockCloudModelSchema = z.object({
 
 const azureOpenAICloudModelSchema = z.object({
   provider: z.literal("azure_openai"),
-  model_name: z.string().trim().min(1, "Model name is required"),
+  model_name: z.string().trim().min(1, "模型名称不能为空"),
   display_name: z.string().trim().optional(),
-  deployment_name: z.string().trim().min(1, "Deployment name is required"),
+  deployment_name: z.string().trim().min(1, "部署名称不能为空"),
 })
 
 const azureAICloudModelSchema = z.object({
   provider: z.literal("azure_ai"),
-  model_name: z.string().trim().min(1, "Model name is required"),
+  model_name: z.string().trim().min(1, "模型名称不能为空"),
   display_name: z.string().trim().optional(),
-  azure_ai_model_name: z
-    .string()
-    .trim()
-    .min(1, "Azure AI model name is required"),
+  azure_ai_model_name: z.string().trim().min(1, "Azure AI 模型名称不能为空"),
 })
 
 const vertexAICloudModelSchema = z.object({
   provider: z.literal("vertex_ai"),
-  model_name: z.string().trim().min(1, "Model name is required"),
+  model_name: z.string().trim().min(1, "模型名称不能为空"),
   display_name: z.string().trim().optional(),
-  vertex_model: z.string().trim().min(1, "Vertex model is required"),
+  vertex_model: z.string().trim().min(1, "Vertex 模型不能为空"),
 })
 
 const cloudCatalogModelSchema = z
@@ -232,13 +229,13 @@ const cloudCatalogModelSchema = z
       if (hasProfile && hasModelId) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Provide at most one of Inference profile ID or Model ID.",
+          message: "推理配置 ID 和模型 ID 最多填写一个。",
           path: ["inference_profile_id"],
         })
       } else if (!hasProfile && !hasModelId) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Provide exactly one of Inference profile ID or Model ID.",
+          message: "推理配置 ID 和模型 ID 必须且只能填写一个。",
           path: ["inference_profile_id"],
         })
       }
@@ -438,11 +435,11 @@ const BEDROCK_SUBSCRIPTION_LABELS: Record<
   string | null
 > = {
   subscribed: "Subscribed",
-  not_subscribed: "Not subscribed",
-  pending: "Subscription pending",
-  not_authorized: "Not authorized",
-  unavailable: "Unavailable in region",
-  error: "Subscription error",
+  not_subscribed: "未订阅",
+  pending: "订阅待处理",
+  not_authorized: "未授权",
+  unavailable: "此区域不可用",
+  error: "订阅错误",
   unknown: null,
 }
 
@@ -562,14 +559,14 @@ function parseCustomHeaders(
 
 function formatDateTime(value?: string | null): string {
   if (!value) {
-    return "Never"
+    return "从未"
   }
-  return new Date(value).toLocaleString()
+  return new Date(value).toLocaleString("zh-CN")
 }
 
 function formatStatus(value?: string | null): string {
   if (!value) {
-    return "Unknown"
+    return "未知"
   }
   return value
     .split(/[_\s]+/)
@@ -647,7 +644,7 @@ function getProviderDisplayLabel(provider: string): string {
     case "openrouter":
       return "OpenRouter"
     case "custom-model-provider":
-      return "Custom"
+      return "自定义"
     default:
       return formatStatus(provider)
   }
@@ -692,9 +689,9 @@ function normalizeSourceName(value: string): string {
 function getCustomSourceTypeLabel(type: string): string {
   switch (type) {
     case "manual_custom":
-      return "Manual custom"
+      return "手动自定义"
     case "openai_compatible_gateway":
-      return "OpenAI-compatible"
+      return "兼容 OpenAI"
     default:
       return type.replaceAll("_", " ")
   }
@@ -706,13 +703,13 @@ function getCustomSourceFlavorLabel(flavor?: string | null): string | null {
   }
   switch (flavor) {
     case "generic_openai_compatible":
-      return "Generic OpenAI-compatible"
+      return "通用 OpenAI 兼容接口"
     case "ollama":
       return "Ollama"
     case "vllm":
       return "vLLM"
     case "manual":
-      return "Manual"
+      return "手动"
     default:
       return flavor.replaceAll("_", " ")
   }
@@ -738,7 +735,7 @@ function formatTokenCount(value: number | null): string {
   if (value == null) {
     return "n/a"
   }
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("zh-CN", {
     maximumFractionDigits: 1,
     notation: "compact",
   }).format(value)
@@ -778,7 +775,7 @@ function getModelSourceLabel(
 ): string {
   return (
     model.source_name ??
-    (model.source_id ? "Custom" : getProviderDisplayLabel(model.model_provider))
+    (model.source_id ? "自定义" : getProviderDisplayLabel(model.model_provider))
   )
 }
 
@@ -992,17 +989,14 @@ function CustomProviderDialog({
       })
       onOpenChange(false)
       toast({
-        title: provider ? "Custom source updated" : "Custom source created",
-        description: provider
-          ? "Saved the custom source configuration."
-          : "Created the custom source.",
+        title: provider ? "已更新自定义来源" : "已创建自定义来源",
+        description: provider ? "已保存自定义来源配置。" : "已创建自定义来源。",
       })
     },
     onError: (error: ApiError) => {
       toast({
-        title: provider ? "Update failed" : "Create failed",
-        description:
-          getApiErrorDetail(error) ?? "Unable to save the custom source.",
+        title: provider ? "更新失败" : "创建失败",
+        description: getApiErrorDetail(error) ?? "无法保存自定义来源。",
         variant: "destructive",
       })
     },
@@ -1015,18 +1009,17 @@ function CustomProviderDialog({
       }),
     onSuccess: (result) => {
       toast({
-        title: result.valid ? "Connection looks good" : "Connection failed",
+        title: result.valid ? "连接正常" : "连接失败",
         description: result.valid
-          ? "The provider responded successfully."
-          : "The provider did not respond successfully.",
+          ? "提供商已成功响应。"
+          : "提供商未能成功响应。",
         variant: result.valid ? "default" : "destructive",
       })
     },
     onError: (error: ApiError) => {
       toast({
-        title: "Connection test failed",
-        description:
-          getApiErrorDetail(error) ?? "Unable to validate the custom source.",
+        title: "连接测试失败",
+        description: getApiErrorDetail(error) ?? "无法验证自定义来源。",
         variant: "destructive",
       })
     },
@@ -1052,11 +1045,11 @@ function CustomProviderDialog({
       <DialogContent size="lg" className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>
-            {provider ? "Edit custom source" : "Add custom source"}
+            {provider ? "编辑自定义来源" : "添加自定义来源"}
           </DialogTitle>
           <DialogDescription>
-            Configure a user-defined OpenAI-compatible endpoint. Discovery reads
-            the source&apos;s <code>/models</code> endpoint.
+            配置兼容 OpenAI 的自定义端点。自动发现会读取该来源的{" "}
+            <code>/models</code> 端点。
           </DialogDescription>
         </DialogHeader>
 
@@ -1073,9 +1066,9 @@ function CustomProviderDialog({
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>名称</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Local gateway" />
+                      <Input {...field} placeholder={"本地网关"} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -1087,7 +1080,7 @@ function CustomProviderDialog({
                 name="baseUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Base URL</FormLabel>
+                    <FormLabel>基础 URL</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -1106,7 +1099,7 @@ function CustomProviderDialog({
                     name="apiKeyHeader"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Auth header</FormLabel>
+                        <FormLabel>身份验证请求头</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Authorization" />
                         </FormControl>
@@ -1119,15 +1112,13 @@ function CustomProviderDialog({
                     name="apiKey"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Auth value</FormLabel>
+                        <FormLabel>身份验证值</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             type="password"
                             placeholder={
-                              provider
-                                ? "Leave blank to keep saved value"
-                                : "sk-••••••••"
+                              provider ? "留空以保留已保存的值" : "sk-••••••••"
                             }
                           />
                         </FormControl>
@@ -1137,11 +1128,11 @@ function CustomProviderDialog({
                   />
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  Defaults to{" "}
+                  默认为{" "}
                   <code className="bg-muted rounded px-1 py-0.5 font-mono">
                     Authorization: Bearer &lt;value&gt;
                   </code>{" "}
-                  if no header is set.
+                  （未设置请求头时）。
                 </p>
               </div>
 
@@ -1151,13 +1142,10 @@ function CustomProviderDialog({
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between gap-4 rounded-md border p-3">
                     <div className="space-y-1">
-                      <FormLabel className="text-sm">
-                        Passthrough mode
-                      </FormLabel>
+                      <FormLabel className="text-sm">直通模式</FormLabel>
                       <FormDescription>
-                        Recommended for bring-your-own gateways (LiteLLM, vLLM,
-                        etc.). Skips Tracecat&apos;s transforms and forwards
-                        requests directly to your endpoint.
+                        推荐用于自有网关（LiteLLM、vLLM 等）。跳过 Tracecat
+                        转换，直接将请求转发到你的端点。
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -1173,7 +1161,7 @@ function CustomProviderDialog({
               <Collapsible open={advancedOpen} onOpenChange={setAdvancedOpen}>
                 <CollapsibleTrigger className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm [&[data-state=open]>svg]:rotate-180">
                   <ChevronDown className="size-4 transition-transform duration-200" />
-                  Advanced
+                  高级
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="pt-3">
@@ -1182,7 +1170,7 @@ function CustomProviderDialog({
                       name="customHeadersJson"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Additional headers</FormLabel>
+                          <FormLabel>附加请求头</FormLabel>
                           <FormControl>
                             <Textarea
                               {...field}
@@ -1191,10 +1179,9 @@ function CustomProviderDialog({
                             />
                           </FormControl>
                           <FormDescription>
-                            Optional JSON object of extra static headers sent on
-                            every request. Use this for non-auth headers not
-                            covered by the API key above. Saving new JSON
-                            replaces the saved value.
+                            可选的 JSON 对象，为每次请求附加静态请求头。用于上述
+                            API 密钥未覆盖的非认证请求头。保存新 JSON
+                            会替换旧值。
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -1215,7 +1202,7 @@ function CustomProviderDialog({
                 {validateMutation.isPending ? (
                   <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : null}
-                Test connection
+                测试连接
               </Button>
               <Button
                 size="sm"
@@ -1225,7 +1212,7 @@ function CustomProviderDialog({
                 {saveMutation.isPending ? (
                   <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : null}
-                {provider ? "Save source" : "Add source"}
+                {provider ? "保存来源" : "添加来源"}
               </Button>
             </DialogFooter>
           </form>
@@ -1266,7 +1253,7 @@ function CustomSourceModelRow({
         <div className="flex flex-wrap items-center gap-2">
           <p className="truncate text-sm font-medium">{title}</p>
           <Badge variant="outline">{model.model_provider}</Badge>
-          {model.base_url ? <Badge variant="outline">Custom URL</Badge> : null}
+          {model.base_url ? <Badge variant="outline">自定义 URL</Badge> : null}
         </div>
         {detailParts.length ? (
           <p className="truncate text-xs text-muted-foreground">
@@ -1282,7 +1269,7 @@ function CustomSourceModelRow({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            aria-label="Model actions"
+            aria-label={"模型操作"}
             disabled={disabled}
             size="icon"
             type="button"
@@ -1297,27 +1284,26 @@ function CustomSourceModelRow({
               void onToggle(model)
             }}
           >
-            {model.enabled ? "Disable" : "Enable"}
+            {model.enabled ? "禁用" : "启用"}
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={async () => {
               try {
                 await navigator.clipboard.writeText(model.id)
                 toast({
-                  title: "Copied",
-                  description: `Catalog ID ${model.id} copied to clipboard.`,
+                  title: "已复制",
+                  description: `已将目录 ID ${model.id} 复制到剪贴板。`,
                 })
               } catch {
                 toast({
-                  title: "Copy failed",
-                  description:
-                    "Could not copy the catalog ID to your clipboard.",
+                  title: "复制失败",
+                  description: "无法将目录 ID 复制到剪贴板。",
                   variant: "destructive",
                 })
               }
             }}
           >
-            Copy catalog ID
+            复制目录 ID
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -1404,7 +1390,7 @@ function ProviderAllowlistModelRow({
                 {subscribePending ? (
                   <Loader2 className="mr-1 size-3 animate-spin" />
                 ) : null}
-                Subscribe
+                订阅
               </Button>
             ) : null}
           </div>
@@ -1418,8 +1404,8 @@ function ProviderAllowlistModelRow({
           ) : null}
           {showCapabilityColumns ? (
             <p className="text-xs text-muted-foreground sm:hidden">
-              {getModelContextLabel(model)} ctx {"·"}{" "}
-              {getModelOutputLabel(model)} out
+              {getModelContextLabel(model)} 上下文 {"·"}{" "}
+              {getModelOutputLabel(model)} 输出
             </p>
           ) : null}
           {statusMessage ? (
@@ -1447,7 +1433,7 @@ function ProviderAllowlistModelRow({
               size="sm"
               variant={model.enabled ? "secondary" : "outline"}
             >
-              {model.enabled ? "Disallow" : "Allow"}
+              {model.enabled ? "不允许" : "允许"}
             </Button>
           </div>
         ) : null}
@@ -1456,7 +1442,7 @@ function ProviderAllowlistModelRow({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
-                  aria-label="Model actions"
+                  aria-label={"模型操作"}
                   disabled={disabled}
                   size="icon"
                   type="button"
@@ -1468,12 +1454,12 @@ function ProviderAllowlistModelRow({
               <DropdownMenuContent align="end">
                 {onEdit ? (
                   <DropdownMenuItem onSelect={() => onEdit(model)}>
-                    Edit
+                    编辑
                   </DropdownMenuItem>
                 ) : null}
                 {onDelete ? (
                   <DropdownMenuItem onSelect={() => onDelete(model)}>
-                    Delete
+                    删除
                   </DropdownMenuItem>
                 ) : null}
               </DropdownMenuContent>
@@ -1567,8 +1553,8 @@ function ProviderConnectionItem({
   const subtitle = provider.credentials_configured
     ? provider.base_url || provider.runtime_target
       ? [provider.base_url, provider.runtime_target].filter(Boolean).join(" · ")
-      : "Connected"
-    : "Not connected"
+      : "已连接"
+    : "未连接"
 
   return (
     <RbacListItem
@@ -1576,7 +1562,7 @@ function ProviderConnectionItem({
         <div className="flex flex-wrap items-center justify-end gap-2">
           {provider.credentials_configured ? (
             <ProviderMetaPill active={enabledSelectableProviderCount > 0}>
-              {enabledSelectableProviderCount} enabled
+              {enabledSelectableProviderCount} 已启用
             </ProviderMetaPill>
           ) : null}
           {onRefreshModels && provider.credentials_configured ? (
@@ -1589,7 +1575,7 @@ function ProviderConnectionItem({
               {refreshPending ? (
                 <Loader2 className="mr-2 size-3.5 animate-spin" />
               ) : null}
-              Refresh models
+              刷新模型
             </Button>
           ) : null}
           {onAddCatalogModel && provider.credentials_configured ? (
@@ -1599,7 +1585,7 @@ function ProviderConnectionItem({
               size="sm"
               variant="outline"
             >
-              Add model
+              添加模型
             </Button>
           ) : null}
           <Button
@@ -1607,7 +1593,7 @@ function ProviderConnectionItem({
             size="sm"
             variant="outline"
           >
-            {provider.credentials_configured ? "Configure" : "Connect"}
+            {provider.credentials_configured ? "配置" : "连接"}
           </Button>
         </div>
       }
@@ -1634,17 +1620,16 @@ function ProviderConnectionItem({
               size="sm"
               variant="outline"
             >
-              Disconnect
+              断开连接
             </Button>
           </div>
         ) : (
           <div className="rounded-lg border border-dashed px-4 py-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-medium">Connect {provider.label}</p>
+                <p className="text-sm font-medium">连接 {provider.label}</p>
                 <p className="text-xs text-muted-foreground">
-                  Use the Connect action above to add organization credentials
-                  before these models can be enabled for organization use.
+                  请先使用上方“连接”操作添加组织凭据，再启用这些模型供组织使用。
                 </p>
               </div>
             </div>
@@ -1661,11 +1646,11 @@ function ProviderConnectionItem({
           <div className="rounded-lg border px-4 py-3">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-medium">Model access</p>
+                <p className="text-sm font-medium">模型访问</p>
                 <p className="text-xs text-muted-foreground">
                   {allowAllChecked
-                    ? `All selectable ${provider.label} models are allowed. Turn this off to manage a whitelist.`
-                    : `Use a whitelist to choose which ${provider.label} models can appear in default-model and preset selection.`}
+                    ? `允许所有可选的 ${provider.label} 模型。关闭后可管理白名单。`
+                    : `通过白名单选择哪些 ${provider.label} 模型可用于默认模型和预设。`}
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -1677,7 +1662,7 @@ function ProviderConnectionItem({
                       : "text-muted-foreground"
                   )}
                 >
-                  Allow all
+                  全部允许
                 </span>
                 <Switch
                   checked={allowAllChecked}
@@ -1719,10 +1704,10 @@ function ProviderConnectionItem({
             <div className="mt-3 flex flex-wrap gap-2">
               <ProviderMetaPill active={enabledSelectableProviderCount > 0}>
                 {selectableProviderModelCount
-                  ? `${enabledSelectableProviderCount} of ${selectableProviderModelCount} models enabled`
+                  ? `已启用 ${enabledSelectableProviderCount}/${selectableProviderModelCount} 个模型`
                   : provider.credentials_configured
-                    ? "No selectable models available"
-                    : "Connect to manage platform models"}
+                    ? "暂无可选模型"
+                    : "连接后管理平台模型"}
               </ProviderMetaPill>
             </div>
           </div>
@@ -1736,7 +1721,7 @@ function ProviderConnectionItem({
                 onChange={(event) => {
                   setCatalogQueryInput(event.target.value)
                 }}
-                placeholder={`Search ${provider.label} models`}
+                placeholder={`搜索 ${provider.label} 模型`}
                 value={catalogQueryInput}
               />
               {catalogQueryInput.trim() ? (
@@ -1748,7 +1733,7 @@ function ProviderConnectionItem({
                   type="button"
                   variant="ghost"
                 >
-                  Clear
+                  清除
                 </Button>
               ) : null}
             </div>
@@ -1767,15 +1752,15 @@ function ProviderConnectionItem({
                           : "grid-cols-[minmax(0,1fr)_2rem]"
                     )}
                   >
-                    <span>Model</span>
+                    <span>模型</span>
                     {showCapabilityColumns ? (
                       <>
-                        <span className="text-right">Context</span>
-                        <span className="text-right">Output</span>
+                        <span className="text-right">上下文</span>
+                        <span className="text-right">输出</span>
                       </>
                     ) : null}
                     {canManageModels ? (
-                      <span className="text-center">Access</span>
+                      <span className="text-center">访问</span>
                     ) : null}
                     <span aria-hidden="true" />
                   </div>
@@ -1815,15 +1800,14 @@ function ProviderConnectionItem({
             ) : (
               <div className="rounded-md border border-dashed px-3 py-4 text-sm text-muted-foreground">
                 {catalogQueryInput.trim()
-                  ? `No ${provider.label} models matched this search.`
-                  : "No selectable models are currently available for this provider."}
+                  ? `没有匹配的 ${provider.label} 模型。`
+                  : "此提供商目前没有可选模型。"}
               </div>
             )}
           </div>
         ) : (
           <div className="rounded-md border border-dashed px-3 py-4 text-sm text-muted-foreground">
-            Connect this provider, then allow the platform models your
-            organization should be able to choose.
+            连接此提供商后，允许组织应当使用的平台模型。
           </div>
         )}
       </div>
@@ -1881,17 +1865,14 @@ function CloudCatalogModelDialog({
       })
       onOpenChange(false)
       toast({
-        title: entry ? "Model updated" : "Model added",
-        description: entry
-          ? "Saved the catalog entry."
-          : "Added the catalog entry.",
+        title: entry ? "已更新模型" : "已添加模型",
+        description: entry ? "已保存目录条目。" : "已添加目录条目。",
       })
     },
     onError: (error: ApiError) => {
       toast({
-        title: entry ? "Update failed" : "Add failed",
-        description:
-          getApiErrorDetail(error) ?? "Unable to save the catalog entry.",
+        title: entry ? "更新失败" : "添加失败",
+        description: getApiErrorDetail(error) ?? "无法保存目录条目。",
         variant: "destructive",
       })
     },
@@ -1913,16 +1894,16 @@ function CloudCatalogModelDialog({
       <DialogContent size="lg" className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>
-            {isEdit ? `Edit ${label} model` : `Add ${label} model`}
+            {isEdit ? `编辑 ${label} 模型` : `添加 ${label} 模型`}
           </DialogTitle>
           <DialogDescription>
             {provider === "bedrock"
-              ? "Reference a Bedrock inference profile or a direct model ID."
+              ? "引用 Bedrock 推理配置或直接模型 ID。"
               : provider === "azure_openai"
-                ? "Map a catalog entry to an Azure OpenAI deployment."
+                ? "将目录条目映射到 Azure OpenAI 部署。"
                 : provider === "azure_ai"
-                  ? "Map a catalog entry to an Azure AI model name."
-                  : "Map a catalog entry to a Vertex AI model."}
+                  ? "将目录条目映射到 Azure AI 模型名称。"
+                  : "将目录条目映射到 Vertex AI 模型。"}
           </DialogDescription>
         </DialogHeader>
 
@@ -1937,17 +1918,16 @@ function CloudCatalogModelDialog({
                 name="model_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Model name</FormLabel>
+                    <FormLabel>模型名称</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         disabled={isEdit}
-                        placeholder="e.g. claude-sonnet-4"
+                        placeholder={"例如 claude-sonnet-4"}
                       />
                     </FormControl>
                     <FormDescription>
-                      Catalog identifier exposed to presets and default-model
-                      selection. Cannot be changed after creation.
+                      供预设和默认模型选择使用的目录标识，创建后无法更改。
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -1959,12 +1939,12 @@ function CloudCatalogModelDialog({
                 name="display_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Display name</FormLabel>
+                    <FormLabel>显示名称</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         value={field.value ?? ""}
-                        placeholder="Optional friendly label"
+                        placeholder={"可选的易读标签"}
                       />
                     </FormControl>
                     <FormMessage />
@@ -1979,7 +1959,7 @@ function CloudCatalogModelDialog({
                     name="inference_profile_id"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Inference profile ID</FormLabel>
+                        <FormLabel>推理配置 ID</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -1988,8 +1968,7 @@ function CloudCatalogModelDialog({
                           />
                         </FormControl>
                         <FormDescription>
-                          Required for newer models. Provide either this or a
-                          direct model ID.
+                          较新模型需要此项。请填写此项或直接模型 ID，二选一。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -2000,7 +1979,7 @@ function CloudCatalogModelDialog({
                     name="model_id"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Model ID</FormLabel>
+                        <FormLabel>模型 ID</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -2009,7 +1988,7 @@ function CloudCatalogModelDialog({
                           />
                         </FormControl>
                         <FormDescription>
-                          Direct model ID for older on-demand models.
+                          旧版按需模型使用的直接模型 ID。
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -2022,12 +2001,11 @@ function CloudCatalogModelDialog({
                       <FormItem className="flex items-center justify-between gap-4 rounded-md border p-3">
                         <div className="space-y-1">
                           <FormLabel className="text-sm">
-                            Use Converse API
+                            使用 Converse API
                           </FormLabel>
                           <FormDescription>
-                            Force the Bedrock Converse API instead of
-                            InvokeModel. Enable this for models that require the
-                            Converse API.
+                            强制使用 Bedrock Converse API，而非
+                            InvokeModel。需要 Converse API 的模型应启用此项。
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -2048,7 +2026,7 @@ function CloudCatalogModelDialog({
                   name="deployment_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Deployment name</FormLabel>
+                      <FormLabel>部署名称</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="gpt-4o" />
                       </FormControl>
@@ -2064,7 +2042,7 @@ function CloudCatalogModelDialog({
                   name="azure_ai_model_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Azure AI model name</FormLabel>
+                      <FormLabel>Azure AI 模型名称</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="claude-sonnet-4-5" />
                       </FormControl>
@@ -2080,7 +2058,7 @@ function CloudCatalogModelDialog({
                   name="vertex_model"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Vertex model</FormLabel>
+                      <FormLabel>Vertex 模型</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="gemini-3-flash" />
                       </FormControl>
@@ -2095,7 +2073,7 @@ function CloudCatalogModelDialog({
                 {saveMutation.isPending ? (
                   <Loader2 className="mr-2 size-4 animate-spin" />
                 ) : null}
-                {isEdit ? "Save model" : "Add model"}
+                {isEdit ? "保存模型" : "添加模型"}
               </Button>
             </DialogFooter>
           </form>
@@ -2307,7 +2285,7 @@ export function OrgSettingsAgentForm() {
                   : null,
               readiness_message: credentialsConfigured
                 ? null
-                : "Connect this provider before allowing its platform models.",
+                : "请先连接此提供商，再允许使用其平台模型。",
             })
           )
 
@@ -2541,26 +2519,20 @@ export function OrgSettingsAgentForm() {
     provider: string,
     label: string
   ) {
-    if (
-      !window.confirm(
-        `Delete the saved ${label} credentials for this organization?`
-      )
-    ) {
+    if (!window.confirm(`删除此组织已保存的 ${label} 凭据？`)) {
       return
     }
 
     try {
       await credentialDeleteMutation.mutateAsync(provider)
       toast({
-        title: "Credentials deleted",
-        description: `${label} credentials were removed.`,
+        title: "已删除凭据",
+        description: `已移除 ${label} 凭据。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to delete ${label} credentials`,
-        description:
-          getApiErrorDetail(error) ??
-          "Unable to delete the provider credentials.",
+        title: `删除 ${label} 凭据失败`,
+        description: getApiErrorDetail(error) ?? "无法删除提供商凭据。",
         variant: "destructive",
       })
     }
@@ -2570,13 +2542,12 @@ export function OrgSettingsAgentForm() {
     try {
       await updateDefaultModel(catalogId)
       toast({
-        title: "Default model updated",
+        title: "已更新默认模型",
       })
     } catch (error) {
       toast({
-        title: "Update failed",
-        description:
-          getApiErrorDetail(error) ?? "Unable to update the default model.",
+        title: "更新失败",
+        description: getApiErrorDetail(error) ?? "无法更新默认模型。",
         variant: "destructive",
       })
     }
@@ -2587,9 +2558,8 @@ export function OrgSettingsAgentForm() {
       await toggleCatalogAccessMutation.mutateAsync(model)
     } catch (error) {
       toast({
-        title: `Failed to ${model.enabled ? "disable" : "enable"} ${getModelLabel(model)}`,
-        description:
-          getApiErrorDetail(error) ?? "Unable to update model access.",
+        title: `${model.enabled ? "禁用" : "启用"} ${getModelLabel(model)} 失败`,
+        description: getApiErrorDetail(error) ?? "无法更新模型访问权限。",
         variant: "destructive",
       })
       throw error
@@ -2615,16 +2585,15 @@ export function OrgSettingsAgentForm() {
         catalogIdsToEnable,
       })
       toast({
-        title: "Provider access updated",
+        title: "已更新提供商访问权限",
         description: catalogIdsToEnable.length
-          ? `Every selectable ${label} model is now allowed.`
-          : `All selectable ${label} models were already allowed.`,
+          ? `现在允许所有可选的 ${label} 模型。`
+          : `所有可选的 ${label} 模型均已允许。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to update ${label} model access`,
-        description:
-          getApiErrorDetail(error) ?? "Unable to update model access.",
+        title: `更新 ${label} 模型访问权限失败`,
+        description: getApiErrorDetail(error) ?? "无法更新模型访问权限。",
         variant: "destructive",
       })
       throw error
@@ -2651,16 +2620,15 @@ export function OrgSettingsAgentForm() {
         catalogIdsToEnable: [],
       })
       toast({
-        title: "Provider access updated",
+        title: "已更新提供商访问权限",
         description: accessIdsToDisable.length
-          ? `All ${label} models were removed from the allowlist.`
-          : `No ${label} models were currently allowed.`,
+          ? `已从白名单中移除所有 ${label} 模型。`
+          : `当前未允许任何 ${label} 模型。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to update ${label} model access`,
-        description:
-          getApiErrorDetail(error) ?? "Unable to update model access.",
+        title: `更新 ${label} 模型访问权限失败`,
+        description: getApiErrorDetail(error) ?? "无法更新模型访问权限。",
         variant: "destructive",
       })
       throw error
@@ -2672,17 +2640,17 @@ export function OrgSettingsAgentForm() {
     try {
       const result = await refreshBuiltInProviderMutation.mutateAsync(provider)
       toast({
-        title: `${label} models refreshed`,
-        description: `Discovered ${result.models_discovered} models.`,
+        title: `已刷新 ${label} 模型`,
+        description: `已发现 ${result.models_discovered} 个模型。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to refresh ${label} models`,
+        title: `刷新 ${label} 模型失败`,
         description:
           getApiErrorDetail(error) ??
           (provider === "bedrock"
-            ? "Unable to list models from AWS Bedrock."
-            : "Unable to reach the provider's /models endpoint."),
+            ? "无法列出 AWS Bedrock 模型。"
+            : "无法访问提供商的 /models 端点。"),
         variant: "destructive",
       })
     }
@@ -2698,19 +2666,19 @@ export function OrgSettingsAgentForm() {
       toast({
         title:
           result.status === "subscribed"
-            ? `Subscribed to ${name}`
-            : `Subscription requested for ${name}`,
+            ? `已订阅 ${name}`
+            : `已请求订阅 ${name}`,
         description:
           result.status === "subscribed"
-            ? "The model is ready to use."
-            : "AWS can take a few minutes to activate model access.",
+            ? "模型已可使用。"
+            : "AWS 可能需要几分钟来激活模型访问权限。",
       })
     } catch (error) {
       toast({
-        title: `Failed to subscribe to ${name}`,
+        title: `订阅 ${name} 失败`,
         description:
           getApiErrorDetail(error) ??
-          "Check that the AWS credentials allow aws-marketplace:Subscribe.",
+          "请检查 AWS 凭据是否具有 aws-marketplace:Subscribe 权限。",
         variant: "destructive",
       })
     }
@@ -2720,15 +2688,13 @@ export function OrgSettingsAgentForm() {
     try {
       await refreshProviderMutation.mutateAsync(source.id)
       toast({
-        title: "Custom source refreshed",
-        description: `Updated ${source.display_name}.`,
+        title: "已刷新自定义来源",
+        description: `已更新 ${source.display_name}。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to refresh ${source.display_name}`,
-        description:
-          getApiErrorDetail(error) ??
-          "Unable to refresh the custom provider catalog.",
+        title: `刷新 ${source.display_name} 失败`,
+        description: getApiErrorDetail(error) ?? "无法刷新自定义提供商目录。",
         variant: "destructive",
       })
     }
@@ -2738,14 +2704,13 @@ export function OrgSettingsAgentForm() {
     try {
       await deleteCustomProviderMutation.mutateAsync(provider.id)
       toast({
-        title: "Custom source deleted",
-        description: `${provider.display_name} was removed.`,
+        title: "已删除自定义来源",
+        description: `已移除 ${provider.display_name}。`,
       })
     } catch (error) {
       toast({
-        title: `Failed to delete ${provider.display_name}`,
-        description:
-          getApiErrorDetail(error) ?? "Unable to delete the custom provider.",
+        title: `删除 ${provider.display_name} 失败`,
+        description: getApiErrorDetail(error) ?? "无法删除自定义提供商。",
         variant: "destructive",
       })
     }
@@ -2754,10 +2719,8 @@ export function OrgSettingsAgentForm() {
   function handleProviderCredentialsSaved() {
     invalidateBuiltInAgentQueries()
     toast({
-      title: selectedCredentialsConfigured
-        ? "Credentials updated"
-        : "Provider connected",
-      description: "Provider credentials were saved.",
+      title: selectedCredentialsConfigured ? "已更新凭据" : "提供商已连接",
+      description: "已保存提供商凭据。",
     })
   }
 
@@ -2794,14 +2757,13 @@ export function OrgSettingsAgentForm() {
     try {
       await deleteCatalogEntryMutation.mutateAsync(entry.id)
       toast({
-        title: "Model deleted",
-        description: `Removed ${entry.model_name} from the catalog.`,
+        title: "已删除模型",
+        description: `已从目录移除 ${entry.model_name}。`,
       })
     } catch (error) {
       toast({
-        title: "Delete failed",
-        description:
-          getApiErrorDetail(error) ?? "Unable to delete the catalog entry.",
+        title: "删除失败",
+        description: getApiErrorDetail(error) ?? "无法删除目录条目。",
         variant: "destructive",
       })
     } finally {
@@ -2846,20 +2808,15 @@ export function OrgSettingsAgentForm() {
       {pageError ? (
         <AlertNotification
           level="error"
-          message={
-            getApiErrorDetail(pageError) ?? "Unable to load agent settings."
-          }
+          message={getApiErrorDetail(pageError) ?? "无法加载智能体设置。"}
         />
       ) : null}
 
       <section className="space-y-4">
         <div className="space-y-1">
-          <h3 className="text-lg font-semibold tracking-tight">
-            Default model
-          </h3>
+          <h3 className="text-lg font-semibold tracking-tight">默认模型</h3>
           <p className="text-sm text-muted-foreground">
-            Choose the organization-wide default from the models enabled for
-            this organization.
+            从组织已启用的模型中选择组织级默认模型。
           </p>
         </div>
 
@@ -2867,7 +2824,7 @@ export function OrgSettingsAgentForm() {
           <CenteredSpinner />
         ) : !defaultModelOptions.length ? (
           <p className="text-sm text-muted-foreground">
-            Enable at least one model below to choose a default.
+            请先在下方启用至少一个模型，再选择默认模型。
           </p>
         ) : (
           <Select
@@ -2899,7 +2856,7 @@ export function OrgSettingsAgentForm() {
                   </div>
                 </div>
               ) : (
-                <SelectValue placeholder="Choose a default model" />
+                <SelectValue placeholder={"选择默认模型"} />
               )}
             </SelectTrigger>
             <SelectContent>
@@ -2921,7 +2878,7 @@ export function OrgSettingsAgentForm() {
                           </span>
                           {isSelected ? (
                             <span className="shrink-0 text-xs text-muted-foreground">
-                              Current default
+                              当前默认值
                             </span>
                           ) : null}
                         </div>
@@ -2938,27 +2895,24 @@ export function OrgSettingsAgentForm() {
         )}
 
         {isSelectionUpdating ? (
-          <p className="text-xs text-muted-foreground">Saving changes…</p>
+          <p className="text-xs text-muted-foreground">正在保存更改…</p>
         ) : null}
       </section>
 
       <section className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold tracking-tight">
-              Provider connections
-            </h3>
+            <h3 className="text-lg font-semibold tracking-tight">提供商连接</h3>
             <p className="text-sm text-muted-foreground">
-              Connect a provider, open it, and allow the organization-level
-              models your workspaces can draw from.
+              连接并打开提供商，然后启用供工作空间使用的组织级模型。
             </p>
           </div>
         </div>
         <div className="space-y-1">
           <p className="text-xs text-muted-foreground">
             {agentAddonsEnabled
-              ? "The platform catalog stays shared, while each workspace can still restrict itself to a smaller subset of the organization-enabled catalog."
-              : "Connect providers here. Upgrade to manage which organization-level models are enabled."}
+              ? "平台模型目录保持共享，各工作空间仍可在组织启用的模型中进一步限制可用范围。"
+              : "在此连接提供商。升级后可管理组织级模型的启用状态。"}
           </p>
         </div>
         <div className="space-y-4">
@@ -3026,7 +2980,7 @@ export function OrgSettingsAgentForm() {
             </RbacListContainer>
           ) : (
             <div className="rounded-md border border-dashed px-3 py-4 text-sm text-muted-foreground">
-              No platform providers are available.
+              暂无可用的平台提供商。
             </div>
           )}
         </div>
@@ -3035,12 +2989,10 @@ export function OrgSettingsAgentForm() {
       <section className="space-y-4">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold tracking-tight">
-              Custom sources
-            </h3>
+            <h3 className="text-lg font-semibold tracking-tight">自定义来源</h3>
             <p className="text-sm text-muted-foreground">
-              Add any other OpenAI-compatible gateway. Ollama, vLLM, LiteLLM,
-              and OpenRouter are available as built-in providers above.
+              添加其他兼容 OpenAI 的网关。Ollama、vLLM、LiteLLM 和 OpenRouter
+              已作为内置提供商列于上方。
             </p>
           </div>
           <Button
@@ -3050,7 +3002,7 @@ export function OrgSettingsAgentForm() {
             }}
             variant="outline"
           >
-            Add custom source
+            添加自定义来源
           </Button>
         </div>
 
@@ -3091,7 +3043,7 @@ export function OrgSettingsAgentForm() {
                         size="sm"
                         variant="outline"
                       >
-                        Edit
+                        编辑
                       </Button>
                       <Button
                         disabled={
@@ -3104,7 +3056,7 @@ export function OrgSettingsAgentForm() {
                         size="sm"
                         variant="outline"
                       >
-                        Refresh
+                        刷新
                       </Button>
                       <Button
                         disabled={
@@ -3115,17 +3067,15 @@ export function OrgSettingsAgentForm() {
                         size="sm"
                         variant="outline"
                       >
-                        Delete
+                        删除
                       </Button>
                     </div>
                   </div>
                   <div className="grid gap-2 text-xs text-muted-foreground sm:grid-cols-2">
-                    <p>
-                      Last refreshed: {formatDateTime(source.last_refreshed_at)}
-                    </p>
+                    <p>上次刷新： {formatDateTime(source.last_refreshed_at)}</p>
                     {source.base_url ? (
                       <p>
-                        Base URL:{" "}
+                        基础 URL：{" "}
                         <span className="font-mono">{source.base_url}</span>
                       </p>
                     ) : null}
@@ -3140,7 +3090,7 @@ export function OrgSettingsAgentForm() {
 
                   {!source.base_url ? (
                     <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                      Set a base URL before refreshing this custom endpoint.
+                      刷新此自定义端点前，请先设置基础 URL。
                     </div>
                   ) : null}
 
@@ -3148,8 +3098,7 @@ export function OrgSettingsAgentForm() {
                     <>
                       {!agentAddonsEnabled ? (
                         <div className="rounded-lg border border-dashed p-3 text-xs text-muted-foreground">
-                          Upgrade to enable or disable specific source-backed
-                          models for presets and defaults.
+                          升级后可启用或禁用指定来源的模型，供预设和默认模型选择使用。
                         </div>
                       ) : null}
                       {source.models.map((model) => (
@@ -3163,8 +3112,7 @@ export function OrgSettingsAgentForm() {
                     </>
                   ) : (
                     <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-                      Refresh this source, then enable the entries you want
-                      available to presets and defaults.
+                      刷新此来源后，启用需要用于预设和默认模型的条目。
                     </div>
                   )}
                 </CardContent>
@@ -3175,11 +3123,9 @@ export function OrgSettingsAgentForm() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center gap-3 py-10 text-center">
               <div className="space-y-1">
-                <p className="text-sm font-medium">No custom sources yet</p>
+                <p className="text-sm font-medium">暂无自定义来源</p>
                 <p className="text-sm text-muted-foreground">
-                  Use custom sources only when you need a user-defined endpoint
-                  beyond the platform provider cards and shared platform
-                  catalog.
+                  仅在平台提供商和共享模型目录无法满足需求、需要自定义端点时使用自定义来源。
                 </p>
               </div>
             </CardContent>
@@ -3216,15 +3162,15 @@ export function OrgSettingsAgentForm() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete custom source</AlertDialogTitle>
+            <AlertDialogTitle>删除自定义来源</AlertDialogTitle>
             <AlertDialogDescription>
               {deletingProvider
-                ? `Delete ${deletingProvider.display_name} from this organization? Any models discovered from this source will stop being available for selection.`
-                : "Delete this custom source from this organization?"}
+                ? `从组织删除 ${deletingProvider.display_name} 吗？从此来源发现的模型将不再可选。`
+                : "从组织删除此自定义来源吗？"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (deletingProvider) {
@@ -3234,7 +3180,7 @@ export function OrgSettingsAgentForm() {
               }}
               variant="destructive"
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -3261,15 +3207,15 @@ export function OrgSettingsAgentForm() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete catalog model</AlertDialogTitle>
+            <AlertDialogTitle>删除目录模型</AlertDialogTitle>
             <AlertDialogDescription>
               {deletingCatalogEntry
-                ? `Delete ${deletingCatalogEntry.model_name} from the catalog? Any workspace access rows for this model will also be removed.`
-                : "Delete this catalog entry?"}
+                ? `从目录删除 ${deletingCatalogEntry.model_name} 吗？此模型对应的工作空间访问记录也会被移除。`
+                : "删除此目录条目吗？"}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               disabled={deleteCatalogEntryMutation.isPending}
               onClick={() => {
@@ -3279,7 +3225,7 @@ export function OrgSettingsAgentForm() {
               }}
               variant="destructive"
             >
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

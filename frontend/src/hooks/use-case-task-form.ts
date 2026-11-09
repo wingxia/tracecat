@@ -35,7 +35,7 @@ const CASE_TASK_PRIORITY_VALUES = [
  * `null` — would erase trigger defaults written by `WorkflowTriggerDialog`.
  */
 export const caseTaskFormSchema = z.object({
-  title: z.string().trim().min(1, "Title is required"),
+  title: z.string().trim().min(1, "标题不能为空"),
   description: z.string().max(CASE_TASK_DESCRIPTION_MAX_LENGTH),
   status: z.enum(CASE_TASK_STATUS_VALUES),
   priority: z.enum(CASE_TASK_PRIORITY_VALUES),

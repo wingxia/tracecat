@@ -28,16 +28,11 @@ import { Input } from "@/components/ui/input"
 const createTagSchema = z.object({
   name: z
     .string()
-    .min(1, "Tag name cannot be empty")
-    .max(50, "Tag name cannot be longer than 50 characters")
+    .min(1, "标签名称不能为空")
+    .max(50, "标签名称不能超过 50 个字符")
     .trim()
-    .refine(
-      (name) => name.trim().length > 0,
-      "Tag name cannot be only whitespace"
-    ),
-  color: z
-    .string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, "Color must be a valid hex color code"),
+    .refine((name) => name.trim().length > 0, "标签名称不能仅为空白字符"),
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "颜色必须是有效的十六进制色值"),
 })
 
 /** Tag shape used for duplicate checking. */
@@ -79,7 +74,7 @@ export function CreateTagDialog({
       if (tagExists) {
         methods.setError("name", {
           type: "manual",
-          message: "A tag with this name already exists",
+          message: "已存在同名标签",
         })
         return
       }
@@ -114,11 +109,11 @@ export function CreateTagDialog({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Name</FormLabel>
+                    <FormLabel className="text-sm">名称</FormLabel>
                     <FormControl>
                       <Input
                         className="text-sm"
-                        placeholder="Name"
+                        placeholder={"名称"}
                         {...field}
                       />
                     </FormControl>
@@ -132,7 +127,7 @@ export function CreateTagDialog({
                 name="color"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm">Color</FormLabel>
+                    <FormLabel className="text-sm">颜色</FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
                         <Input
@@ -154,7 +149,7 @@ export function CreateTagDialog({
             </DialogBody>
             <DialogFooter>
               <Button size="sm" type="submit">
-                Create tag
+                创建标签
               </Button>
             </DialogFooter>
           </form>

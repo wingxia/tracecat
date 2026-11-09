@@ -64,7 +64,7 @@ export function CaseLinkRowsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         {...nonDismissableDialogProps}
-        title="Link rows"
+        title={"关联行"}
         className="flex h-[min(92dvh,960px)] w-[min(96vw,1440px)] max-w-none flex-col gap-0 overflow-hidden p-0"
       >
         {/* Radix unmounts the body on close, so every pick resets for free. */}
@@ -246,31 +246,31 @@ function CaseLinkRowsDialogBody({
             committedRowIds
           )
         )
-        const detail = getApiErrorDetail(error.cause) ?? "Try again."
+        const detail = getApiErrorDetail(error.cause) ?? "请重试。"
         if (linkedCount + alreadyLinkedCount > 0) {
           toast({
-            title: "Some rows were not linked",
+            title: "部分行未能关联",
             description: `${describePartialLink(linkedCount, alreadyLinkedCount)} ${detail}`,
             variant: "destructive",
           })
           return
         }
         toast({
-          title: "Could not link rows",
+          title: "无法关联行",
           description: detail,
           variant: "destructive",
         })
         return
       }
       toast({
-        title: "Could not link rows",
-        description: getApiErrorDetail(error) ?? "Try again.",
+        title: "无法关联行",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
       return
     }
     toast({
-      title: "Rows linked",
+      title: "已关联行",
       description: describeLinkResult(linkedCount, alreadyLinkedCount),
     })
     onOpenChange(false)
@@ -278,13 +278,13 @@ function CaseLinkRowsDialogBody({
 
   let gridContent: ReactNode
   if (tablesError) {
-    gridContent = <GridMessage tone="error">Failed to load tables.</GridMessage>
+    gridContent = <GridMessage tone="error">加载数据表失败。</GridMessage>
   } else if (!tablesIsLoading && sortedTables.length === 0) {
-    gridContent = <GridMessage>No tables in this workspace</GridMessage>
+    gridContent = <GridMessage>此工作空间暂无数据表</GridMessage>
   } else if (tableError || (rowsError && !isStaleRowQuery)) {
     gridContent = (
       <GridMessage tone="error">
-        Failed to load table rows.
+        加载数据表行失败。
         {(isSearching || sortingState.orderBy !== null) && (
           // The header that holds the filter is unmounted with the grid.
           <Button
@@ -293,7 +293,7 @@ function CaseLinkRowsDialogBody({
             className="ml-3 h-7 text-xs text-foreground"
             onClick={resetRowQuery}
           >
-            Clear filter and sort
+            清除筛选和排序
           </Button>
         )}
       </GridMessage>
@@ -322,34 +322,32 @@ function CaseLinkRowsDialogBody({
     )
   }
 
-  let summary = `${totalStaged} selected`
+  let summary = `已选择 ${totalStaged} 项`
   if (stagedTableCount > 1) {
-    summary += ` across ${stagedTableCount} tables`
+    summary += `（来自 ${stagedTableCount} 个数据表）`
   }
 
-  let linkLabel = "Link rows"
+  let linkLabel = "关联行"
   if (totalStaged === 1) {
-    linkLabel = "Link 1 row"
+    linkLabel = "关联 1 行"
   } else if (totalStaged > 1) {
-    linkLabel = `Link ${totalStaged} rows`
+    linkLabel = `关联 ${totalStaged} 行`
   }
 
   return (
     <>
       <div className="flex flex-col gap-3 px-6 pt-6 pb-4 pr-10">
         <div className="flex flex-col gap-1.5">
-          <DialogTitle>Link rows</DialogTitle>
-          <DialogDescription>
-            Select rows to link to this case.
-          </DialogDescription>
+          <DialogTitle>关联行</DialogTitle>
+          <DialogDescription>选择要关联到此事件的行。</DialogDescription>
         </div>
         <Select
           value={tableId}
           onValueChange={handleTableChange}
           disabled={tablesIsLoading || sortedTables.length === 0}
         >
-          <SelectTrigger className="h-8 w-[280px]" aria-label="Table">
-            <SelectValue placeholder="Select a table" />
+          <SelectTrigger className="h-8 w-[280px]" aria-label={"数据表"}>
+            <SelectValue placeholder={"选择数据表"} />
           </SelectTrigger>
           <SelectContent>
             {sortedTables.map((option) => (
@@ -387,7 +385,7 @@ function CaseLinkRowsDialogBody({
             onClick={handleClear}
             disabled={totalStaged === 0 || linkCaseRowsIsPending}
           >
-            Clear
+            清除
           </Button>
           <Button
             onClick={handleLink}
@@ -396,7 +394,7 @@ function CaseLinkRowsDialogBody({
             {linkCaseRowsIsPending ? (
               <span className="flex items-center gap-2">
                 <Spinner className="size-4" />
-                Linking…
+                关联中…
               </span>
             ) : (
               linkLabel
@@ -437,24 +435,22 @@ function describePartialLink(
   linkedCount: number,
   alreadyLinkedCount: number
 ): string {
-  const linkedNoun = linkedCount === 1 ? "row" : "rows"
-  let description = `Linked ${linkedCount} ${linkedNoun}`
+  let description = `已关联 ${linkedCount} 行`
   if (alreadyLinkedCount > 0) {
-    description += ` (${alreadyLinkedCount} already linked)`
+    description += `（${alreadyLinkedCount} 行此前已关联）`
   }
-  return `${description} before a request failed.`
+  return `请求失败前${description}。`
 }
 
 function describeLinkResult(
   linkedCount: number,
   alreadyLinkedCount: number
 ): string {
-  const linkedNoun = linkedCount === 1 ? "row" : "rows"
-  let description = `Linked ${linkedCount} ${linkedNoun} to this case.`
+  let description = `已将 ${linkedCount} 行关联到此事件。`
   if (alreadyLinkedCount === 1) {
-    description += " 1 was already linked."
+    description += " 1 行此前已关联。"
   } else if (alreadyLinkedCount > 1) {
-    description += ` ${alreadyLinkedCount} were already linked.`
+    description += ` ${alreadyLinkedCount} 行此前已关联。`
   }
   return description
 }

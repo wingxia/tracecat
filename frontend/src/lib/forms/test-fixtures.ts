@@ -19,7 +19,7 @@ export function resolvedForm(
   overrides: Partial<FormPreview> = {}
 ): FormPreview {
   return {
-    title: "Laptop request",
+    title: "笔记本电脑申请",
     definition_version: 4,
     config_version: "config-1",
     blocks: [],

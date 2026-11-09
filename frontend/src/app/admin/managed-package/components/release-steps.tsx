@@ -24,9 +24,9 @@ export interface ReleaseStepsProps {
 function pendingDetail(state: ReleaseStepDataState): string | null {
   switch (state) {
     case "loading":
-      return "Loading..."
+      return "加载中…"
     case "error":
-      return "Could not load."
+      return "无法加载。"
     case "ready":
       return null
   }
@@ -49,30 +49,30 @@ export function ReleaseSteps({
   const onLatest = latest
     ? targets.filter((target) => target.last_applied_tag === latest).length
     : 0
-  let published = "Push from the source workspace's Git sync page."
+  let published = "请从源工作空间的 Git 同步页面推送。"
   if (candidate) {
     const sha = candidate.commit_sha.substring(0, 7)
     const existingTags = candidate.existing_tags ?? []
     published =
       existingTags.length > 0
-        ? `${candidate.branch} @ ${sha} is released as ${existingTags.join(", ")}.`
-        : `${candidate.branch} @ ${sha} has unreleased changes.`
+        ? `${candidate.branch} @ ${sha} 已发布为 ${existingTags.join("、")}。`
+        : `${candidate.branch} @ ${sha} 有未发布的更改。`
   }
   const release = latest
-    ? `Latest release is ${latest}.`
-    : "No release yet. Cut one below."
+    ? `最新发布版本为 ${latest}。`
+    : "暂无发布版本，请在下方创建。"
   const deploy = latest
-    ? `${onLatest} of ${targets.length} targets run ${latest}.`
-    : `${targets.length} targets assigned.`
+    ? `${targets.length} 个目标中有 ${onLatest} 个运行 ${latest}。`
+    : `已分配 ${targets.length} 个目标。`
   // Deploy needs both the tags and the targets.
   const deployState = tagsState === "ready" ? targetsState : tagsState
   const steps = [
     {
-      title: "1. Publish",
+      title: "1. 发布内容",
       detail: pendingDetail(candidateState) ?? published,
     },
-    { title: "2. Release", detail: pendingDetail(tagsState) ?? release },
-    { title: "3. Deploy", detail: pendingDetail(deployState) ?? deploy },
+    { title: "2. 创建版本", detail: pendingDetail(tagsState) ?? release },
+    { title: "3. 部署", detail: pendingDetail(deployState) ?? deploy },
   ]
 
   return (

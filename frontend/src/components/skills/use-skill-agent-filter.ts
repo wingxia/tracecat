@@ -66,11 +66,11 @@ export function useSkillAgentFilter({
     [agentIds, presets]
   )
 
-  let emptyMessage = "No agents yet."
+  let emptyMessage = "暂无智能体。"
   if (presetsIsLoading) {
-    emptyMessage = "Loading agents..."
+    emptyMessage = "正在加载智能体…"
   } else if (presetsError) {
-    emptyMessage = "Failed to load agents."
+    emptyMessage = "加载智能体失败。"
   }
 
   const active = agentIds.length > 0

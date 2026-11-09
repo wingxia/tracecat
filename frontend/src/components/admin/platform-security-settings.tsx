@@ -7,7 +7,7 @@ export function PlatformSecuritySettings() {
   return (
     <IPAllowlistSettingsForm
       {...useAdminSecuritySettings()}
-      enforcementDescription="Only allow platform admin console and API access from the IP ranges in the allowlists below. Organization access is unaffected. Your current IP must be covered before enforcement can be enabled."
+      enforcementDescription="仅允许从下方允许列表中的 IP 范围访问平台管理控制台和 API。组织访问不受影响。启用限制前，列表必须涵盖你当前的 IP。"
     />
   )
 }

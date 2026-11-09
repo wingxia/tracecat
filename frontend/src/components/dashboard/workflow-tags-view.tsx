@@ -48,22 +48,19 @@ export function WorkflowTagsView() {
 
   if (workspaceError) {
     return (
-      <AlertNotification
-        level="error"
-        message="Error loading workspace info."
-      />
+      <AlertNotification level="error" message={"加载工作空间信息出错。"} />
     )
   }
 
   if (!workspace) {
-    return <AlertNotification level="error" message="Workspace not found." />
+    return <AlertNotification level="error" message={"未找到工作空间。"} />
   }
 
   if (tagsError) {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading tags: ${tagsError.message}`}
+        message={`加载标签出错：${tagsError.message}`}
       />
     )
   }
@@ -77,10 +74,8 @@ export function WorkflowTagsView() {
               <EmptyMedia variant="icon">
                 <TagIcon className="size-6" />
               </EmptyMedia>
-              <EmptyTitle>No tags defined yet</EmptyTitle>
-              <EmptyDescription>
-                Add your first tag using the button in the header
-              </EmptyDescription>
+              <EmptyTitle>尚未定义标签</EmptyTitle>
+              <EmptyDescription>使用顶部按钮添加第一个标签</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (

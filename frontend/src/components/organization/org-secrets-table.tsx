@@ -35,7 +35,7 @@ export function OrgSecretsTable() {
     return (
       <AlertNotification
         level="error"
-        message={`Error loading secrets: ${orgSecretsError?.message || "Secrets undefined"}`}
+        message={`加载密钥出错：${orgSecretsError?.message || "Secrets undefined"}`}
       />
     )
   }
@@ -58,7 +58,7 @@ export function OrgSecretsTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Secret Name"
+                  title={"密钥名称"}
                 />
               ),
               cell: ({ row }) => (
@@ -75,7 +75,7 @@ export function OrgSecretsTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Description"
+                  title={"描述"}
                 />
               ),
               cell: ({ row }) => (
@@ -94,7 +94,7 @@ export function OrgSecretsTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Environment"
+                  title={"环境"}
                 />
               ),
               cell: ({ row }) => (
@@ -113,7 +113,7 @@ export function OrgSecretsTable() {
                 <DataTableColumnHeader
                   className="text-xs"
                   column={column}
-                  title="Secret keys"
+                  title={"密钥字段"}
                 />
               ),
               cell: ({ row }) => {
@@ -143,7 +143,7 @@ export function OrgSecretsTable() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="size-8 p-0">
-                        <span className="sr-only">Open menu</span>
+                        <span className="sr-only">打开菜单</span>
                         <DotsHorizontalIcon className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
@@ -153,7 +153,7 @@ export function OrgSecretsTable() {
                           navigator.clipboard.writeText(row.original.id)
                         }
                       >
-                        Copy secret ID
+                        复制密钥 ID
                       </DropdownMenuItem>
 
                       <UpdateOrgSecretDialogTrigger asChild>
@@ -170,7 +170,7 @@ export function OrgSecretsTable() {
                             )
                           }}
                         >
-                          Edit
+                          编辑
                         </DropdownMenuItem>
                       </UpdateOrgSecretDialogTrigger>
 
@@ -185,7 +185,7 @@ export function OrgSecretsTable() {
                             )
                           }}
                         >
-                          Delete
+                          删除
                         </DropdownMenuItem>
                       </DeleteOrgSecretAlertDialogTrigger>
                     </DropdownMenuContent>
@@ -196,7 +196,7 @@ export function OrgSecretsTable() {
           ]}
           toolbarProps={{
             filterProps: {
-              placeholder: "Filter secrets by name...",
+              placeholder: "按名称筛选密钥…",
               column: "name",
             },
           }}

@@ -88,9 +88,9 @@ function CaseTagPickerList({
 
   return (
     <Command>
-      <CommandInput placeholder="Search tags..." className="text-xs" />
+      <CommandInput placeholder={"搜索标签…"} className="text-xs" />
       <CommandList>
-        <CommandEmpty>No tags found.</CommandEmpty>
+        <CommandEmpty>未找到标签。</CommandEmpty>
         <CommandGroup>
           {orderedTags.map((tag) => {
             const hasTag = appliedTagIds.has(tag.id)
@@ -113,7 +113,7 @@ function CaseTagPickerList({
                 <span>{tag.name}</span>
                 {/* cmdk owns `aria-selected` for highlight, so applied state
                     rides on the accessible name instead. */}
-                {hasTag && <span className="sr-only">{", applied"}</span>}
+                {hasTag && <span className="sr-only">{"，已应用"}</span>}
               </CommandItem>
             )
           })}
@@ -158,8 +158,8 @@ export function CaseTagPicker({
     } catch (error) {
       console.error("Failed to modify tag:", error)
       toast({
-        title: "Error",
-        description: `Failed to ${hasTag ? "remove" : "add"} tag ${hasTag ? "from" : "to"} case. Please try again.`,
+        title: "错误",
+        description: `${hasTag ? "移除" : "添加"}事件标签失败（${hasTag ? "来自" : "更改为"}），请重试。`,
         variant: "destructive",
       })
       return false
@@ -175,7 +175,7 @@ export function CaseTagPicker({
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="size-6 shrink-0 p-0">
           <Plus className="h-4 w-4" />
-          <span className="sr-only">Manage tags</span>
+          <span className="sr-only">管理标签</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent

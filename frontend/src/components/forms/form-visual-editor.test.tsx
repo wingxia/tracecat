@@ -27,7 +27,7 @@ function renderEditor(text = TEXT, readOnly = false) {
 describe("FormVisualEditor", () => {
   it("edits the title in the YAML and keeps its comments", () => {
     const { onChange } = renderEditor()
-    fireEvent.change(screen.getByLabelText("Title"), {
+    fireEvent.change(screen.getByLabelText("标题"), {
       target: { value: "Order" },
     })
     expect(onChange).toHaveBeenCalledWith(
@@ -38,13 +38,13 @@ describe("FormVisualEditor", () => {
   it("opens a block to edit it and removes blocks", () => {
     const { onChange } = renderEditor()
     fireEvent.click(screen.getByRole("button", { name: /Details/ }))
-    fireEvent.change(screen.getByLabelText("Heading"), {
+    fireEvent.change(screen.getByLabelText("内容块标题"), {
       target: { value: "" },
     })
     expect(onChange).toHaveBeenLastCalledWith(
       '# Kept\ntitle: Laptop request\nlayout:\n  - field: model\n  - heading: ""\n'
     )
-    fireEvent.click(screen.getAllByRole("button", { name: "Remove block" })[0])
+    fireEvent.click(screen.getAllByRole("button", { name: "移除内容块" })[0])
     expect(onChange).toHaveBeenLastCalledWith(
       "# Kept\ntitle: Laptop request\nlayout:\n  - heading: Details\n"
     )
@@ -52,14 +52,14 @@ describe("FormVisualEditor", () => {
 
   it("sends YAML it can't show to the YAML editor", () => {
     const { onEditYaml } = renderEditor("title: [broken\n")
-    fireEvent.click(screen.getByRole("button", { name: "Edit YAML" }))
+    fireEvent.click(screen.getByRole("button", { name: "编辑 YAML" }))
     expect(onEditYaml).toHaveBeenCalled()
   })
 
   it("is read only without form:update", () => {
     renderEditor(TEXT, true)
-    expect(screen.getByLabelText("Title")).toBeDisabled()
-    expect(screen.queryByRole("button", { name: "Add block" })).toBeNull()
-    expect(screen.queryByRole("button", { name: "Remove block" })).toBeNull()
+    expect(screen.getByLabelText("标题")).toBeDisabled()
+    expect(screen.queryByRole("button", { name: "添加内容块" })).toBeNull()
+    expect(screen.queryByRole("button", { name: "移除内容块" })).toBeNull()
   })
 })

@@ -45,7 +45,7 @@ export function CasePanelFieldsGroup({
     // of which applies a flex gap between the groups).
     <SidebarGroup className="mt-4">
       <SidebarGroupLabel className={CASE_PANEL_GROUP_LABEL_CLASS}>
-        Fields
+        字段
       </SidebarGroupLabel>
       <SidebarGroupContent className="px-2">
         {/* gap-1, not gap-2: grouping is read from the ratio of between-section
@@ -78,7 +78,7 @@ export function CasePanelFieldsGroup({
           })}
           {customFields.length === 0 && (
             <span className="text-sm text-muted-foreground">
-              No custom fields configured
+              尚未配置自定义字段
             </span>
           )}
           {customFields.length > 0 && (
@@ -87,7 +87,7 @@ export function CasePanelFieldsGroup({
               className="h-7 text-left text-sm text-muted-foreground underline-offset-4 hover:underline"
               onClick={onToggleShowAll}
             >
-              {showAll ? "Hide empty fields" : "View all fields"}
+              {showAll ? "隐藏空字段" : "查看所有字段"}
             </button>
           )}
         </div>

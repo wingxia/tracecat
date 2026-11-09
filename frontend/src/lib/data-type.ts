@@ -23,20 +23,20 @@ export interface TypeConfig {
 }
 
 export const SQL_TYPE_CONFIG: Record<SqlType, TypeConfig> = {
-  TEXT: { label: "Text", icon: Type },
-  INTEGER: { label: "Integer", icon: Hash },
-  NUMERIC: { label: "Number", icon: CircleDot },
-  BOOLEAN: { label: "Boolean", icon: ToggleLeft },
-  TIMESTAMPTZ: { label: "Date and time", icon: CalendarClock },
-  DATE: { label: "Date", icon: Calendar },
+  TEXT: { label: "文本", icon: Type },
+  INTEGER: { label: "整数", icon: Hash },
+  NUMERIC: { label: "数字", icon: CircleDot },
+  BOOLEAN: { label: "布尔值", icon: ToggleLeft },
+  TIMESTAMPTZ: { label: "日期与时间", icon: CalendarClock },
+  DATE: { label: "日期", icon: Calendar },
   JSONB: { label: "JSON", icon: Braces },
-  SELECT: { label: "Select", icon: SquareCheck },
-  MULTI_SELECT: { label: "Multi-select", icon: ListTodo },
+  SELECT: { label: "选择", icon: SquareCheck },
+  MULTI_SELECT: { label: "多选", icon: ListTodo },
 }
 
 /** Display config overrides for case field kinds. */
 export const CASE_FIELD_KIND_CONFIG: Record<CaseFieldKind, TypeConfig> = {
-  LONG_TEXT: { label: "Long text", icon: ScrollText },
+  LONG_TEXT: { label: "长文本", icon: ScrollText },
   URL: { label: "URL", icon: Link },
 }
 

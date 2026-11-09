@@ -112,7 +112,7 @@ export function AssigneeChangedEvent({
         <div className="flex items-center space-x-2 text-xs">
           <EventIcon icon={UserIcon} />
           <span>
-            <EventActor user={actor} /> self-assigned the case
+            <EventActor user={actor} /> 将事件分配给自己
           </span>
         </div>
       )
@@ -121,7 +121,7 @@ export function AssigneeChangedEvent({
       <div className="flex items-center space-x-2 text-xs">
         <EventIcon icon={UserIcon} />
         <span>
-          <EventActor user={actor} /> assigned the case to{" "}
+          <EventActor user={actor} /> 将事件分配给{" "}
           <EventActor user={userMap[assigneeId]} />
         </span>
       </div>
@@ -131,7 +131,7 @@ export function AssigneeChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={UserXIcon} />
       <span>
-        <EventActor user={actor} /> unassigned the case
+        <EventActor user={actor} /> 取消了事件分配
       </span>
     </div>
   )
@@ -154,7 +154,7 @@ export function StatusChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={newStatus.icon} className={newStatus.color} />
       <span>
-        <EventActor user={actor} /> changed status from {oldStatus.label} to{" "}
+        <EventActor user={actor} /> 将状态从 {oldStatus.label} 更改为{" "}
         {newStatus.label}
       </span>
     </div>
@@ -178,7 +178,7 @@ export function PriorityChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={newPriority.icon} className={newPriority.color} />
       <span>
-        <EventActor user={actor} /> changed priority from {oldSeverity.label} to{" "}
+        <EventActor user={actor} /> 将优先级从 {oldSeverity.label} 更改为{" "}
         {newPriority.label}
       </span>
     </div>
@@ -202,7 +202,7 @@ export function SeverityChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={newSeverity.icon} className={newSeverity.color} />
       <span>
-        <EventActor user={actor} /> changed severity from {oldSeverity.label} to{" "}
+        <EventActor user={actor} /> 将严重程度从 {oldSeverity.label} 更改为{" "}
         {newSeverity.label}
       </span>
     </div>
@@ -221,7 +221,7 @@ export function CaseReopenedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={newStatus.icon} className={newStatus.color} />
       <span>
-        <EventActor user={actor} /> reopened the case as {newStatus.label}
+        <EventActor user={actor} /> 重新打开事件，状态为 {newStatus.label}
       </span>
     </div>
   )
@@ -238,7 +238,7 @@ export function CaseViewedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={EyeIcon} />
       <span>
-        <EventActor user={actor} /> viewed the case
+        <EventActor user={actor} /> 查看了事件
       </span>
     </div>
   )
@@ -256,7 +256,7 @@ export function CaseClosedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={newStatus.icon} className={newStatus.color} />
       <span>
-        <EventActor user={actor} /> closed the case
+        <EventActor user={actor} /> 关闭了事件
       </span>
     </div>
   )
@@ -280,14 +280,12 @@ export function CaseUpdatedEvent({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="cursor-default">
-                    {event.new
-                      ? `changed summary to ${event.new}`
-                      : "removed summary"}
+                    {event.new ? `将摘要更改为 ${event.new}` : "移除了摘要"}
                   </span>
                 </TooltipTrigger>
                 {event.old && (
                   <TooltipContent>
-                    <p>Previously: {event.old}</p>
+                    <p>此前： {event.old}</p>
                   </TooltipContent>
                 )}
               </Tooltip>
@@ -315,7 +313,7 @@ export function FieldsChangedEvent({
         <EventIcon icon={BracesIcon} />
         <div className="flex flex-wrap items-center gap-1">
           <span>
-            <EventActor user={actor} /> changed fields
+            <EventActor user={actor} /> 更改了字段
           </span>
           {event.changes.map(({ field, old, new: newVal }, index) => (
             <Fragment key={`${field}-${index}`}>
@@ -357,7 +355,7 @@ export function AttachmentCreatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PaperclipIcon} />
       <span>
-        <EventActor user={actor} /> uploaded{" "}
+        <EventActor user={actor} /> 上传了{" "}
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -367,8 +365,8 @@ export function AttachmentCreatedEvent({
             </TooltipTrigger>
             <TooltipContent>
               <div className="space-y-1">
-                <p>Size: {formatFileSize(event.size)}</p>
-                <p>Type: {event.content_type}</p>
+                <p>大小： {formatFileSize(event.size)}</p>
+                <p>类型： {event.content_type}</p>
               </div>
             </TooltipContent>
           </Tooltip>
@@ -389,7 +387,7 @@ export function AttachmentDeletedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TrashIcon} className="text-red-600 bg-red-50" />
       <span>
-        <EventActor user={actor} /> deleted{" "}
+        <EventActor user={actor} /> 删除了{" "}
         <span className="font-medium">{event.file_name}</span>
       </span>
     </div>
@@ -407,7 +405,7 @@ export function PayloadChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> updated the payload
+        <EventActor user={actor} /> 更新了数据载荷
       </span>
     </div>
   )
@@ -424,7 +422,7 @@ export function CommentCreatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={MessageSquareIcon} />
       <span>
-        <EventActor user={actor} /> created a comment
+        <EventActor user={actor} /> 创建了评论
       </span>
     </div>
   )
@@ -441,7 +439,7 @@ export function CommentReplyCreatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={MessageSquareIcon} />
       <span>
-        <EventActor user={actor} /> replied to a comment
+        <EventActor user={actor} /> 回复了评论
       </span>
     </div>
   )
@@ -458,7 +456,7 @@ export function CommentUpdatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> edited a comment
+        <EventActor user={actor} /> 编辑了评论
       </span>
     </div>
   )
@@ -475,7 +473,7 @@ export function CommentReplyUpdatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> edited a reply
+        <EventActor user={actor} /> 编辑了回复
       </span>
     </div>
   )
@@ -492,7 +490,7 @@ export function CommentDeletedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TrashIcon} />
       <span>
-        <EventActor user={actor} /> deleted a comment
+        <EventActor user={actor} /> 删除了评论
       </span>
     </div>
   )
@@ -509,7 +507,7 @@ export function CommentReplyDeletedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TrashIcon} />
       <span>
-        <EventActor user={actor} /> deleted a reply
+        <EventActor user={actor} /> 删除了回复
       </span>
     </div>
   )
@@ -528,7 +526,7 @@ export function TaskCreatedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PlusIcon} />
       <span>
-        <EventActor user={actor} /> created the task{" "}
+        <EventActor user={actor} /> 创建了任务{" "}
         <span className="font-medium">{event.title}</span>
       </span>
     </div>
@@ -546,7 +544,7 @@ export function TaskDeletedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TrashIcon} className="text-red-600 bg-red-50" />
       <span>
-        <EventActor user={actor} /> deleted the task
+        <EventActor user={actor} /> 删除了任务
         {event.title ? (
           <span>
             {" "}
@@ -562,10 +560,10 @@ const TASK_STATUS_LABELS: Record<
   "todo" | "in_progress" | "completed" | "blocked",
   string
 > = {
-  todo: "To Do",
-  in_progress: "In Progress",
-  completed: "Completed",
-  blocked: "Blocked",
+  todo: "待办",
+  in_progress: "处理中",
+  completed: "已完成",
+  blocked: "受阻",
 }
 
 export function TaskStatusChangedEvent({
@@ -582,11 +580,11 @@ export function TaskStatusChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> changed{" "}
+        <EventActor user={actor} /> 更改了{" "}
         <span className="font-medium max-w-32 inline-block truncate align-bottom">
           {event.title}
         </span>{" "}
-        status: {oldStatus} → {newStatus}
+        状态： {oldStatus} → {newStatus}
       </span>
     </div>
   )
@@ -608,17 +606,17 @@ export function TaskAssigneeChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> {newAssignee ? "assigned" : "unassigned"}{" "}
+        <EventActor user={actor} /> {newAssignee ? "分配了" : "取消分配了"}{" "}
         <span className="font-medium max-w-32 inline-block truncate align-bottom">
           {event.title}
         </span>{" "}
         {newAssignee ? (
           <>
-            to <EventActor user={newAssignee} />
+            更改为 <EventActor user={newAssignee} />
           </>
         ) : oldAssignee ? (
           <>
-            from <EventActor user={oldAssignee} />
+            来自 <EventActor user={oldAssignee} />
           </>
         ) : null}
       </span>
@@ -640,11 +638,11 @@ export function TaskPriorityChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> changed{" "}
+        <EventActor user={actor} /> 更改了{" "}
         <span className="font-medium max-w-32 inline-block truncate align-bottom">
           {event.title}
         </span>{" "}
-        priority: {oldPriority.label} → {newPriority.label}
+        优先级： {oldPriority.label} → {newPriority.label}
       </span>
     </div>
   )
@@ -665,8 +663,8 @@ export function DropdownValueChangedEvent({
       <div className="flex items-center space-x-2 text-xs">
         <EventIcon icon={PencilIcon} />
         <span>
-          <EventActor user={actor} /> changed {event.definition_name} from{" "}
-          {oldLabel} to {newLabel}
+          <EventActor user={actor} /> 更改了 {event.definition_name} 来自{" "}
+          {oldLabel} 更改为 {newLabel}
         </span>
       </div>
     )
@@ -677,7 +675,8 @@ export function DropdownValueChangedEvent({
       <div className="flex items-center space-x-2 text-xs">
         <EventIcon icon={PencilIcon} />
         <span>
-          <EventActor user={actor} /> set {event.definition_name} to {newLabel}
+          <EventActor user={actor} /> 设置了 {event.definition_name} 更改为{" "}
+          {newLabel}
         </span>
       </div>
     )
@@ -687,8 +686,8 @@ export function DropdownValueChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> cleared {event.definition_name}
-        {oldLabel ? ` (was ${oldLabel})` : ""}
+        <EventActor user={actor} /> 清除了 {event.definition_name}
+        {oldLabel ? `（此前为 ${oldLabel}）` : ""}
       </span>
     </div>
   )
@@ -710,7 +709,7 @@ export function TaskWorkflowChangedEvent({
       <div className="flex items-center space-x-2 text-xs">
         <EventIcon icon={PencilIcon} />
         <span>
-          <EventActor user={actor} /> linked workflow to{" "}
+          <EventActor user={actor} /> 将工作流关联到{" "}
           <span className="font-medium max-w-32 inline-block truncate align-bottom">
             {event.title}
           </span>
@@ -724,7 +723,7 @@ export function TaskWorkflowChangedEvent({
       <div className="flex items-center space-x-2 text-xs">
         <EventIcon icon={PencilIcon} />
         <span>
-          <EventActor user={actor} /> removed workflow from{" "}
+          <EventActor user={actor} /> 移除了工作流关联，对象为{" "}
           <span className="font-medium max-w-32 inline-block truncate align-bottom">
             {event.title}
           </span>
@@ -737,7 +736,7 @@ export function TaskWorkflowChangedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={PencilIcon} />
       <span>
-        <EventActor user={actor} /> changed workflow on{" "}
+        <EventActor user={actor} /> 更改了工作流，对象为{" "}
         <span className="font-medium max-w-32 inline-block truncate align-bottom">
           {event.title}
         </span>
@@ -771,7 +770,7 @@ function CaseRefList({ caseRefs }: { caseRefs: CaseRef[] }) {
         </Fragment>
       ))}
       {caseRefs.length > shown.length &&
-        ` and ${caseRefs.length - shown.length} more`}
+        ` 等另外 ${caseRefs.length - shown.length} 项`}
     </>
   )
 }
@@ -780,7 +779,7 @@ function ParentChangeDescription({ event }: { event: ParentChangedEventRead }) {
   if (event.new && event.old) {
     return (
       <>
-        moved this case from <CaseRefLink caseRef={event.old} /> to{" "}
+        将此事件移出 <CaseRefLink caseRef={event.old} /> 更改为{" "}
         <CaseRefLink caseRef={event.new} />
       </>
     )
@@ -788,18 +787,18 @@ function ParentChangeDescription({ event }: { event: ParentChangedEventRead }) {
   if (event.new) {
     return (
       <>
-        grouped this case under <CaseRefLink caseRef={event.new} />
+        将此事件归入 <CaseRefLink caseRef={event.new} />
       </>
     )
   }
   if (event.old) {
     return (
       <>
-        removed this case from <CaseRefLink caseRef={event.old} />
+        将此事件移出 <CaseRefLink caseRef={event.old} />
       </>
     )
   }
-  return <>removed this case from its parent</>
+  return <>将此事件从父事件中移出</>
 }
 
 /** Activity row for a case being grouped under, moved to, or removed from a parent. */
@@ -831,8 +830,8 @@ export function SubCasesAddedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={ListTreeIcon} />
       <span>
-        <EventActor user={actor} /> added sub-case
-        {event.sub_cases.length === 1 ? " " : "s "}
+        <EventActor user={actor} /> 添加了子事件
+        {event.sub_cases.length === 1 ? " " : ""}
         <CaseRefList caseRefs={event.sub_cases} />
       </span>
     </div>
@@ -850,8 +849,8 @@ export function SubCasesRemovedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={ListTreeIcon} className="text-red-600 bg-red-50" />
       <span>
-        <EventActor user={actor} /> removed sub-case
-        {event.sub_cases.length === 1 ? " " : "s "}
+        <EventActor user={actor} /> 移除了子事件
+        {event.sub_cases.length === 1 ? " " : ""}
         <CaseRefList caseRefs={event.sub_cases} />
       </span>
     </div>
@@ -869,7 +868,7 @@ export function TagAddedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TagIcon} />
       <span>
-        <EventActor user={actor} /> added tag{" "}
+        <EventActor user={actor} /> 添加了标签{" "}
         <span className="font-medium">{event.tag_name}</span>
       </span>
     </div>
@@ -887,7 +886,7 @@ export function TagRemovedEvent({
     <div className="flex items-center space-x-2 text-xs">
       <EventIcon icon={TagIcon} className="text-red-600 bg-red-50" />
       <span>
-        <EventActor user={actor} /> removed tag{" "}
+        <EventActor user={actor} /> 移除了标签{" "}
         <span className="font-medium">{event.tag_name}</span>
       </span>
     </div>

@@ -34,14 +34,14 @@ describe("getWorkspaceSyncPushOutcome", () => {
         isPending: false,
         provider: "gitlab",
       })
-    ).toBe("Push & open MR")
+    ).toBe("推送并创建 MR")
     expect(
       getWorkspaceSyncPushResultLabel({
         outcome,
         defaultBranch: "main",
         provider: "gitlab",
       })
-    ).toBe("MR into main")
+    ).toBe("MR 合并到 main")
     expect(
       getWorkspaceSyncPushWarning({
         outcome: {
@@ -53,6 +53,6 @@ describe("getWorkspaceSyncPushOutcome", () => {
         defaultBranch: "main",
         provider: "gitlab",
       })
-    ).toBe("This commits directly to main. No merge request will be created.")
+    ).toBe("此操作会直接提交到 main，不创建merge request。")
   })
 })

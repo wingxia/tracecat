@@ -95,7 +95,7 @@ export default React.memo(function SelectorNode({
       <div className="flex h-96 w-72 flex-col overflow-hidden rounded-lg border bg-popover text-popover-foreground shadow-sm">
         <div className="w-full bg-muted-foreground/5 px-3 py-[2px]">
           <Label className="flex items-center text-xs text-muted-foreground">
-            <span className="font-medium">Add a node</span>
+            <span className="font-medium">添加节点</span>
             <span className="my-px ml-auto flex items-center space-x-2">
               <p className="my-0 inline-block rounded-sm border border-muted-foreground/20 bg-muted-foreground/10 px-px py-0 font-mono text-xs">
                 Esc
@@ -350,15 +350,15 @@ function ActionCommandGroup({
           } catch (retryError) {
             console.error("Failed to persist node after retry:", retryError)
             toast({
-              title: "Failed to create new node",
-              description: "Could not create new node after retry.",
+              title: "创建节点失败",
+              description: "重试后仍无法创建节点。",
             })
           }
         } else {
           console.error("An error occurred while creating a new node:", error)
           toast({
-            title: "Failed to create new node",
-            description: "Could not create new node.",
+            title: "创建节点失败",
+            description: "无法创建节点。",
           })
         }
       }
@@ -391,13 +391,13 @@ function ActionCommandGroup({
         inputRef={inputRef}
         autoFocus
         fill
-        placeholder="Start typing to search for an action..."
+        placeholder={"输入以搜索动作…"}
         inputClassName="py-0 text-xs"
         heading="Suggestions"
-        label="Actions"
+        label={"动作"}
         empty={
           <span className="text-muted-foreground/70">
-            {isLoading ? "Loading actions..." : "No results found."}
+            {isLoading ? "正在加载动作…" : "未找到结果。"}
           </span>
         }
         onSelect={(action) => void handleSelect(action)}

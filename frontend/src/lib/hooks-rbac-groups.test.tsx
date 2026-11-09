@@ -86,7 +86,7 @@ describe("useRbacGroups addGroupMembers", () => {
     expect(outcome).toEqual({ failedUserIds: [], failures: [] })
     expect(invalidateQueries).toHaveBeenCalledTimes(2)
     expect(toast).toHaveBeenCalledTimes(1)
-    expect(toast).toHaveBeenCalledWith({ title: "3 members added" })
+    expect(toast).toHaveBeenCalledWith({ title: "已添加 3 位成员" })
   })
 
   it("keeps going after a failure and reports the distinct reasons", async () => {
@@ -115,31 +115,31 @@ describe("useRbacGroups addGroupMembers", () => {
       failures: [
         {
           userId: "u1",
-          reason: "This user is already a member of the group.",
+          reason: "此用户已是用户组成员。",
         },
         {
           userId: "u3",
-          reason: "This user is already a member of the group.",
+          reason: "此用户已是用户组成员。",
         },
         { userId: "u4", reason: "User is not an org member" },
         {
           userId: "u5",
-          reason: "You don't have permission to add group members.",
+          reason: "你没有添加用户组成员的权限。",
         },
-        { userId: "u6", reason: "The group or user does not exist." },
-        { userId: "u7", reason: "Failed to add member" },
+        { userId: "u6", reason: "用户组或用户不存在。" },
+        { userId: "u7", reason: "添加成员失败" },
       ],
     })
     expect(invalidateQueries).toHaveBeenCalledTimes(2)
     expect(toast).toHaveBeenCalledTimes(1)
     expect(toast).toHaveBeenCalledWith({
-      title: "Added 1 of 7 members",
+      title: "已添加 1/7 位成员",
       description: [
-        "This user is already a member of the group.",
+        "此用户已是用户组成员。",
         "User is not an org member",
-        "You don't have permission to add group members.",
-        "The group or user does not exist.",
-        "Failed to add member",
+        "你没有添加用户组成员的权限。",
+        "用户组或用户不存在。",
+        "添加成员失败",
       ].join("\n"),
       variant: "destructive",
     })

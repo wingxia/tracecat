@@ -250,13 +250,12 @@ export function CasesLayout({
             variant: "destructive",
             title: result.error
               ? succeededIds.size > 0
-                ? `${succeededIds.size} ${verb} before a request failed`
+                ? `请求失败前已${succeededIds.size} ${verb}`
                 : failureTitle
-              : `${succeededIds.size} ${verb}, ${result.failed} failed`,
+              : `${succeededIds.size} ${verb}，${result.failed} 个失败`,
             description: result.error
-              ? "Please retry the remaining cases."
-              : (result.errors[0] ??
-                `Some selected cases could not be ${verb}.`),
+              ? "请重试剩余事件。"
+              : (result.errors[0] ?? `部分所选事件无法${verb}。`),
           })
           // Keep selection changes made mid-flight; only drop what succeeded.
           setSelectedCaseIds(
@@ -287,10 +286,9 @@ export function CasesLayout({
       runSelectionBatch({
         request: (chunk) => batchDeleteCases({ case_ids: chunk }),
         verb: "deleted",
-        failureTitle: "Failed to delete cases",
+        failureTitle: "删除事件失败",
         successTitle: `${selectedCaseIds.size} case(s) deleted`,
-        successDescription:
-          "The selected cases have been deleted successfully.",
+        successDescription: "已成功删除所选事件。",
         clearOnSuccess: true,
         setBusy: setIsDeleting,
         invalidate: invalidateCases,
@@ -308,13 +306,10 @@ export function CasesLayout({
         request: (chunk) =>
           batchUpdateCases({ case_ids: chunk, update: updates }),
         verb: "updated",
-        failureTitle: "Failed to update cases",
-        successTitle:
-          options?.successTitle ||
-          `Updated ${count} case${count > 1 ? "s" : ""}`,
+        failureTitle: "更新事件失败",
+        successTitle: options?.successTitle || `已更新 ${count} 个事件`,
         successDescription:
-          options?.successDescription ||
-          "The selected cases have been updated successfully.",
+          options?.successDescription || "已成功更新所选事件。",
         clearOnSuccess: false,
         setBusy: setIsBulkUpdating,
         invalidate: invalidateCases,
@@ -333,13 +328,9 @@ export function CasesLayout({
             parentId: parent?.id ?? null,
           }),
         verb: "updated",
-        failureTitle: parent
-          ? "Failed to group cases"
-          : "Failed to remove from parent",
-        successTitle: parent
-          ? `Grouped under ${parent.short_id}`
-          : "Removed from parent",
-        successDescription: `Applied to ${count} case${count === 1 ? "" : "s"}.`,
+        failureTitle: parent ? "事件分组失败" : "从父事件移除失败",
+        successTitle: parent ? `已归入 ${parent.short_id}` : "已从父事件移除",
+        successDescription: `已应用到 ${count} 个事件。`,
         clearOnSuccess: true,
         setBusy: setIsChangingParent,
         invalidate: () => invalidateCaseHierarchy(queryClient),
@@ -538,10 +529,10 @@ export function CasesLayout({
                 <EmptyMedia variant="icon">
                   <TimerOffIcon className="size-5 text-muted-foreground/60" />
                 </EmptyMedia>
-                <EmptyTitle>Search took too long</EmptyTitle>
+                <EmptyTitle>搜索超时</EmptyTitle>
                 <EmptyDescription>
-                  Try a more specific search term or narrow the filters. Or
-                  contact the Tracecat team for support.
+                  请使用更精确的搜索词或缩小筛选范围，也可联系 Tracecat
+                  团队获取支持。
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -549,15 +540,13 @@ export function CasesLayout({
         ) : error ? (
           <div className="flex flex-1 items-center justify-center">
             <span className="text-sm text-red-500">
-              Failed to load cases: {getApiErrorDetail(error) ?? error.message}
+              加载事件失败： {getApiErrorDetail(error) ?? error.message}
             </span>
           </div>
         ) : cases.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 p-4">
             <p className="text-sm text-muted-foreground">
-              {hasNextPage
-                ? "No cases loaded yet."
-                : "No cases match the current filters."}
+              {hasNextPage ? "尚未加载事件。" : "没有符合当前筛选条件的事件。"}
             </p>
             {hasNextPage && (
               <Button
@@ -566,18 +555,17 @@ export function CasesLayout({
                 disabled={isFetchingNextPage}
                 onClick={onLoadMore}
               >
-                {isFetchingNextPage ? "Loading cases..." : "Load more cases"}
+                {isFetchingNextPage ? "正在加载事件…" : "加载更多事件"}
               </Button>
             )}
           </div>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col">
             {exactMatch && (
-              <section aria-label="Exact match" className="shrink-0 border-b">
+              <section aria-label={"精确匹配"} className="shrink-0 border-b">
                 <p className="px-4 py-2 text-xs text-muted-foreground">
-                  Exact match
-                  {exactMatch.is_outside_filters &&
-                    " · Outside current filters"}
+                  精确匹配
+                  {exactMatch.is_outside_filters && " · 不符合当前筛选条件"}
                 </p>
                 <div className="ml-[18px]">
                   <CaseItem

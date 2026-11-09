@@ -225,14 +225,14 @@ function AgentPresetLoadError({
 /** Validation shared by the preset editor and its panel tests. */
 export const agentPresetSchema = z
   .object({
-    name: z.string().trim().min(1, "Name is required"),
-    slug: z.string().trim().min(1, "Slug is required"),
+    name: z.string().trim().min(1, "名称不能为空"),
+    slug: z.string().trim().min(1, "标识不能为空"),
     description: z.string().max(1000).optional(),
     instructions: z.string().optional(),
     source_id: z.string().optional(),
     catalog_id: z.string().optional(),
-    model_provider: z.string().trim().min(1, "Model provider is required"),
-    model_name: z.string().trim().min(1, "Model name is required"),
+    model_provider: z.string().trim().min(1, "模型提供商不能为空"),
+    model_name: z.string().trim().min(1, "模型名称不能为空"),
     base_url: z.union([z.string().url(), z.literal(""), z.undefined()]),
     outputTypeKind: z.enum(["none", "data-type", "json"]),
     outputTypeDataType: z.string().optional(),
@@ -255,7 +255,7 @@ export const agentPresetSchema = z
     skills: z
       .array(
         z.object({
-          skillId: z.string().trim().min(1, "Select a skill"),
+          skillId: z.string().trim().min(1, "选择技能"),
         })
       )
       .default([]),
@@ -263,16 +263,16 @@ export const agentPresetSchema = z
     toolApprovals: z
       .array(
         z.object({
-          tool: z.string().trim().min(1, "Tool name is required"),
+          tool: z.string().trim().min(1, "工具名称不能为空"),
           allow: z.boolean(),
         })
       )
       .default([]),
     toolTunnels: z.record(z.string(), z.string()).default({}),
     retries: z.coerce
-      .number({ invalid_type_error: "Retries must be a number" })
+      .number({ invalid_type_error: "重试次数必须为数字" })
       .int()
-      .min(0, "Retries must be 0 or more"),
+      .min(0, "重试次数不能小于 0"),
     enableThinking: z.boolean().default(true),
     enableInternetAccess: z.boolean().default(false),
   })
@@ -281,7 +281,7 @@ export const agentPresetSchema = z
       ctx.addIssue({
         path: ["outputTypeDataType"],
         code: z.ZodIssueCode.custom,
-        message: "Select an output type",
+        message: "选择输出类型",
       })
     }
     if (data.outputTypeKind === "json") {
@@ -289,7 +289,7 @@ export const agentPresetSchema = z
         ctx.addIssue({
           path: ["outputTypeJson"],
           code: z.ZodIssueCode.custom,
-          message: "Provide a JSON schema",
+          message: "提供 JSON Schema",
         })
       } else {
         try {
@@ -302,14 +302,14 @@ export const agentPresetSchema = z
             ctx.addIssue({
               path: ["outputTypeJson"],
               code: z.ZodIssueCode.custom,
-              message: "JSON schema must be an object",
+              message: "JSON Schema 必须是对象",
             })
           }
         } catch (_error) {
           ctx.addIssue({
             path: ["outputTypeJson"],
             code: z.ZodIssueCode.custom,
-            message: "Invalid JSON",
+            message: "JSON 无效",
           })
         }
       }
@@ -325,29 +325,28 @@ export const agentPresetSchema = z
         ctx.addIssue({
           path: ["subagents", index, "preset"],
           code: z.ZodIssueCode.custom,
-          message: "Select a preset",
+          message: "选择预设",
         })
       }
       if (alias && !SUBAGENT_ALIAS_REGEX.test(alias)) {
         ctx.addIssue({
           path: ["subagents", index, "name"],
           code: z.ZodIssueCode.custom,
-          message:
-            "Use lowercase letters, numbers, and hyphens; start and end with a letter or number",
+          message: "使用小写字母、数字和连字符，并以字母或数字开头和结尾",
         })
       }
       if (effectiveAlias && RESERVED_SUBAGENT_ALIASES.has(effectiveAlias)) {
         ctx.addIssue({
           path: ["subagents", index, alias ? "name" : "preset"],
           code: z.ZodIssueCode.custom,
-          message: "This alias is reserved",
+          message: "此别名为保留名称",
         })
       }
       if (effectiveAlias && aliases.has(effectiveAlias)) {
         ctx.addIssue({
           path: ["subagents", index, alias ? "name" : "preset"],
           code: z.ZodIssueCode.custom,
-          message: "Subagent aliases must be unique",
+          message: "子智能体别名必须唯一",
         })
       }
       if (effectiveAlias) {
@@ -360,7 +359,7 @@ export const agentPresetSchema = z
         ctx.addIssue({
           path: ["subagents", index, "maxTurns"],
           code: z.ZodIssueCode.custom,
-          message: "Use a positive turn limit",
+          message: "轮次上限必须为正数",
         })
       }
     })
@@ -373,22 +372,22 @@ type SkillBindingFormValue = AgentPresetFormValues["skills"][number]
 type ToolApprovalFormValue = AgentPresetFormValues["toolApprovals"][number]
 
 const LIVE_INTERNET_ACCESS_WARNING_MESSAGE =
-  "One or more selected subagents have internet access enabled, but the parent agent does not. Enable internet access on the parent agent for those subagents to use web tools."
+  "所选子智能体中有已启用互联网访问的智能体，但父智能体未启用。请为父智能体启用互联网访问，让子智能体可以使用网络工具。"
 
 const AGENT_PRESET_CAPABILITY_CONFIG = [
   {
     capability: "approvals",
-    label: "Approvals",
+    label: "审批",
     Icon: ShieldCheck,
   },
   {
     capability: "subagents",
-    label: "Subagents",
+    label: "子智能体",
     Icon: MousePointerClickIcon,
   },
   {
     capability: "internet_access",
-    label: "Internet access",
+    label: "互联网访问",
     Icon: Globe,
   },
 ] satisfies Array<{
@@ -503,10 +502,8 @@ export function AgentPresetsBuilder({ presetId }: { presetId?: string }) {
   if (presetsError) {
     return (
       <AgentPresetLoadError
-        title="Unable to load agent presets"
-        detail={
-          getApiErrorDetail(presetsError) ?? "Agent presets failed to load."
-        }
+        title={"无法加载智能体预设列表"}
+        detail={getApiErrorDetail(presetsError) ?? "加载智能体预设失败。"}
       />
     )
   }
@@ -518,11 +515,8 @@ export function AgentPresetsBuilder({ presetId }: { presetId?: string }) {
   if (activePresetId && (selectedPresetError || !selectedPreset)) {
     return (
       <AgentPresetLoadError
-        title="Unable to load agent preset"
-        detail={
-          getApiErrorDetail(selectedPresetError) ??
-          "Agent preset was not found."
-        }
+        title={"无法加载智能体预设"}
+        detail={getApiErrorDetail(selectedPresetError) ?? "未找到智能体预设。"}
       />
     )
   }
@@ -635,7 +629,7 @@ export function AgentPresetArtifactView({
 
 // The builder edits its preset, so it needs agent:update as well as agent:execute.
 const BUILDER_SCOPES_REQUIRED_MESSAGE =
-  "Your role cannot edit agents. Ask an admin for the agent:execute and agent:update scopes."
+  "你的角色无法编辑智能体，请联系管理员申请 agent:execute 和 agent:update 权限。"
 
 /** Shown in place of a chat when the user's role lacks the scopes to run it. */
 function AgentExecuteRequiredNotice({
@@ -766,7 +760,7 @@ function AgentPresetChatPane({
 
     try {
       const newChat = await createChat({
-        title: `${preset.name} chat`,
+        title: `${preset.name} 的对话`,
         entity_type: "agent_preset",
         entity_id: preset.id,
         tools: selectedVersionConfig?.actions ?? preset.actions ?? undefined,
@@ -810,10 +804,8 @@ function AgentPresetChatPane({
               <EmptyMedia variant="icon">
                 <MessageCircle />
               </EmptyMedia>
-              <EmptyTitle>Live chat</EmptyTitle>
-              <EmptyDescription>
-                Save the agent to start chatting with it.
-              </EmptyDescription>
+              <EmptyTitle>实时对话</EmptyTitle>
+              <EmptyDescription>保存智能体后即可开始对话。</EmptyDescription>
             </EmptyHeader>
           </Empty>
         </div>
@@ -848,8 +840,7 @@ function AgentPresetChatPane({
           <div className="flex max-w-xs flex-col items-center gap-2 text-center text-xs text-muted-foreground">
             <AlertCircle className="size-5 text-amber-500" />
             <p className="text-pretty">
-              This preset no longer points at an enabled model. Select a new
-              model in the preset configuration before starting chat.
+              此预设指定的模型已停用。请先在预设配置中选择新模型，再开始对话。
             </p>
           </div>
         </div>
@@ -860,11 +851,11 @@ function AgentPresetChatPane({
       return (
         <div className="flex h-full items-center justify-center px-4">
           <Alert variant="destructive" className="w-full text-xs">
-            <AlertTitle>Unable to load chat sessions</AlertTitle>
+            <AlertTitle>无法加载对话会话</AlertTitle>
             <AlertDescription>
               {typeof chatsError.message === "string"
                 ? chatsError.message
-                : "Something went wrong while fetching the chat session."}
+                : "获取对话会话时出错。"}
             </AlertDescription>
           </Alert>
         </div>
@@ -889,11 +880,11 @@ function AgentPresetChatPane({
       return (
         <div className="flex h-full items-center justify-center px-4">
           <Alert variant="destructive" className="w-full text-xs">
-            <AlertTitle>Chat unavailable</AlertTitle>
+            <AlertTitle>对话不可用</AlertTitle>
             <AlertDescription>
               {typeof chatError.message === "string"
                 ? chatError.message
-                : "We couldn't load the conversation for this agent."}
+                : "无法加载此智能体的对话。"}
             </AlertDescription>
           </Alert>
         </div>
@@ -907,7 +898,7 @@ function AgentPresetChatPane({
         entityType={"agent_preset"}
         entityId={preset.id}
         className="flex-1 min-h-0"
-        placeholder={`Talk to ${preset.name}...`}
+        placeholder={`与 ${preset.name} 对话…`}
         modelInfo={modelInfo ?? undefined}
         emptyState={<PlaygroundEmptyState />}
         toolsEnabled={false}
@@ -965,7 +956,7 @@ function AgentPresetChatPane({
                 ) : (
                   <Plus className="mr-2 size-4" />
                 )}
-                New chat
+                新建对话
               </Button>
               <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
             </>
@@ -981,22 +972,18 @@ function AgentPresetChatPane({
 function PlaygroundEmptyState() {
   return (
     <div className="max-w-sm text-center">
-      <p className="text-sm font-medium text-foreground">Try out your agent</p>
+      <p className="text-sm font-medium text-foreground">试用你的智能体</p>
       <p className="mt-1 text-pretty text-sm text-muted-foreground">
-        Send a message to see how it responds and which tools it calls. Runs use
-        the last saved version.
+        发送消息，查看智能体的回复和工具调用。运行时使用最近保存的版本。
       </p>
     </div>
   )
 }
 
 const BUILDER_READINESS_MESSAGES: Record<string, string> = {
-  no_model:
-    "Select a default model in organization agent settings to use the builder.",
-  default_not_enabled:
-    "Enable the organization default model for this workspace to use the builder.",
-  subset_disabled:
-    "Enable the organization default model for this workspace to use the builder.",
+  no_model: "请在组织的智能体设置中选择默认模型，以使用构建器。",
+  default_not_enabled: "请为此工作空间启用组织默认模型，以使用构建器。",
+  subset_disabled: "请为此工作空间启用组织默认模型，以使用构建器。",
 }
 
 /**
@@ -1072,7 +1059,7 @@ function AgentPresetBuilderChatPane({
     }
     try {
       const newChat = await createChat({
-        title: `${preset.name} builder`,
+        title: `${preset.name} 编辑器`,
         entity_type: "agent_preset_builder",
         entity_id: preset.id,
       })
@@ -1100,10 +1087,8 @@ function AgentPresetBuilderChatPane({
               <EmptyMedia variant="icon">
                 <MessageCircle />
               </EmptyMedia>
-              <EmptyTitle>Builder</EmptyTitle>
-              <EmptyDescription>
-                Save the agent to start working with the builder.
-              </EmptyDescription>
+              <EmptyTitle>编辑器</EmptyTitle>
+              <EmptyDescription>保存智能体后即可使用编辑器。</EmptyDescription>
             </EmptyHeader>
           </Empty>
         </div>
@@ -1143,7 +1128,7 @@ function AgentPresetBuilderChatPane({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Go to agent settings
+            前往智能体设置
           </Link>
         </div>
       )
@@ -1153,11 +1138,11 @@ function AgentPresetBuilderChatPane({
       return (
         <div className="flex h-full items-center justify-center px-4">
           <Alert variant="destructive" className="w-full text-xs">
-            <AlertTitle>Unable to load builder chats</AlertTitle>
+            <AlertTitle>无法加载编辑器对话</AlertTitle>
             <AlertDescription>
               {typeof chatsError.message === "string"
                 ? chatsError.message
-                : "Something went wrong while fetching the builder chat."}
+                : "获取编辑器对话时出错。"}
             </AlertDescription>
           </Alert>
         </div>
@@ -1168,11 +1153,11 @@ function AgentPresetBuilderChatPane({
       return (
         <div className="flex h-full items-center justify-center px-4">
           <Alert variant="destructive" className="w-full text-xs">
-            <AlertTitle>Builder unavailable</AlertTitle>
+            <AlertTitle>编辑器不可用</AlertTitle>
             <AlertDescription>
               {typeof chatError.message === "string"
                 ? chatError.message
-                : "We couldn't load the builder conversation."}
+                : "无法加载编辑器对话。"}
             </AlertDescription>
           </Alert>
         </div>
@@ -1194,7 +1179,7 @@ function AgentPresetBuilderChatPane({
         entityType="agent_preset_builder"
         entityId={preset.id}
         className="flex-1 min-h-0"
-        placeholder="Ask the builder to refine this agent's instructions, tools, or approvals..."
+        placeholder={"让编辑器完善此智能体的指令、工具或审批规则…"}
         modelInfo={modelInfo ?? undefined}
         emptyState={<BuilderEmptyState />}
         // Without both scopes the server refuses new turns and approvals, but
@@ -1239,7 +1224,7 @@ function AgentPresetBuilderChatPane({
                 ) : (
                   <Plus className="mr-2 size-4" />
                 )}
-                New chat
+                新建对话
               </Button>
               <span aria-hidden="true" className="mx-1 h-4 w-px bg-border" />
             </>
@@ -1255,10 +1240,9 @@ function AgentPresetBuilderChatPane({
 function BuilderEmptyState() {
   return (
     <div className="max-w-sm text-center">
-      <p className="text-sm font-medium text-foreground">Build with AI</p>
+      <p className="text-sm font-medium text-foreground">使用 AI 构建</p>
       <p className="mt-1 text-pretty text-sm text-muted-foreground">
-        The builder already knows this agent's instructions, tools, and approval
-        rules. Ask it to refine them, and it saves the changes for you.
+        编辑器已了解此智能体的指令、工具和审批规则。告诉它如何改进，它会为你保存更改。
       </p>
     </div>
   )
@@ -1399,7 +1383,7 @@ const AGENT_PRESET_FORM_FIELD_TO_BACKEND_FIELD: Record<
 > = {
   name: "name",
   slug: "slug",
-  description: "description",
+  description: "描述",
   instructions: "instructions",
   source_id: null,
   catalog_id: "catalog_id",
@@ -1453,7 +1437,7 @@ function getAgentPresetSubmitLabel({
   dirtyFields: Partial<Record<keyof AgentPresetFormValues, unknown>>
 }): string {
   if (mode === "create") {
-    return "Create agent"
+    return "创建智能体"
   }
 
   for (const [field, value] of Object.entries(dirtyFields)) {
@@ -1468,11 +1452,11 @@ function getAgentPresetSubmitLabel({
       backendField &&
       AGENT_PRESET_PUBLISHING_BACKEND_FIELDS.has(backendField)
     ) {
-      return "Save version"
+      return "保存版本"
     }
   }
 
-  return "Save changes"
+  return "保存更改"
 }
 
 function syncFormModelSelection(
@@ -1788,7 +1772,7 @@ function AgentPresetForm({
     mode,
     dirtyFields: form.formState.dirtyFields,
   })
-  const cutsVersion = submitLabel !== "Save changes"
+  const cutsVersion = submitLabel !== "保存更改"
   const isDirty = form.formState.isDirty
 
   // Everything registered below must have a stable identity, because the
@@ -1884,7 +1868,7 @@ function AgentPresetForm({
   // Channels lives in the URL so the Slack OAuth redirect returns to it.
   const modeSwitch = (
     <SegmentedControl<AgentPresetLeftMode>
-      ariaLabel="Left pane"
+      ariaLabel="左侧面板"
       value={leftMode}
       onValueChange={(value) => {
         setLeftMode(value)
@@ -1892,17 +1876,17 @@ function AgentPresetForm({
         onTabChange?.(LEFT_MODE_TABS[value])
       }}
       options={[
-        { value: "instructions", label: "Instructions" },
-        { value: "playground", label: "Playground" },
-        { value: "builder", label: "Builder" },
+        { value: "instructions", label: "指令" },
+        { value: "playground", label: "试验场" },
+        { value: "builder", label: "编辑器" },
         ...(channelsEnabled
-          ? [{ value: "channels" as const, label: "Channels" }]
+          ? [{ value: "channels" as const, label: "渠道" }]
           : []),
       ]}
     />
   )
 
-  const railToggleLabel = railOpen ? "Hide setup" : "Show setup"
+  const railToggleLabel = railOpen ? "隐藏设置" : "显示设置"
   const railToggle = (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -2105,7 +2089,7 @@ function AgentPresetDocumentPanel({
             name="slug"
             render={({ field }) => (
               <FormItem className="space-y-0">
-                <FormLabel className="sr-only">Slug</FormLabel>
+                <FormLabel className="sr-only">标识</FormLabel>
                 <FormControl>
                   <input type="hidden" {...field} value={field.value ?? ""} />
                 </FormControl>
@@ -2117,11 +2101,11 @@ function AgentPresetDocumentPanel({
             name="name"
             render={({ field }) => (
               <FormItem className="space-y-0">
-                <FormLabel className="sr-only">Agent name</FormLabel>
+                <FormLabel className="sr-only">智能体名称</FormLabel>
                 <FormControl>
                   <Input
                     className="h-auto w-full border-none bg-transparent px-0 text-[30px] font-semibold leading-tight tracking-[-0.02em] text-foreground shadow-none outline-none transition-none placeholder:text-muted-foreground/40 focus-visible:bg-transparent focus-visible:outline-none focus-visible:ring-0"
-                    placeholder="New agent preset"
+                    placeholder={"新智能体预设"}
                     disabled={isSaving}
                     {...field}
                     value={field.value ?? ""}
@@ -2142,7 +2126,7 @@ function AgentPresetDocumentPanel({
                     onChange={field.onChange}
                     onBlur={field.onBlur}
                     disabled={isSaving}
-                    placeholder="Describe this agent."
+                    placeholder={"描述此智能体。"}
                     className="w-full resize-none overflow-hidden border-none bg-transparent px-0 text-[15px] leading-[1.55] text-muted-foreground shadow-none outline-none transition-none placeholder:text-muted-foreground/50 focus-visible:bg-transparent focus-visible:outline-none focus-visible:ring-0"
                   />
                 </FormControl>
@@ -2162,7 +2146,7 @@ function AgentPresetDocumentPanel({
                     value={field.value ?? ""}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
-                    placeholder="You are a helpful analyst..."
+                    placeholder={"你是一位乐于助人的分析师…"}
                     editable={!isSaving}
                     showToolbar={false}
                     className="flex flex-1 flex-col [&_.simple-editor-content]:flex-1 [&_.simple-editor-content_.tiptap.ProseMirror.simple-editor]:min-h-24 [&_.simple-editor-content_.tiptap.ProseMirror.simple-editor]:text-[15.5px] [&_.simple-editor-content_.tiptap.ProseMirror.simple-editor]:leading-[1.7]"
@@ -2250,10 +2234,10 @@ function tabToLeftMode(tab: AgentPresetSideTab): AgentPresetLeftMode {
 }
 
 const RAIL_TABS = [
-  { value: "tools", label: "Tools" },
-  { value: "skills", label: "Skills" },
-  { value: "subagents", label: "Subagents" },
-  { value: "output", label: "Output" },
+  { value: "tools", label: "工具" },
+  { value: "skills", label: "技能" },
+  { value: "subagents", label: "子智能体" },
+  { value: "output", label: "输出" },
 ] as const
 
 type AgentPresetRailTab = (typeof RAIL_TABS)[number]["value"]
@@ -2370,7 +2354,7 @@ function AgentPresetRail({
 
   return (
     <aside
-      aria-label="Agent configuration"
+      aria-label={"智能体配置"}
       className={cn("flex h-full min-h-0 flex-col", RAIL_SURFACE)}
     >
       <Tabs
@@ -2587,7 +2571,7 @@ function AgentPresetSettingsRows({
     <div>
       <div className={RAIL_ROW}>
         <span id={modelLabelId} className="text-muted-foreground">
-          Model
+          模型
         </span>
         <AgentModelCombobox
           options={enabledModelOptions}
@@ -2601,7 +2585,7 @@ function AgentPresetSettingsRows({
           loaded={enabledModelsLoaded}
           disabled={isSaving || enabledModelOptions.length === 0}
           placeholder={
-            enabledModelOptions.length ? "Select a model" : "No enabled models"
+            enabledModelOptions.length ? "选择模型" : "没有已启用的模型"
           }
           aria-labelledby={modelLabelId}
           inline
@@ -2617,11 +2601,11 @@ function AgentPresetSettingsRows({
           form.setValue("enableThinking", !thinking, { shouldDirty: true })
         }
       >
-        <span className="text-muted-foreground">Thinking</span>
+        <span className="text-muted-foreground">思考</span>
         <span
           className={thinking ? "text-foreground" : "text-muted-foreground"}
         >
-          {thinking ? "On" : "Off"}
+          {thinking ? "开启" : "关闭"}
         </span>
       </button>
       {hasStdioMcp ? (
@@ -2633,13 +2617,11 @@ function AgentPresetSettingsRows({
               aria-pressed
               aria-disabled
             >
-              <span className="text-muted-foreground">Internet</span>
-              <span>On</span>
+              <span className="text-muted-foreground">互联网</span>
+              <span>开启</span>
             </button>
           </TooltipTrigger>
-          <TooltipContent>
-            Internet access is required when a stdio MCP server is connected
-          </TooltipContent>
+          <TooltipContent>连接 stdio MCP 服务器时需要访问互联网</TooltipContent>
         </Tooltip>
       ) : (
         <button
@@ -2653,16 +2635,16 @@ function AgentPresetSettingsRows({
             })
           }
         >
-          <span className="text-muted-foreground">Internet</span>
+          <span className="text-muted-foreground">互联网</span>
           <span
             className={internet ? "text-foreground" : "text-muted-foreground"}
           >
-            {internet ? "On" : "Off"}
+            {internet ? "开启" : "关闭"}
           </span>
         </button>
       )}
       <div className={cn(RAIL_ROW, "group")}>
-        <span className="text-muted-foreground">Retries</span>
+        <span className="text-muted-foreground">重试次数</span>
         <span className="flex items-center gap-1.5">
           <span className="tabular-nums">
             {Number.isFinite(retries) ? retries : DEFAULT_RETRIES}
@@ -2673,7 +2655,7 @@ function AgentPresetSettingsRows({
               variant="ghost"
               size="icon"
               className="size-5 text-muted-foreground"
-              aria-label="Fewer retries"
+              aria-label={"减少重试"}
               disabled={isSaving || retries <= 0}
               onClick={() => setRetries(retries - 1)}
             >
@@ -2684,7 +2666,7 @@ function AgentPresetSettingsRows({
               variant="ghost"
               size="icon"
               className="size-5 text-muted-foreground"
-              aria-label="More retries"
+              aria-label={"增加重试"}
               disabled={isSaving}
               onClick={() => setRetries(retries + 1)}
             >
@@ -2699,7 +2681,7 @@ function AgentPresetSettingsRows({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button type="button" className={RAIL_ROW} disabled={isSaving}>
-            <span className="text-muted-foreground">Output</span>
+            <span className="text-muted-foreground">输出</span>
             <span className="flex min-w-0 items-center gap-1">
               <span className="truncate">{output.label}</span>
               {output.meta ? (
@@ -2730,7 +2712,7 @@ function AgentPresetSettingsRows({
               className="text-xs"
               onSelect={() => changeOutputKind("none")}
             >
-              Text
+              文本
             </DropdownMenuRadioItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="relative pl-8 text-xs">
@@ -2739,7 +2721,7 @@ function AgentPresetSettingsRows({
                     <DotFilledIcon className="size-4 fill-current" />
                   </span>
                 ) : null}
-                Structured
+                结构化
                 {outputKind === "data-type" && outputDataType ? (
                   <span className="ml-auto pl-2 font-mono text-[11px] text-muted-foreground">
                     {outputDataType}
@@ -2778,7 +2760,7 @@ function AgentPresetSettingsRows({
                     )
                   }
                 >
-                  List of values
+                  值列表
                 </DropdownMenuCheckboxItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
@@ -2790,9 +2772,9 @@ function AgentPresetSettingsRows({
                 onOpenOutput()
               }}
             >
-              JSON schema
+              JSON Schema
               <span className="ml-auto pl-2 text-muted-foreground">
-                {outputKind === "json" ? "Edit" : ""}
+                {outputKind === "json" ? "编辑" : ""}
               </span>
               <ChevronRight className="size-4" />
             </DropdownMenuRadioItem>
@@ -2805,10 +2787,10 @@ function AgentPresetSettingsRows({
 
 const OUTPUT_PRIMITIVES: Array<{ value: AgentOutputPrimitive; label: string }> =
   [
-    { value: "str", label: "String" },
-    { value: "int", label: "Integer" },
-    { value: "float", label: "Float" },
-    { value: "bool", label: "Boolean" },
+    { value: "str", label: "字符串" },
+    { value: "int", label: "整数" },
+    { value: "float", label: "浮点数" },
+    { value: "bool", label: "布尔值" },
   ]
 
 function describeOutput(
@@ -2817,10 +2799,10 @@ function describeOutput(
   json: string | undefined
 ): { label: string; meta: string; invalid: boolean } {
   if (kind === "data-type") {
-    return { label: "Structured", meta: dataType ?? "", invalid: false }
+    return { label: "结构化", meta: dataType ?? "", invalid: false }
   }
   if (kind !== "json") {
-    return { label: "Text", meta: "", invalid: false }
+    return { label: "文本", meta: "", invalid: false }
   }
   try {
     const parsed = JSON.parse(json ?? "")
@@ -2829,16 +2811,16 @@ function describeOutput(
         ? parsed.properties
         : undefined
     if (!properties || typeof properties !== "object") {
-      return { label: "JSON schema", meta: "", invalid: false }
+      return { label: "JSON Schema", meta: "", invalid: false }
     }
     const count = Object.keys(properties).length
     return {
-      label: "JSON schema",
+      label: "JSON Schema",
       meta: `${count} ${count === 1 ? "field" : "fields"}`,
       invalid: false,
     }
   } catch {
-    return { label: "JSON schema", meta: "invalid", invalid: true }
+    return { label: "JSON Schema", meta: "invalid", invalid: true }
   }
 }
 
@@ -3041,21 +3023,21 @@ export function AgentPresetSubagentsPanel({
   return (
     <section>
       <RailSectionHeader
-        title="Subagents"
+        title={"子智能体"}
         count={subagentFields.length}
-        addLabel="Add subagent"
+        addLabel="添加子智能体"
         onAdd={() => setIsPickerOpen(true)}
         addDisabled={isSaving || presetOptions.length === 0}
         addDisabledReason={
           presetOptions.length === 0
-            ? "Create another agent preset first, then attach it here."
+            ? "请先创建另一个智能体预设，然后在此关联。"
             : null
         }
       />
       {internetAccessWarningMessage ? (
         <Alert variant="warning" className="my-2">
           <AlertCircle className="size-4" />
-          <AlertTitle>Internet access limited</AlertTitle>
+          <AlertTitle>互联网访问受限</AlertTitle>
           <AlertDescription>{internetAccessWarningMessage}</AlertDescription>
         </Alert>
       ) : null}
@@ -3104,7 +3086,7 @@ export function AgentPresetSubagentsPanel({
             {invalid ? (
               <AlertCircle
                 className="size-3.5 shrink-0 text-destructive"
-                aria-label="Needs attention"
+                aria-label={"需要处理"}
               />
             ) : null}
             <span className="truncate font-mono text-[11.5px] text-muted-foreground/80">
@@ -3115,12 +3097,12 @@ export function AgentPresetSubagentsPanel({
       })}
       <CommandDialog open={isPickerOpen} onOpenChange={setIsPickerOpen}>
         <DialogDescription className="sr-only">
-          Choose a preset to attach as a subagent.
+          选择要添加为子智能体的预设。
         </DialogDescription>
-        <CommandInput placeholder="Search subagents..." />
+        <CommandInput placeholder={"搜索子智能体…"} />
         <CommandList>
-          <CommandEmpty>No presets found.</CommandEmpty>
-          <CommandGroup heading="Workspace presets">
+          <CommandEmpty>未找到预设。</CommandEmpty>
+          <CommandGroup heading="工作空间预设">
             {presetOptions.map((preset) => {
               const eligibilityMessage = getSubagentEligibilityMessage(
                 preset.current_version_subagent_eligibility
@@ -3135,9 +3117,7 @@ export function AgentPresetSubagentsPanel({
                       keywords={[preset.name, preset.slug]}
                       disabled={isSaving || attached}
                       aria-description={
-                        attached
-                          ? "Already added"
-                          : (eligibilityMessage ?? undefined)
+                        attached ? "已添加" : (eligibilityMessage ?? undefined)
                       }
                       onSelect={() => handleAddSubagent(preset)}
                       className="flex min-w-0 items-center gap-2"
@@ -3150,7 +3130,7 @@ export function AgentPresetSubagentsPanel({
                       <span className="ml-auto flex shrink-0 items-center gap-2">
                         {attached ? (
                           <span className="text-xs text-muted-foreground">
-                            Added
+                            已添加
                           </span>
                         ) : null}
                         <AgentPresetCapabilityIcons
@@ -3159,7 +3139,7 @@ export function AgentPresetSubagentsPanel({
                         {eligibilityMessage ? (
                           <AlertCircle
                             className="!size-3.5 shrink-0 text-destructive"
-                            aria-label="Cannot attach this preset"
+                            aria-label={"无法添加此预设"}
                           />
                         ) : null}
                       </span>
@@ -3221,8 +3201,7 @@ export function AgentPresetSubagentDetail({
   const rowErrors = form.formState.errors.subagents?.[index]
   const presetError = rowErrors?.preset?.message
   const presetAliasError =
-    presetError === "This alias is reserved" ||
-    presetError === "Subagent aliases must be unique"
+    presetError === "此别名为保留名称" || presetError === "子智能体别名必须唯一"
       ? presetError
       : undefined
   const presetSlug = preset?.slug ?? subagent.preset
@@ -3265,7 +3244,7 @@ export function AgentPresetSubagentDetail({
       {eligibilityIssue ? (
         <Alert variant="destructive" className="text-xs">
           <AlertCircle className="size-4" />
-          <AlertTitle>Cannot attach this preset</AlertTitle>
+          <AlertTitle>无法添加此预设</AlertTitle>
           <AlertDescription>{eligibilityIssue.message}</AlertDescription>
         </Alert>
       ) : null}
@@ -3286,7 +3265,7 @@ export function AgentPresetSubagentDetail({
         render={({ field }) => (
           <FormItem className="space-y-1.5">
             <FormLabel className="text-xs font-normal text-muted-foreground">
-              Alias
+              别名
             </FormLabel>
             <FormControl>
               <Input
@@ -3306,12 +3285,12 @@ export function AgentPresetSubagentDetail({
         render={({ field }) => (
           <FormItem className="space-y-1.5">
             <FormLabel className="text-xs font-normal text-muted-foreground">
-              Delegate when
+              委派条件
             </FormLabel>
             <FormControl>
               <Textarea
                 {...field}
-                placeholder="When should the parent delegate to this subagent?"
+                placeholder={"父智能体应在什么情况下委派给此子智能体？"}
                 disabled={isSaving}
                 rows={3}
                 className="text-[13px] shadow-none"
@@ -3327,14 +3306,14 @@ export function AgentPresetSubagentDetail({
         render={({ field }) => (
           <FormItem className="space-y-1.5">
             <FormLabel className="text-xs font-normal text-muted-foreground">
-              Max turns
+              最大轮次
             </FormLabel>
             <FormControl>
               <Input
                 {...field}
                 type="number"
                 min={1}
-                placeholder="No limit"
+                placeholder={"不限制"}
                 disabled={isSaving}
                 className="h-8 w-24 text-[13px] shadow-none"
               />
@@ -3352,7 +3331,7 @@ export function AgentPresetSubagentDetail({
           onClick={() => onRemove(index)}
           disabled={isSaving}
         >
-          Remove subagent
+          移除子智能体
         </Button>
       </div>
     </div>
@@ -3420,13 +3399,11 @@ export function AgentPresetSkillsPanel({
     availableLibrarySkillsToAdd.length === 0
   ) {
     if (!skills?.length) {
-      addSkillDisabledReason = "No skills in this workspace yet"
+      addSkillDisabledReason = "此工作空间暂无技能"
     } else if (skills.some((skill) => !attachedSkillIds.has(skill.id))) {
-      addSkillDisabledReason =
-        "Only skills with published versions can be attached."
+      addSkillDisabledReason = "仅可关联已有发布版本的技能。"
     } else {
-      addSkillDisabledReason =
-        "All workspace skills are already attached to this preset."
+      addSkillDisabledReason = "此工作空间的全部技能都已关联到该预设。"
     }
   }
   function handleAddSkill(skillId: string) {
@@ -3459,10 +3436,10 @@ export function AgentPresetSkillsPanel({
   function renderSkills() {
     // Workspace and library requests fail and load independently.
     const alerts = [
-      { error: skillsError, title: "Unable to load workspace skills" },
+      { error: skillsError, title: "无法加载工作空间技能" },
       {
         error: librarySkillsError,
-        title: "Unable to load the Tracecat library",
+        title: "无法加载 Tracecat 技能库",
       },
     ].map(({ error, title }) =>
       error ? (
@@ -3470,7 +3447,7 @@ export function AgentPresetSkillsPanel({
           <AlertCircle className="size-4" />
           <AlertTitle>{title}</AlertTitle>
           <AlertDescription>
-            {getApiErrorDetail(error) ?? "Please try again."}
+            {getApiErrorDetail(error) ?? "请重试。"}
           </AlertDescription>
         </Alert>
       ) : null
@@ -3480,7 +3457,7 @@ export function AgentPresetSkillsPanel({
         <>
           {alerts}
           <p className="px-2 text-[13px] text-muted-foreground">
-            Loading skills...
+            正在加载技能…
           </p>
         </>
       )
@@ -3533,9 +3510,9 @@ export function AgentPresetSkillsPanel({
   return (
     <section>
       <RailSectionHeader
-        title="Skills"
+        title={"技能"}
         count={attachedCount}
-        addLabel="Add skill"
+        addLabel="添加技能"
         onAdd={() => setIsPickerOpen(true)}
         addDisabled={
           isSaving ||
@@ -3548,12 +3525,12 @@ export function AgentPresetSkillsPanel({
       {renderSkills()}
       <CommandDialog open={isPickerOpen} onOpenChange={setIsPickerOpen}>
         <DialogDescription className="sr-only">
-          Choose a published skill to attach.
+          选择要添加的已发布技能。
         </DialogDescription>
-        <CommandInput placeholder="Search skills..." />
+        <CommandInput placeholder={"搜索技能…"} />
         <CommandList>
-          <CommandEmpty>No skills found.</CommandEmpty>
-          <CommandGroup heading="Workspace skills">
+          <CommandEmpty>未找到技能。</CommandEmpty>
+          <CommandGroup heading="工作空间技能">
             {availableSkillsToAdd.map((skill) => (
               <CommandItem
                 key={skill.id}
@@ -3571,7 +3548,7 @@ export function AgentPresetSkillsPanel({
             ))}
           </CommandGroup>
           {availableLibrarySkillsToAdd.length > 0 ? (
-            <CommandGroup heading="Tracecat library">
+            <CommandGroup heading={"Tracecat 技能库"}>
               {availableLibrarySkillsToAdd.map((skill) => (
                 <CommandItem
                   key={skill.slug}
@@ -3643,7 +3620,7 @@ function AgentPresetLibrarySkillRow({
           ) : null}
         </HoverCard>
         <span className="shrink-0 truncate text-xs text-muted-foreground">
-          {group ?? source?.provider ?? "Tracecat library"}
+          {group ?? source?.provider ?? "Tracecat 技能库"}
         </span>
       </div>
       <Button
@@ -3653,7 +3630,7 @@ function AgentPresetLibrarySkillRow({
         className={RAIL_REMOVE_BUTTON}
         onClick={() => onRemove(slug)}
         disabled={isSaving}
-        aria-label={`Remove ${slug}`}
+        aria-label={`移除 ${slug}`}
       >
         <X className="size-3" />
       </Button>
@@ -3686,7 +3663,7 @@ function AgentPresetSkillBindingRow({
     (skill) => skill.id === selectedSkillId
   )
   const displaySkillName =
-    selectedSkill?.name ?? savedBinding?.skill_name ?? "Unknown skill"
+    selectedSkill?.name ?? savedBinding?.skill_name ?? "未知技能"
   const displaySkillDescription = selectedSkill?.description?.trim()
 
   function handleOpenSkill() {
@@ -3740,10 +3717,10 @@ function AgentPresetSkillBindingRow({
         disabled={isSaving || locked}
         aria-label={
           locked
-            ? `${displaySkillName} comes from the package and cannot be removed`
-            : `Remove ${displaySkillName}`
+            ? `${displaySkillName} 来自软件包，无法移除`
+            : `移除 ${displaySkillName}`
         }
-        title={locked ? "Comes from the package" : undefined}
+        title={locked ? "来自软件包" : undefined}
       >
         <X className="size-3" />
       </Button>
@@ -3821,21 +3798,21 @@ export function AgentPresetStructuredOutputPanel({
     <div className="px-2 text-xs">
       <div className="mb-3.5">
         <SegmentedControl<AgentPresetFormValues["outputTypeKind"]>
-          ariaLabel="Format"
+          ariaLabel={"格式"}
           value={outputTypeKind}
           onValueChange={changeKind}
           disabled={isSaving}
           options={[
-            { value: "none", label: "Text" },
-            { value: "data-type", label: "Structured" },
-            { value: "json", label: "JSON schema" },
+            { value: "none", label: "文本" },
+            { value: "data-type", label: "结构化" },
+            { value: "json", label: "JSON Schema" },
           ]}
         />
       </div>
       {outputTypeKind === "none" ? (
         <p className="text-[13px] leading-normal text-muted-foreground">
-          The agent replies in free-form text. Switch to JSON schema to get
-          typed fields a workflow can branch on.
+          智能体以自由文本回复。切换到 JSON Schema
+          可获得带类型的字段，供工作流进行分支判断。
         </p>
       ) : null}
       {outputTypeKind === "data-type" ? (
@@ -3846,11 +3823,11 @@ export function AgentPresetStructuredOutputPanel({
             render={({ field }) => (
               <FormItem className="space-y-1.5">
                 <FormLabel className="text-xs font-normal text-muted-foreground">
-                  Type
+                  输入
                 </FormLabel>
                 <FormControl>
                   <SegmentedControl<AgentOutputPrimitive>
-                    ariaLabel="Type"
+                    ariaLabel={"输入"}
                     value={type as AgentOutputPrimitive}
                     onValueChange={(value) =>
                       field.onChange(
@@ -3859,10 +3836,10 @@ export function AgentPresetStructuredOutputPanel({
                     }
                     disabled={isSaving}
                     options={[
-                      { value: "str", label: "String" },
-                      { value: "int", label: "Integer" },
-                      { value: "float", label: "Float" },
-                      { value: "bool", label: "Boolean" },
+                      { value: "str", label: "字符串" },
+                      { value: "int", label: "整数" },
+                      { value: "float", label: "浮点数" },
+                      { value: "bool", label: "布尔值" },
                     ]}
                   />
                 </FormControl>
@@ -3890,13 +3867,13 @@ export function AgentPresetStructuredOutputPanel({
                   />
                 </FormControl>
                 <FormLabel className="text-[13px] font-normal">
-                  List of values
+                  值列表
                 </FormLabel>
               </FormItem>
             )}
           />
           <p className="text-muted-foreground">
-            Returns <output className="font-mono">{outputTypeDataType}</output>
+            返回值 <output className="font-mono">{outputTypeDataType}</output>
           </p>
         </div>
       ) : null}
@@ -3906,7 +3883,7 @@ export function AgentPresetStructuredOutputPanel({
           name="outputTypeJson"
           render={({ field }) => (
             <FormItem className="space-y-0">
-              <FormLabel className="sr-only">JSON schema</FormLabel>
+              <FormLabel className="sr-only">JSON Schema</FormLabel>
               <FormControl>
                 <CodeEditor
                   value={field.value ?? ""}
@@ -3938,14 +3915,14 @@ export function AgentPresetStructuredOutputPanel({
                   onClick={formatSchema}
                   disabled={isSaving || !schema.ok}
                 >
-                  Format
+                  格式
                 </Button>
               </div>
               <FormMessage />
               {schema.ok && schema.fields.length > 0 ? (
                 <div className="mt-4">
                   <div className="pb-1 text-muted-foreground">
-                    Fields the agent returns
+                    智能体返回的字段
                   </div>
                   {schema.fields.map((schemaField) => (
                     <div
@@ -3962,7 +3939,7 @@ export function AgentPresetStructuredOutputPanel({
                         {schemaField.options}
                       </span>
                       <span className="text-[11.5px] text-muted-foreground/70">
-                        {schemaField.required ? "required" : ""}
+                        {schemaField.required ? "必填" : ""}
                       </span>
                     </div>
                   ))}
@@ -3990,17 +3967,17 @@ type JsonSchemaSummary = {
 /** Summarise an object schema's top-level properties for display. */
 function describeJsonSchema(text: string | undefined): JsonSchemaSummary {
   if (!text?.trim()) {
-    return { ok: false, status: "Paste a JSON schema", fields: [] }
+    return { ok: false, status: "粘贴 JSON Schema", fields: [] }
   }
   let parsed: unknown
   try {
     parsed = JSON.parse(text)
   } catch (error) {
     const message = error instanceof Error ? error.message : "parse error"
-    return { ok: false, status: `Invalid JSON: ${message}`, fields: [] }
+    return { ok: false, status: `JSON 无效：${message}`, fields: [] }
   }
   if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-    return { ok: false, status: "JSON schema must be an object", fields: [] }
+    return { ok: false, status: "JSON Schema 必须是对象", fields: [] }
   }
   const schema = parsed as {
     properties?: Record<string, { type?: unknown; enum?: unknown }>
@@ -4024,7 +4001,7 @@ function describeJsonSchema(text: string | undefined): JsonSchemaSummary {
     }
   })
   const count = `${fields.length} ${fields.length === 1 ? "field" : "fields"}`
-  return { ok: true, status: `Valid · ${count}`, fields }
+  return { ok: true, status: `有效 · ${count}`, fields }
 }
 
 function presetToFormValues(preset: AgentPresetRead): AgentPresetFormValues {
@@ -4257,7 +4234,7 @@ function getSubagentEligibilityMessage(
   if (!eligibility || eligibility.eligible) {
     return null
   }
-  return eligibility.message ?? "This version cannot be attached as a subagent."
+  return eligibility.message ?? "此版本无法作为子智能体关联。"
 }
 
 function getOrderedAgentPresetCapabilities(

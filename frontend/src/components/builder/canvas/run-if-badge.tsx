@@ -147,7 +147,7 @@ export function RunIfBadge({
 
   return (
     <Badge
-      aria-label={`Run if ${condition}`}
+      aria-label={`运行条件：${condition}`}
       data-state={showCondition ? "expanded" : "collapsed"}
       className={cn(
         "border-0 text-xs shadow-none",

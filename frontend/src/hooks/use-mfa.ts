@@ -45,13 +45,13 @@ export function useMfaPolicy(scope: "organization" | "platform") {
     onSuccess: (result) => {
       queryClient.setQueryData(queryKey, result)
       toast({
-        title: result.mfa_required ? "MFA required" : "MFA no longer required",
+        title: result.mfa_required ? "已要求多因素认证" : "不再要求多因素认证",
       })
     },
     onError: (error) => {
       toast({
-        title: "Failed to update MFA policy",
-        description: getApiErrorDetail(error) ?? "Please try again.",
+        title: "更新多因素认证策略失败",
+        description: getApiErrorDetail(error) ?? "请重试。",
         variant: "destructive",
       })
     },
@@ -79,12 +79,12 @@ export function useSecurityKeys() {
         await authDeleteCredential({ credentialId }),
       onSuccess: async () => {
         await refresh()
-        toast({ title: "Security key removed" })
+        toast({ title: "已移除安全密钥" })
       },
       onError: (error) => {
         toast({
-          title: "Failed to remove security key",
-          description: getApiErrorDetail(error) ?? "Please try again.",
+          title: "移除安全密钥失败",
+          description: getApiErrorDetail(error) ?? "请重试。",
           variant: "destructive",
         })
       },
@@ -96,8 +96,8 @@ export function useSecurityKeys() {
       onSuccess: refresh,
       onError: (error) => {
         toast({
-          title: "Failed to generate recovery codes",
-          description: getApiErrorDetail(error) ?? "Please try again.",
+          title: "生成恢复码失败",
+          description: getApiErrorDetail(error) ?? "请重试。",
           variant: "destructive",
         })
       },

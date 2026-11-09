@@ -135,7 +135,7 @@ export const YamlStyledEditor = React.forwardRef<
     } catch (err) {
       // Invalid YAML – don't update RHF, keep last valid value
       console.warn("YAML parse error on commit:", err)
-      setValidationErrors([err instanceof Error ? err.message : "Invalid YAML"])
+      setValidationErrors([err instanceof Error ? err.message : "YAML 无效"])
       return false
     }
   }, []) // No dependencies - stable function
@@ -162,7 +162,7 @@ export const YamlStyledEditor = React.forwardRef<
       setValidationErrors([])
       return true
     } catch (err) {
-      setValidationErrors([err instanceof Error ? err.message : "Invalid YAML"])
+      setValidationErrors([err instanceof Error ? err.message : "YAML 无效"])
       return false
     }
   }, [])
@@ -324,7 +324,7 @@ export const YamlStyledEditor = React.forwardRef<
       {fieldState.error && (
         <div className="mb-2 flex items-center gap-2 rounded-md border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
           <AlertTriangle className="size-3" />
-          <span>{fieldState.error.message ?? "Invalid YAML"}</span>
+          <span>{fieldState.error.message ?? "YAML 无效"}</span>
         </div>
       )}
       <div className="relative rounded-md border-[0.5px] border-border shadow-sm">
@@ -375,7 +375,7 @@ export const YamlStyledEditor = React.forwardRef<
         {saveState === SaveState.SAVED && (
           <div className="flex items-center gap-1 rounded-md bg-green-100 px-2 py-1 text-xs text-green-800">
             <Check className="size-3" />
-            <span>Saved</span>
+            <span>已保存</span>
           </div>
         )}
         {saveState === SaveState.ERROR && (
@@ -384,17 +384,17 @@ export const YamlStyledEditor = React.forwardRef<
             title={validationErrors.join("\n")}
           >
             <AlertTriangle className="size-3" />
-            <span>Error</span>
+            <span>错误</span>
           </div>
         )}
         {/* Existing syntax error indicator */}
         {hasErrors && saveState !== SaveState.ERROR && (
           <div
             className="flex items-center gap-1 rounded-md bg-destructive/10 px-2 py-1 text-xs text-destructive"
-            title="YAML syntax error"
+            title={"YAML 语法错误"}
           >
             <AlertTriangle className="size-3" />
-            <span>Syntax error</span>
+            <span>语法错误</span>
           </div>
         )}
       </div>
@@ -421,7 +421,7 @@ function customYamlLinter(view: EditorView): Diagnostic[] {
     }
     let from = 0
     let to = content.length
-    let message = "Invalid YAML"
+    let message = "YAML 无效"
 
     if (error.message) {
       message = error.message

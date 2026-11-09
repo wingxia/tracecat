@@ -197,21 +197,21 @@ describe("AppMenu workspace creation", () => {
     const { rerender } = renderAppMenu()
 
     expect(
-      screen.getByRole("button", { name: "Create workspace" })
+      screen.getByRole("button", { name: "创建工作空间" })
     ).toBeInTheDocument()
 
     mockEntitlements = { multi_workspace: false }
     rerender(<AppMenu workspaceId="workspace-1" />)
 
     expect(
-      screen.queryByRole("button", { name: "Create workspace" })
+      screen.queryByRole("button", { name: "创建工作空间" })
     ).not.toBeInTheDocument()
 
     mockEntitlements = { multi_workspace: true }
     mockScopes["workspace:create"] = false
     rerender(<AppMenu workspaceId="workspace-1" />)
     expect(
-      screen.queryByRole("button", { name: "Create workspace" })
+      screen.queryByRole("button", { name: "创建工作空间" })
     ).not.toBeInTheDocument()
   })
 
@@ -241,7 +241,7 @@ describe("AppMenu workspace creation", () => {
       renderAppMenu()
 
       expect(
-        screen.queryByRole("button", { name: "Create workspace" })
+        screen.queryByRole("button", { name: "创建工作空间" })
       ).not.toBeInTheDocument()
       expect(screen.queryByText(/upgrade/i)).not.toBeInTheDocument()
       expect(
@@ -253,13 +253,13 @@ describe("AppMenu workspace creation", () => {
   it("creates and navigates to a new workspace for entitled users", async () => {
     renderAppMenu()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create workspace" }))
-    fireEvent.change(screen.getByLabelText("Workspace name"), {
+    fireEvent.click(screen.getByRole("button", { name: "创建工作空间" }))
+    fireEvent.change(screen.getByLabelText("工作空间名称"), {
       target: { value: "Third workspace" },
     })
     fireEvent.click(
       within(screen.getByRole("dialog")).getByRole("button", {
-        name: "Create workspace",
+        name: "创建工作空间",
       })
     )
 
@@ -274,16 +274,16 @@ describe("AppMenu workspace creation", () => {
   it("removes the open dialog if entitlement disappears before submit", () => {
     const { rerender } = renderAppMenu()
 
-    fireEvent.click(screen.getByRole("button", { name: "Create workspace" }))
+    fireEvent.click(screen.getByRole("button", { name: "创建工作空间" }))
     expect(
-      screen.getByRole("heading", { name: "Create workspace" })
+      screen.getByRole("heading", { name: "创建工作空间" })
     ).toBeInTheDocument()
 
     mockEntitlements = { multi_workspace: false }
     rerender(<AppMenu workspaceId="workspace-1" />)
 
     expect(
-      screen.queryByRole("heading", { name: "Create workspace" })
+      screen.queryByRole("heading", { name: "创建工作空间" })
     ).not.toBeInTheDocument()
     expect(mockCreateWorkspace).not.toHaveBeenCalled()
   })

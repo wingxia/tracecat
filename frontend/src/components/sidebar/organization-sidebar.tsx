@@ -56,7 +56,7 @@ export function OrganizationSidebar({
 
   const navCustomRegistry = [
     {
-      title: "Repository",
+      title: "仓库",
       url: "/organization/settings/custom-registry",
       icon: GitBranchIcon,
       isActive: pathname === "/organization/settings/custom-registry",
@@ -64,7 +64,7 @@ export function OrganizationSidebar({
       locked: !customRegistryEnabled,
     },
     {
-      title: "Versions",
+      title: "版本",
       url: "/organization/settings/custom-registry/versions",
       icon: HistoryIcon,
       isActive: pathname?.startsWith(
@@ -86,7 +86,7 @@ export function OrganizationSidebar({
 
   const navSettings: OrgSettingsNavItem[] = [
     {
-      title: "SAML (SSO)",
+      title: "SAML（单点登录）",
       url: "/organization/settings/sso",
       icon: LockIcon,
       isActive: pathname?.includes("/organization/settings/sso"),
@@ -94,7 +94,7 @@ export function OrganizationSidebar({
       locked: false,
     },
     {
-      title: "Domains",
+      title: "域名",
       url: "/organization/settings/domains",
       icon: GlobeIcon,
       isActive: pathname?.includes("/organization/settings/domains"),
@@ -110,7 +110,7 @@ export function OrganizationSidebar({
       locked: !rbacAddonsEnabled,
     },
     {
-      title: "Secret stores",
+      title: "密钥存储",
       url: "/organization/settings/secret-stores",
       icon: VaultIcon,
       isActive: pathname?.includes("/organization/settings/secret-stores"),
@@ -118,7 +118,7 @@ export function OrganizationSidebar({
       locked: !externalSecretStoresEnabled,
     },
     {
-      title: "Application",
+      title: "应用",
       url: "/organization/settings/app",
       icon: Settings2,
       isActive: pathname?.includes("/organization/settings/app"),
@@ -126,7 +126,7 @@ export function OrganizationSidebar({
       locked: false,
     },
     {
-      title: "Audit Logs",
+      title: "审计日志",
       url: "/organization/settings/audit",
       icon: LogsIcon,
       isActive: pathname?.includes("/organization/settings/audit"),
@@ -134,7 +134,7 @@ export function OrganizationSidebar({
       locked: false,
     },
     {
-      title: "IP allowlist",
+      title: "IP 白名单",
       url: "/organization/settings/security",
       icon: ShieldCheckIcon,
       isActive: pathname?.includes("/organization/settings/security"),
@@ -142,7 +142,7 @@ export function OrganizationSidebar({
       locked: false,
     },
     {
-      title: "Git providers",
+      title: "Git 提供商",
       url: "/organization/vcs",
       icon: GitBranchIcon,
       isActive: pathname?.includes("/organization/vcs"),
@@ -160,7 +160,7 @@ export function OrganizationSidebar({
 
   const navAgent = [
     {
-      title: "Configuration",
+      title: "配置",
       url: "/organization/settings/agent",
       icon: MousePointerClickIcon,
       isActive: pathname === "/organization/settings/agent",
@@ -168,7 +168,7 @@ export function OrganizationSidebar({
       locked: false,
     },
     {
-      title: "Telemetry",
+      title: "遥测",
       url: "/organization/settings/agent/telemetry",
       icon: RadioTowerIcon,
       isActive: pathname?.startsWith("/organization/settings/agent/telemetry"),
@@ -179,21 +179,21 @@ export function OrganizationSidebar({
 
   const navManage = [
     {
-      title: "Members",
+      title: "成员",
       url: "/organization/members",
       icon: UsersIcon,
       isActive: pathname?.includes("/organization/members"),
       visible: canViewMembers === true,
     },
     {
-      title: "Sessions",
+      title: "会话",
       url: "/organization/sessions",
       icon: LogInIcon,
       isActive: pathname?.includes("/organization/sessions"),
       visible: canViewMembers === true,
     },
     {
-      title: "Service accounts",
+      title: "服务账号",
       url: "/organization/settings/service-accounts",
       icon: KeyRoundIcon,
       isActive: pathname?.includes("/organization/settings/service-accounts"),
@@ -209,7 +209,7 @@ export function OrganizationSidebar({
             <SidebarMenuButton asChild>
               <Link href="/workspaces" className="text-muted-foreground">
                 <ChevronLeftIcon />
-                <span>Back to workspaces</span>
+                <span>返回工作空间列表</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -218,7 +218,7 @@ export function OrganizationSidebar({
       <SidebarContent>
         {navSettings.some((item) => item.visible === true) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Settings</SidebarGroupLabel>
+            <SidebarGroupLabel>设置</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navSettings
@@ -234,7 +234,7 @@ export function OrganizationSidebar({
                       {item.locked ? (
                         <SidebarMenuBadge>
                           <LockIcon aria-hidden="true" className="size-3.5" />
-                          <span className="sr-only">Requires upgrade</span>
+                          <span className="sr-only">需要升级</span>
                         </SidebarMenuBadge>
                       ) : null}
                     </SidebarMenuItem>
@@ -246,7 +246,7 @@ export function OrganizationSidebar({
 
         {navAgent.some((item) => item.visible === true) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Agent</SidebarGroupLabel>
+            <SidebarGroupLabel>智能体</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navAgent
@@ -268,7 +268,7 @@ export function OrganizationSidebar({
 
         {navCustomRegistry.some((item) => item.visible === true) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Custom registry</SidebarGroupLabel>
+            <SidebarGroupLabel>自定义注册表</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navCustomRegistry
@@ -284,7 +284,7 @@ export function OrganizationSidebar({
                       {item.locked ? (
                         <SidebarMenuBadge>
                           <LockIcon aria-hidden="true" className="size-3.5" />
-                          <span className="sr-only">Requires upgrade</span>
+                          <span className="sr-only">需要升级</span>
                         </SidebarMenuBadge>
                       ) : null}
                     </SidebarMenuItem>
@@ -296,7 +296,7 @@ export function OrganizationSidebar({
 
         {navManage.some((item) => item.visible === true) && (
           <SidebarGroup>
-            <SidebarGroupLabel>Manage</SidebarGroupLabel>
+            <SidebarGroupLabel>管理</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {navManage

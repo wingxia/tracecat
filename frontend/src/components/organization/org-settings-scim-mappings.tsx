@@ -137,9 +137,9 @@ export function OrgSettingsScimMappings({
   const header = (
     <div className="flex items-end gap-4">
       <div className="flex-1 space-y-1">
-        <h3 className="text-lg font-medium">Group mappings</h3>
+        <h3 className="text-lg font-medium">用户组映射</h3>
         <p className="text-sm text-muted-foreground">
-          Unmapped groups grant no access.
+          未映射的用户组不会授予任何访问权限。
         </p>
       </div>
       {externalGroups && externalGroups.length > 0 ? (
@@ -149,8 +149,8 @@ export function OrgSettingsScimMappings({
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search groups"
-            aria-label="Search groups"
+            placeholder={"搜索用户组"}
+            aria-label={"搜索用户组"}
             className="h-8 pl-8 text-sm"
           />
         </div>
@@ -167,10 +167,10 @@ export function OrgSettingsScimMappings({
             <EmptyMedia variant="icon">
               <UsersIcon className="size-6" />
             </EmptyMedia>
-            <EmptyTitle>Connect SCIM first</EmptyTitle>
+            <EmptyTitle>请先连接 SCIM</EmptyTitle>
             <EmptyDescription>
-              Generate a connection token above, then configure Tracecat in your
-              identity provider. Groups you push appear here and can be mapped.
+              在上方生成连接令牌，再在身份提供商中配置
+              Tracecat。推送的用户组会显示在此处供你映射。
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -200,8 +200,8 @@ export function OrgSettingsScimMappings({
     return (
       <div className="space-y-4">
         {header}
-        <ErrorAlert title="Unable to load group mappings">
-          Reload the page to try again.
+        <ErrorAlert title={"无法加载用户组映射"}>
+          请重新加载页面后重试。
         </ErrorAlert>
       </div>
     )
@@ -237,13 +237,11 @@ export function OrgSettingsScimMappings({
     <div className="space-y-4">
       {header}
       {status === "disabled" && (
-        <ErrorAlert title="SCIM disconnected">
-          Generate a new token to reconnect.
-        </ErrorAlert>
+        <ErrorAlert title={"SCIM 已断开"}>生成新令牌以重新连接。</ErrorAlert>
       )}
       {revoked && status !== "disabled" && (
-        <ErrorAlert title="Token revoked">
-          Rotate the token before changing SCIM configuration.
+        <ErrorAlert title={"令牌已撤销"}>
+          更改 SCIM 配置前，请先轮换令牌。
         </ErrorAlert>
       )}
 
@@ -253,10 +251,10 @@ export function OrgSettingsScimMappings({
             <EmptyMedia variant="icon">
               <UsersIcon className="size-6" />
             </EmptyMedia>
-            <EmptyTitle>No synced groups yet</EmptyTitle>
+            <EmptyTitle>暂无已同步用户组</EmptyTitle>
             <EmptyDescription>
-              Assign groups to the Tracecat application in your identity
-              provider. They appear here once it pushes them.
+              在身份提供商中将用户组分配给 Tracecat
+              应用。推送完成后会显示在此处。
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
@@ -265,10 +263,10 @@ export function OrgSettingsScimMappings({
           <Table>
             <TableHeader>
               <TableRow className="hover:bg-transparent">
-                <TableHead>IdP group</TableHead>
-                <TableHead className="w-24">Members</TableHead>
+                <TableHead>IdP 用户组</TableHead>
+                <TableHead className="w-24">成员</TableHead>
                 <TableHead className="w-8" />
-                <TableHead className="w-[320px]">Tracecat groups</TableHead>
+                <TableHead className="w-[320px]">Tracecat 用户组</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -288,7 +286,7 @@ export function OrgSettingsScimMappings({
                   <TableCell className="align-top">
                     {mappingsIncomplete ? (
                       <RowLine className="text-muted-foreground">
-                        Load all mappings to view selections.
+                        加载全部映射以查看选择。
                       </RowLine>
                     ) : (
                       <TargetPicker
@@ -311,7 +309,7 @@ export function OrgSettingsScimMappings({
                     colSpan={4}
                     className="py-6 text-center text-sm text-muted-foreground"
                   >
-                    No groups match.
+                    没有匹配的用户组。
                   </TableCell>
                 </TableRow>
               )}
@@ -378,7 +376,7 @@ function TargetPicker({
         <Button
           variant="outline"
           disabled={disabled}
-          aria-label={`Tracecat groups for ${group.display_name}`}
+          aria-label={`${group.display_name} 的 Tracecat 用户组`}
           className={cn(
             "h-auto min-h-9 w-full items-start justify-between whitespace-normal px-3 py-[7px] font-normal shadow-none",
             names.length === 0 &&
@@ -387,7 +385,7 @@ function TargetPicker({
         >
           <span className="flex min-w-0 flex-col text-left">
             {names.length === 0 ? (
-              <span>Not mapped</span>
+              <span>未映射</span>
             ) : (
               names.map((name) => (
                 <span key={name} className="truncate">
@@ -407,11 +405,11 @@ function TargetPicker({
       >
         <Command>
           <CommandInput
-            placeholder="Search Tracecat groups"
+            placeholder={"搜索 Tracecat 用户组"}
             className="text-sm"
           />
           <CommandList>
-            <CommandEmpty>No groups found.</CommandEmpty>
+            <CommandEmpty>未找到用户组。</CommandEmpty>
             <CommandGroup>
               {tracecatGroups.map((candidate) => {
                 const target = targets.find(
@@ -491,15 +489,15 @@ function ListFooter({
     <div className="flex flex-wrap items-center gap-3 border-t bg-muted/30 px-4 py-2.5 text-sm">
       {showDrafts ? (
         <span className="flex-1 text-muted-foreground">
-          {changeCount} {changeCount === 1 ? "draft applies" : "drafts apply"}{" "}
-          {isPending ? "when you activate." : "after review."}
+          {changeCount} {changeCount === 1 ? "项草稿将生效" : "项草稿将生效"}{" "}
+          {isPending ? "，时间为激活后。" : "，时间为审核后。"}
         </span>
       ) : (
         <span className="flex-1" />
       )}
       {externalGroupsError && (
         <span role="alert" className="text-muted-foreground">
-          Unable to load more groups.
+          无法加载更多用户组。
         </span>
       )}
       {(externalGroupsHasNextPage || externalGroupsError) && (
@@ -510,13 +508,13 @@ function ListFooter({
           onClick={fetchNextExternalGroups}
         >
           {externalGroupsIsFetchingNextPage
-            ? "Loading groups…"
-            : "Load more groups"}
+            ? "正在加载用户组…"
+            : "加载更多用户组"}
         </Button>
       )}
       {!isPending && mappingsError && (
         <span role="alert" className="text-muted-foreground">
-          Unable to load more mappings.
+          无法加载更多映射。
         </span>
       )}
       {showMappingPages && (
@@ -526,9 +524,7 @@ function ListFooter({
           disabled={mappingsIsFetchingNextPage}
           onClick={fetchNextMappings}
         >
-          {mappingsIsFetchingNextPage
-            ? "Loading mappings…"
-            : "Load more mappings"}
+          {mappingsIsFetchingNextPage ? "正在加载映射…" : "加载更多映射"}
         </Button>
       )}
       {showDrafts && (
@@ -538,12 +534,12 @@ function ListFooter({
           disabled={reviewIsPending}
           onClick={onDiscardDrafts}
         >
-          Discard drafts
+          放弃草稿
         </Button>
       )}
       {showDrafts && !isPending && (
         <Button size="sm" disabled={reviewIsPending} onClick={onReviewChanges}>
-          Review changes
+          审核更改
         </Button>
       )}
     </div>

@@ -20,10 +20,9 @@ export function getAgentCatalogSourceName(
   >
 ): string {
   if (!entry.custom_provider_id) {
-    return "Platform"
+    return "平台"
   }
   return (
-    providersById.get(entry.custom_provider_id)?.display_name ??
-    "Custom provider"
+    providersById.get(entry.custom_provider_id)?.display_name ?? "自定义提供商"
   )
 }

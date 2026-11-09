@@ -24,7 +24,7 @@ const TYPE_FILTER_OPTIONS: Array<
   CatalogHeaderPillOption<IntegrationTypeFilter>
 > = [
   { value: "oauth", label: "OAuth", icon: Lock },
-  { value: "custom_oauth", label: "Custom OAuth", icon: LockKeyhole },
+  { value: "custom_oauth", label: "自定义 OAuth", icon: LockKeyhole },
 ]
 
 export function IntegrationsHeader({
@@ -42,14 +42,14 @@ export function IntegrationsHeader({
       value: connectionFilter,
       onValueChange: (value) =>
         onConnectionFilterChange(value as ConnectionFilter),
-      placeholder: "Connection",
+      placeholder: "连接",
       allValue: "all",
       options: [
-        { value: "all", label: "All connections" },
-        { value: "connected", label: "Connected", icon: Link2 },
+        { value: "all", label: "所有连接" },
+        { value: "connected", label: "已连接", icon: Link2 },
         {
           value: "not_connected",
-          label: "Not connected",
+          label: "未连接",
           icon: Unlink2,
         },
       ],
@@ -60,7 +60,7 @@ export function IntegrationsHeader({
     <CatalogHeader
       searchQuery={searchQuery}
       onSearchChange={onSearchChange}
-      searchPlaceholder="Search integrations..."
+      searchPlaceholder={"搜索集成…"}
       pillFilters={TYPE_FILTER_OPTIONS}
       activePillFilters={typeFilters}
       onPillFilterToggle={onTypeFilterToggle}

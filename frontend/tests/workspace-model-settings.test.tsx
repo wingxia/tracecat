@@ -95,7 +95,7 @@ it("saves a workspace subset through the workspace route, never the org routes",
   ).toBeInTheDocument()
   await user.click(screen.getByRole("switch"))
   await user.click(screen.getAllByRole("checkbox")[0])
-  await user.click(screen.getByRole("button", { name: "Save" }))
+  await user.click(screen.getByRole("button", { name: "保存" }))
 
   await waitFor(() => {
     expect(updateWorkspaceModelAccess).toHaveBeenCalledWith({

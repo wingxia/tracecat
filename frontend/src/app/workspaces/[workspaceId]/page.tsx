@@ -17,14 +17,13 @@ function NoAccessibleSections() {
     <main className="container flex size-full max-w-[400px] flex-col items-center justify-center space-y-4">
       <Image src={TracecatIcon} alt="Tracecat" className="mb-4 size-16" />
       <h1 className="text-2xl font-semibold tracking-tight">
-        No accessible pages
+        没有可访问的页面
       </h1>
       <span className="text-center text-muted-foreground">
-        You can access this workspace, but you don&apos;t have read permissions
-        for any workspace section.
+        你可以访问此工作空间，但没有任何工作空间功能的读取权限。
       </span>
       <Button variant="outline" onClick={() => router.replace("/workspaces")}>
-        Back to workspaces
+        返回工作空间列表
       </Button>
     </main>
   )

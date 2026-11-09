@@ -40,11 +40,11 @@ export function GitSyncRepoStatus({
           type="button"
           variant="link"
           size="sm"
-          aria-label="Edit connection"
+          aria-label={"编辑连接"}
           className="h-auto shrink-0 p-0 text-xs font-normal text-foreground/70 underline underline-offset-2 hover:text-foreground"
           onClick={onEditConnection}
         >
-          Edit
+          编辑
         </Button>
       )}
     </div>
@@ -59,23 +59,23 @@ function ConnectionState({
   hasError: boolean
 }) {
   if (isLoading) {
-    return <span className="shrink-0">Checking...</span>
+    return <span className="shrink-0">检查中…</span>
   }
   if (hasError) {
     return (
       <span
         className="flex min-w-0 items-center gap-1 text-destructive"
-        title="Could not reach repository"
+        title={"无法访问仓库"}
       >
         <AlertTriangleIcon className="size-3.5 shrink-0" />
-        <span className="truncate">Could not reach repository</span>
+        <span className="truncate">无法访问仓库</span>
       </span>
     )
   }
   return (
     <span className="flex shrink-0 items-center gap-1.5">
       <span className="size-1.5 rounded-full bg-green-500" />
-      Connected
+      已连接
     </span>
   )
 }
