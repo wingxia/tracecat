@@ -72,6 +72,8 @@ interface CasesLayoutProps {
   tags?: CaseTagRead[]
   onSearchModeChange?: (mode: "full_text" | "literal") => void
   onSearchChange: (query: string) => void
+  onSipFilterChange?: (value: string) => void
+  onDipFilterChange?: (value: string) => void
   onSortByChange: (value: CaseSortValue) => void
   onStatusChange: (status: CaseStatus[]) => void
   onStatusModeChange: (mode: FilterMode) => void
@@ -122,6 +124,8 @@ export function CasesLayout({
   tags,
   onSearchModeChange,
   onSearchChange,
+  onSipFilterChange,
+  onDipFilterChange,
   onSortByChange,
   onStatusChange,
   onStatusModeChange,
@@ -408,6 +412,10 @@ export function CasesLayout({
   }, [])
 
   const headerProps = {
+    sipFilter: filters.sipFilter,
+    dipFilter: filters.dipFilter,
+    onSipFilterChange,
+    onDipFilterChange,
     searchQuery: filters.searchQuery,
     appliedSearchQuery,
     effectiveHierarchy,

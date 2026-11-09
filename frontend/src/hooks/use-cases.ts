@@ -104,6 +104,8 @@ function getCaseSearchTerm(query: string, mode: SearchMode): string {
 export interface UseCasesFilters {
   structuredFilters?: CaseQuery["filters"]
   searchQuery: string
+  sipFilter: string
+  dipFilter: string
   searchMode?: SearchMode
   searchOrder?: "relevance" | "column"
   sortBy: CaseSortValue
@@ -145,6 +147,8 @@ export interface UseCasesResult {
   isSearchPending: boolean
   setSearchMode: (mode: SearchMode) => void
   setSearchQuery: (query: string) => void
+  setSipFilter: (value: string) => void
+  setDipFilter: (value: string) => void
   setSortBy: (value: CaseSortValue) => void
   setStructuredFilters: (filters: CaseQuery["filters"]) => void
   setStatusFilter: (status: CaseStatus[]) => void
@@ -258,6 +262,8 @@ export const DEFAULT_CREATED_FILTER: CaseDateFilterValue = {
 const DEFAULT_CASES_FILTERS: UseCasesFilters = {
   structuredFilters: null,
   searchQuery: "",
+  sipFilter: "",
+  dipFilter: "",
   searchMode: "full_text",
   searchOrder: "relevance",
   sortBy: DEFAULT_CASE_SORT,
@@ -319,6 +325,8 @@ function loadPersistedCasesFilterState(
         parsed.searchQuery,
         defaults.searchQuery
       ),
+      sipFilter: sanitizeSearchQuery(parsed.sipFilter, "").slice(0, 64),
+      dipFilter: sanitizeSearchQuery(parsed.dipFilter, "").slice(0, 64),
       sortBy: sanitizeSortBy(parsed.sortBy, defaults.sortBy),
       statusFilter: sanitizeEnumArray(
         parsed.statusFilter,
@@ -674,6 +682,53 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
   }
   const initialFilterState = initialFilterStateRef.current
 
+  const [ipFilters, setIpFilters] = useState({
+    sip: initialFilterState.sipFilter,
+    dip: initialFilterState.dipFilter,
+  })
+  const [appliedIpFilters, setAppliedIpFilters] = useState({
+    sip: ipFilters.sip.trim(),
+    dip: ipFilters.dip.trim(),
+    revision: "",
+  })
+  const normalizedSip = ipFilters.sip.trim()
+  const normalizedDip = ipFilters.dip.trim()
+  useEffect(() => {
+    if (
+      normalizedSip === appliedIpFilters.sip &&
+      normalizedDip === appliedIpFilters.dip
+    ) {
+      return
+    }
+    const timeout = setTimeout(() => {
+      setAppliedIpFilters({
+        sip: normalizedSip,
+        dip: normalizedDip,
+        revision: uuid4(),
+      })
+    }, CASES_SEARCH_DEBOUNCE_MS)
+    return () => clearTimeout(timeout)
+  }, [normalizedSip, normalizedDip, appliedIpFilters])
+
+  const setIpFilter = useCallback((field: "sip" | "dip", value: string) => {
+    setIpFilters((previous) => ({ ...previous, [field]: value }))
+    if (!value.trim()) {
+      setAppliedIpFilters((previous) => ({
+        ...previous,
+        [field]: "",
+        revision: uuid4(),
+      }))
+    }
+  }, [])
+  const setSipFilter = useCallback(
+    (value: string) => setIpFilter("sip", value),
+    [setIpFilter]
+  )
+  const setDipFilter = useCallback(
+    (value: string) => setIpFilter("dip", value),
+    [setIpFilter]
+  )
+
   const [searchMode, setSearchMode] = useState<SearchMode>(
     initialFilterState.searchMode ?? "full_text"
   )
@@ -851,6 +906,15 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     }
 
     const nextFilterState = loadPersistedCasesFilterState(workspaceId)
+    setIpFilters({
+      sip: nextFilterState.sipFilter,
+      dip: nextFilterState.dipFilter,
+    })
+    setAppliedIpFilters({
+      sip: nextFilterState.sipFilter.trim(),
+      dip: nextFilterState.dipFilter.trim(),
+      revision: uuid4(),
+    })
     setStructuredFilters(nextFilterState.structuredFilters ?? null)
     setSearchQueryState(nextFilterState.searchQuery)
     applySearch(nextFilterState.searchQuery, true)
@@ -883,6 +947,8 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
       workspaceId,
       serializePersistedCasesFilters({
         structuredFilters,
+        sipFilter: ipFilters.sip,
+        dipFilter: ipFilters.dip,
         searchQuery,
         searchMode,
         searchOrder,
@@ -912,6 +978,7 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     )
   }, [
     workspaceId,
+    ipFilters,
     structuredFilters,
     searchQuery,
     searchMode,
@@ -1017,6 +1084,8 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     return {
       apiQueryParams: {
         filters: structuredFilters,
+        sip: appliedIpFilters.sip || undefined,
+        dip: appliedIpFilters.dip || undefined,
         search_term: normalizedSearch.length > 0 ? normalizedSearch : undefined,
         search_mode: normalizedSearch.length > 0 ? searchMode : undefined,
         status: resolvedStatus.values,
@@ -1049,6 +1118,7 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     }
   }, [
     structuredFilters,
+    appliedIpFilters,
     appliedSearchQuery,
     searchMode,
     statusFilter,
@@ -1094,12 +1164,14 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
         // A new applied search starts at page one even when returning to a
         // previously cached term, including an immediately cleared input.
         searchRevision: appliedSearch.revision,
+        ipRevision: appliedIpFilters.revision,
         structuredRevision,
       }),
     [
       apiQueryParams,
       hasImpossibleEnumFilter,
       appliedSearch.revision,
+      appliedIpFilters.revision,
       structuredRevision,
     ]
   )
@@ -1264,10 +1336,15 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     error: error ?? null,
     refetch,
     appliedSearchQuery,
-    isSearchPending: normalizedSearchInput !== appliedSearchQuery,
+    isSearchPending:
+      normalizedSearchInput !== appliedSearchQuery ||
+      normalizedSip !== appliedIpFilters.sip ||
+      normalizedDip !== appliedIpFilters.dip,
     effectiveHierarchy: apiQueryParams.hierarchy,
     filters: {
       structuredFilters,
+      sipFilter: ipFilters.sip,
+      dipFilter: ipFilters.dip,
       searchQuery,
       searchMode,
       searchOrder,
@@ -1294,6 +1371,8 @@ export function useCases(options: UseCasesOptions = {}): UseCasesResult {
     setSearchMode,
     setStructuredFilters,
     setSearchQuery,
+    setSipFilter,
+    setDipFilter,
     setSortBy,
     setStatusFilter,
     setStatusMode,

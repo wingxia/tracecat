@@ -2966,6 +2966,14 @@ export type CaseQuery = {
   filters?: Filter | null
   search_term?: string | null
   /**
+   * Source IP prefix; matches sip/source_ip/src_ip payload strings or text custom fields.
+   */
+  sip?: string | null
+  /**
+   * Destination IP prefix; matches dip/destination_ip/dest_ip/dst_ip payload strings or text custom fields. Combined with sip and other filters using AND.
+   */
+  dip?: string | null
+  /**
    * Explicit word/phrase or escaped substring search. Omitted mode retains legacy matching and ordering.
    */
   search_mode?: SearchMode | null
@@ -3101,6 +3109,14 @@ export type CaseSearchRequest = {
    */
   filters?: Filter | null
   search_term?: string | null
+  /**
+   * Source IP prefix; matches sip/source_ip/src_ip payload strings or text custom fields.
+   */
+  sip?: string | null
+  /**
+   * Destination IP prefix; matches dip/destination_ip/dest_ip/dst_ip payload strings or text custom fields. Combined with sip and other filters using AND.
+   */
+  dip?: string | null
   /**
    * Explicit word/phrase or escaped substring search. Omitted mode retains legacy matching and ordering.
    */

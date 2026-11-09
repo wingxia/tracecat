@@ -63,6 +63,11 @@ CUSTOM_FIELDS_JOIN_KEY = "case_fields"
 DROPDOWN_PREFIX = "dropdowns."
 PAYLOAD_PREFIX = "payload."
 TAG_OPS = frozenset({FilterOp.CONTAINS, FilterOp.IN, FilterOp.IS_NULL})
+IP_FIELD_ALIASES = {
+    "sip": ("sip", "source_ip", "src_ip"),
+    "dip": ("dip", "destination_ip", "dest_ip", "dst_ip"),
+}
+IP_FILTER_OPS = frozenset({FilterOp.EQ, FilterOp.CONTAINS, FilterOp.STARTS_WITH})
 
 TEXT_OPS = frozenset(
     {
@@ -257,6 +262,8 @@ class CaseFieldResolver:
 
     def resolve(self, field: str) -> ResolvedField | None:
         """Return the filter field, or ``None`` when the address is unknown."""
+        if field in IP_FIELD_ALIASES:
+            return self._resolve_ip_field(field)
         if field.startswith(PAYLOAD_PREFIX):
             path = field.removeprefix(PAYLOAD_PREFIX).split(".")
             if (
@@ -307,6 +314,39 @@ class CaseFieldResolver:
                 value_type=value_type,
             )
         return None
+
+    def _resolve_ip_field(self, field: str) -> ResolvedField:
+        """Match IP aliases in payload strings and workspace text fields."""
+        aliases = IP_FIELD_ALIASES[field]
+
+        def predicate(
+            op: FilterOp, value: NormalizedFilterValue | None
+        ) -> ColumnElement[bool]:
+            matches: list[ColumnElement[bool]] = []
+            for alias in aliases:
+                payload_value = Case.payload[alias]
+                matches.append(
+                    sa.and_(
+                        sa.func.jsonb_typeof(payload_value) == "string",
+                        compile_predicate(payload_value.as_string(), op, value),
+                    )
+                )
+                custom_field = self._resolve_custom_field_address(f"fields.{alias}")
+                if custom_field is not None and custom_field.sql_type is SqlType.TEXT:
+                    column = self._custom_fields_table.c[custom_field.physical_name]
+                    matches.append(
+                        _joined_field_predicate_factory(
+                            self._custom_fields_join, column
+                        )(op, value)
+                    )
+            return sa.or_(*matches)
+
+        return ResolvedField(
+            expr=predicate,
+            kind=FieldKind.TEXT,
+            allowed_ops=IP_FILTER_OPS,
+            value_type=sa.Text(),
+        )
 
     def resolve_aggregation(self, field: str) -> ResolvedCaseAggregationField | None:
         """Return an aggregation field and any join needed to use it."""

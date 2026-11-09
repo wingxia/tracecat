@@ -1,5 +1,34 @@
 # Case lexical search
 
+## Source and destination IP filters
+
+The case list filter bar includes `sip` (source IP) and `dip` (destination IP).
+Enter a complete address or a leading fragment such as `192.0.2.` to match
+that prefix. Both inputs use case-insensitive literal prefix matching, including
+IPv6 prefixes; `%`, `_`, and backslashes are not wildcards. This is text prefix
+matching, not CIDR notation. Empty inputs remove the corresponding constraint.
+The inputs are debounced and saved per workspace along with the other filters.
+
+`POST /cases/search` and `POST /cases/search/aggregate` accept optional `sip`
+and `dip` strings with the same semantics. They are combined with each other
+and all other conditions using AND, before pagination and status counts.
+An exact case-ID search cannot promote a result outside these IP constraints.
+No database migration or payload rewrite is required.
+
+Each filter checks string values at these top-level payload keys and TEXT custom
+fields of the same names:
+
+| Filter | Accepted names |
+| --- | --- |
+| `sip` | `sip`, `source_ip`, `src_ip` |
+| `dip` | `dip`, `destination_ip`, `dest_ip`, `dst_ip` |
+
+Missing, null, object, and array payload values do not match. Structured filters
+can also address `sip` and `dip` with `eq`, `starts_with`, or `contains` for
+explicit exact, prefix, or substring searches.
+
+## Text search
+
 Case search can find required words across summary and description, keep quoted
 phrases within one field, tolerate bounded word typos, and return relevance
 ordering and plain-text match excerpts. It uses PostgreSQL and pg_trgm; it does

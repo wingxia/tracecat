@@ -112,6 +112,8 @@ export default function CasesPage() {
     isSearchPending,
     setSearchMode,
     setSearchQuery,
+    setSipFilter,
+    setDipFilter,
     setSortBy,
     setStatusFilter,
     setStatusMode,
@@ -164,6 +166,8 @@ export default function CasesPage() {
         tags={caseTags}
         onSearchModeChange={setSearchMode}
         onSearchChange={setSearchQuery}
+        onSipFilterChange={setSipFilter}
+        onDipFilterChange={setDipFilter}
         onSortByChange={setSortBy}
         onStatusChange={setStatusFilter}
         onStatusModeChange={setStatusMode}

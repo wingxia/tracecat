@@ -131,6 +131,8 @@ function Harness({
       effectiveHierarchy={search.effectiveHierarchy}
       isSearchPending={search.isSearchPending}
       onSearchChange={search.setSearchQuery}
+      onSipFilterChange={search.setSipFilter}
+      onDipFilterChange={search.setDipFilter}
       onSearchModeChange={lexicalControls ? search.setSearchMode : undefined}
       onSortByChange={search.setSortBy}
       onStatusChange={search.setStatusFilter}
@@ -212,6 +214,38 @@ describe("exact-first case search UI", () => {
             },
           })
         )
+    )
+  })
+
+  it("filters by sip and dip in the filter bar and resets both inputs", async () => {
+    setup()
+    const filters = screen.getByRole("group", { name: "当前视图筛选条件" })
+    const sip = within(filters).getByRole("textbox", { name: "sip（源 IP）" })
+    const dip = within(filters).getByRole("textbox", { name: "dip（目的 IP）" })
+    fireEvent.change(sip, { target: { value: "192.0.2." } })
+    fireEvent.change(dip, { target: { value: "198.51.100." } })
+    await waitFor(() =>
+      expect(casesQueryCases).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          requestBody: expect.objectContaining({
+            sip: "192.0.2.",
+            dip: "198.51.100.",
+          }),
+        })
+      )
+    )
+    fireEvent.click(screen.getByRole("button", { name: "重置" }))
+    expect(sip).toHaveValue("")
+    expect(dip).toHaveValue("")
+    await waitFor(() =>
+      expect(casesQueryCaseAggregates).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          requestBody: expect.objectContaining({
+            sip: undefined,
+            dip: undefined,
+          }),
+        })
+      )
     )
   })
 

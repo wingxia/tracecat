@@ -92,6 +92,108 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
+it("debounces IP prefixes and applies identical constraints to rows and counts", async () => {
+  const { result } = setup()
+  await advance()
+  searchCases.mockClear()
+  searchAggregates.mockClear()
+  for (const prefix of ["1", "19", "192."]) {
+    act(() => result.current.setSipFilter(prefix))
+    await advance(70)
+  }
+  expect(searchCases).not.toHaveBeenCalled()
+  act(() => {
+    result.current.setSipFilter(" 192.0.2. ")
+    result.current.setDipFilter("198.51.100.")
+    result.current.setStatusFilter(["new"])
+  })
+  await advance(301)
+  for (const request of [searchCases, searchAggregates]) {
+    expect(request).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        requestBody: expect.objectContaining({
+          sip: "192.0.2.",
+          dip: "198.51.100.",
+          status: ["new"],
+        }),
+      })
+    )
+  }
+  expect(result.current.isSearchPending).toBe(false)
+})
+
+it("clears IP filters immediately and cancels pending input", async () => {
+  const { result } = setup()
+  act(() => result.current.setSipFilter("192.0.2."))
+  await advance(301)
+  act(() => result.current.setSipFilter("198."))
+  await advance(50)
+  act(() => result.current.setSipFilter(""))
+  await advance()
+  expect(searchCases.mock.calls.at(-1)?.[0].requestBody.sip).toBeUndefined()
+  await advance(350)
+  expect(searchCases.mock.calls.at(-1)?.[0].requestBody.sip).toBeUndefined()
+  expect(result.current.isSearchPending).toBe(false)
+})
+
+it("restores IP filters per workspace without leaking pending input", async () => {
+  const { result, unmount } = setup()
+  act(() => {
+    result.current.setSipFilter("192.0.2.")
+    result.current.setDipFilter("2001:db8:")
+  })
+  await advance(301)
+  unmount()
+  const restored = setup()
+  await advance()
+  expect(restored.result.current.filters.sipFilter).toBe("192.0.2.")
+  expect(restored.result.current.filters.dipFilter).toBe("2001:db8:")
+  act(() => restored.result.current.setSipFilter("203.0."))
+  act(() => restored.changeWorkspace(OTHER_WORKSPACE_ID))
+  await advance(350)
+  expect(searchCases.mock.calls.at(-1)?.[0]).toEqual(
+    expect.objectContaining({
+      workspaceId: OTHER_WORKSPACE_ID,
+      requestBody: expect.objectContaining({ sip: undefined, dip: undefined }),
+    })
+  )
+  expect(restored.result.current.filters.sipFilter).toBe("")
+})
+
+it("restarts pagination when returning to a previously loaded IP prefix", async () => {
+  searchCases.mockImplementation((request) =>
+    resolved<CasesSearchCasesResponse>({
+      items: [
+        {
+          ...CASE,
+          id: request.requestBody.cursor ? "synthetic-second" : CASE.id,
+        },
+      ],
+      has_more: !request.requestBody.cursor,
+      next_cursor: request.requestBody.cursor ? null : "synthetic-next",
+    })
+  )
+  const { result } = setup()
+  act(() => result.current.setSipFilter("192.0.2."))
+  await advance(301)
+  await advance()
+  act(() => result.current.fetchNextPage())
+  await advance(10)
+  expect(result.current.cases).toHaveLength(2)
+  act(() => result.current.setSipFilter("198.51.100."))
+  await advance(301)
+  act(() => result.current.setSipFilter("192.0.2."))
+  await advance(301)
+  await advance()
+  expect(searchCases.mock.calls.at(-1)?.[0].requestBody).toEqual(
+    expect.objectContaining({
+      sip: "192.0.2.",
+      cursor: undefined,
+    })
+  )
+  expect(result.current.cases).toHaveLength(1)
+})
+
 it("debounces search requests while typing", async () => {
   const sdk = jest.requireActual<typeof import("@/client")>("@/client")
   searchCases.mockImplementation(sdk.casesQueryCases)

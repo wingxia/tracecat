@@ -91,6 +91,16 @@ class CaseQuery(BaseModel):
         description='AND/OR/NOT conditions. Payload scalar equality uses field="payload.metadata.product.vendor_name", op="eq", value="Microsoft". Dot-separated literal keys or numeric array indices; keys containing dots are unsupported. Equality preserves JSON types. Payload is_null matches a missing path; explicit JSON null is a present value. Exclusions omit missing paths unless ORed with is_null.',
     )
     search_term: str | None = Field(default=None, max_length=1000)
+    sip: str | None = Field(
+        default=None,
+        max_length=64,
+        description="Source IP prefix; matches sip/source_ip/src_ip payload strings or text custom fields.",
+    )
+    dip: str | None = Field(
+        default=None,
+        max_length=64,
+        description="Destination IP prefix; matches dip/destination_ip/dest_ip/dst_ip payload strings or text custom fields. Combined with sip and other filters using AND.",
+    )
     search_mode: SearchMode | None = Field(
         default=None,
         description="Explicit word/phrase or escaped substring search. Omitted mode retains legacy matching and ordering.",
@@ -115,7 +125,13 @@ class CaseQuery(BaseModel):
     updated_after: datetime | None = Field(default=None)
     updated_before: datetime | None = Field(default=None)
 
-    @field_validator("search_term", "short_id")
+    @field_validator("sip", "dip")
+    @classmethod
+    def normalize_ip_prefix(cls, value: str | None) -> str | None:
+        """Accept partial addresses and treat blank IP filters as unset."""
+        return value.strip() or None if value is not None else None
+
+    @field_validator("search_term", "short_id", "sip", "dip")
     @classmethod
     def reject_nul(cls, value: str | None) -> str | None:
         """Reject text values that PostgreSQL cannot represent."""

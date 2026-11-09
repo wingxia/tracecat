@@ -27,6 +27,7 @@ from tracecat.cases.exact_search import (
 from tracecat.cases.hierarchy import TOP_LEVEL, CaseHierarchyService
 from tracecat.cases.query import (
     CUSTOM_FIELD_PREFIX,
+    IP_FIELD_ALIASES,
     CaseFieldResolver,
     case_payload_projection,
 )
@@ -58,7 +59,7 @@ from tracecat.db.models import Case, CaseDropdownValue, CaseTableRow, CaseTag, C
 from tracecat.exceptions import TracecatValidationError
 from tracecat.pagination import CursorPaginatedResponse, PageParams, paginate
 from tracecat.query.compiler import compile_filter
-from tracecat.query.filters import Filter
+from tracecat.query.filters import Condition, Filter, FilterOp
 from tracecat.query.lexical_types import SearchMatchMetadata, SearchMode
 from tracecat.service import BaseWorkspaceService
 
@@ -224,7 +225,7 @@ class CaseSearchService(BaseWorkspaceService):
         schema = (
             await self.fields.get_field_schema()
             if any(
-                field.startswith(CUSTOM_FIELD_PREFIX)
+                field.startswith(CUSTOM_FIELD_PREFIX) or field in IP_FIELD_ALIASES
                 for field in (*referenced_fields, *extra_fields)
             )
             else {}
@@ -243,7 +244,12 @@ class CaseSearchService(BaseWorkspaceService):
     ) -> list[ColumnElement[bool]]:
         """Keep trusted scope and compatibility constraints outside the user tree."""
         compatibility = await self.compatibility_filters(query)
-        trees = (query.filters, compatibility, legacy_filters)
+        ip_filters = [
+            Condition(field=field, op=FilterOp.STARTS_WITH, value=value)
+            for field, value in (("sip", query.sip), ("dip", query.dip))
+            if value
+        ]
+        trees = (query.filters, compatibility, legacy_filters, *ip_filters)
         resolver = await self.prepare_resolver(
             trees, case_addons_enabled=case_addons_enabled
         )
@@ -366,6 +372,8 @@ class CaseSearchService(BaseWorkspaceService):
                 request.case_id,
                 request.short_id,
                 request.parent_id,
+                request.sip,
+                request.dip,
                 case_addons_enabled and request.hierarchy == "top_level",
                 linked_row,
                 exclude_case_id,

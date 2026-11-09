@@ -35,6 +35,8 @@ def case_filter_metadata(
         "case_number",
         "created_at",
         "updated_at",
+        "sip",
+        "dip",
         *(f"fields.{name}" for name in schema),
         *(f"dropdowns.{ref}" for ref in dropdown_refs),
         "payload.<path>",
@@ -55,6 +57,8 @@ def case_filter_metadata(
         "case_number": "Case number",
         "created_at": "Created at",
         "updated_at": "Updated at",
+        "sip": "Source IP (sip)",
+        "dip": "Destination IP (dip)",
         "payload.<path>": "Payload path",
     }
     fields: list[CaseFilterField] = []

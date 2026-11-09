@@ -12,6 +12,7 @@ from tracecat.cases.enums import CasePriority, CaseSeverity, CaseStatus
 from tracecat.cases.query import (
     BOOLEAN_OPS,
     ENUM_OPS,
+    IP_FILTER_OPS,
     NUMBER_OPS,
     RANKED_ENUM_OPS,
     TEMPORAL_OPS,
@@ -60,6 +61,8 @@ def _compile(
 @pytest.mark.parametrize(
     ("field", "expected_kind", "expected_ops"),
     [
+        ("sip", FieldKind.TEXT, IP_FILTER_OPS),
+        ("dip", FieldKind.TEXT, IP_FILTER_OPS),
         ("status", FieldKind.ENUM, ENUM_OPS),
         ("priority", FieldKind.ENUM, RANKED_ENUM_OPS),
         ("severity", FieldKind.ENUM, RANKED_ENUM_OPS),

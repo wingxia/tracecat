@@ -10580,6 +10580,34 @@ export const $CaseQuery = {
       ],
       title: "Search Term",
     },
+    sip: {
+      anyOf: [
+        {
+          type: "string",
+          maxLength: 64,
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Sip",
+      description:
+        "Source IP prefix; matches sip/source_ip/src_ip payload strings or text custom fields.",
+    },
+    dip: {
+      anyOf: [
+        {
+          type: "string",
+          maxLength: 64,
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Dip",
+      description:
+        "Destination IP prefix; matches dip/destination_ip/dest_ip/dst_ip payload strings or text custom fields. Combined with sip and other filters using AND.",
+    },
     search_mode: {
       anyOf: [
         {
@@ -11241,6 +11269,34 @@ export const $CaseSearchRequest = {
         },
       ],
       title: "Search Term",
+    },
+    sip: {
+      anyOf: [
+        {
+          type: "string",
+          maxLength: 64,
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Sip",
+      description:
+        "Source IP prefix; matches sip/source_ip/src_ip payload strings or text custom fields.",
+    },
+    dip: {
+      anyOf: [
+        {
+          type: "string",
+          maxLength: 64,
+        },
+        {
+          type: "null",
+        },
+      ],
+      title: "Dip",
+      description:
+        "Destination IP prefix; matches dip/destination_ip/dest_ip/dst_ip payload strings or text custom fields. Combined with sip and other filters using AND.",
     },
     search_mode: {
       anyOf: [

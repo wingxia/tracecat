@@ -59,6 +59,7 @@ import { ListHeaderSearch } from "@/components/list-header-search"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
+import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
@@ -392,6 +393,10 @@ function CaseSortSelect({
 }
 
 interface CasesHeaderProps {
+  sipFilter?: string
+  dipFilter?: string
+  onSipFilterChange?: (value: string) => void
+  onDipFilterChange?: (value: string) => void
   structuredFilters?: CaseQuery["filters"]
   searchQuery: string
   searchMode?: "full_text" | "literal"
@@ -459,6 +464,10 @@ interface CasesHeaderProps {
 
 /** Case search, visible scope, and the current view's filter controls. */
 export function CasesHeader({
+  sipFilter = "",
+  dipFilter = "",
+  onSipFilterChange,
+  onDipFilterChange,
   structuredFilters,
   searchQuery,
   searchMode = "full_text",
@@ -606,6 +615,8 @@ export function CasesHeader({
   const includesSubCases = effectiveHierarchy === "all"
 
   const hasFilters =
+    sipFilter.trim().length > 0 ||
+    dipFilter.trim().length > 0 ||
     Boolean(structuredFilters) ||
     searchQuery.trim().length > 0 ||
     !isDefaultCaseSort(sortBy) ||
@@ -620,6 +631,8 @@ export function CasesHeader({
     (includeSubCases && onIncludeSubCasesChange !== undefined)
 
   const handleReset = () => {
+    onSipFilterChange?.("")
+    onDipFilterChange?.("")
     onStructuredFiltersChange?.(null)
     onSearchChange("")
     onSearchModeChange?.("full_text")
@@ -749,6 +762,40 @@ export function CasesHeader({
 
         <fieldset className={cn("flex min-w-0 flex-wrap items-center gap-2")}>
           <legend className="sr-only">当前视图筛选条件</legend>
+          {[
+            {
+              name: "sip",
+              label: "源 IP",
+              value: sipFilter,
+              onChange: onSipFilterChange,
+            },
+            {
+              name: "dip",
+              label: "目的 IP",
+              value: dipFilter,
+              onChange: onDipFilterChange,
+            },
+          ].map(({ name, label, value, onChange }) =>
+            onChange ? (
+              <label key={name} className="flex items-center gap-1.5 text-xs">
+                <span>{name}</span>
+                <Input
+                  aria-label={`${name}（${label}）`}
+                  title={`${label}前缀匹配，例如 192.0.2.；同时填写 sip 和 dip 时取交集`}
+                  placeholder="IP 或前缀…"
+                  className={cn(
+                    "h-6 w-36 px-2",
+                    value.trim() && "border-primary/50 bg-primary/5"
+                  )}
+                  maxLength={64}
+                  autoComplete="off"
+                  spellCheck={false}
+                  value={value}
+                  onChange={(event) => onChange(event.target.value)}
+                />
+              </label>
+            ) : null
+          )}
           <FilterMultiSelect
             placeholder={"状态"}
             icon={SignalIcon}
