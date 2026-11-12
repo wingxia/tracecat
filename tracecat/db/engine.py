@@ -9,7 +9,7 @@ import boto3
 from botocore.exceptions import ClientError
 from loguru import logger
 from sqlalchemy import event
-from sqlalchemy.engine import Result
+from sqlalchemy.engine import Result, make_url
 from sqlalchemy.exc import TimeoutError as SQLAlchemyTimeoutError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.pool import NullPool
@@ -172,6 +172,28 @@ def get_connection_string(
     return base
 
 
+def _convert_db_uri_driver(uri: str, driver: Literal["psycopg", "asyncpg"]) -> str:
+    """Convert a direct SQLAlchemy database URI to the requested driver.
+
+    ``asyncpg`` names the PostgreSQL TLS query parameter ``ssl`` while libpq
+    uses ``sslmode``. Direct ``TRACECAT__DB_URI`` values are used by both the
+    synchronous migration path and the asynchronous application path, so the
+    query parameter must be translated when the application switches drivers.
+    """
+    if driver == "psycopg":
+        return uri
+
+    url = make_url(uri)
+    scheme = url.drivername.split("+", 1)[0]
+    query = dict(url.query)
+    sslmode = query.pop("sslmode", None)
+    if sslmode is not None and "ssl" not in query:
+        query["ssl"] = sslmode
+    return url.set(drivername=f"{scheme}+asyncpg", query=query).render_as_string(
+        hide_password=False
+    )
+
+
 def _get_db_uri(driver: Literal["psycopg", "asyncpg"] = "psycopg") -> str:
     # Check if AWS environment
     if config.TRACECAT__DB_PASS__ARN:
@@ -278,8 +300,7 @@ def _get_db_uri(driver: Literal["psycopg", "asyncpg"] = "psycopg") -> str:
     # Else use the default URI
     else:
         uri = config.TRACECAT__DB_URI
-        if driver == "asyncpg":
-            uri = uri.replace("psycopg", "asyncpg")
+        uri = _convert_db_uri_driver(uri, driver)
     logger.trace("Using database URI", uri=uri)
     return uri
 

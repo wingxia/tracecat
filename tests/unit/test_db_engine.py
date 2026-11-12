@@ -74,6 +74,34 @@ def test_get_db_uri_logs_decode_error(monkeypatch: pytest.MonkeyPatch) -> None:
     )
 
 
+@pytest.mark.parametrize(
+    ("uri", "expected"),
+    [
+        (
+            "postgresql+psycopg://user:password@db.example.com:5432/tracecat?sslmode=require",
+            "postgresql+asyncpg://user:password@db.example.com:5432/tracecat?ssl=require",
+        ),
+        (
+            "postgresql+psycopg://user:password@db.example.com:5432/tracecat",
+            "postgresql+asyncpg://user:password@db.example.com:5432/tracecat",
+        ),
+        (
+            "postgresql+psycopg://user:password@db.example.com:5432/tracecat?ssl=require&sslmode=disable",
+            "postgresql+asyncpg://user:password@db.example.com:5432/tracecat?ssl=require",
+        ),
+    ],
+)
+def test_get_db_uri_converts_direct_uri_for_asyncpg(
+    monkeypatch: pytest.MonkeyPatch, uri: str, expected: str
+) -> None:
+    monkeypatch.setattr(config, "TRACECAT__DB_PASS__ARN", None)
+    monkeypatch.setattr(config, "TRACECAT__DB_USER", None)
+    monkeypatch.setattr(config, "TRACECAT__DB_PASS", None)
+    monkeypatch.setattr(config, "TRACECAT__DB_URI", uri)
+
+    assert _get_db_uri(driver="asyncpg") == expected
+
+
 @pytest.mark.anyio
 @pytest.mark.parametrize(
     ("session_factory", "rls_mode", "with_role", "expect_role_context"),

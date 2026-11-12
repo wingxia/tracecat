@@ -1,0 +1,22 @@
+# Use this override when Tracecat should connect to an independently managed
+# PostgreSQL instance instead of starting the bundled `postgres_db` service.
+#
+# Example:
+#   docker compose -f docker-compose.yml -f docker-compose.external-db.yml up -d
+#
+# Set TRACECAT__DB_URI (and, when role provisioning is required,
+# TRACECAT__DB_ADMIN_URI) in `.env` before starting the stack.
+
+services:
+  # Keep the bundled service definition available for Compose merging, but do
+  # not start it when this override is selected. Use the base Compose file
+  # without this override when you want the bundled database.
+  postgres_db:
+    profiles:
+      - bundled-db
+
+  # The external database has no Compose healthcheck to wait for. Migrations
+  # still run before API/worker services because those services already depend
+  # on the migrations container.
+  migrations:
+    depends_on: !override []

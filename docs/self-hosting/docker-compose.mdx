@@ -92,7 +92,52 @@ TRACECAT__EXECUTOR_BACKEND=nsjail docker compose \
   -f docker-compose.yml -f docker-compose.sandbox.yml up -d
 ```
 
-If you build locally with `docker-compose.local.yml`, substitute that file for `docker-compose.yml` in the command.
+### Use an independent PostgreSQL instance
+
+For a single database user, set these values in `.env`. The user must have
+permission to run schema migrations as well as application queries:
+
+```dotenv
+TRACECAT__DB_URI=postgresql+psycopg://tracecat:<password>@db.example.com:5432/tracecat?sslmode=require
+TRACECAT__DB_ADMIN_URI=
+```
+
+To provision separate `app` and `migrator` roles instead, use an administrator
+connection to the same database and supply both role passwords:
+
+```dotenv
+TRACECAT__DB_URI=postgresql+psycopg://app:<app-password>@db.example.com:5432/tracecat?sslmode=require
+TRACECAT__DB_ADMIN_URI=postgresql+psycopg://tracecat_admin:<admin-password>@db.example.com:5432/tracecat?sslmode=require
+TRACECAT__DB_APP_PASSWORD=<app-password>
+TRACECAT__DB_MIGRATOR_PASSWORD=<migrator-password>
+```
+
+Keep the application password in the URI consistent with `TRACECAT__DB_APP_PASSWORD`.
+Percent-encode special characters in URI passwords. The migrations container
+uses the administrator connection to set up roles, then runs migrations as
+`migrator`. See [Security](/self-hosting/security) for role permissions.
+If you ran `env.sh`, replace or clear its generated administrator URI, which
+points to the bundled database.
+
+Start the stack with `docker-compose.external-db.yml` from this repository.
+The override excludes `postgres_db` from startup and removes the migration
+dependency on that service. Temporal continues to use its bundled database:
+
+```bash
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.external-db.yml \
+  up -d
+```
+
+For a local build, replace `docker-compose.yml` with `docker-compose.local.yml`
+and add `--build`. For the sandbox executor, also include `docker-compose.sandbox.yml`.
+Use PostgreSQL 15 or newer with `vector` version 0.8.0 or newer and `pg_trgm`
+in the `public` schema. If the migration role cannot install extensions, have
+your database administrator enable them before startup.
+
+When moving an existing installation, migrate its data separately. The override
+does not copy data or stop an already-running bundled database container.
 
 ## Access Tracecat
 

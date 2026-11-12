@@ -50,9 +50,11 @@ short server start/stop cycle.
 
 The Compose startup hook provisions only the bundled database. For an external
 application database, the schema migration enables pgvector if its role has
-permission; otherwise an administrator must enable it first. Compose retains its
-existing bundled-database dependency; this change does not add external-database
-routing. See the [pgvector setup guide](https://docs.tracecat.com/self-hosting/pgvector)
+permission; otherwise an administrator must enable it first. Layer
+`docker-compose.external-db.yml` over your base Compose file to disable the
+bundled application database and remove its migration dependency. Set
+`TRACECAT__DB_URI` and any `TRACECAT__DB_ADMIN_URI` to the external database.
+See the [pgvector setup guide](https://docs.tracecat.com/self-hosting/pgvector)
 for server installation and migration troubleshooting.
 
 ### Image publication

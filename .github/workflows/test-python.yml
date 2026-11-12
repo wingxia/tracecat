@@ -13,12 +13,14 @@ on:
       - pyproject.toml
       - uv.lock
       - docker-compose.yml
+      - docker-compose.external-db.yml
       - docker-compose.local.yml
       - docker-compose.dev.yml
       - deployments/postgres/**
       - scripts/postgres/**
       - scripts/tests/test_pgvector*.sh
       - scripts/tests/test_pg_trgm.sh
+      - scripts/tests/test_external_db_compose.sh
       - .env.example
       - env.sh
       - .github/workflows/test-python.yml
@@ -110,6 +112,9 @@ jobs:
 
       - name: Check automatic Compose pgvector wiring
         run: bash scripts/tests/test_pgvector_compose.sh
+
+      - name: Check external PostgreSQL Compose wiring
+        run: bash scripts/tests/test_external_db_compose.sh
 
       # PRs test their own candidate, before its GHCR tag is published.
       - name: Build PostgreSQL candidate image

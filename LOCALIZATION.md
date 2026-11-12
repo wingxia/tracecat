@@ -50,6 +50,23 @@ docker compose -f docker-compose.local.yml logs --tail=100 ui api
 
 完整部署要求、网络配置与版本迁移说明仍以上游 [Docker Compose 文档](https://docs.tracecat.com/self-hosting/docker-compose)为准。本次中文化未改变后端服务、认证逻辑、数据库结构或企业版许可。
 
+### 使用独立 PostgreSQL
+
+在 `.env` 中将 `TRACECAT__DB_URI` 指向独立应用库。使用单一数据库账号时，清空 `TRACECAT__DB_ADMIN_URI`，并确保该账号具有执行数据库迁移所需的 DDL 权限。`env.sh` 会生成指向内置库的管理员 URI，切换时需要清空或替换。
+
+如果需要自动配置独立的 `app` 与 `migrator` 角色，将 `TRACECAT__DB_ADMIN_URI` 指向同一个外部数据库，并设置 `TRACECAT__DB_APP_PASSWORD` 和 `TRACECAT__DB_MIGRATOR_PASSWORD`；此时 `TRACECAT__DB_URI` 应使用 `app` 账号及对应密码。完整示例见 [独立 PostgreSQL 部署说明](docs/self-hosting/docker-compose.mdx#use-an-independent-postgresql-instance)。
+
+叠加外置数据库覆盖文件启动：
+
+```bash
+docker compose \
+  -f docker-compose.local.yml \
+  -f docker-compose.external-db.yml \
+  up -d --build
+```
+
+该覆盖文件使 `postgres_db` 不再随应用启动，并移除迁移容器对它的健康检查依赖；Temporal 继续使用内置数据库。外部应用库需要 PostgreSQL 15 或更高版本，在 `public` schema 中启用 `vector`（至少 0.8.0）与 `pg_trgm` 扩展；迁移账号没有安装权限时，请由数据库管理员预先启用。已有部署需另行迁移数据，覆盖文件不会复制数据或停止已经运行的内置数据库容器。
+
 ## 前端开发与检查
 
 使用 Node.js 22 和仓库指定的 pnpm 10.30.3：

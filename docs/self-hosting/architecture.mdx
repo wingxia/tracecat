@@ -8,7 +8,9 @@ description: "Architecture overview for self-hosted Tracecat: services, networki
 Use PostgreSQL 15 or newer for the Tracecat application database. The bundled
 Docker Compose database uses PostgreSQL 16.
 
-The Docker Compose stack runs 18 containers. Only `caddy` is exposed externally; all other ports are internal to the Docker network.
+The default Docker Compose stack runs 18 containers. The external database
+override excludes the bundled application database from startup. Only `caddy` is
+exposed externally; all other ports are internal to the Docker network.
 
 | Service | Port | Description |
 | :------ | :--- | :---------- |
@@ -22,7 +24,7 @@ The Docker Compose stack runs 18 containers. Only `caddy` is exposed externally;
 | `agent-executor` | — | AI agent action executor |
 | `litellm` | 4000 | Managed LiteLLM gateway for AI model requests |
 | `mcp` | 8099 | MCP server for IDE integrations |
-| `postgres_db` | 5432 | Application database (PostgreSQL 16) |
+| `postgres_db` | 5432 | Bundled application database (PostgreSQL 16; optional with the external database override) |
 | `temporal` | 7233 | Workflow engine |
 | `temporal_postgres_db` | 5432 | Temporal database (PostgreSQL 13) |
 | `temporal_ui` | 8081 (not exposed) | Temporal web UI |
@@ -98,9 +100,9 @@ See [SAML configuration](/authentication/saml) for provider-specific setup instr
 
 <AccordionGroup>
   <Accordion title="Can I use an external PostgreSQL or Redis?">
-    Yes. Update `TRACECAT__DB_URI` to point to your managed PostgreSQL 15 or newer instance and `REDIS_URL` for Redis. For Temporal, update the Temporal PostgreSQL credentials in your `.env` file.
+    Yes. Set `TRACECAT__DB_URI` to your managed PostgreSQL 15 or newer instance, then start Docker Compose with `docker-compose.external-db.yml`. This override disables the bundled `postgres_db` service and removes its healthcheck dependency from migrations. Set `REDIS_URL` for Redis. For Temporal, update the Temporal PostgreSQL credentials in your `.env` file.
 
-    The migrations container sets up database roles through `TRACECAT__DB_ADMIN_URI`, which `env.sh` points at the bundled PostgreSQL. Set it to an admin connection for the same external instance, or clear it to keep a single database user. Migrations run against the database it names.
+    The migrations container sets up database roles through `TRACECAT__DB_ADMIN_URI`. Set it to an administrator connection for the same external instance, or clear it to keep a single database user. Migrations run against the database it names.
 
     See [Security](/self-hosting/security) for production credential recommendations.
   </Accordion>
